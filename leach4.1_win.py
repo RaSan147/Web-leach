@@ -20,6 +20,7 @@
 #>>>>>fixed title dir prob (4.1)
 #>>>>>dimention added (4.1)
 #>>>>>added updater
+#>>>>>used https://webleach.weebly.com for file hosting and update host
 
 
 print("LOADINS ASSETS...")
