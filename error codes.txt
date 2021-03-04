@@ -1,6 +1,0 @@
-001  >>>  (corrupted file) (.proj file) don't have enough data , not enough index to access (lines were deleted)
-002  >>>  (corrupted file) (.proj file) have corrupted sub dir list
-003  >>>  (corrupted file) (.list file) have corrupted sub link (files) list
-004  >>>  (corrupted file) (.list file) have corrupted files types list
-005  >>>  (Network issue ) (main_link)  failed to connect to the entered link
-006  >>>  (Network issue ) (pastebin)   failed to connect to the pastebin

@@ -1,7 +1,0 @@
-('https://1.bp.blogspot.com/-Lsa7zSaXj7g/XlLwPyxq99I/AAAAAAAAd40/G7Zktpvi0lcc4bsNTB-tslzdwWzPiJjXgCLcBGAsYHQ/s6600/013.jpg', 76)
-('https://1.bp.blogspot.com/-RLoaTLj5A74/XlLfaZJqWOI/AAAAAAAAdFc/0dNAaGXq9zEg3Ol4cx_c__k4xnkTwArowCLcBGAsYHQ/s6600/012.jpg', 60)
-('https://1.bp.blogspot.com/-390KKtC2WOA/XlLcSyRaqaI/AAAAAAAAc0k/VAEGC0uVeNk08UBTvd2-qOK7o8aEwJBdgCLcBGAsYHQ/s6600/005.jpg', 56)
-('https://1.bp.blogspot.com/-kENJmy0SFe8/XlLEJhsKxLI/AAAAAAAAbuM/xOtk53H-S2EhnDmoy6HxYs47S5ldgia9gCLcBGAsYHQ/s6600/004.jpg', 102)
-('https://1.bp.blogspot.com/-LWRj-JgMsLU/XlK2DWKE7QI/AAAAAAAAbco/cqr6azoN5LoFv0nB-q-NeYvEs5LiMn6hwCLcBGAsYHQ/s6600/018.jpg', 72)
-('https://1.bp.blogspot.com/-MXrTZtYjoNs/XlLElS0hw-I/AAAAAAAAbv8/0AGOdsK60m4tOWT7Z-s0clk8-wJl7HUhgCLcBGAsYHQ/s6600/010.jpg', 29)
-('https://1.bp.blogspot.com/-jbwYFN2MT_s/XlLHfWwd9_I/AAAAAAAAb8k/1InTDzpOnngMiwtdbzBcL5mYxCGgnwg0wCLcBGAsYHQ/s6600/021.jpg', 52)
