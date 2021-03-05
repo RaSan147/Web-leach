@@ -1,0 +1,8 @@
+##############            pastebin updater file               ##################
+global user_list,_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size
+user_list+= ['747130591421a901c542ddd58a9f98ccd40fa7d2']
+_latest_version='4.1'
+_latest_link='https://webleach.weebly.com/uploads/1/2/2/0/122015891/web_leach_v4.1.zip'
+_latest_hash='5f6e2f07fde96468e3aa8be2a9680211'
+_latest_size="5.54mb"
+_latest_filename='Web Leach v4.1'

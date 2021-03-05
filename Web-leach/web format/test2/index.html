@@ -1,0 +1,134 @@
+<head>
+  <title>Test page</title>
+  <script type="text/javascript">
+  var images_loc = ['001.jpg', '123.png'];
+  var pages_list = ['test', 'test2', 'test3'];
+  var current_page_index = 1
+  
+  var img_space = document.createElement("PRE");
+  img_space.innerHTML = "<br><br><br>";
+  img_space.className = "space";
+  </script>
+  <style type="text/css">
+  #contents {
+    margin: 15px;
+  }
+  </style>
+  </head>
+  
+  <body>
+  <div id="contents">
+  <h4>Customize Your Page For Your Desired Manga</h4>
+  <br>
+  <select id="pageFormats">
+  <option value="noS">No space</option>
+  <option value="shortS">Short space</option>
+  <option value="SP">Single page</option>
+  </select>
+  <br><br>
+  <input type="radio" id="borderE" name="borderSelection" value="be"> <label for="borderEnabled">Border Enabled</label><br>
+  <input type="radio" id="borderD" name="borderSelection" value="bd" checked=""> <label for="borderDisabled">Border Disabled</label><br>
+  <center>
+    <button id="submit" onclick="displayValue()">Submit</button> <hr><br>
+    <p id="result"></p>
+    <div id="images"></div>
+  </center>
+    <p id="pagination" style="text-align: center;" ></p>
+
+  </div>
+  <script type="text/javascript">
+    function display_imgs() {
+      for (i = 0; i < images_loc.length; i++) {
+        var imgx = document.createElement("IMG");
+        imgx.src = images_loc[i];
+        imgx.className = 'per_img';
+        imgx.alt = 'It seems image is not found ('+images_loc[i]+')';
+        
+        
+        var images_const = document.getElementById("images");
+        images_const.appendChild(imgx);
+        if (i < (images_loc.length)-1) {
+          images_const.appendChild(document.createElement("BR"));
+          images_const.appendChild(document.createElement("BR"));
+          images_const.appendChild(document.createElement("BR"));
+          images_const.appendChild(document.createElement("BR"));
+        }
+      }
+    }
+  
+    display_imgs();
+  
+    function getValue() {
+      var ele = document.getElementsByTagName('input');
+      var arr = [];
+      for (i = 0; i < ele.length; i++) {
+        if (ele[i].type = "radio") {
+          if (ele[i].checked)
+          arr.push(ele[i].value);
+        }
+      }
+      arr.push(document.getElementById("pageFormats").value);
+      return arr;
+    }
+    function pagination () {
+      var page_direction=document.getElementById("pagination");
+      
+      if (current_page_index != 0) {
+        var prev_a= document.createElement("A");
+        prev_a.href= "../"+pages_list[current_page_index-1]+"/index.html";
+        prev_a.innerHTML= '<< Previous page  ';
+        page_direction.appendChild(prev_a);
+        
+      }
+      
+      page_direction.innerHTML+='&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'
+
+      if (current_page_index != pages_list.length-1){
+        var next_a= document.createElement('A');
+        next_a.href= "../"+pages_list[current_page_index+1]+"/index.html";
+        next_a.innerHTML= '  Next page >>';
+        page_direction.appendChild(next_a);
+      } 
+
+      
+    }
+    
+    pagination();
+    function displayValue() {
+      
+      var values = getValue();
+      var str = "Page Status: "+values[1]+"<br>Border Status: "+ values[0];
+      var img_div1 = document.getElementById('images');
+      var eleIMG = document.getElementsByClassName('per_img');
+      var breaks = img_div1.getElementsByTagName("BR");
+      document.getElementById("result").innerHTML = str;
+      
+      if (values[0] == "be") {
+        for (i = 0; i < eleIMG.length; i++) {
+          eleIMG[i].border = "4px";
+        }
+      }
+      if (values[0] == "bd") {
+        for (i = 0; i < eleIMG.length; i++) {
+          eleIMG[i].border = "0px";
+        }
+      }
+      
+      if (values[1] == "noS") {
+        for (i = breaks.length-1; i >= 0; i--) {
+          breaks[i].style.display = 'none'
+        }
+      }
+      
+      
+      if (values[1] == "shortS") {
+        var y = img_div1.childElementCount;
+        for (i = breaks.length-1; i >= 0; i--) {
+          breaks[i].style.display = 'initial';
+        }
+      }
+    }
+  
+  </script>
+  
+  </body>

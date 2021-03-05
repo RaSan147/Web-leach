@@ -1,0 +1,10 @@
+main_link= "https://ww1.readkaguyasama.com/manga/kaguya-sama-light-novel/"
+link_startswith= "https://ww1.readkaguyasama.com/chapter/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['kaguya-sama-light-novel-chapter-1', 'kaguya-sama-light-novel-chapter-2', 'kaguya-sama-light-novel-chapter-3', 'kaguya-sama-light-novel-chapter-4']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 2
+dl_done = True

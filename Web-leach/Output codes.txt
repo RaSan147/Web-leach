@@ -1,0 +1,46 @@
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+==================(2)==================
+-----------> UPDATE CODES<------------
+
+201  >>>  (updating program) (main file) connectiong to server
+           ||compressed_dt||latest_version code
+202  >>>  (Network issue) (main file) failed connect server
+           ||compressed_dt||latest_version code||host link||current version||header index
+
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+==================(6)==================
+------------> ERROR CODES<------------
+
+601  >>>  (corrupted file) (.proj file) don't have enough data , not enough index to access (lines were deleted)
+
+602  >>>  (corrupted file) (.proj file) have corrupted sub dir list
+
+603  >>>  (corrupted file) (.list file) have corrupted sub link (files) list
+
+604  >>>  (corrupted file) (.list file) have corrupted files types list
+
+605x  >>>  (Network issue ) (main_link)  failed to connect to the entered link
+          1  >>>  failed to connect with 'https://ident.me' to get user net ip from import_paste() called by import_paste_t thread in 'main file'
+                ||compressed_dt||header index
+          2  >>>  failed to do 'from pastebin import send_paste' from import_paste() called by import_paste_t thread in 'main file'
+                ||compressed_dt||header index
+          3  >>>  failed to download 'who_r_u.mp3' file in god_mode in 'main file'
+                ||compressed_dt||header index
+          4  >>>  failed to download UPDATE file from pastebin in god_mode in 'main file'
+                ||compressed_dt||header index
+
+606  >>>  (Network issue ) (pastebin)   failed to connect to the pastebin
+
+607  >>>  (Indexing Error) (list_writer)error occured in the (indx threads)
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+==================(000)==================
+------------> FUNC ERROR CODES<----------
+
+00001   >>>   Failed to remove non-ascii charecters from string.
+                 ||ErrorName||compressed_dt||text string
+00006   >>>   failed to write a file
+                 ||ErrorName||compressed_dt||function_code||file_name||write_mode||directory

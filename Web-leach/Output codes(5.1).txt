@@ -1,0 +1,50 @@
+<<<<<<<<<<<<<<<<<<<<  VERSION 5.1  <<<<<<<<<<<<<<<<<<
+==================(2)==================
+-----------> UPDATE CODES<------------
+
+201  >>>  (updating program) (main file) connectiong to server
+           ||compressed_dt||latest_version code
+202  >>>  (Network issue) (main file) failed connect server
+           ||compressed_dt||latest_version code||host link||current version||header index
+
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+==================(6)==================
+------------> ERROR CODES<------------
+
+601x >>>  (corrupted file) (.proj file) and (.list file)
+          ==========CORRUPT CODES=========
+          0  >>>  missing one or both .proj and .list
+          1  >>>  (.proj file)corrupted main link
+          2  >>>  (.proj file)corrupted sub link starts with
+          3  >>>  (.proj file)corrupted file types tuple
+          4  >>>  (.proj file)corrupted file_startswith link (regex)
+          5  >>>  (.proj file)have corrupted sub dir list
+          6  >>>  (.list file)have corrupted sub link (files) list
+
+605x >>>  (Network issue ) (main_link)  failed to connect to the entered link
+          ||compressed_dt||header index
+          ==========CORRUPT CODES=========
+          1  >>>  failed to connect with 'https://ident.me' to get user net ip from _connect_net() in 'main file'
+          2  >>>  failed to do 'from pastebin import send_paste' from import_paste() called by import_paste_t thread in 'main file'
+          3  >>>  failed to download 'who_r_u.mp3' file in god_mode in 'main file'
+          4  >>>  failed to download UPDATE file from pastebin link in god_mode in 'main file'
+
+606x >>>  (Network issue) (sp_link) failed to reach sp_link like nh, mangafreak
+          1  >>>  failed to connect nhentai.net site, possible cause wrong link or location blocked or internet issue
+          2  >>>  failed to connect nhentai.to site, possible cause wrong link or internet issue
+
+606  >>>  (Network issue ) (pastebin)   failed to connect to the pastebin
+
+607  >>>  (Indexing Error) (list_writer)error occured in the (indx threads)
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+==================(000)==================
+------------> FUNC ERROR CODES<----------
+
+00001   >>>   Failed to remove non-ascii charecters from string.
+                 ||ErrorName||compressed_dt||text string
+00006   >>>   failed to write a file
+                 ||ErrorName||compressed_dt||function_code||file_name||write_mode||directory

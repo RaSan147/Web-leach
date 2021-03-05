@@ -1,0 +1,1 @@
+py -3.7 -m PyInstaller --noconfirm --onefile --console --icon "E:/Ratul Codes/C/Python/Test/web ripper/untitled_1_IDN_icon.ico" --name "Web Leach v4.0"  "E:/Ratul Codes/C/Python/Test/web ripper/leach4_win.py"

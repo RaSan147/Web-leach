@@ -1,0 +1,12 @@
+main_link= "https://nhentai.net/g/230225"
+link_startswith= "https://nhentai.xxx/g/230225/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['[Morishima Kon] Naisho no Gohoushi + Bangaihen (Oneshota Dish) [English] {Hennojin}']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = False
+dimention = 0
+sequence = True
+Project = "maid shota"
+dl_done = True

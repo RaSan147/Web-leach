@@ -1,0 +1,10 @@
+main_link= "https://ww1.readkaguyasama.com/manga/ib-instant-bullet/"
+link_startswith= "https://ww1.readkaguyasama.com/chapter/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['ib-instant-bullet-chapter-1.1', 'ib-instant-bullet-chapter-1.2', 'ib-instant-bullet-chapter-10', 'ib-instant-bullet-chapter-11', 'ib-instant-bullet-chapter-12', 'ib-instant-bullet-chapter-13', 'ib-instant-bullet-chapter-14', 'ib-instant-bullet-chapter-15', 'ib-instant-bullet-chapter-16', 'ib-instant-bullet-chapter-16.5', 'ib-instant-bullet-chapter-17', 'ib-instant-bullet-chapter-18', 'ib-instant-bullet-chapter-19', 'ib-instant-bullet-chapter-2', 'ib-instant-bullet-chapter-20', 'ib-instant-bullet-chapter-21', 'ib-instant-bullet-chapter-22', 'ib-instant-bullet-chapter-23', 'ib-instant-bullet-chapter-24', 'ib-instant-bullet-chapter-25', 'ib-instant-bullet-chapter-3', 'ib-instant-bullet-chapter-4', 'ib-instant-bullet-chapter-5', 'ib-instant-bullet-chapter-6', 'ib-instant-bullet-chapter-7', 'ib-instant-bullet-chapter-8', 'ib-instant-bullet-chapter-9']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 2
+dl_done = True

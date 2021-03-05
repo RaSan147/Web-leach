@@ -1,0 +1,12 @@
+main_link= "https://nhentai.net/g/304307"
+link_startswith= "https://nhentai.net/g/304307/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['[Nishizawa Mizuki] Akarui Kazoku Seikatsu [English] [Otokonoko Scans]']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = False
+dimention = 0
+sequence = True
+Project = "my turn"
+dl_done = True
