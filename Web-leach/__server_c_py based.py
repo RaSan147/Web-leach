@@ -116,12 +116,13 @@ import RcryptxAsuna2_1_c_py_lines as RxAsuna
 import Number_sys_conv as Nsys
 
 print("testing C program availability")
+decryptor_lang=None
 try:
 	RxAsuna.Cdecrypt('hello', "world")
-	decrypto_lang= 'C'
+	decryptor_lang= 'C'
 except FileNotFoundError:
 	print("Failed!\nSwitching to Python mode")
-	decrypto_lang=None
+
 
 # Default error message template
 DEFAULT_ERROR_MESSAGE = """\
@@ -705,6 +706,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 		None, in which case the caller has nothing further to do.
 
 		"""
+
+		global decryptor_lang
 		path = self.translate_path(self.path)
 
 		decrypto_header = open('_server001_decrypto.py').read()
@@ -717,11 +720,32 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 				decrypto_key = "Asuna" #input("Enter password: ")
 				self.decrypto_dat= []
 				self.PIDs=[]
+				try:
+					with open('data/userlog.leach') as f:
+						read_dec = time.time()
+						dec_raw = f.read()
+				except FileNotFoundError as e:
+					print("NO userlog.leach file found, try Recheck if the file Exists\n\n")
+					enc = sys.getfilesystemencoding()
+					r.append('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" '
+			'"http://www.w3.org/TR/html4/strict.dtd">')
+					r.append('<meta http-equiv="Content-Type" '
+			'content="text/html; charset=%s">' % enc)
+					r.append("""<h1>503 Error Occred</h1>
+					<h2>Failed to execute decryption program (%s occured)</h2>
+					<h1>Failed to load Log file. PLease recheck the file</h1>
+					<p><b>Error message:</b> %s</p>"""%(str(e.__class__.__name__), str(e)))
+					encoded = '\n'.join(r).encode(enc, 'surrogateescape')
 
-				with open('data/userlog.leach') as f:
-					read_dec = time.time()
-					dec_raw = f.read()
-				if decrypto_lang =='C':
+					f = io.BytesIO()
+					f.write(encoded)
+					f.seek(0)
+					self.send_response (HTTPStatus.SERVICE_UNAVAILABLE)
+					self.send_header ("Content-type", "text/html; charset=%s" % enc)
+					self.send_header ("Content-Length", str(len(encoded)))
+					self.end_headers()
+					return f
+				if decryptor_lang =='C':
 					temp_dec= RxAsuna.Cdecrypt(dec_raw , decrypto_key)
 					for i in temp_dec.replace('\r\n', '\n').split('\n')[::-1]:
 						if i!='':self.decrypto_dat.append(i[40:].split('||')[:-1])
@@ -733,7 +757,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 							if i!='':self.decrypto_dat.append(RxAsuna.PYdecrypt(i, decrypto_key)[40:].split('||')[:-1])
 						decryptor_lang = 'Python'
 					except Exception as e:
-						print("can't execute the Decryption program, try Rechect if the file Exists\n\n")
+						print("can't execute the Decryption program, try Recheck if the file Exists\n\n")
 						enc = sys.getfilesystemencoding()
 						r.append('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" '
 				'"http://www.w3.org/TR/html4/strict.dtd">')

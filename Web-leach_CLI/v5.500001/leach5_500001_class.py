@@ -48,8 +48,8 @@ ara_ara= False #to control parody noise
 
 print("LOADINS ASSETS...")
 
-cloud_data_link='https://raw.githubusercontent.com/Ratulhasan14789/Web-Leach_pub/main/update.txt'#'https://pastebin.com/raw/Sa9hTd0P' #backend server location
-cloud_data_link='https://raw.githubusercontent.com/Ratulhasan14789/Web-Leach_pub/main/update%20(server%20v%3A%205.4).txt'
+#cloud_data_link='https://raw.githubusercontent.com/Ratulhasan14789/Web-Leach_pub/main/update.txt'#'https://pastebin.com/raw/Sa9hTd0P' #backend server location
+cloud_data_link='https://raw.githubusercontent.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500001).txt'
 user_net_ip='offline'
 import time
 

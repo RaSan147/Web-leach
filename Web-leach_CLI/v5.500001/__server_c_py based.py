@@ -116,12 +116,13 @@ import RcryptxAsuna2_1_c_py_lines as RxAsuna
 import Number_sys_conv as Nsys
 
 print("testing C program availability")
+decryptor_lang=None
 try:
 	RxAsuna.Cdecrypt('hello', "world")
-	decrypto_lang= 'C'
+	decryptor_lang= 'C'
 except FileNotFoundError:
 	print("Failed!\nSwitching to Python mode")
-	decrypto_lang=None
+
 
 # Default error message template
 DEFAULT_ERROR_MESSAGE = """\
@@ -705,6 +706,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 		None, in which case the caller has nothing further to do.
 
 		"""
+
+		global decryptor_lang
 		path = self.translate_path(self.path)
 
 		decrypto_header = open('_server001_decrypto.py').read()
@@ -742,7 +745,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 					self.send_header ("Content-Length", str(len(encoded)))
 					self.end_headers()
 					return f
-				if decrypto_lang =='C':
+				if decryptor_lang =='C':
 					temp_dec= RxAsuna.Cdecrypt(dec_raw , decrypto_key)
 					for i in temp_dec.replace('\r\n', '\n').split('\n')[::-1]:
 						if i!='':self.decrypto_dat.append(i[40:].split('||')[:-1])
