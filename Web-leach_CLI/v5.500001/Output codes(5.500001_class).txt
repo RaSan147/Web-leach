@@ -77,7 +77,7 @@ CON                    \|:*"><?
             ||header index||link (default= None)||extra (default= None)
           ==========CORRUPT CODES=========
           0  >>>  failed to connect a link
-          1  >>>  [✓|✗|✓] (in 00012) failed to connect with 'https://ident.me' to get user net ip from _connect_net() in 'main file'
+          1  >>>  [✓|✗|✓] (in 0000C) failed to connect with 'https://ident.me' to get user net ip from _connect_net() in 'main file'
           2  >>>  [✗|✗|✗] failed to do 'from pastebin import send_paste' from import_paste() called by import_paste_t thread in 'main file'
           3  >>>  [✓|✓|✗] failed to download 'who_r_u.mp3' file in god_mode in 'main file'
           4  >>>  [✓|✓|✓] failed to download UPDATE file from server link in god_mode in 'main file'
@@ -121,7 +121,7 @@ CON                    \|:*"><?
               -1 >>>  Unknown error occured. Returns -1 as index
                           ||caller f_code||ErrorName||error string||corrupted header
 
-00011x  >>>   [run_server in `main file`]
+0000Bx  >>>   [run_server in `main file`]
               1  >>>  Hosting directory data type is invalid (not string)
                           ||Data type||converted srt form of cd parameter (? if not converted)||caller f_code
               2  >>>  Hosting directory data type is invalid (has `CON` charecters)
@@ -129,11 +129,11 @@ CON                    \|:*"><?
               3  >>>  Hosting directory doesn't exist
                           ||cd parameter||caller f_code
 
-00012x  >>>   [_connect_net]
+0000Cx  >>>   [_connect_net]
               -1 >>>  Unknown ERROR occured
                           ||header index||error name||error string
 
-00023   >>>   [check_internet] No internet access
+00017   >>>   [check_internet] No internet access
                 ||link||header index||caller f_code||Error code (not in prev version)
 
 ------------------------------------------------------------------------------

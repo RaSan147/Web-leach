@@ -351,7 +351,7 @@ def hdr(header, f_code=''):    #func_code=00009
 		return str((-1, header))
 
 
-def leach_logger(io, key='lock'):   #func_code=00010
+def leach_logger(io, key='lock'):   #func_code=0000A
 	"""saves encrypted logger data to file\n
 	(new in 5.3_class: auto adds dt_() at the begning)
 
@@ -376,7 +376,7 @@ def leach_logger(io, key='lock'):   #func_code=00010
 
 #################### CONNECT TO THE NET FOR THE FIRST TIME #################
 
-def run_server(port, cd=None, f_code= 'None'):      #func_code= 00011
+def run_server(port, cd=None, f_code= 'None'):      #func_code= 0000B
 	"""Runs localhost server using python.\n
 	the I/O is suppressed
 
@@ -389,25 +389,25 @@ def run_server(port, cd=None, f_code= 'None'):      #func_code= 00011
 			cd= str(cd)
 		except:
 			cd= '?'
-		print("Invalid localhost directory. Please inform the author.\nError code: 00011x1")
-		leach_logger("00011x1||%s||%s||%s"%(temp, cd, f_code))
+		print("Invalid localhost directory. Please inform the author.\nError code: 0000Bx1")
+		leach_logger("0000Bx1||%s||%s||%s"%(temp, cd, f_code))
 		time.sleep(5)
 		sys_exit()
 
 	elif cd!= None and any(i in cd for i in '\\|:*"><?'):
-		print("Invalid localhost directory. Please inform the author.\nError code: 00011x2")
-		leach_logger("00011x2||%s||%s"%(cd, f_code))
+		print("Invalid localhost directory. Please inform the author.\nError code: 0000Bx2")
+		leach_logger("0000Bx2||%s||%s"%(cd, f_code))
 		time.sleep(5)
 		sys_exit()
 	
 	elif cd!=None and not os_isdir(cd):
-		print(cd,"not found!\nPlease inform the author\nError code: 00011x3")
-		leach_logger("00011x3||"+cd+'||'+f_code)
+		print(cd,"not found!\nPlease inform the author\nError code: 0000Bx3")
+		leach_logger("0000Bx3||"+cd+'||'+f_code)
 		time.sleep(5)
 		sys_exit()
 
 	try:
-		if check_internet("http://localhost:%i"%port, '10011', timeout=2)==False:
+		if check_internet("http://localhost:%i"%port, '1000B', timeout=2)==False:
 			if cd!=None:
 				server_code = subprocess_Popen(['python', '_server000_.py', str(port), '-d', cd], 
 				stdin=open(os_devnull), start_new_session=True, stdout=subprocess_DEVNULL, stderr=subprocess_DEVNULL)
@@ -425,7 +425,7 @@ def run_server(port, cd=None, f_code= 'None'):      #func_code= 00011
 
 
 
-def _connect_net():      #func_code= 00012
+def _connect_net():      #func_code= 0000C
 	"""connects to the internet and returns the users global ip"""
 	global user_net_ip
 	current_header=header_()
@@ -435,19 +435,19 @@ def _connect_net():      #func_code= 00012
 		# print(time.time()-gfh)#return [True, '0']
 	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema) as e:
 		print("\033[1;31;40mError code: 605x1\nNo internet connection!\nThe program will break in 5 seconds\033[0m")
-		leach_logger("605x1||%s||%s"%(hdr(current_header,'00012'), e.__class__.__name__), 'lock')
+		leach_logger("605x1||%s||%s"%(hdr(current_header,'0000C'), e.__class__.__name__), 'lock')
 		time.sleep(5)
 		exit(0)
 	except Exception as e:
-		print(e.__class__.__name__, "occured. Please inform the Author.\nError code: 00012x-1(%s)"%e.__class__.__name__)
-		leach_logger("00012x-1||"+hdr(current_header,'00012')+'||%s||%s'%(e.__class__.__name__, str(e)), 'lock')
+		print(e.__class__.__name__, "occured. Please inform the Author.\nError code: 0000Cx-1(%s)"%e.__class__.__name__)
+		leach_logger("0000Cx-1||"+hdr(current_header,'0000C')+'||%s||%s'%(e.__class__.__name__, str(e)), 'lock')
 		time.sleep(5)
 		exit(0)
 
 if __name__ == "__main__":
 	_connect_net()
 
-def run_in_local_server(port, host_dir=''):     #func_code= 00013
+def run_in_local_server(port, host_dir=''):     #func_code= 0000D
 	"""opens a directory or a file in localhost server using browser
 
 	port : port number\n
@@ -456,7 +456,7 @@ def run_in_local_server(port, host_dir=''):     #func_code= 00013
 	webbrowser.open_new_tab('http://localhost:%i/%s'%(port, host_dir))
 
 
-def import_paste():      #func_code= 00014
+def import_paste():      #func_code= 0000E
 	"""will import the upload host lib here"""
 	try:pass
 		#from pastebin import send_paste
@@ -481,7 +481,7 @@ import_paste_t.start()
 boss=0
 
 
-def go_prev_dir(link):    #func_code=00014
+'''def go_prev_dir(link):    #func_code=0000E
 	"""returns the previous path str of web link or directory\n
 	**warning: returns only in linux directory format"""
 	link=loc(link,'Linux')
@@ -490,7 +490,7 @@ def go_prev_dir(link):    #func_code=00014
 	# x=link.split('/')
 	else:
 		return '/'.join(link.split('/')[:-2])+'/'
-
+'''
 
 
 _VERSION="5.50001"
@@ -509,8 +509,8 @@ condERR = "Sorry,  I can't understand what you are saying. Just type yes or no. 
 user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
 
 g_mode=False
-# leach_logger('000||00015||~||~||~||input exit code L&infin;ping for unknown reason')
-def safe_input(msg='', input_func=input):     #func_code = 00015
+# leach_logger('000||0000F||~||~||~||input exit code L&infin;ping for unknown reason')
+def safe_input(msg='', input_func=input):     #func_code = 0000F
 	sys_write(str(msg))
 	try:
 		try:
@@ -522,7 +522,7 @@ def safe_input(msg='', input_func=input):     #func_code = 00015
 			except KeyboardInterrupt:
 				raise LeachICancelError
 			except LeachICancelError:
-				leach_logger('000||00015||~||~||~||input exit code L&infin;ping for unknown reason')
+				leach_logger('000||0000F||~||~||~||input exit code L&infin;ping for unknown reason')
 		except EOFError:
 			raise LeachICancelError
 		except KeyboardInterrupt:
@@ -532,7 +532,7 @@ def safe_input(msg='', input_func=input):     #func_code = 00015
 	except KeyboardInterrupt:
 		raise LeachICancelError
 
-def asker(out='', default=None, True_False=(True, False), extra_opt=tuple(), extra_return=tuple()):      #func_code= 00016
+def asker(out='', default=None, True_False=(True, False), extra_opt=tuple(), extra_return=tuple()):      #func_code= 00010
 	"""asks for yes no or equevalent inputs
 	out: printing text to ask tha question *empty string
 	default: default output for empty response *None
@@ -561,7 +561,7 @@ def asker(out='', default=None, True_False=(True, False), extra_opt=tuple(), ext
 
 
 
-def get_file_name(directory, mode= 'dir'):      #func_code= 00017
+def get_file_name(directory, mode= 'dir'):      #func_code= 00011
 	"""[takes a file directory and returns the last last part of the dir (can be file or folder)
 
 	directory: the file directory, only absolute path to support multiple os
@@ -581,7 +581,7 @@ def get_file_name(directory, mode= 'dir'):      #func_code= 00017
 
 
 
-def get_file_ext(directory, mode='dir', no_format='noformat'):      #func_code= 00018
+def get_file_ext(directory, mode='dir', no_format='noformat'):      #func_code= 00012
 	"""to get the extension of a file directory
 
 	directory: file directory relative or direct\n
@@ -594,7 +594,7 @@ def get_file_ext(directory, mode='dir', no_format='noformat'):      #func_code= 
 
 
 
-def reader(direc, read_mode='r'):      #func_code= 00019
+def reader(direc, read_mode='r'):      #func_code= 00013
 	if type(read_mode)!=str:
 		print("Invalid read type. Mode must be a string data")
 		raise TypeError
@@ -618,7 +618,7 @@ def reader(direc, read_mode='r'):      #func_code= 00019
 
 
 
-def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, server_link):      #func_code= 00020
+def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, server_link):      #func_code= 00014
 	print("An update available v"+_latest_version+"("+_latest_size+"), Do you want to update? ")
 	try:
 		reply= safe_input()
@@ -642,7 +642,7 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 			update_response = requests.get(_latest_link, stream=True,headers=current_header)
 		except Exception as e:
 			update_response= False
-			leach_logger('202||%s||%s||err:%s'%(_latest_link, hdr(current_header,'00020'), str(e.__class__.__name__)),'lock')
+			leach_logger('202||%s||%s||err:%s'%(_latest_link, hdr(current_header,'00014'), str(e.__class__.__name__)),'lock')
 
 		delete_last_line()
 		if update_response!=None:
@@ -704,13 +704,13 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 				# remove('')
 		elif update_response!=False:
 			print("Failed to connect to the host server.\nPlease inform the author!!\nError code 202")
-			leach_logger('202||%s||%s||code:%s'%(_latest_link, hdr(current_header,'00020'), str(update_response.status_code)),'lock')
+			leach_logger('202||%s||%s||code:%s'%(_latest_link, hdr(current_header,'00014'), str(update_response.status_code)),'lock')
 
 
 
 _server_version = "5.4"
 
-def god_mode():      #func_code= 00021
+def god_mode():      #func_code= 00015
 	global _server_version
 	if os_isdir('data/projects'): rename('data/projects', 'data/leach_projects')
 	if os_isdir('./projects'): rename('./projects', './Download_Projects')
@@ -721,20 +721,20 @@ def god_mode():      #func_code= 00021
 			if not os_isfile('data/.temp/who_r_u.mp3'):
 				file=requests.get(who_r_u, headers=current_header)
 				if file:
-					writer('who_r_u.mp3','wb',file.content,'data/.temp','00021')
+					writer('who_r_u.mp3','wb',file.content,'data/.temp','00015')
 				else:
 					raise requests.exceptions.ConnectionError
 
 		except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout):
 			print("\033[1;31;40mError code: 605x3\nNo internet connection!\033[0m\nRunning offline mode")
-			leach_logger("605x3||%s||%s||%s"%(hdr(current_header,'00017'),who_r_u, e.__class__.__name__), 'lock')
+			leach_logger("605x3||%s||%s||%s"%(hdr(current_header,'00015'),who_r_u, e.__class__.__name__), 'lock')
 			return 'offline'
 	current_header=header_()
 	# cloud_data_link = 'htt://jhhgj.com'
 	try:
 		file=requests.get(cloud_data_link, headers=current_header)
 		if file:
-			writer('updateL.ext','wb',file.content,'data/.temp','00021')
+			writer('updateL.ext','wb',file.content,'data/.temp','00015')
 			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip())
 
 			# _server_version = server_version
@@ -743,17 +743,17 @@ def god_mode():      #func_code= 00021
 			# time.sleep(500)
 		else:
 			print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode")
-			leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00017'), cloud_data_link, str(file.status_code)), 'lock')
+			leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, str(file.status_code)), 'lock')
 			return 'offline'
 
 		#remove('data/.temp/update.ext')
 	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema) as e:
 		print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode")
-		leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00017'), cloud_data_link, e.__class__.__name__), 'lock')
+		leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, e.__class__.__name__), 'lock')
 		return 'offline'
 	except Exception as e:
-		print(e.__class__.__name__,": Unknown error occured. Error code 00017x-1\nPlease inform the author.")
-		leach_logger("00021x-1||%s||%s||%s"%(e.__class__.__name__,str(e),hdr(current_header,'00021')), 'lock')
+		print(e.__class__.__name__,": Unknown error occured. Error code 00015x-1\nPlease inform the author.")
+		leach_logger("00015x-1||%s||%s||%s"%(e.__class__.__name__,str(e),hdr(current_header,'00015')), 'lock')
 		time.sleep(5)
 		exit(0)
 
@@ -761,7 +761,7 @@ def god_mode():      #func_code= 00021
 	try:
 		file=requests.get(cloud_data_link_global, headers=current_header)
 		if file:
-			writer('updateG.ext','wb',file.content,'data/.temp','00021')
+			writer('updateG.ext','wb',file.content,'data/.temp','00015')
 			exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip())
 
 			# _server_version = server_version
@@ -770,17 +770,17 @@ def god_mode():      #func_code= 00021
 			# time.sleep(500)
 		else:
 			print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode")
-			leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00017'), cloud_data_link, str(file.status_code)), 'lock')
+			leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, str(file.status_code)), 'lock')
 			return 'offline'
 
 		#remove('data/.temp/update.ext')
 	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema) as e:
 		print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode")
-		leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00017'), cloud_data_link, e.__class__.__name__), 'lock')
+		leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, e.__class__.__name__), 'lock')
 		return 'offline'
 	except Exception as e:
-		print(e.__class__.__name__,": Unknown error occured. Error code 00017x-1\nPlease inform the author.")
-		leach_logger("00021x-1||%s||%s||%s"%(e.__class__.__name__,str(e),hdr(current_header,'00021')), 'lock')
+		print(e.__class__.__name__,": Unknown error occured. Error code 00015x-1\nPlease inform the author.")
+		leach_logger("00015x-1||%s||%s||%s"%(e.__class__.__name__,str(e),hdr(current_header,'00015')), 'lock')
 		time.sleep(5)
 		exit(0)
 
@@ -801,7 +801,7 @@ if os_name=='Windows':
 	import mplay4
 
 
-def log_in():      #func_code= 00022
+def log_in():      #func_code= 00016
 	global user_name
 	if boss!=1:
 		userhash=0
@@ -811,7 +811,7 @@ def log_in():      #func_code= 00022
 				user_name=safe_input("Enter username: ")
 			except LeachICancelError:
 				print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
-				leach_logger("0x1||00022||Login exit")
+				leach_logger("0x1||00016||Login exit")
 				exit(0)
 			# print(user_list)
 			userhash=hashlib_sha1(user_name.encode()).hexdigest()
@@ -835,7 +835,7 @@ def log_in():      #func_code= 00022
 
 
 	if not os_exists('data/projects.db'):
-		writer('projects.db','a','','data','00019')
+		writer('projects.db','a','','data','00016')
 	if userhash=='eb23efbb267893b699389ae74854547979d265bd':
 		g_mode='Asuna'
 	return userhash
@@ -850,7 +850,7 @@ except Exception as e:
 	exit()
 
 
-def check_internet(link, f_code, timeout=None):       # f_code= 00023
+def check_internet(link, f_code, timeout=None):       # f_code= 00017
 	"""Check if the connection is available or not
 
 	link: link to check for connection status"""
@@ -862,9 +862,9 @@ def check_internet(link, f_code, timeout=None):       # f_code= 00023
 		if r:
 			return True
 		else:
-			leach_logger('00023||%s||%s||%s||%s'%(link, hdr(current_header, '00023'), f_code, str(r.status_code)))
+			leach_logger('00017||%s||%s||%s||%s'%(link, hdr(current_header, '00017'), f_code, str(r.status_code)))
 	except (requests.exceptions.ConnectionError, requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout) as e:
-		leach_logger('00023||%s||%s||%s'%(link, hdr(current_header, '00023'), f_code))
+		leach_logger('00017||%s||%s||%s'%(link, hdr(current_header, '00017'), f_code))
 		return False
 
 

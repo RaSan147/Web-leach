@@ -937,7 +937,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 							self.decrypto_dat[i][4]= '<b><u>Error code:</u></b> %s <br><b><u>Error string:</u></b> %s <br><b><u>Corrupted Header: </u></b>%s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][5], self.decrypto_dat[i][6])
 							self.decrypto_dat[i][3]
 						
-					if self.decrypto_dat[i][2].startswith('00011x'):
+					if self.decrypto_dat[i][2].startswith('0000Bx'):
 						if self.decrypto_dat[i][2][6]=='1':
 							self.decrypto_dat[i][4]= '<b><u>arg data type:</u></b> %s <br><b><u>Arg:</u></b> "%s" <br><b><u>Called by:</u></b> %s'%(self.decrypto_dat[i][3], '?Failed to convert to string' if self.decrypto_dat[i][4]=='?' else self.decrypto_dat[i][4], self.decrypto_dat[i][5])
 							self.decrypto_dat[i][3]= 'Failed to <i>host server</i> from <i>entered</i> directory<br><b>The directory Arg is not a string</b>'
@@ -945,12 +945,12 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 						if self.decrypto_dat[i][2][6]=='2':
 							self.decrypto_dat[i][2]
 
-					if self.decrypto_dat[i][2].startswith('00012x'):
+					if self.decrypto_dat[i][2].startswith('0000Cx'):
 						if self.decrypto_dat[i][2][6:8]=='-1':
 							self.decrypto_dat[i][4]= '<b><u>Error Name:</u></b> %s <br><b><u>Error string:</u></b> %s <br><b><u>Header Index:</u></b> %s'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5], self.decrypto_dat[i][3])
 							self.decrypto_dat[i][3]= "Failed to connect IP server <i>(retuens user ip)</i><br><b>Unknown Error occured</b>."
 
-					if self.decrypto_dat[i][2]=='00023':
+					if self.decrypto_dat[i][2]=='00017':
 						self.decrypto_dat[i][4] = '<b><u>Link:</u></b><a href="%s" target="_blank"> %s</a><br><b><u>Header index:</u></b> %s <br><b><u>Called by:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][3], self.decrypto_dat[i][4], self.decrypto_dat[i][5])
 						self.decrypto_dat[i][3] = 'Failed to <b>connect</b> to the arg Web page'
 						try:
