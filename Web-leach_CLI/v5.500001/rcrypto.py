@@ -145,6 +145,7 @@ def _decrypt(text,C):
 
 def decrypt(text, key):
 	text+=" "*((8-len(text)%8)%8)
+	
 	text=list(text)
 	key=key[::-1]
 	for c in key:
@@ -152,5 +153,6 @@ def decrypt(text, key):
 		text=text[-2:]+text[:-2]
 
 	return (''.join(text))
+
 
 # print(encrypt(input("X"), input("K")))

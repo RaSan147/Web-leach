@@ -51,9 +51,9 @@ def Cencrypt(text, key):
     os_sys(" ".join([compiled_c, "en"]))
     remove('i.txt')
     remove('k.txt')
-    with open('out.txt') as f:
+    with open('out.txt', 'r') as f:
         returner= f.read()
-    remove('out.txt')
+    remove('out.txt.534678864')
     return returner
         
 def Cdecrypt(text, key):
@@ -66,7 +66,7 @@ def Cdecrypt(text, key):
     os_sys(" ".join([compiled_c, "de"]))
     remove('i.txt')
     remove('k.txt')
-    with open('out.txt') as f:
+    with open('out.txt', 'r') as f:
         returner= f.read()
     remove('out.txt')
     return returner
@@ -246,7 +246,7 @@ def PYdecrypt(texts, key):
 	return '\n'.join(returner)
 
 
-def test(msg=False,key=False, mode = 'C'):
+def test(msg=False,key=False, mode = 'py'):
 	if mode.lower()=='c':
 		encrypt = Cencrypt
 		decrypt = Cdecrypt

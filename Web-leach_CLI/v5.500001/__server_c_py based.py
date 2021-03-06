@@ -115,13 +115,14 @@ import webbrowser
 import RcryptxAsuna2_1_c_py_lines as RxAsuna
 import Number_sys_conv as Nsys
 
-print("testing C program availability")
+print("Stopped testing C program due to unavailability")
 decryptor_lang=None
 try:
 	RxAsuna.Cdecrypt('hello', "world")
 	decryptor_lang= 'C'
 except FileNotFoundError:
 	print("Failed!\nSwitching to Python mode")
+
 
 
 # Default error message template
@@ -746,12 +747,17 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 					self.end_headers()
 					return f
 				if decryptor_lang =='C':
-					temp_dec= RxAsuna.Cdecrypt(dec_raw , decrypto_key)
-					for i in temp_dec.replace('\r\n', '\n').split('\n')[::-1]:
-						if i!='':self.decrypto_dat.append(i[40:].split('||')[:-1])
+					try:
+						temp_dec= RxAsuna.Cdecrypt(dec_raw , decrypto_key)
+						for i in temp_dec.replace('\r\n', '\n').split('\n')[::-1]:
+							if i!='':self.decrypto_dat.append(i[40:].split('||')[:-1])
+					except UnicodeDecodeError:
+						print("Failed!\nEncoding Issue\nSwitching to Python mode")
+						decryptor_lang =None
+
 					#decryptor_lang = 'C'
 					
-				else:
+				if decryptor_lang ==None or decryptor_lang == 'Python':
 					try:
 						for i in dec_raw.replace('\r\n', '\n').split('\n')[::-1]:
 							if i!='':self.decrypto_dat.append(RxAsuna.PYdecrypt(i, decrypto_key)[40:].split('||')[:-1])

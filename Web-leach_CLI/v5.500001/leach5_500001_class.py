@@ -48,7 +48,7 @@ ara_ara= False #to control parody noise
 
 print("LOADINS ASSETS...")
 
-#cloud_data_link='https://raw.githubusercontent.com/Ratulhasan14789/Web-Leach_pub/main/update.txt'#'https://pastebin.com/raw/Sa9hTd0P' #backend server location
+cloud_data_link_global='https://raw.githubusercontent.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(v5.5%2B).txt'#'https://pastebin.com/raw/Sa9hTd0P' #backend server location
 cloud_data_link='https://raw.githubusercontent.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500001).txt'
 user_net_ip='offline'
 import time
@@ -734,8 +734,35 @@ def god_mode():      #func_code= 00021
 	try:
 		file=requests.get(cloud_data_link, headers=current_header)
 		if file:
-			writer('update.ext','wb',file.content,'data/.temp','00021')
-			exec(decrypt(open('data/.temp/update.ext').read(), "lock").strip())
+			writer('updateL.ext','wb',file.content,'data/.temp','00021')
+			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip())
+
+			# _server_version = server_version
+			#print(decrypt(open('data/.temp/update.ext').read().strip(), "lock").strip())
+			#AssertionErrorprint(server_version)
+			# time.sleep(500)
+		else:
+			print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode")
+			leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00017'), cloud_data_link, str(file.status_code)), 'lock')
+			return 'offline'
+
+		#remove('data/.temp/update.ext')
+	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema) as e:
+		print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode")
+		leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00017'), cloud_data_link, e.__class__.__name__), 'lock')
+		return 'offline'
+	except Exception as e:
+		print(e.__class__.__name__,": Unknown error occured. Error code 00017x-1\nPlease inform the author.")
+		leach_logger("00021x-1||%s||%s||%s"%(e.__class__.__name__,str(e),hdr(current_header,'00021')), 'lock')
+		time.sleep(5)
+		exit(0)
+
+
+	try:
+		file=requests.get(cloud_data_link_global, headers=current_header)
+		if file:
+			writer('updateG.ext','wb',file.content,'data/.temp','00021')
+			exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip())
 
 			# _server_version = server_version
 			#print(decrypt(open('data/.temp/update.ext').read().strip(), "lock").strip())
@@ -2206,8 +2233,9 @@ import getpass
 
 
 if run_mod=='offline' :
-	if os_exists('data/.temp/update.ext'):
-		exec(decrypt(open('data/.temp/update.ext').read(), "lock").strip())
+	if os_exists('data/.temp/updateG.ext') and os_exists('data/.temp/updateL.ext'):
+		exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip())
+		exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip())
 	else:
 		print("Failed to startup. Please connet to the internet for the first initialization")
 		leach_logger('0x0')

@@ -1,0 +1,12 @@
+main_link= "https://w11.mangafreak.net/Manga/nisekoi"
+link_startswith= "mangafreak.net"
+file_types = ('zip',)
+file_starts= ""
+sub_dirs = ['.']
+sp_flags = ['dl unzip', 'del dl zip', 'mangafreak']
+sp_extension = ".zip"
+overwrite_bool = True
+dimention = 0
+sequence = True
+Project = "nisekoi"
+dl_done = True
