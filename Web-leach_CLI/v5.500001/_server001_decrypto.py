@@ -47,6 +47,7 @@ table {
   border-collapse: collapse;
   width: 1920px;
   padding: 16px;
+  line-height: 25px;
 }
 
 td, th {

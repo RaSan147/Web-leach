@@ -1,4 +1,8 @@
-<<<<<<<<<<<<<<<<<<<<  VERSION 5.3_class  <<<<<<<<<<<<<<<<<<
+<<<<<<<<<<<<<<<<<<<<  VERSION 5.5_class  <<<<<<<<<<<<<<<<<<
+SP project Names                   Works
+=================     ================================================================
+-Ara_ara_on_fire       `sp_arg_flag['disabe dl cancel'] = True`  Disables download cancellation by adding join thread option
+-Ara_ara_off_fire      `sp_arg_flag['disabe dl cancel'] = False` Enables download cancellation by adding removing thread option [DEFAULT]
 
 
  key -----------------             values

@@ -1,0 +1,12 @@
+main_link= "https://nhentai.net/g/333882"
+link_startswith= "https://nhentai.xxx/g/333882/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= "https://nhentai"
+sub_dirs = ["(C97) [Kuragamo (Tukinowagamo)] Tonari no Chinatsu-chan R 05 - Next Door's Chinatsu-chan R 05 [English] [Team Koinaka]"]
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 0
+sequence = True
+Project = "4 nh 333882"
+dl_done = True

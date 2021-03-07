@@ -1,0 +1,12 @@
+main_link= "https://nhentai.xxx/g/332269/"
+link_startswith= "https://nhentai.xxx/g/332269/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= "https://nhentai"
+sub_dirs = ['(C97) [Kyomu no Uta (Satou Toshio)] Pro no Saimin Oji-san wa Sex shika Dekinai 02 (Bokutachi wa Benkyou ga Dekinai) [English] [Fated Circle]']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 0
+sequence = True
+Project = "kirisu 12"
+dl_done = True

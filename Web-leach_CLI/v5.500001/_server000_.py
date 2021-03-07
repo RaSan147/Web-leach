@@ -1,6 +1,48 @@
-import time
+directory_explorer_header = '''
+<html>
+<style type="text/css">
+body{
+  
+  position: relative;
+  min-height: 100vh;
+}
+html, body, input, textarea, select, button {
+    border-color: #736b5e;
+    color: #e8e6e3;
+    background-color: #181a1b !important
+}
+* {
+    scrollbar-color: #0f0f0f #454a4d;
+}
+a{
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
+  text-decoration: none;
+  color: rgb(64, 164, 247);
+}
 
-from bs4 import BeautifulSoup
+.link{
+  color: #F00;
+  background-color: rgba(146, 146, 146, 0.282);
+}
+
+.file{
+  font-weight: 300;
+  color: rgb(240, 41, 117);
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%%;
+  height: 2.5rem;            /* Footer height */
+}
+</style>
+<head>'''
+
+
+
 
 """HTTP server classes.
 
@@ -108,31 +150,10 @@ import socketserver
 import sys
 import time
 import urllib.parse
-import urllib
 import natsort
 from functools import partial
 
 from http import HTTPStatus
-import webbrowser
-
-import RcryptxAsuna2_1_c_py_lines as RxAsuna
-import Number_sys_conv as Nsys
-
-try:
-	from bs4 import BeautifulSoup as bs
-except:
-	print('BeautifulSoup is not available, please Download it')
-	input()
-	exit(0)
-
-print("Testing C program availability")
-decryptor_lang=None
-try:
-	RxAsuna.Cdecrypt('hello', "world")
-	decryptor_lang= 'C'
-except FileNotFoundError:
-	print("Failed!\nSwitching to Python mode")
-
 
 
 # Default error message template
@@ -362,7 +383,6 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
 		try:
 			self.headers = http.client.parse_headers(self.rfile,
 													 _class=self.MessageClass)
-			print(self.headers)
 		except http.client.LineTooLong as err:
 			self.send_error(
 				HTTPStatus.REQUEST_HEADER_FIELDS_TOO_LARGE,
@@ -675,8 +695,6 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 	def do_GET(self):
 		"""Serve a GET request."""
-		self.response_get = time.time()
-		self.is_get_req = True
 		f = self.send_head()
 		if f:
 			try:
@@ -686,27 +704,11 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 	def do_HEAD(self):
 		"""Serve a HEAD request."""
-		self.response_get = time.time()
-		self.is_get_req = False
 		f = self.send_head()
 		if f:
 			f.close()
 
-	def do_POST(self):
-		"""Serve a POST request."""
-		import logging
-		self.response_get = time.time()
-		self.is_get_req = False
-		content_length = int(self.headers['Content-Length'])
-		post_data = self.rfile.read(content_length) # <--- Gets the data itself
-		print("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n"%(
-				str(self.path), str(self.headers), post_data.decode('utf-8')))
-
-		f = self.send_head()
-		if f:
-			f.close()
-
-	def send_head(self, spid='', scode='', scodepart='', skeyword=''):
+	def send_head(self):
 		"""Common code for GET and HEAD commands.
 
 		This sends the response code and MIME headers.
@@ -717,409 +719,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 		None, in which case the caller has nothing further to do.
 
 		"""
-
-		global decryptor_lang
 		path = self.translate_path(self.path)
-		print(self.path)
-
-		decrypto_header = open('_server001_decrypto.py').read()
-		if self.path.startswith('/search='):
-			spid, scode, scodepart, skeyword = (urllib.parse.unquote(part) for part in self.path[8:].split('+'))
-			
-		
 		f = None
-		r=[]
-		if self.path=='/' or self.path.startswith('/search='):
-			if self.is_get_req:
-				request_time= time.time()
-				decrypto_key = "Asuna" #input("Enter password: ")
-				self.decrypto_dat= []
-				self.PIDs=[]
-				try:
-					with open('data/userlog.leach') as f:
-						read_dec = time.time()
-						dec_raw = f.read()
-				except FileNotFoundError as e:
-					print("NO userlog.leach file found, try Recheck if the file Exists\n\n")
-					enc = sys.getfilesystemencoding()
-					r.append('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" '
-			'"http://www.w3.org/TR/html4/strict.dtd">')
-					r.append('<meta http-equiv="Content-Type" '
-			'content="text/html; charset=%s">' % enc)
-					r.append("""<h1>503 Error Occred</h1>
-					<h2>Failed to execute decryption program (%s occured)</h2>
-					<h1>Failed to load Log file. PLease recheck the file</h1>
-					<p><b>Error message:</b> %s</p>"""%(str(e.__class__.__name__), str(e)))
-					encoded = '\n'.join(r).encode(enc, 'surrogateescape')
-
-					f = io.BytesIO()
-					f.write(encoded)
-					f.seek(0)
-					self.send_response (HTTPStatus.SERVICE_UNAVAILABLE)
-					self.send_header ("Content-type", "text/html; charset=%s" % enc)
-					self.send_header ("Content-Length", str(len(encoded)))
-					self.end_headers()
-					return f
-				if decryptor_lang =='C':
-					try:
-						temp_dec= RxAsuna.Cdecrypt(dec_raw , decrypto_key)
-						for i in temp_dec.replace('\r\n', '\n').split('\n')[::-1]:
-							if i!='':self.decrypto_dat.append(i[40:].split('||')[:-1])
-					except UnicodeDecodeError:
-						print("Failed!\nEncoding Issue\nSwitching to Python mode")
-						decryptor_lang =None
-
-					#decryptor_lang = 'C'
-					
-				if decryptor_lang ==None or decryptor_lang == 'Python':
-					try:
-						for i in dec_raw.replace('\r\n', '\n').split('\n')[::-1]:
-							if i!='':self.decrypto_dat.append(RxAsuna.PYdecrypt(i, decrypto_key)[40:].split('||')[:-1])
-						decryptor_lang = 'Python'
-					except Exception as e:
-						print("can't execute the Decryption program, try Recheck if the file Exists\n\n")
-						enc = sys.getfilesystemencoding()
-						r.append('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" '
-				'"http://www.w3.org/TR/html4/strict.dtd">')
-						r.append('<meta http-equiv="Content-Type" '
-				'content="text/html; charset=%s">' % enc)
-						r.append("""<h1>503 Error Occred</h1>
-						<h2>Failed to execute decryption program (%s occured)</h2>
-						<h1>Failed to decypt Log file. PLease recheck the file</h1>
-						<p><b>Error message:</b> %s</p>"""%(str(e.__class__.__name__), str(e)))
-						encoded = '\n'.join(r).encode(enc, 'surrogateescape')
-
-						f = io.BytesIO()
-						f.write(encoded)
-						f.seek(0)
-						self.send_response (HTTPStatus.SERVICE_UNAVAILABLE)
-						self.send_header ("Content-type", "text/html; charset=%s" % enc)
-						self.send_header ("Content-Length", str(len(encoded)))
-						self.end_headers()
-						return f
-
-				
-				
-				read_dec = time.time()-read_dec
-
-				self.current_sort= 'date_new2old'
-				
-				tables=[]
-				td_t = '<td>%s</td>\n'
-				table_made = time.time()
-				for i in range(len(self.decrypto_dat)):
-					if spid!='' and spid!= self.decrypto_dat[i][1]: continue
-					if scode!='' and scode!= self.decrypto_dat[i][2]: continue
-					if scodepart!='' and scodepart not in self.decrypto_dat[i][2]: continue
-					
-					try:
-						self.decrypto_dat[i][0]= "%s/%s/%s &nbsp&nbsp&nbsp %s:%s:%s" %Nsys.dec_dt(self.decrypto_dat[i][0])
-					except KeyError: pass
-
-					if self.decrypto_dat[i][1] not in self.PIDs: self.PIDs.append(self.decrypto_dat[i][1])
-
-					if self.decrypto_dat[i][2]=='0x0':
-						self.decrypto_dat[i].append('Failed to start up')
-						self.decrypto_dat[i].append("No intenter connection (for online mode) nor Update file found (for offline mode)")
-
-					elif self.decrypto_dat[i][2]=='0x1':
-						self.decrypto_dat[i][3]= '%s (called from %s)' %(self.decrypto_dat[i][4],self.decrypto_dat[i][3])
-						self.decrypto_dat[i][4]= "Exited at %s" %self.decrypto_dat[i][0]
-						# self.decrypto_dat[i]= self.decrypto_dat[i][:5]
-					elif self.decrypto_dat[i][2]=='000':
-						if self.decrypto_dat[i][5]=='f-Stop':
-							temp= " (Called from %s)"%self.decrypto_dat[i][3]
-							temp1= "Input cancelled from \"%s\""%self.decrypto_dat[i][4]
-							temp2= ' (Where %s)'%self.decrypto_dat[i][6]
-							self.decrypto_dat[i][3]= temp1+temp+temp2
-							del temp, temp1, temp2
-							self.decrypto_dat[i][4]= self.decrypto_dat[i][7]
-							#self.decrypto_dat[i]=self.decrypto_dat[i][:5]
-
-							
-
-					elif self.decrypto_dat[i][2]=='001':
-						temp= "<u><b>App V</u></b>"+self.decrypto_dat[i][3]+"<br><u><b>Launched at</u></b>: "+("%s/%s/%s  %s:%s:%s" %Nsys.dec_dt(self.decrypto_dat[i][6]))+"<br><u><b>User Ip:</u></b> "+self.decrypto_dat[i][5]+(
-								"<br><u><b>Timezone:</u></b> %s<br><u><b>Start up latency:</u></b> %s"%(self.decrypto_dat[i][7],self.decrypto_dat[i][8]))
-
-						_temp = eval(self.decrypto_dat[i][4])
-						_temp2=''
-						for key in _temp:
-							_temp2+='<tr><td><b>%s</b></td><td>%s</td></tr>\n'%(key, _temp[key])
-
-						_temp2 = '<table class= "device_info">%s</table>'%_temp2
-						self.decrypto_dat[i][3]=temp
-						self.decrypto_dat[i][4]= _temp2
-						del temp, _temp, _temp2
-						#self.decrypto_dat[i]=self.decrypto_dat[i][:5]
-
-
-					elif self.decrypto_dat[i][2]== '002':
-						self.decrypto_dat[i][4]= "<u><b>Server version:</u></b> "+self.decrypto_dat[i][4]+"<br><b><u>Load latency:</b></u> "+self.decrypto_dat[i][3]
-						self.decrypto_dat[i][3]= "Server connected successfully!"
-						
-					elif self.decrypto_dat[i][2]== '003':
-						# print(self.decrypto_dat[i][4])
-						self.decrypto_dat[i][4] = "<u><b>User Hash: </u></b> "+self.decrypto_dat[i][3]+"<br><u><b>Log in at</u></b> "+"%s/%s/%s %s:%s:%s" %Nsys.dec_dt(self.decrypto_dat[i][4])
-						self.decrypto_dat[i][3] = 'User logged in'
-
-					elif self.decrypto_dat[i][2] == "201":
-						self.decrypto_dat[i][3] = '<i>(Updating app)</i><br>Updating to <b><u>latest version:</u></b> %sb <br><u><b>From:</b></u> %s'%(self.decrypto_dat[i][3],self.decrypto_dat[i][4])
-						self.decrypto_dat[i][4] = '<b><u>Current version:</u></b> %s <br><b><u>Server version:</u></b> %s'%(self.decrypto_dat[i][5], self.decrypto_dat[i][6])
-						
-					elif self.decrypto_dat[i][2] == '202':
-						self.decrypto_dat[i][4]= '<b><u>Update file link:</u></b> %s <br><b><u>Header index:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
-						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Network issue:</u></b> %s'%(self.decrypto_dat[i][5])
-					
-
-					######## to be continued ####################################################
-					elif self.decrypto_dat[i][2].startswith('605x'):
-						while len(self.decrypto_dat[i]) <=4: 
-							self.decrypto_dat[i].append('')
-						#print(self.decrypto_dat[i])
-						if self.decrypto_dat[i][2][4] == '1':
-							self.decrypto_dat[i][4]='<b><u>Header index:</u></b>%s<br><b><u>Error code:</u></b> %s' %(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
-							self.decrypto_dat[i][3]= '<i>Network issue</i> in <b>_connect_net()</b><br>Failed to connect <a href="https://ident.me" target="_blank" rel="noopener noreferrer">https://ident.me</a><br>Failed to obtain user ip<br>Running Offline mode'
-
-						if self.decrypto_dat[i][2][4]== '2':
-							pass #will not be used
-							#depricating soon
-						
-						if self.decrypto_dat[i][2][4]== '3':
-							self.decrypto_dat[i][4] = '<b><u>Header index:</u></b> %s<br><b><u>File link:</u></b> %s<br><b><u>Error code:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]='Failed to download "Who are you" file from net'
-
-						if self.decrypto_dat[i][2][4]== '4':
-							self.decrypto_dat[i][4]= '<b><u>Server link:</u></b> %s<br><b><u>Header index:</u></b> %s <br><b><u>Error code:</u></b> %s'%(self.decrypto_dat[i][4],self.decrypto_dat[i][3], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3] = "Failed to load Update.txt file.<br>Loading <b>offline mode</b>"
-
-						################################################################
-					elif self.decrypto_dat[i][2].startswith('606x'):
-						if self.decrypto_dat[i][2][4] == '1':
-							self.decrypto_dat[i][4]='<b><u>NH link:</u></b> %s<br><b><u>Header index:</u></b> %s' %(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s<br><i>Network issue</i> while connecting <b>nhentai.net</b><br>Trying Proxy server' %self.decrypto_dat[i][3]
-						
-						if self.decrypto_dat[i][2][4]== '2':
-							self.decrypto_dat[i][4]='<b><u>NH link:</u></b> %s<br><b><u>Header index:</u></b> %s' %(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= '<i>Project:</i> while connecting <b>nhentai.xxx</b><br>Returning Failed Code' %self.decrypto_dat[i][3]
-
-
-					elif self.decrypto_dat[i][2].startswith('00000x'):
-						if self.decrypto_dat[i][2][6:9] == '101':
-							if self.decrypto_dat[i][4]=='0':
-								self.decrypto_dat[i][4]="<b><u>File"
-							else:
-								self.decrypto_dat[i][4]="<b><u>Folder"
-
-							self.decrypto_dat[i][4] += ' location: "'+self.decrypto_dat[i][3]+'"</u></b>'
-
-							self.decrypto_dat[i][3]= "Failed to Write or Edit data due to <b>Permission Error</b>"
-						# must me elif
-
-					elif self.decrypto_dat[i][2]=='00003':
-						tempI = 'Failed to remove non-ascii charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Called from:</u></b> %s'%(self.decrypto_dat[i][6], self.decrypto_dat[i][5])
-						self.decrypto_dat[i][4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
-						self.decrypto_dat[i][3]= tempI
-						del tempI
-
-					elif self.decrypto_dat[i][2]=='00006':
-						self.decrypto_dat[i][4] = '<b><u>Package name: </u></b> %s<br><b><u>Pypi internet access: </u></b>%s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
-						self.decrypto_dat[i][3] = 'Failed to <i>install</i> <b>required</b> packages'
-
-					elif self.decrypto_dat[i][2].startswith('00008x'):
-						if self.decrypto_dat[i][2][6:9]=='101':
-							if len(self.decrypto_dat[i])==7:
-								tempI = 'Failed to Write "%s" <b>in</b> "%s" due to <b><i>permission error</i></b>'%(self.decrypto_dat[i][4], self.decrypto_dat[i][6])
-							else: 
-								tempI = 'Failed to create "%s" folder for writing "%s" <b><i>in</i></b> "%s" due to <b><i>permission error</i></b>'%(self.decrypto_dat[i][7],self.decrypto_dat[i][4], self.decrypto_dat[i][6])
-							
-							self.decrypto_dat[i][4] = "<b><u>Write mode:</u></b> %s <br><b><u>Called by:</u></b> %s"%(self.decrypto_dat[i][5], self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= tempI
-							del tempI
-
-						elif self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i].append('<b><u>Provided file name:</u></b> %s'%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= 'Invalid <i>file name</i><br>Replacing <i>\\|:*<>?</i> with <i>-</i> and <i>"</i> with <i>\'</i>'
-
-						elif self.decrypto_dat[i][2][6]=='2':
-							self.decrypto_dat[i].append('<b><u>Provided directory:</u></b> %s'%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3] = 'Invalid <i>Directory</i><br>Replacing <i>\\|:*<>?</i> with <i>-</i> and <i>"</i> with <i>\'</i>'
-
-						elif self.decrypto_dat[i][2][6:8]=='-1':
-							_t ='<b><u>Error code:</u></b> %s <br><b><u>Error string:</u></b><i> %s</i><br><b><u>Called by:</u></b> %s <br><b><u>File name:</u></b> %s <br><b><u>Write mode:</u></b> %s <br><b><u>Directory:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][8], self.decrypto_dat[i][4], self.decrypto_dat[i][5], self.decrypto_dat[i][6], self.decrypto_dat[i][7])
-							self.decrypto_dat[i][3] = '<b>Unknown Error occured</b> while writing <i>%s</i> inside <i>%s</i>'%(self.decrypto_dat[i][5], self.decrypto_dat[i][7])
-
-							self.decrypto_dat[i][4]= _t
-
-							del _t
-
-					if self.decrypto_dat[i][2].startswith('00009x'):
-						if self.decrypto_dat[i][2][6:8]=='-1':
-							self.decrypto_dat[i][4]= '<b><u>Unknown Header:</u></b> %s <b><u>Error string:</u></b> %s'%self.decrypto_dat[i][5], self.decrypto_dat[i][4]
-							self.decrypto_dat[i][3]= '<b>Data CORRUPTION</b><br> <I>Invalid header request found</I><br><b><u>Called by:</u></b> %s<br><i>returning value -1</i>'%self.decrypto_dat[i][3]
-						
-						else:
-							_temp= '<b>Unknown Error occured</b> while searching header index. <br>possible cause: <i>Data Corrupted</i><b><u>Called by:</u></b> %s'%(self.decrypto_dat[i][4])
-							self.decrypto_dat[i][4]= '<b><u>Error code:</u></b> %s <br><b><u>Error string:</u></b> %s <br><b><u>Corrupted Header: </u></b>%s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][5], self.decrypto_dat[i][6])
-							self.decrypto_dat[i][3]
-						
-					if self.decrypto_dat[i][2].startswith('0000Bx'):
-						if self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i][4]= '<b><u>arg data type:</u></b> %s <br><b><u>Arg:</u></b> "%s" <br><b><u>Called by:</u></b> %s'%(self.decrypto_dat[i][3], '?Failed to convert to string' if self.decrypto_dat[i][4]=='?' else self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= 'Failed to <i>host server</i> from <i>entered</i> directory<br><b>The directory Arg is not a string</b>'
-
-						if self.decrypto_dat[i][2][6]=='2':
-							self.decrypto_dat[i][2]
-
-					if self.decrypto_dat[i][2].startswith('0000Cx'):
-						if self.decrypto_dat[i][2][6:8]=='-1':
-							self.decrypto_dat[i][4]= '<b><u>Error Name:</u></b> %s <br><b><u>Error string:</u></b> %s <br><b><u>Header Index:</u></b> %s'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5], self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= "Failed to connect IP server <i>(retuens user ip)</i><br><b>Unknown Error occured</b>."
-
-					if self.decrypto_dat[i][2]=='00017':
-						self.decrypto_dat[i][4] = '<b><u>Link:</u></b><a href="%s" target="_blank"> %s</a><br><b><u>Header index:</u></b> %s <br><b><u>Called by:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][3], self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-						self.decrypto_dat[i][3] = 'Failed to <b>connect</b> to the arg Web page'
-						try:
-							self.decrypto_dat[i][3]+= '<br><b><u>Error code:</u></b> %s'%self.decrypto_dat[i][6]
-
-						except: pass
-
-					if self.decrypto_dat[i][2].startswith('10002x'):
-						if self.decrypto_dat[i][2][6]=='1':
-							temp= eval(self.decrypto_dat[i][5])[0]
-							self.decrypto_dat[i][4]= '<b><u>Header index:</u></b> %s <br><b><u>Dl link:</u></b> <i><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></i>'%(self.decrypto_dat[i][4], temp, temp)
-							self.decrypto_dat[i][3]= '<b><u>Project:</u> "<i>%s</i>"</b><br>Failed to downlaod a file.'%self.decrypto_dat[i][3]
-							try: self.decrypto_dat[i][3]+= '<br><b><u>Error code:</u></b> '+ self.decrypto_dat[i][6]
-							except: pass
-							del temp
-
-						elif self.decrypto_dat[i][2][6]=='2':
-							self.decrypto_dat[i][4]= '<b><u>Header index:</u></b> %s <br><b><u>Dl link:</u></b> <i><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></i>'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= '<b><u>Project:</u> "<i>%s</i>"</b><br>Failed to <b>Unzip</b> downlaoded zip file.'%self.decrypto_dat[i][3]
-
-
-					
-					if self.decrypto_dat[i][2].startswith('10003x'):
-						if self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i][4]= '<b><u>Header index:</u></b> %s <br><b><u>Dl link:</u></b> <i>%s</i>'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							try:
-								self.decrypto_dat[i][4]+= '<br><b><u>Error CODE:</u></b> %s <br><b><u>Error string:</u></b> %s'%(self.decrypto_dat[i][6], self.decrypto_dat[i][7])
-							except: pass
-							self.decrypto_dat[i][3]= '<b><u>Project:</u> "<i>%s</i>"</b><br>Failed to <b>Connect</b> link for <i>indexing<br>Possible cause dead link or no internet</i>.'%self.decrypto_dat[i][3]
-
-					if self.decrypto_dat[i][2].startswith('10005x'):
-						if self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i][4]= '<b><u>NH link:</u></b><i><a href="%s" target="_blank" rel="noopener noreferrer"> %s </a></i><br><b><u>Header index:</u></b> %s '%(self.decrypto_dat[i][4], self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s <br><b><i>is NH</i></b><br>failed to connect nhentai.net site, possible cause wrong link or location blocked or internet issue. Attempting proxy'%(self.decrypto_dat[i][3])
-							
-						elif self.decrypto_dat[i][2][6]== '2':
-							self.decrypto_dat[i][4]= '<b><u>NH link:</u></b><i><a href="%s" target="_blank" rel="noopener noreferrer"> %s </a></i><br><b><u>Header index:</u></b> %s <br><i>[Depricated in 5.4]</i>'%(self.decrypto_dat[i][4], self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s <br><b><i>is NH</i></b><br>failed to connect nhentai.xxx site, possible cause wrong link or internet issue'%(self.decrypto_dat[i][3])
-
-					if self.decrypto_dat[i][2].startswith('10008x'):
-						if self.decrypto_dat[i][2][6]=='0':
-							self.decrypto_dat[i][3]= '<b><u>Project:</u> %s</b><br>Error Fixing began'%self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]= '<b><u>Total files:</u></b> %s <br><b><u>Error files:</u></b> %s'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-
-						elif self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i][3]= '<b><u>CORRUPTION Detected</u></b><br><b><u>Project Name:</u></b> %s'%self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]= '<b>Error file missing</b><br>Some downalod error occured in previous download however the  <b><u>error.txt</u> file is missing</b>'
-
-						elif self.decrypto_dat[i][2][6]=='2':
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s <br><b><u>Error Fixing process complete</u></b>'% self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]= '<b><u>Left errors:</u></b> '+self.decrypto_dat[i][4]
-
-					if self.decrypto_dat[i][2].startswith('11000x'):
-						if self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i].append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was completed</b> '%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= '<h5><b><u>Project was RESET</u></b></h5>'
-
-						elif self.decrypto_dat[i][2][6]=='2':
-							self.decrypto_dat[i].append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was completed</b> '%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= '<h5><b><u>Project is UPDATING</u></b></h5>'
-
-						elif self.decrypto_dat[i][2][6]=='3':
-							self.decrypto_dat[i].append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was Incompleted</b> '%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= '<h5><b><u>Project is RESET</u></b></h5>'
-						
-						elif self.decrypto_dat[i][2][6]=='4':
-							self.decrypto_dat[i].append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was Incompleted</b> '%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= '<h5><b><u>Project is RESUMED</u></b></h5>'
-
-					if self.decrypto_dat[i][2].startswith("10009x"):
-						if self.decrypto_dat[i][2][6:]=='-1':
-							self.decrypto_dat[i][3]='<b><u>Project:</u></b> %s <br><b>UnknownError occured</b>' %self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]= '<b><u>Error Code:</u></b> %s <br><b><u>Error String:</u></b> %s'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-						elif self.decrypto_dat[i][2][6]=='0':
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s <br>Began'%self.decrypto_dat[i][3]
-							self.decrypto_dat[i].append( 'Asking for inputs')
-
-						elif self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i][3]="<b><u>Project:</u></b> %s <br><b>Assinging variables</b>"%self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]= '<b>%s</b> = <i>%s</i>'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-
-
-
-
-
-
-
-
-
-					self.decrypto_dat[i] = self.decrypto_dat[i][:5] #uncomment when done
-					tr='<tr class = "p%s">'%self.decrypto_dat[i][1]
-
-					for j in range(len(self.decrypto_dat[i])):
-						tr+=td_t%self.decrypto_dat[i][j]
-					tr+='</tr>'
-					# print(bs(tr, "html.parser").text)
-
-					if skeyword!='' and skeyword.lower() not in bs(tr, "html.parser").text.lower(): continue
-
-					tables.append(tr)
-
-				table_made= time.time()- table_made
-
-				#self.PIDs= [i for i in self.PIDs]
-				
-				pink= self.PIDs[0::4]
-				Lblue= self.PIDs[1::4]
-				blue= self.PIDs[2::4]
-				purple= self.PIDs[3::4]
-
-
-			enc = sys.getfilesystemencoding()
-			r.append('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" '
-				'"http://www.w3.org/TR/html4/strict.dtd">')
-			r.append('<meta http-equiv="Content-Type" '
-				'content="text/html; charset=%s">' % enc)
-
-			if self.is_get_req:
-				r.append(decrypto_header%(str(pink), str(Lblue), str(blue), str(purple), '\n'.join(tables)))
-				r.append("""\n<hr>\n</body>\n<footer id="footer"><br><br><br><br><hr><hr>\n<p style="color: darkgray;">Made by Ratul Hasan with Web leach</p>\n<br><p>[Server] %i Results Arranged in %ss<br></p>\n<br><p>[Server] Decrypted in %ss (%s powered)<br></p>\n<br><p>[Server] Table made in %ss<br></p>\n<br><p id="render"></p><br>\n<br><p id="response"></p><br>\n</footer> <script>var response_get = %s; var response_send = %s;
-				
-				document.getElementById('response').innerHTML="[Browser] Sent and rendered in " + ((Date.now()/1000)- response_get)+'s';
-				document.getElementById('render').innerHTML="[Browser] Rendered in "+((Date.now()/1000)- response_send)+'s';</script></html> \n"""%(len(self.decrypto_dat), str(time.time()-request_time), read_dec, decryptor_lang, str(table_made), str(self.response_get), str(time.time())))
-
-
-			# print(self.PIDs)
-			encoded = '\n'.join(r).encode(enc, 'surrogateescape')
-
-			f = io.BytesIO()
-			f.write(encoded)
-			f.seek(0)
-			self.send_response(HTTPStatus.OK)
-			self.send_header("Content-type", "text/html; charset=%s" % enc)
-			self.send_header("Content-Length", str(len(encoded)))
-			self.end_headers()
-			return f
-
-			
-
-		elif self.path.startswith('/sPID='):
-			web_args= self.path[1:].split('&')
-
-		elif os.path.isdir(path):
+		if os.path.isdir(path):
 			parts = urllib.parse.urlsplit(self.path)
 			if not parts.path.endswith('/'):
 				# redirect browser - doing basically what apache does
@@ -1200,7 +802,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 				HTTPStatus.NOT_FOUND,
 				"No permission to list directory")
 			return None
-		_list= natsort.realsorted(_list, reverse=True)
+		_list= natsort.natsorted(_list,  key= lambda x: x.lower())
 		r = []
 		try:
 			displaypath = urllib.parse.unquote(self.path,
@@ -1212,9 +814,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 		title = 'Inside %s' % displaypath
 		r.append('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" '
 				 '"http://www.w3.org/TR/html4/strict.dtd">')
+		r.append(directory_explorer_header)
 		r.append('<meta http-equiv="Content-Type" '
 				 'content="text/html; charset=%s">' % enc)
-		r.append(directory_explorer_header)
 		r.append('<title>%s</title>\n</head>' % title)
 		r.append('<body>\n<h1>All files and folders in %s</h1>' % displaypath)
 		r.append('<hr>\n<ul>')
@@ -1712,11 +1314,10 @@ if __name__ == '__main__':
 						help='Specify alternative directory '
 						'[default:current directory]')
 	parser.add_argument('port', action='store',
-						default=8090, type=int,
+						default=8000, type=int,
 						nargs='?',
 						help='Specify alternate port [default: 8000]')
 	args = parser.parse_args()
-	# webbrowser.open('http://localhost:%i'%args.port)
 	if args.cgi:
 		handler_class = CGIHTTPRequestHandler
 	else:

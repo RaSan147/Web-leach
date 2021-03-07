@@ -1,0 +1,12 @@
+main_link= "https://nhentai.xxx/g/301375/"
+link_startswith= "https://nhentai.xxx/g/301375/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= "https://nhentai"
+sub_dirs = ['(C95) [Project Harakiri (Kaishaku)] BOKUTACHIHA SENSEIMO URUKAMO KAWAII (Bokutachi wa Benkyou ga Dekinai) [English] {Doujins.com}']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 0
+sequence = True
+Project = "kirisu 5"
+dl_done = True

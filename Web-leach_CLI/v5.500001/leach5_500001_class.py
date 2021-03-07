@@ -508,6 +508,8 @@ condERR = "Sorry,  I can't understand what you are saying. Just type yes or no. 
 
 user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
 
+sp_arg_flag={'disabe dl cancel' : False, }
+
 g_mode=False
 # leach_logger('000||0000F||~||~||~||input exit code L&infin;ping for unknown reason')
 def safe_input(msg='', input_func=input):     #func_code = 0000F
@@ -913,7 +915,7 @@ class web_leach:
 		self.from_file= False
 		self.page_error = 0
 
-		self.special_starts ={'nh':'https://nhentai\.(net)|(to)/g/',
+		self.special_starts ={'nh':'https://nhentai\.(net)|(to)|(xxx)/g/',
 		'mangafreak':'https://w[\d]+\.mangafreak.net/(M|m)anga/',
 		'nh_sc':'^nh (\d+)$',
 		'mf_sc':'^mf (.+)$',
@@ -1514,7 +1516,7 @@ class web_leach:
 				if self.dl_done:
 					print('It seems  the old prject download was complete!!')
 					try:
-						temp= asker(out='\u29bf Do you want to get updated data from the project link?\n\u29bf If you want make a fresh start with that project name type \u001b[1m\u001b[4m\u001b[7mfresh\033[0m/\u001b[1m\u001b[4m\u001b[7mf\033[0m\n\u29bf To open the project in Browser enter \u001b[1m\u001b[4m\u001b[7mx\033[0m\n\u001b[33;1m  >> \033[0m',extra_opt=('x','fresh', 'f'), extra_return=('run','fresh', 'fresh')) #Do you want make a fresh start with that project name??\n\033[1;33mWarning!\033[0m last project data will be erased\n(downloaded files will be safe, unless the program replaces the files with new ones)\n\033[32m>> \033[0m'):
+						temp= asker(out='\u29bf Do you want to get updated data from the project link?\n\u29bf If you want make a fresh start with that project name type \u001b[1m\u001b[4m\u001b[7m fresh \033[0m/\u001b[1m\u001b[4m\u001b[7m f \033[0m\n\u29bf To open the project in Browser enter \u001b[1m\u001b[4m\u001b[7m x \033[0m\n\u001b[33;1m  >> \033[0m',extra_opt=('x','fresh', 'f'), extra_return=('run','fresh', 'fresh')) #Do you want make a fresh start with that project name??\n\033[1;33mWarning!\033[0m last project data will be erased\n(downloaded files will be safe, unless the program replaces the files with new ones)\n\033[32m>> \033[0m'):
 						if temp=='run':
 							if 'mangafreak' in self.sp_flags:
 								self.all_list=[]
@@ -1552,7 +1554,7 @@ class web_leach:
 					del temp
 				else:
 					try:
-						temp= asker("\u29bf Do you want to resume the Project '%s'?\nyes/y to resume\n\u29bf \u001b[1m\u001b[4m\u001b[7mfresh\033[0m/\u001b[1m\u001b[4m\u001b[7mf\033[0m\n to Start fresh (\033[1;33mwarning! last project data will be erased \033[0m(downloaded files will be safe, unless the program replaces the files with new ones)\n\u001b[33;1m  >> \033[0m"%self.Project, extra_opt=('f','fresh'), extra_return=('fresh','fresh'))
+						temp= asker("\u29bf Do you want to resume the Project '%s'?\nyes/y to resume\n\u29bf \u001b[1m\u001b[4m\u001b[7m fresh \033[0m/\u001b[1m\u001b[4m\u001b[7m f \033[0m\n to Start fresh (\033[1;33mwarning! last project data will be erased \033[0m(downloaded files will be safe, unless the program replaces the files with new ones)\n\u001b[33;1m  >> \033[0m"%self.Project, extra_opt=('f','fresh'), extra_return=('fresh','fresh'))
 					except LeachICancelError:
 						print("\n\u001b[33;1mCancellation command entered.\nReturning to main options\u001b[0m")
 						leach_logger("000||11000||%s||f-Stop||was_paused||don't want to resume proj or anything"%self.Project)
@@ -1586,7 +1588,7 @@ class web_leach:
 			print('Insufiicient data!\n')
 			self.corruptions+=[0]
 	def main(self):      #func_code= 10009
-		global death
+		global death, sp_arg_flag
 		"""runs the mainloop of the projects runtime code"""
 		self.__init__()
 
@@ -1609,6 +1611,16 @@ class web_leach:
 					sys_exit(0)
 				if self.Project=='':
 					print('You must enter a Project name here.')
+				elif self.Project == '-Ara_ara_on_fire':
+					sp_arg_flag['disabe dl cancel'] = True
+					print('Disabled download cancellation by adding join thread option')
+					return 0
+
+				elif self.Project == '-Ara_ara_off_fire':
+					sp_arg_flag['disabe dl cancel'] = False
+					print('Enabled download cancellation by adding removing thread option [DEFAULT]')
+					return 0
+					
 				else:
 					self.Project= self.Project
 					break
@@ -1860,7 +1872,7 @@ class web_leach:
 
 					if self.check_sp_links(self.main_link,'mangafreak'):
 						print("mangafreak link detected!!")
-						is_mangafreak=asker("\u29bf Do you want to download manga images from this links?? (\u001b[1m\u001b[4m\u001b[7my\033[0m/\u001b[1m\u001b[4m\u001b[7mn\033[0m)\n>> ")
+						is_mangafreak=asker("\u29bf Do you want to download manga images from this links?? (\u001b[1m\u001b[4m\u001b[7m y \033[0m/\u001b[1m\u001b[4m\u001b[7m n \033[0m)\n>> ")
 						if is_mangafreak:
 							will_unzip=asker("\nThe download files are in zip format.\n\u29bf Do you wish to Extract them?\n>> ")
 
@@ -1872,13 +1884,13 @@ class web_leach:
 							self.file_types=('zip',)
 							self.file_starts=''
 
-							leach_logger('10009x1||%s||is_mangafreak||%s'%(self.Project,str(self.sp_flags)),user_name)
+							leach_logger('10009x1||%s||is_mangafreak.sp_flags||%s'%(self.Project,str(self.sp_flags)),user_name)
 							# sub_links=''
 							#exit(0)
 
 					if  self.check_sp_links(self.main_link,'nh'): #main_link.startswith('https://nhentai.net/g/') or main_link.startswith('https://nhentai.to/g/'):
 						print("nhentai link detected!!")
-						is_nh=asker("\u29bf Do you want to download doujin images from this links?? (\u001b[1m\u001b[4m\u001b[7my\033[0m/\u001b[1m\u001b[4m\u001b[7mn\033[0m)\n>> \n( ͡° ͜ʖ ͡°)\t")
+						is_nh=asker("\u29bf Do you want to download doujin images from this links?? (\u001b[1m\u001b[4m\u001b[7m y \033[0m/\u001b[1m\u001b[4m\u001b[7m n \033[0m)\n>> \n( ͡° ͜ʖ ͡°)\t")
 						####( io )
 						if is_nh:
 							if os_name=='Windows' and ara_ara:
@@ -1893,7 +1905,7 @@ class web_leach:
 								#sub_dirs.append(title.replace('/','-').replace('?','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-'))
 								self.file_types=img
 								self.file_starts='https://nhentai'
-								leach_logger('project||%s||is_nh'%(self.Project),user_name)
+								leach_logger('10009x1||%s||is_nh||True'%(self.Project),user_name)
 						'''elif is_nh!='n':
 							print('invalid input!! the program will break in 3seconds')
 							time.sleep(3)
@@ -2179,13 +2191,34 @@ class web_leach:
 		t10.start()
 		t99.start()
 
+		if sp_arg_flag['disabe dl cancel']== True:
+			try:
+				t11.join()
+				t2.join()
+				t3.join()
+				t4.join()
+				t5.join()
+				t6.join()
+				t7.join()
+				t8.join()
+				t9.join()
+				t10.join()
+				t99.join()
+			
+			except EOFError:
+				print("Hard cancel command entered! stopping")
+				self.break_all = True
+			except KeyboardInterrupt:
+				print("Hard cancel command entered! stopping")
+				self.break_all = True
+
 		will_open = None
 
 		if not 'mangafreak' in self.sp_flags:
 			#print(True)
 			first_page=make_pages(self.all_list,self.sub_dirs, self.Project, self.sequence)
 
-		while any([t11.is_alive(),t2.is_alive(),t3.is_alive(),t4.is_alive(),t5.is_alive(),t6.is_alive(),t7.is_alive(),t8.is_alive(),t9.is_alive(),t10.is_alive(), t99.is_alive()]):
+		while self.break_all==False and any([t11.is_alive(),t2.is_alive(),t3.is_alive(),t4.is_alive(),t5.is_alive(),t6.is_alive(),t7.is_alive(),t8.is_alive(),t9.is_alive(),t10.is_alive(), t99.is_alive()]):
 			try:
 				will_open= safe_input()
 				# print([t11.is_alive(),t2.is_alive(),t3.is_alive(),t4.is_alive(),t5.is_alive(),t6.is_alive(),t7.is_alive(),t8.is_alive(),t9.is_alive(),t10.is_alive(), t99.is_alive()])
