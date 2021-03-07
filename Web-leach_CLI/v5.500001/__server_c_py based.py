@@ -1,5 +1,7 @@
 import time
 
+from bs4 import BeautifulSoup
+
 """HTTP server classes.
 
 Note: BaseHTTPRequestHandler doesn't implement any HTTP request; see
@@ -106,6 +108,7 @@ import socketserver
 import sys
 import time
 import urllib.parse
+import urllib
 import natsort
 from functools import partial
 
@@ -115,7 +118,14 @@ import webbrowser
 import RcryptxAsuna2_1_c_py_lines as RxAsuna
 import Number_sys_conv as Nsys
 
-print("Stopped testing C program due to unavailability")
+try:
+	from bs4 import BeautifulSoup as bs
+except:
+	print('BeautifulSoup is not available, please Download it')
+	input()
+	exit(0)
+
+print("Testing C program availability")
 decryptor_lang=None
 try:
 	RxAsuna.Cdecrypt('hello', "world")
@@ -696,7 +706,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 		if f:
 			f.close()
 
-	def send_head(self):
+	def send_head(self, spid='', scode='', scodepart='', skeyword=''):
 		"""Common code for GET and HEAD commands.
 
 		This sends the response code and MIME headers.
@@ -710,12 +720,16 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 		global decryptor_lang
 		path = self.translate_path(self.path)
+		print(self.path)
 
 		decrypto_header = open('_server001_decrypto.py').read()
+		if self.path.startswith('/search='):
+			spid, scode, scodepart, skeyword = (urllib.parse.unquote(part) for part in self.path[8:].split('+'))
+			
 		
 		f = None
 		r=[]
-		if self.path=='/':
+		if self.path=='/' or self.path.startswith('/search='):
 			if self.is_get_req:
 				request_time= time.time()
 				decrypto_key = "Asuna" #input("Enter password: ")
@@ -794,9 +808,12 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 				td_t = '<td>%s</td>\n'
 				table_made = time.time()
 				for i in range(len(self.decrypto_dat)):
-					# self.decrypto_dat[i]= self.decrypto_dat[i]
+					if spid!='' and spid!= self.decrypto_dat[i][1]: continue
+					if scode!='' and scode!= self.decrypto_dat[i][2]: continue
+					if scodepart!='' and scodepart not in self.decrypto_dat[i][2]: continue
+					
 					try:
-						self.decrypto_dat[i][0]= "%s/%s/%s %s:%s:%s" %Nsys.dec_dt(self.decrypto_dat[i][0])
+						self.decrypto_dat[i][0]= "%s/%s/%s &nbsp&nbsp&nbsp %s:%s:%s" %Nsys.dec_dt(self.decrypto_dat[i][0])
 					except KeyError: pass
 
 					if self.decrypto_dat[i][1] not in self.PIDs: self.PIDs.append(self.decrypto_dat[i][1])
@@ -822,15 +839,15 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 							
 
 					elif self.decrypto_dat[i][2]=='001':
-						temp= "<u><b>App V</u></b>"+self.decrypto_dat[i][3]+"<br><u><b>Launched at</u></b>: "+("%s/%s/%s %s:%s:%s" %Nsys.dec_dt(self.decrypto_dat[i][6]))+"<br><u><b>User Ip:</u></b> "+self.decrypto_dat[i][5]+(
+						temp= "<u><b>App V</u></b>"+self.decrypto_dat[i][3]+"<br><u><b>Launched at</u></b>: "+("%s/%s/%s  %s:%s:%s" %Nsys.dec_dt(self.decrypto_dat[i][6]))+"<br><u><b>User Ip:</u></b> "+self.decrypto_dat[i][5]+(
 								"<br><u><b>Timezone:</u></b> %s<br><u><b>Start up latency:</u></b> %s"%(self.decrypto_dat[i][7],self.decrypto_dat[i][8]))
 
 						_temp = eval(self.decrypto_dat[i][4])
 						_temp2=''
 						for key in _temp:
-							_temp2+='<tr><td width="200px"><b>%s</b></td><td>%s</td></tr>\n'%(key, _temp[key])
+							_temp2+='<tr><td><b>%s</b></td><td>%s</td></tr>\n'%(key, _temp[key])
 
-						_temp2 = '<table>%s</table>'%_temp2
+						_temp2 = '<table class= "device_info">%s</table>'%_temp2
 						self.decrypto_dat[i][3]=temp
 						self.decrypto_dat[i][4]= _temp2
 						del temp, _temp, _temp2
@@ -1044,9 +1061,11 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 					tr='<tr class = "p%s">'%self.decrypto_dat[i][1]
 
 					for j in range(len(self.decrypto_dat[i])):
-						if j == 3: tr += '<td width= "35%%">%s</td>'%self.decrypto_dat[i][j]
-						else: tr+=td_t%self.decrypto_dat[i][j]
+						tr+=td_t%self.decrypto_dat[i][j]
 					tr+='</tr>'
+					# print(bs(tr, "html.parser").text)
+
+					if skeyword!='' and skeyword.lower() not in bs(tr, "html.parser").text.lower(): continue
 
 					tables.append(tr)
 
@@ -1688,7 +1707,7 @@ if __name__ == '__main__':
 						nargs='?',
 						help='Specify alternate port [default: 8000]')
 	args = parser.parse_args()
-	webbrowser.open('http://localhost:%i'%args.port)
+	# webbrowser.open('http://localhost:%i'%args.port)
 	if args.cgi:
 		handler_class = CGIHTTPRequestHandler
 	else:

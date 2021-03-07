@@ -9,3 +9,4 @@ overwrite_bool = False
 dimention = 0
 sequence = True
 Project = "nisekoi"
+dl_done = True

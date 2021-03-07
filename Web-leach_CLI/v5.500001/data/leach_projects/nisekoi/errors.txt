@@ -1,1 +1,4 @@
-['http://images.mangafreak.net:8080/downloads/nisekoi_6', 0, '124']
+['http://images.mangafreak.net:8080/downloads/nisekoi_18', 0, '14']
+['http://images.mangafreak.net:8080/downloads/nisekoi_35', 0, '120']
+['http://images.mangafreak.net:8080/downloads/nisekoi_99', 0, '25']
+['http://images.mangafreak.net:8080/downloads/nisekoi_213', 0, '132']

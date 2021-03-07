@@ -53,11 +53,27 @@ td, th {
   border: 1px solid rgb(120, 111, 98);
   text-align: left;
   padding: 8px;
-  max-width:2%% !important;
+ overflow-wrap: break-word;
 }
 
-td, th{
- overflow-wrap: break-word;
+#main_table td:nth-child(1):not(.device_info td){
+
+  width: 230px;
+}
+
+#main_table td:nth-child(2):not(.device_info td){
+  text-align: center;
+  width: 55px;
+}
+
+#main_table td:nth-child(3):not(.device_info td){
+  text-align: center;
+  width: 100px;
+}
+
+.device_info{
+	width: 800px;
+
 }
 
 #footer {
@@ -98,10 +114,10 @@ td, th{
 		<tr>
 			<th>Time</th>
 			<th>PID</th>
-			<th>Code</th>
+			<th>Code <I>[HEX]</I></th>
 			<th>Message</th>
 			<th>INFO</th>
-		  </tr>
+		</tr>
 		%s
 	</table>
 	</div>
@@ -114,15 +130,9 @@ td, th{
 		var sCodePart = encodeURIComponent(document.getElementById("Search_Code_part").value);
 		var sKeyword = encodeURIComponent(document.getElementById('Search_keywords').value);
 
-    var search_http = new XMLHttpRequest();
-    search_http.open("POST", "/", true);
-    search_http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    var params = "search=" + "sPID="+sPID+'&sCode='+sCode+'&sCodePart='+sCodePart+'&sKeyword='+sKeyword; // probably use document.getElementById(...).value
-    
-	search_http.send(params);
-    search_http.onload = function() {
-        alert(search_http.responseText);
-    }
+		var params = "search="+sPID+'+'+sCode+'+'+sCodePart+'+'+sKeyword; // probably use document.getElementById(...).value
+		
+		window.open(params,"_self")
 	}
 
 	for (i = 0; i < pink.length; i++){

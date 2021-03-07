@@ -2199,7 +2199,7 @@ class web_leach:
 			leach_logger("000||10009||%s||D-Stop||Downloaded-%i | Error-%i"%(self.Project, self.done, self.errors))
 		else:
 			if 'mangafreak' in self.sp_flags:
-				sub_dirs = natsort.natsorted([get_file_name(i[0], 'url').split('.')[0] for i in all_list], key= lambda x: x.lower())
+				sub_dirs = natsort.natsorted([get_file_name(i[0], 'url').split('.')[0] for i in self.all_list], key= lambda x: x.lower())
 				all_list =[]
 				for i in range(len(sub_dirs)):
 					try:
@@ -2208,7 +2208,7 @@ class web_leach:
 							if os_isfile('Download_projects/'+Project+'/'+sub_dirs[i]+'/'+j) and not j.endswith('.html'):
 								all_list.append([j,i])
 					except OSError: continue
-				first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
+				first_page=make_pages(all_list,sub_dirs, self.Project, True)
 
 			if will_open=='x':
 				run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
