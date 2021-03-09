@@ -1,9 +1,14 @@
 <<<<<<<<<<<<<<<<<<<<  VERSION 5.5_class  <<<<<<<<<<<<<<<<<<
-SP project Names                   Works
-=================     ================================================================
--Ara_ara_on_fire       `sp_arg_flag['disabe dl cancel'] = True`  Disables download cancellation by adding join thread option
--Ara_ara_off_fire      `sp_arg_flag['disabe dl cancel'] = False` Enables download cancellation by adding removing thread option [DEFAULT]
+Index    SP project Names                   Works
+======   =================      ================================================================
+  1    -enable-dl-thread       `sp_arg_flag['disable dl cancel'] = True`  Disables download cancellation by adding join thread option
+  2    -disable-dl-thread      `sp_arg_flag['disable dl cancel'] = False` Enables download cancellation by adding removing thread option [DEFAULT]
 
+  3    -disable-dl-get         `sp_arg_flag['disable dl get'] = True`     Disabled download save by using requests.head
+  4    -enable-dl-get          `sp_arg_flag['disable dl get'] = False`    Enabled download save by using requests.get [DEFAULT]
+
+  -3   -D-dl                   same as 3
+  -4   -E-dl                   same as 4
 
  key -----------------             values
 ========              =================================================================
@@ -181,6 +186,8 @@ CON                    \|:*"><?
                           ||Project name||Task or info
               1  >>>  Project variables
                           ||Project name||Var||Value
+              2  >>>  Indexing Started
+                          ||Project name||Number of sub links
               -1 >>>  Unknown Error occured in the Indexing Threads
                           ||Project name||ErrorName||Error string
                 

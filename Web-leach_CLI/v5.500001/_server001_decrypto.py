@@ -72,6 +72,10 @@ td, th {
   width: 100px;
 }
 
+#main_table td:nth-child(5):not(.device_info td){
+  width: 850px;
+}
+
 .device_info{
 	width: 800px;
 

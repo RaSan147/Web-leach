@@ -1051,12 +1051,20 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 							self.decrypto_dat[i][3]='<b><u>Project:</u></b> %s <br><b>UnknownError occured</b>' %self.decrypto_dat[i][3]
 							self.decrypto_dat[i][4]= '<b><u>Error Code:</u></b> %s <br><b><u>Error String:</u></b> %s'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
 						elif self.decrypto_dat[i][2][6]=='0':
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s <br>Began'%self.decrypto_dat[i][3]
-							self.decrypto_dat[i].append( 'Asking for inputs')
+							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s <br>Name entered'%self.decrypto_dat[i][3]
+							self.decrypto_dat[i][4]+='<br>Asking for inputs'
 
 						elif self.decrypto_dat[i][2][6]=='1':
 							self.decrypto_dat[i][3]="<b><u>Project:</u></b> %s <br><b>Assinging variables</b>"%self.decrypto_dat[i][3]
 							self.decrypto_dat[i][4]= '<b>%s</b> = <i>%s</i>'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
+
+						elif self.decrypto_dat[i][2][6]=='2':
+							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s <br>Indexing Start'%self.decrypto_dat[i][3]
+							self.decrypto_dat[i][4]= '<b><u>Total links:</u></b> %s'%self.decrypto_dat[i][4]
+
+						elif self.decrypto_dat[i][2][6]=='3':
+							self.decrypto_dat[i][3]="<b><u>Project:</u></b> %s <br><b>Indexing complete</b>"%self.decrypto_dat[i][3]
+							self.decrypto_dat[i][4]= '<b><u>Indexed links:</u></b> %s <br><b><u>FOund results:</u></b> %s '%(self.decrypto_dat[i][4], self.decrypto_dat[i][5]) 
 
 
 

@@ -1,2 +1,0 @@
-['https://cdn.nhentai.xxx/g/1762955/6.jpg', 0, '138']
-['https://cdn.nhentai.xxx/g/1762955/3.jpg', 0, '146']
