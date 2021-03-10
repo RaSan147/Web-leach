@@ -81,6 +81,9 @@ td, th {
 
 }
 
+#stats{
+  line-height: 40px;
+
 #footer {
   position: absolute;
   bottom: 0;
@@ -96,7 +99,8 @@ td, th {
 
 
 <body>
-	<form>
+	<table><tr><td>
+		<form>
 		
 		<label for="Process_id">Process ID:</label>
 		<input type="text" name="Process_id" id="Process_id" value=""><br><br>
@@ -113,6 +117,12 @@ td, th {
 		<input type="button" value="Submit" onclick= search_request()>
 
 	</form> 
+	</td>
+	<td>
+		%s
+	</td>
+</tr></table>
+	
 
 	<div style='padding: 16px;'>
 	<table id='main_table'>

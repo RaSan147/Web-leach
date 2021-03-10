@@ -1,4 +1,5 @@
-from leach5_4_class import *
+from leach5_500001_class import *
+
 run_server(port)
 def main():
 	while True:
@@ -133,6 +134,7 @@ def main():
 					else:
 						print("can't generate web pages offline from incomplete manga freak download")
 				else:
+					exec(open('make_html.py').read(), globals())
 					first_page=make_pages(all_list,sub_dirs, Project, True)
 
 				

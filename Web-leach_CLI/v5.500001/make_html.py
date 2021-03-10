@@ -6,13 +6,7 @@ sub_page_template="""<!DOCTYPE html>
 
 <head>
   <title></title>
-  <script type="text/javascript">
-  var images_loc = %s;
-  var pages_list = %s;
-  var current_page_index = %i;
-  var proj_name= '%s';
-  document.title = pages_list[current_page_index];
-  </script>
+
   <style type="text/css">
     .container {
       margin: 80px auto;
@@ -168,6 +162,7 @@ sub_page_template="""<!DOCTYPE html>
       color: #ccc;
       padding: 10px 0;
       height: 150px;
+	    overflow-wrap: break-word;
     }
 
     /* Add Animation */
@@ -303,8 +298,8 @@ sub_page_template="""<!DOCTYPE html>
   <h4 style="color: #dbdee0d5;">Customize Your Page For Your Desired Manga</h4>
   <br>
   <select id="pageFormats">
-  <option value="noS" id='spacer'>No space</option>
   <option value="shortS" id ='spacer'>Short space</option>
+  <option value="noS" id='spacer'>No space</option>
   </select>
   <br><br><br><br>
   <label class="containerR" style="color: #bbb;">Border Enabled
@@ -356,6 +351,12 @@ sub_page_template="""<!DOCTYPE html>
 </footer>
 
 <script type="text/javascript">
+
+  var images_loc = %s;
+  var pages_list = %s;
+  var current_page_index = %i;
+  var proj_name= '%s';
+  document.title = pages_list[current_page_index];
 
   document.getElementById('go2main').href= '../'+proj_name+'.html';
 
@@ -412,7 +413,7 @@ sub_page_template="""<!DOCTYPE html>
       
     }
     
-    page_direction.innerHTML+='&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'
+    page_direction.innerHTML+='<span style="padding : 15%%;"></span>'
 
     if (current_page_index != pages_list.length-1){
       var next_a= document.createElement('A');
@@ -506,9 +507,11 @@ sub_page_template="""<!DOCTYPE html>
 
 
       var LArrow = document.getElementById('LARROW');
+      LArrow.style.cursor= "pointer";
+      LArrow.style.padding='7px';
       LArrow.style.backgroundColor = '#6495ED';
       if (modal_img_indx == 0){LArrow.style.backgroundColor= '#999999';}
-      LArrow.innerText='\\u00A0\\u00A0\\u00A0<\\u00A0\\u00A0\\u00A0';
+      LArrow.innerText='\\u00A0\\u00A0\\u00A0< Prev\\u00A0\\u00A0\\u00A0';
       LArrow.onclick = function(){ 
         if (modal_img_indx != 0){
           modal_img_indx-=1;
@@ -532,9 +535,11 @@ sub_page_template="""<!DOCTYPE html>
       
 
       var RArrow = document.getElementById('RARROW');
+      RArrow.style.cursor= "pointer";
+      RArrow.style.padding='7px';
       RArrow.style.backgroundColor = '#6495ED';
       if (modal_img_indx+1 == js_img_src.length){RArrow.style.backgroundColor= '#999999';}
-      RArrow.innerText='\\u00A0\\u00A0\\u00A0>\\u00A0\\u00A0\\u00A0'
+      RArrow.innerText='\\u00A0\\u00A0\\u00A0Next >\\u00A0\\u00A0\\u00A0'
       RArrow.onclick = function(){
           if (modal_img_indx+1 != js_img_src.length){
             modal_img_indx+=1;

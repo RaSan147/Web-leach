@@ -996,7 +996,7 @@ class web_leach:
 						if sp_arg_flag['disable dl get']==True:
 							file=requests.head(i[0], headers= current_header, timeout=2)
 						else:
-							file=requests.head(i[0], headers= current_header, timeout=2, stream= (not is_error))
+							file=requests.get(i[0], headers= current_header, timeout=2, stream= (not is_error))
 						if file:
 							if sp_arg_flag['disable dl get']!=True:
 								# clear the file
@@ -2179,8 +2179,6 @@ class web_leach:
 					leach_logger("10009x-1||%s||%s||%s"%(self.Project, e.__class__.__name__, str(e)), user_name)
 					time.sleep(5)
 					exit(0)
-					
-			leach_logger("10009x3||%s||%i||%i"%(self.Project, len(self.sub_dirs), len(self.all_list)), user_name)
 
 			
 
@@ -2190,6 +2188,8 @@ class web_leach:
 			writer('projects.db','a',self.Project+'\n','data','10009')
 
 		self.all_list2 = remove_duplicate(self.all_list)
+
+		leach_logger("10009x3||%s||%i||%i"%(self.Project, len(self.sub_dirs), len(self.all_list)), user_name)
 
 		# clean the files if exist
 		writer(self.Project+'.list','w','','data/leach_projects','10009')

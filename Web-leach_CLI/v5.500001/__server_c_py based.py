@@ -1103,11 +1103,12 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 				'content="text/html; charset=%s">' % enc)
 
 			if self.is_get_req:
-				r.append(decrypto_header%(str(pink), str(Lblue), str(blue), str(purple), '\n'.join(tables)))
-				r.append("""\n<hr>\n</body>\n<footer id="footer"><br><br><br><br><hr><hr>\n<p style="color: darkgray;">Made by Ratul Hasan with Web leach</p>\n<br><p>[Server] %i Results Arranged in %ss<br></p>\n<br><p>[Server] Decrypted in %ss (%s powered)<br></p>\n<br><p>[Server] Table made in %ss<br></p>\n<br><p id="render"></p><br>\n<br><p id="response"></p><br>\n</footer> <script>var response_get = %s; var response_send = %s;
+				__x='''\n<div id='stats'><p style="color: darkgray;">Made by Ratul Hasan with Web leach</p><br>\n<p>[Server] %i Results Arranged in %ss</p>\n<p>[Server] Decrypted in %ss (%s powered)</p>\n<p>[Server] Table made in %ss</p>\n<p id="render"></p>\n<p id="response"></p>\n</div>'''%(len(self.decrypto_dat), str(time.time()-request_time), read_dec, decryptor_lang, str(table_made))
+				r.append(decrypto_header%(str(pink), str(Lblue), str(blue), str(purple), __x, '\n'.join(tables)))
+				r.append("""\n<hr>\n</body>\n<footer id="footer"><br><br><br><br><hr><hr></footer> <script>var response_get = %s; var response_send = %s;
 				
 				document.getElementById('response').innerHTML="[Browser] Sent and rendered in " + ((Date.now()/1000)- response_get)+'s';
-				document.getElementById('render').innerHTML="[Browser] Rendered in "+((Date.now()/1000)- response_send)+'s';</script></html> \n"""%(len(self.decrypto_dat), str(time.time()-request_time), read_dec, decryptor_lang, str(table_made), str(self.response_get), str(time.time())))
+				document.getElementById('render').innerHTML="[Browser] Rendered in "+((Date.now()/1000)- response_send)+'s';</script></html> \n"""%(str(self.response_get), str(time.time())))
 
 
 			# print(self.PIDs)
