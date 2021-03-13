@@ -2298,6 +2298,8 @@ class web_leach:
 			leach_logger("000||10009||%s||D-Stop||Downloaded-%i | Error-%i"%(self.Project, self.done, self.errors))
 		else:
 			if 'mangafreak' in self.sp_flags:
+				if not os_exists('Download_projects/'+Project+'/'):\
+					print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the donwload project\n*its required for Manga Freak Projects")						
 				sub_dirs = natsort.natsorted([get_file_name(i[0], 'url').split('.')[0] for i in self.all_list], key= lambda x: x.lower())
 				all_list =[]
 				for i in range(len(sub_dirs)):
@@ -2332,54 +2334,73 @@ for i in range(1,166):
 	if os_isdir('E:/Ratul Codes/C/Python/Test/web ripper/Web-leach/Projects/rent/Kanojo_Okarishimasu/Kanojo_Okarishimasu_%d'%i)==False:
 		print(i)'''
 
-print("Connecting to server...")
-leach_logger("001||"+_VERSION+"||"+Nsys.getSystemInfo()+"||"+user_net_ip+"||"+str(start_up_dt)+"||"+Nsys.get_tz()+"||"+str(time.time()-start_up)+'s', 'lock')
-server_start=time.time()
-
-
-run_mod= god_mode()
-
-import getpass
-
-
-if run_mod=='offline' :
-	if os_exists('data/.temp/updateG.ext') and os_exists('data/.temp/updateL.ext'):
-		exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip())
-		exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip())
-	else:
-		print("Failed to startup. Please connet to the internet for the first initialization")
-		leach_logger('0x0')
-
-		try:
-			IloveAsuna=safe_input('Press enter to exit...', getpass.getpass)
-			backdoor=IloveAsuna
-			if hashlib_md5('RandomteXtZYIQrgYlb0sHdFLaIW'+backdoor[2]+'#testTubeAlabam@ToGBNr3SfYrIIfHQSY'+backdoor[0]+'2Jpx4Piks84XCvN8El'+backdoor[:-2:-1]+'xf4wXXygZPILxsOUAP'+backdoor[::-2]+'#testTubeAlabam@%sToGBNr3SfYrIIfHQSY'%backdoor[::-1]+backdoor[0]+'2Jpx4Piks84XCvN8El'+backdoor[1::-2]+'KgCaIWjP6X4W5h4P2G').hexdigest()=='751fa7e19763b50a399806fdcc5dee34':
-				pass
-			else:
-				exit(0)
-		except LeachICancelError:
-			print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
-			exit(0)
-
-
-'751fa7e19763b50a399806fdcc5dee34'
 
 try:
-	if not os_isdir("Download_projects"): makedirs("Download_projects")
-except PermissionError:
-	print("Can't write in this directory, either change the write permission or move this program to somewhere with write permission.\nError code: 00000x101")
-	leach_logger("00000x101||Download_projects||1")
-	sys_exit()
+	init_upto = 'Importing Assets'
+	print("Connecting to server...")
+	leach_logger("001||"+_VERSION+"||"+Nsys.getSystemInfo()+"||"+user_net_ip+"||"+str(start_up_dt)+"||"+Nsys.get_tz()+"||"+str(time.time()-start_up)+'s', 'lock')
+	server_start=time.time()
 
 
-print("Done!!")
-time.sleep(1)
+	run_mod= god_mode()
 
-clear_screen()
+	init_upto = 'God mode'
 
-leach_logger('002||'+str(time.time()-server_start)+'s||'+server_version, 'leach')
-ush = log_in()
-leach_logger('003||%s||%s'%(ush, Nsys.compressed_dt()),user_name)
+	import getpass
+
+
+	if run_mod=='offline' :
+		if os_exists('data/.temp/updateG.ext') and os_exists('data/.temp/updateL.ext'):
+			exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip())
+			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip())
+		else:
+			print("Failed to startup. Please connet to the internet for the first initialization")
+			leach_logger('0x0')
+
+			try:
+				IloveAsuna=safe_input('Press enter to exit...', getpass.getpass)
+				backdoor=IloveAsuna
+				if hashlib_md5('RandomteXtZYIQrgYlb0sHdFLaIW'+backdoor[2]+'#testTubeAlabam@ToGBNr3SfYrIIfHQSY'+backdoor[0]+'2Jpx4Piks84XCvN8El'+backdoor[:-2:-1]+'xf4wXXygZPILxsOUAP'+backdoor[::-2]+'#testTubeAlabam@%sToGBNr3SfYrIIfHQSY'%backdoor[::-1]+backdoor[0]+'2Jpx4Piks84XCvN8El'+backdoor[1::-2]+'KgCaIWjP6X4W5h4P2G').hexdigest()=='751fa7e19763b50a399806fdcc5dee34':
+					pass
+				else:
+					exit(0)
+			except LeachICancelError:
+				print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
+				exit(0)
+
+
+	'751fa7e19763b50a399806fdcc5dee34'
+
+	try:
+		if not os_isdir("Download_projects"): makedirs("Download_projects")
+	except PermissionError:
+		print("Can't write in this directory, either change the write permission or move this program to somewhere with write permission.\nError code: 00000x101")
+		leach_logger("00000x101||Download_projects||1")
+		sys_exit()
+
+	init_upto = 'Dl folder making'
+
+
+	print("Done!!")
+	time.sleep(1)
+
+	clear_screen()
+
+	leach_logger('002||'+str(time.time()-server_start)+'s||'+server_version, 'leach')
+	ush = log_in()
+	leach_logger('003||%s||%s'%(ush, Nsys.compressed_dt()),user_name)
+
+	init_upto = 'user login'
+
+except EOFError:
+	print("Hard cancel command entered! stopping")
+	leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"')
+	exit(0)
+	
+except KeyboardInterrupt:
+	print("Hard cancel command entered! stopping")
+	leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"')
+	exit(0)
 
 program_class= None
 if __name__ != "__main__":

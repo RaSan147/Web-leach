@@ -115,7 +115,10 @@ def main():
 
 				if 'mangafreak' in sp_flags:
 					if dl_done:
-						sub_dirs = natsort.realsorted([get_file_name(i[0], 'url').split('.')[0] for i in all_list])
+						if not os_exists('Download_projects/'+Project+'/'): 
+							print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the donwload project\n*its required for Manga Freak Projects")
+							return 0
+						sub_dirs = natsort.natsorted([get_file_name(i[0], 'url').split('.')[0] for i in all_list])
 						all_list =[]
 						for i in range(len(sub_dirs)):
 							try:
