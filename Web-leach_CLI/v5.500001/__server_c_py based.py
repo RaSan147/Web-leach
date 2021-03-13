@@ -124,16 +124,18 @@ except:
 	print('BeautifulSoup is not available, please Download it')
 	input()
 	exit(0)
-	
+
+
 try:
 	print("Testing lxml program availability")
-	parser = 'lxml'
-	bs("<p>test</p>", parser).text
+	_parser = 'lxml'
+	bs("<p>test</p>", _parser).text
 
 except:
-	parser= 'html.parser'
+	_parser= 'html.parser'
 	print("Failed!\nSwitching to html.parser mode")
 
+# _parser= 'html.parser'
 
 print("Testing C program availability")
 decryptor_lang=None
@@ -1092,7 +1094,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 					tr+='</tr>'
 					# print(bs(tr, "html.parser").text)
 
-					if skeyword!='' and skeyword.lower() not in bs(tr, features= parser).text.lower(): continue
+					if skeyword!='' and skeyword.lower() not in bs(tr, features= _parser).text.lower(): continue
 
 					tables.append(tr)
 

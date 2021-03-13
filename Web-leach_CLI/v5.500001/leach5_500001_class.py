@@ -156,13 +156,7 @@ death = False
 
 def remove_duplicate(li):	#func_code= 00000
 	"removes duplicates from a list or a tuple"
-	res = []
-	for i in li:
-		if i not in res:
-			res.append(i)
-	if type(li)== tuple:
-		res = tuple(res)
-	return res
+	list(dict.fromkeys(seq))
 
 def clear_screen():    #func_code= 00001
 	"""clears terminl output screen"""
@@ -1045,6 +1039,7 @@ class web_leach:
 								writer('errors.txt', 'a',str(i+[hdr(current_header,'10002')])+'\n','data/leach_projects/'+self.Project,'10002')
 								writer('err_header.txt','a','%s,'%hdr(current_header,'10002'),'data/','10002')
 								self.errors+=1
+								
 
 							else:
 								self.re_error +=1
@@ -1073,6 +1068,12 @@ class web_leach:
 						writer('errors.txt', 'a',str(i+[hdr(current_header,'10002')])+'\n','data/leach_projects/'+self.Project,'10002')
 						writer('err_header.txt','a','%s,'%hdr(current_header,'10002'),'data/','10002')
 						self.errors+=1
+
+						with open('data/leach_projects/errors.txt', 'w+') as error_hdr_file:
+							temp_ = error_hdr_file.read()
+							err_hdr_list = eval(temp_)
+							if type(err_hdr_list)== tuple:
+
 
 					else:
 						self.re_error +=1
@@ -2309,7 +2310,7 @@ class web_leach:
 							if os_isfile('Download_projects/'+self.Project+'/'+sub_dirs[i]+'/'+j) and not j.endswith('.html'):
 								all_list.append([j,i])
 					except OSError: continue
-				first_page=make_pages(all_list,sub_dirs, self.Project, True)
+				first_page = make_pages(all_list,sub_dirs, self.Project, True)
 
 			if will_open=='x':
 				run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
@@ -2399,7 +2400,7 @@ except EOFError:
 	
 except KeyboardInterrupt:
 	print("Hard cancel command entered! stopping")
-	leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"')
+	leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"'%init_upto)
 	exit(0)
 
 program_class= None
