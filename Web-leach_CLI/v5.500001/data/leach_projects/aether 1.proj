@@ -1,0 +1,12 @@
+main_link= "https://nhentai.net/g/331461"
+link_startswith= "https://nhentai.xxx/g/331461/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= "https://nhentai"
+sub_dirs = ['[Longow Flintlock] Barbara Star! Dush! (Genshin Impact) [English] [Digital]']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 0
+sequence = True
+Project = "aether 1"
+dl_done = True

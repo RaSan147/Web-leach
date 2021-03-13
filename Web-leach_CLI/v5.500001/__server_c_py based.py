@@ -1,6 +1,6 @@
 import time
 
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
 
 """HTTP server classes.
 
@@ -124,6 +124,16 @@ except:
 	print('BeautifulSoup is not available, please Download it')
 	input()
 	exit(0)
+	
+try:
+	print("Testing lxml program availability")
+	parser = 'lxml'
+	bs("<p>test</p>", parser).text
+
+except:
+	parser= 'html.parser'
+	print("Failed!\nSwitching to html.parser mode")
+
 
 print("Testing C program availability")
 decryptor_lang=None
@@ -1082,7 +1092,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 					tr+='</tr>'
 					# print(bs(tr, "html.parser").text)
 
-					if skeyword!='' and skeyword.lower() not in bs(tr, "html.parser").text.lower(): continue
+					if skeyword!='' and skeyword.lower() not in bs(tr, features= parser).text.lower(): continue
 
 					tables.append(tr)
 

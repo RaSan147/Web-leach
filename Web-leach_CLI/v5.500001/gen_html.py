@@ -11,7 +11,7 @@ def main():
 				server_code.kill()
 				print('Server closed...')
 			except: pass
-			leach_logger("User Exit-0")
+			leach_logger("0x1||5000||User Exit-0")
 			exit(0)
 		if Project=='':
 			print('You must enter a Project name here.')
@@ -19,7 +19,7 @@ def main():
 			corruptions=[]
 			break
 
-	leach_logger("project||%s||began"%(Project),user_name)
+	leach_logger("50001x1||%s"%(Project),user_name)
 	if Project in open('data/projects.db').read().split('\n'):
 		global main_link, link_startswith, file_types, sub_dirs, sp_flags, sp_extension, overwrite_bool, dimention, dl_done, sequence
 		print('Existing Project name found!')

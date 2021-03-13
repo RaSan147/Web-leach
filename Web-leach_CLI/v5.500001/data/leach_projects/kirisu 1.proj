@@ -1,11 +1,11 @@
 main_link= "https://nhentai.net/g/273543"
 link_startswith= "https://nhentai.xxx/g/273543/"
 file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
-file_starts= "https://nhentai"
+file_starts= ""
 sub_dirs = ['(COMIC115) [Popochichi (Yahiro Pochi)] Kirisu Sensei wa Gaman ga Dekinai (Bokutachi wa Benkyou ga Dekinai) [English] [Loli Soul]']
 sp_flags = []
 sp_extension = ""
-overwrite_bool = True
+overwrite_bool = False
 dimention = 0
 sequence = True
 Project = "kirisu 1"

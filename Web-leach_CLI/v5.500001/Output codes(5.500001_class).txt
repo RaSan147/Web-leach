@@ -1,14 +1,14 @@
 <<<<<<<<<<<<<<<<<<<<  VERSION 5.5_class  <<<<<<<<<<<<<<<<<<
 Index    SP project Names                   Works
 ======   =================      ================================================================
-  1    -enable-dl-thread       `sp_arg_flag['disable dl cancel'] = True`  Disables download cancellation by adding join thread option
-  2    -disable-dl-thread      `sp_arg_flag['disable dl cancel'] = False` Enables download cancellation by adding removing thread option [DEFAULT]
+  1    ?enable-dl-thread       `sp_arg_flag['disable dl cancel'] = True`  Disables download cancellation by adding join thread option
+  2    ?disable-dl-thread      `sp_arg_flag['disable dl cancel'] = False` Enables download cancellation by adding removing thread option [DEFAULT]
 
-  3    -disable-dl-get         `sp_arg_flag['disable dl get'] = True`     Disabled download save by using requests.head
-  4    -enable-dl-get          `sp_arg_flag['disable dl get'] = False`    Enabled download save by using requests.get [DEFAULT]
+  3    ?disable-dl-get         `sp_arg_flag['disable dl get'] = True`     Disabled download save by using requests.head
+  4    ?enable-dl-get          `sp_arg_flag['disable dl get'] = False`    Enabled download save by using requests.get [DEFAULT]
 
-  -3   -D-dl                   same as 3
-  -4   -E-dl                   same as 4
+  -3   ?D-dl                   same as 3
+  -4   ?E-dl                   same as 4
 
  key -----------------             values
 ========              =================================================================

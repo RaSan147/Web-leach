@@ -728,7 +728,7 @@ def god_mode():      #func_code= 00015
 				else:
 					raise requests.exceptions.ConnectionError
 
-		except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout):
+		except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout) as e:
 			print("\033[1;31;40mError code: 605x3\nNo internet connection!\033[0m\nRunning offline mode")
 			leach_logger("605x3||%s||%s||%s"%(hdr(current_header,'00015'),who_r_u, e.__class__.__name__), 'lock')
 			return 'offline'
@@ -745,14 +745,16 @@ def god_mode():      #func_code= 00015
 			#AssertionErrorprint(server_version)
 			# time.sleep(500)
 		else:
-			print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode")
+			print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds")
 			leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, str(file.status_code)), 'lock')
+			time.sleep(3)
 			return 'offline'
 
 		#remove('data/.temp/update.ext')
 	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema) as e:
-		print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode")
+		print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds")
 		leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, e.__class__.__name__), 'lock')
+		time.sleep(3)
 		return 'offline'
 	except Exception as e:
 		print(e.__class__.__name__,": Unknown error occured. Error code 00015x-1\nPlease inform the author.")
@@ -772,14 +774,16 @@ def god_mode():      #func_code= 00015
 			#AssertionErrorprint(server_version)
 			# time.sleep(500)
 		else:
-			print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode")
-			leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, str(file.status_code)), 'lock')
+			print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds...")
+			leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link_global, str(file.status_code)), 'lock')
+			time.sleep(3)
 			return 'offline'
 
 		#remove('data/.temp/update.ext')
 	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema) as e:
-		print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode")
+		print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds...")
 		leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, e.__class__.__name__), 'lock')
+		time.sleep(3)
 		return 'offline'
 	except Exception as e:
 		print(e.__class__.__name__,": Unknown error occured. Error code 00015x-1\nPlease inform the author.")
@@ -1642,28 +1646,31 @@ class web_leach:
 					
 
 					exit(0)
-					sys_exit(0)
+					# sys_exit(0)
 				if self.Project=='':
 					print('You must enter a Project name here.')
-				elif self.Project == '-ara-ara-on-fire':
+				elif self.Project == '?enable-dl-thread':
 					sp_arg_flag['disable dl cancel'] = True
 					print('Disabled download cancellation by adding join thread option')
 					return 0
 
-				elif self.Project == '-ara-ara-off-fire':
+				elif self.Project == '?disable-dl-thread':
 					sp_arg_flag['disable dl cancel'] = False
 					print('Enabled download cancellation by adding removing thread option [DEFAULT]')
 					return 0
-				elif self.Project in ['-disable-dl-get', '-D-dl']:
+				elif self.Project in ['?disable-dl-get', '?D-dl']:
 					sp_arg_flag['disable dl get'] = True
 					print('Disabled download save by using requests.head')
 					return 0
 
-				elif self.Project in ['-enable-dl-get', '-E-dl'] :
+				elif self.Project in ['?enable-dl-get', '?E-dl'] :
 					sp_arg_flag['disable dl get'] = False
 					print('Enabled download save by using requests.get [DEFAULT]')
 					return 0
 					
+				elif any(i in self.Project for i in '\\/|:*"><?'):
+					print("\n>> Project name can't have ")
+					print("\\ / | : * \" > < ?\n".center(20))
 				else:
 					self.Project= self.Project
 					break

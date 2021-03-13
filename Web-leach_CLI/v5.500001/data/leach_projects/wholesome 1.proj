@@ -1,0 +1,12 @@
+main_link= "https://nhentai.net/g/77702"
+link_startswith= "https://nhentai.net/g/77702/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= "https://nhentai"
+sub_dirs = ["[Momotsuki Suzu] Issho ni Kaero - Let's Go Back Together (Comic Shitsurakuten 2012-01) [English] {VLtrans}"]
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 0
+sequence = True
+Project = "wholesome 1"
+dl_done = True
