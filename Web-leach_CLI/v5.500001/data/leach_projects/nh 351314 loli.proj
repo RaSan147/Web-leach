@@ -1,0 +1,12 @@
+main_link= "https://nhentai.net/g/351314"
+link_startswith= "https://nhentai.net/g/351314/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= "https://nhentai"
+sub_dirs = ['[Rawls sha (Takeakigaku)] Kono Deutschland o kimochi yoku sasenasai!! - Make this Deutschland feel good!!! (Azur Lane) [English] [Digital]']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 0
+sequence = True
+Project = "nh 351314 loli"
+dl_done = True

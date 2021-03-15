@@ -1,0 +1,638 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<script>
+var pink=['8825', '7577', '3446'];
+var light_blue=['8566', '8958', '6091'];
+var blue=['3129', '6543', '9409'];
+var purple=['2761', '7033', '4020'];
+
+</script>
+<style type="text/css">
+
+
+html, body, input, textarea, select, button {
+    background-color: #181a1b !important;
+    /* border-color: #736b5e; */
+    color: rgb(216, 212, 207)
+}
+body{
+  
+  position: relative;
+  min-height: 100vh;
+}
+
+* {
+    scrollbar-color: #0f0f0f #454a4d;
+}
+a{
+  font-size: 20px;
+  font-weight: 300;
+  font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
+  text-decoration: none;
+  color: #3391ff;
+}
+
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 1920px;
+  padding: 16px;
+  line-height: 25px;
+}
+
+td, th {
+  border: 1px solid rgb(120, 111, 98);
+  text-align: left;
+  padding: 8px;
+ overflow-wrap: break-word;
+}
+
+#main_table td:nth-child(1):not(.device_info td){
+
+  width: 230px;
+}
+
+#main_table td:nth-child(2):not(.device_info td){
+  text-align: center;
+  width: 55px;
+}
+
+#main_table td:nth-child(3):not(.device_info td){
+  text-align: center;
+  width: 100px;
+}
+
+#main_table td:nth-child(5):not(.device_info td){
+  width: 850px;
+}
+
+.device_info{
+	width: 800px;
+
+}
+
+#stats{
+  line-height: 40px;
+}
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;            /* Footer height */
+}
+
+</style>
+
+
+	<title>Web leach log</title>
+</head>
+
+
+<body>
+	<table><tbody><tr><td>
+		<form>
+		
+		<label for="Process_id">Process ID:</label>
+		<input type="text" name="Process_id" id="Process_id"><br><br>
+
+		<label for="Search_Code">Search Code:</label>
+		<input type="text" id="Search_Code" name="Search_Code"><br><br>
+
+		<label for="Search_Code_part">Search code part:</label>
+		<input type="text" id="Search_Code_part" name="Search_Code_part"><br><br>
+		
+		<label for="Search_keywords">Search By Keywords</label>
+		<input type="text" name="Search_keywords" id="Search_keywords"><br><hr>
+
+		<input type="button" value="Submit" onclick="search_request()">
+
+	</form> 
+	</td>
+	<td>
+		
+<div id="stats"><p style="color: darkgray;">Made by Ratul Hasan with Web leach</p><br>
+<p>[Server] 55 Results Arranged in 0.1928844451904297s</p>
+<p>[Server] Decrypted in 0.18888449668884277s (C powered)</p>
+<p>[Server] Table made in 0.003999948501586914s</p>
+<p id="render">[Browser] Rendered in 0.26259446144104004s</p>
+<p id="response">[Browser] Sent and rendered in 0.5024769306182861s</p>
+</div>
+	</td>
+</tr></tbody></table>
+	
+
+	<div style="padding: 16px;">
+	<table id="main_table">
+		<tbody><tr>
+			<th>Time</th>
+			<th>PID</th>
+			<th>Code <i>[HEX]</i></th>
+			<th>Message</th>
+			<th>INFO</th>
+		</tr>
+		<tr class="p8825" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:05:33.792429</td>
+<td>8825</td>
+<td>0x1</td>
+<td>User Exit-0 (called from 10009)</td>
+<td>Exited at 2021/03/15 &nbsp;&nbsp;&nbsp; 11:05:33.792429</td>
+</tr>
+<tr class="p8825" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:04:39.499606</td>
+<td>8825</td>
+<td>10008x2</td>
+<td><b><u>Project:</u></b> kirisu 1 <br><b><u>Error Fixing process complete</u></b></td>
+<td><b><u>Left errors:</u></b> 0</td>
+</tr>
+<tr class="p8825" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:04:39.455604</td>
+<td>8825</td>
+<td>10008x0</td>
+<td><b><u>Project:</u> kirisu 1</b><br>Error Fixing began</td>
+<td><b><u>Total files:</u></b> 22 <br><b><u>Error files:</u></b> 0</td>
+</tr>
+<tr class="p8825" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:04:37.082083</td>
+<td>8825</td>
+<td>10009x3</td>
+<td><b><u>Project:</u></b> kirisu 1 <br><b>Indexing complete</b></td>
+<td><b><u>Indexed links:</u></b> 1 <br><b><u>FOund results:</u></b> 44 </td>
+</tr>
+<tr class="p8825" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:04:37.079084</td>
+<td>8825</td>
+<td>10009x0</td>
+<td><b><u>Project:</u></b> kirisu 1 <br>Name entered</td>
+<td>is_nh<br>Asking for inputs</td>
+</tr>
+<tr class="p8825" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:04:37.048080</td>
+<td>8825</td>
+<td>606x1</td>
+<td><b><u>Project:</u></b> kirisu 1<br><i>Network issue</i> while connecting <b>nhentai.net</b><br>Trying Proxy server</td>
+<td><b><u>NH link:</u></b> https://nhentai.net/g/273543<br><b><u>Header index:</u></b> 79</td>
+</tr>
+<tr class="p8825" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:04:32.536083</td>
+<td>8825</td>
+<td>11000x2</td>
+<td><h5><b><u>Project is UPDATING</u></b></h5></td>
+<td><b><u>Project name:</u></b> kirisu 1 <br><b><u>Project Status:</u> Was completed</b> </td>
+</tr>
+<tr class="p8825" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:04:31.004083</td>
+<td>8825</td>
+<td>00017</td>
+<td>Failed to <b>connect</b> to the arg Web page</td>
+<td><b><u>Link:</u></b><a href="http://localhost:4692/" target="_blank"> http://localhost:4692</a><br><b><u>Header index:</u></b> 139 <br><b><u>Called by:</u></b> 1000B</td>
+</tr>
+<tr class="p8825" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:04:30.988082</td>
+<td>8825</td>
+<td>00017</td>
+<td>Failed to <b>connect</b> to the arg Web page</td>
+<td><b><u>Link:</u></b><a href="http://localhost:4692/" target="_blank"> http://localhost:4692</a><br><b><u>Header index:</u></b> 41 <br><b><u>Called by:</u></b> 1000B</td>
+</tr>
+<tr class="p8825" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:04:30.520082</td>
+<td>8825</td>
+<td>10009x0</td>
+<td><b><u>Project:</u></b> kirisu 1 <br>Name entered</td>
+<td>Checking Project Database<br>Asking for inputs</td>
+</tr>
+<tr class="p8825" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:04:26.925970</td>
+<td>8825</td>
+<td>003</td>
+<td>User logged in</td>
+<td><u><b>User Hash: </b></u> eb23efbb267893b699389ae74854547979d265bd<br><u><b>Log in at</b></u> 2021/03/15 11:04:26.925970</td>
+</tr>
+<tr class="p8825" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:04:22.808397</td>
+<td>8825</td>
+<td>002</td>
+<td>Server connected successfully!</td>
+<td><u><b>Server version:</b></u> 5.4.0.1<br><b><u>Load latency:</u></b> 1.7787950038909912s</td>
+</tr>
+<tr class="p8825" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:04:21.028607</td>
+<td>8825</td>
+<td>001</td>
+<td><u><b>App V</b></u>5.50001<br><u><b>Launched at</b></u>: 2021/03/15  11:04:18.070518<br><u><b>User Ip:</b></u> {"ip":"103.199.155.246","country":"Bangladesh","cc":"BD"}<br><u><b>Timezone:</b></u> +06:00<br><u><b>Start up latency:</b></u> 3.089087724685669s</td>
+<td><table class="device_info"><tbody><tr><td><b>platform</b></td><td>Windows</td></tr>
+<tr><td><b>platform-release</b></td><td>10</td></tr>
+<tr><td><b>platform-version</b></td><td>10.0.19041</td></tr>
+<tr><td><b>architecture</b></td><td>AMD64</td></tr>
+<tr><td><b>hostname</b></td><td>DESKTOP-658FGI3</td></tr>
+<tr><td><b>ip-address</b></td><td>192.168.0.100</td></tr>
+<tr><td><b>mac-address</b></td><td>94:de:80:4c:5c:f8</td></tr>
+<tr><td><b>processor</b></td><td>Intel64 Family 6 Model 58 Stepping 9, GenuineIntel</td></tr>
+<tr><td><b>ram</b></td><td>6 GB</td></tr>
+</tbody></table></td>
+</tr>
+<tr class="p8566" style="background-color: rgb(15, 52, 96);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:03:57.470509</td>
+<td>8566</td>
+<td>0x1</td>
+<td>Login exit (called from 00016)</td>
+<td>Exited at 2021/03/15 &nbsp;&nbsp;&nbsp; 11:03:57.470509</td>
+</tr>
+<tr class="p8566" style="background-color: rgb(15, 52, 96);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:03:55.640509</td>
+<td>8566</td>
+<td>002</td>
+<td>Server connected successfully!</td>
+<td><u><b>Server version:</b></u> 5.4.0.1<br><b><u>Load latency:</u></b> 2.031752824783325s</td>
+</tr>
+<tr class="p8566" style="background-color: rgb(15, 52, 96);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:03:53.607756</td>
+<td>8566</td>
+<td>001</td>
+<td><u><b>App V</b></u>5.50001<br><u><b>Launched at</b></u>: 2021/03/15  11:03:51.083940<br><u><b>User Ip:</b></u> {"ip":"103.199.155.246","country":"Bangladesh","cc":"BD"}<br><u><b>Timezone:</b></u> +06:00<br><u><b>Start up latency:</b></u> 2.5948195457458496s</td>
+<td><table class="device_info"><tbody><tr><td><b>platform</b></td><td>Windows</td></tr>
+<tr><td><b>platform-release</b></td><td>10</td></tr>
+<tr><td><b>platform-version</b></td><td>10.0.19041</td></tr>
+<tr><td><b>architecture</b></td><td>AMD64</td></tr>
+<tr><td><b>hostname</b></td><td>DESKTOP-658FGI3</td></tr>
+<tr><td><b>ip-address</b></td><td>192.168.0.100</td></tr>
+<tr><td><b>mac-address</b></td><td>94:de:80:4c:5c:f8</td></tr>
+<tr><td><b>processor</b></td><td>Intel64 Family 6 Model 58 Stepping 9, GenuineIntel</td></tr>
+<tr><td><b>ram</b></td><td>6 GB</td></tr>
+</tbody></table></td>
+</tr>
+<tr class="p3129" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:03:11.546429</td>
+<td>3129</td>
+<td>10009x0</td>
+<td><b><u>Project:</u></b> kirisu 1 <br>Name entered</td>
+<td>is_nh<br>Asking for inputs</td>
+</tr>
+<tr class="p3129" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:03:11.493260</td>
+<td>3129</td>
+<td>606x1</td>
+<td><b><u>Project:</u></b> kirisu 1<br><i>Network issue</i> while connecting <b>nhentai.net</b><br>Trying Proxy server</td>
+<td><b><u>NH link:</u></b> https://nhentai.net/g/273543<br><b><u>Header index:</u></b> 34</td>
+</tr>
+<tr class="p3129" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:03:07.846820</td>
+<td>3129</td>
+<td>11000x2</td>
+<td><h5><b><u>Project is UPDATING</u></b></h5></td>
+<td><b><u>Project name:</u></b> kirisu 1 <br><b><u>Project Status:</u> Was completed</b> </td>
+</tr>
+<tr class="p3129" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:03:05.535115</td>
+<td>3129</td>
+<td>10009x0</td>
+<td><b><u>Project:</u></b> kirisu 1 <br>Name entered</td>
+<td>Checking Project Database<br>Asking for inputs</td>
+</tr>
+<tr class="p3129" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:02:58.281430</td>
+<td>3129</td>
+<td>00017</td>
+<td>Failed to <b>connect</b> to the arg Web page</td>
+<td><b><u>Link:</u></b><a href="http://localhost:4692/" target="_blank"> http://localhost:4692</a><br><b><u>Header index:</u></b> 151 <br><b><u>Called by:</u></b> 1000B</td>
+</tr>
+<tr class="p3129" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:02:58.252431</td>
+<td>3129</td>
+<td>00017</td>
+<td>Failed to <b>connect</b> to the arg Web page</td>
+<td><b><u>Link:</u></b><a href="http://localhost:4692/" target="_blank"> http://localhost:4692</a><br><b><u>Header index:</u></b> 120 <br><b><u>Called by:</u></b> 1000B</td>
+</tr>
+<tr class="p3129" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:02:54.166432</td>
+<td>3129</td>
+<td>003</td>
+<td>User logged in</td>
+<td><u><b>User Hash: </b></u> eb23efbb267893b699389ae74854547979d265bd<br><u><b>Log in at</b></u> 2021/03/15 11:02:54.166432</td>
+</tr>
+<tr class="p3129" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:02:50.188241</td>
+<td>3129</td>
+<td>002</td>
+<td>Server connected successfully!</td>
+<td><u><b>Server version:</b></u> 5.4.0.1<br><b><u>Load latency:</u></b> 2.2210276126861572s</td>
+</tr>
+<tr class="p3129" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 11:02:47.965212</td>
+<td>3129</td>
+<td>001</td>
+<td><u><b>App V</b></u>5.50001<br><u><b>Launched at</b></u>: 2021/03/15  11:02:45.471211<br><u><b>User Ip:</b></u> {"ip":"103.199.155.246","country":"Bangladesh","cc":"BD"}<br><u><b>Timezone:</b></u> +06:00<br><u><b>Start up latency:</b></u> 2.557999610900879s</td>
+<td><table class="device_info"><tbody><tr><td><b>platform</b></td><td>Windows</td></tr>
+<tr><td><b>platform-release</b></td><td>10</td></tr>
+<tr><td><b>platform-version</b></td><td>10.0.19041</td></tr>
+<tr><td><b>architecture</b></td><td>AMD64</td></tr>
+<tr><td><b>hostname</b></td><td>DESKTOP-658FGI3</td></tr>
+<tr><td><b>ip-address</b></td><td>192.168.0.100</td></tr>
+<tr><td><b>mac-address</b></td><td>94:de:80:4c:5c:f8</td></tr>
+<tr><td><b>processor</b></td><td>Intel64 Family 6 Model 58 Stepping 9, GenuineIntel</td></tr>
+<tr><td><b>ram</b></td><td>6 GB</td></tr>
+</tbody></table></td>
+</tr>
+<tr class="p2761" style="background-color: rgb(84, 18, 59);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:44:58.178912</td>
+<td>2761</td>
+<td>0x1</td>
+<td>Login exit (called from 00016)</td>
+<td>Exited at 2021/03/15 &nbsp;&nbsp;&nbsp; 10:44:58.178912</td>
+</tr>
+<tr class="p2761" style="background-color: rgb(84, 18, 59);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:44:56.136993</td>
+<td>2761</td>
+<td>002</td>
+<td>Server connected successfully!</td>
+<td><u><b>Server version:</b></u> 5.4.0.1<br><b><u>Load latency:</u></b> 1.5102016925811768s</td>
+</tr>
+<tr class="p2761" style="background-color: rgb(84, 18, 59);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:44:54.624790</td>
+<td>2761</td>
+<td>001</td>
+<td><u><b>App V</b></u>5.50001<br><u><b>Launched at</b></u>: 2021/03/15  10:44:52.420904<br><u><b>User Ip:</b></u> {"ip":"103.199.155.246","country":"Bangladesh","cc":"BD"}<br><u><b>Timezone:</b></u> +06:00<br><u><b>Start up latency:</b></u> 2.290886878967285s</td>
+<td><table class="device_info"><tbody><tr><td><b>platform</b></td><td>Windows</td></tr>
+<tr><td><b>platform-release</b></td><td>10</td></tr>
+<tr><td><b>platform-version</b></td><td>10.0.19041</td></tr>
+<tr><td><b>architecture</b></td><td>AMD64</td></tr>
+<tr><td><b>hostname</b></td><td>DESKTOP-658FGI3</td></tr>
+<tr><td><b>ip-address</b></td><td>192.168.0.100</td></tr>
+<tr><td><b>mac-address</b></td><td>94:de:80:4c:5c:f8</td></tr>
+<tr><td><b>processor</b></td><td>Intel64 Family 6 Model 58 Stepping 9, GenuineIntel</td></tr>
+<tr><td><b>ram</b></td><td>6 GB</td></tr>
+</tbody></table></td>
+</tr>
+<tr class="p7577" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:44:51.202408</td>
+<td>7577</td>
+<td>0x1</td>
+<td>Login exit (called from 00016)</td>
+<td>Exited at 2021/03/15 &nbsp;&nbsp;&nbsp; 10:44:51.202408</td>
+</tr>
+<tr class="p7577" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:44:08.597556</td>
+<td>7577</td>
+<td>002</td>
+<td>Server connected successfully!</td>
+<td><u><b>Server version:</b></u> 5.4.0.1<br><b><u>Load latency:</u></b> 2.165391445159912s</td>
+</tr>
+<tr class="p7577" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:44:06.431163</td>
+<td>7577</td>
+<td>001</td>
+<td><u><b>App V</b></u>5.50001<br><u><b>Launched at</b></u>: 2021/03/15  10:44:04.143029<br><u><b>User Ip:</b></u> {"ip":"103.199.155.246","country":"Bangladesh","cc":"BD"}<br><u><b>Timezone:</b></u> +06:00<br><u><b>Start up latency:</b></u> 2.346139669418335s</td>
+<td><table class="device_info"><tbody><tr><td><b>platform</b></td><td>Windows</td></tr>
+<tr><td><b>platform-release</b></td><td>10</td></tr>
+<tr><td><b>platform-version</b></td><td>10.0.19041</td></tr>
+<tr><td><b>architecture</b></td><td>AMD64</td></tr>
+<tr><td><b>hostname</b></td><td>DESKTOP-658FGI3</td></tr>
+<tr><td><b>ip-address</b></td><td>192.168.0.100</td></tr>
+<tr><td><b>mac-address</b></td><td>94:de:80:4c:5c:f8</td></tr>
+<tr><td><b>processor</b></td><td>Intel64 Family 6 Model 58 Stepping 9, GenuineIntel</td></tr>
+<tr><td><b>ram</b></td><td>6 GB</td></tr>
+</tbody></table></td>
+</tr>
+<tr class="p8958" style="background-color: rgb(15, 52, 96);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:38:16.501164</td>
+<td>8958</td>
+<td>0x1</td>
+<td>Login exit (called from 00016)</td>
+<td>Exited at 2021/03/15 &nbsp;&nbsp;&nbsp; 10:38:16.501164</td>
+</tr>
+<tr class="p8958" style="background-color: rgb(15, 52, 96);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:35:24.156665</td>
+<td>8958</td>
+<td>002</td>
+<td>Server connected successfully!</td>
+<td><u><b>Server version:</b></u> 5.4.0.1<br><b><u>Load latency:</u></b> 1.5693869590759277s</td>
+</tr>
+<tr class="p8958" style="background-color: rgb(15, 52, 96);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:35:22.586275</td>
+<td>8958</td>
+<td>001</td>
+<td><u><b>App V</b></u>5.50001<br><u><b>Launched at</b></u>: 2021/03/15  10:35:19.999279<br><u><b>User Ip:</b></u> {"ip":"103.199.155.246","country":"Bangladesh","cc":"BD"}<br><u><b>Timezone:</b></u> +06:00<br><u><b>Start up latency:</b></u> 2.646998405456543s</td>
+<td><table class="device_info"><tbody><tr><td><b>platform</b></td><td>Windows</td></tr>
+<tr><td><b>platform-release</b></td><td>10</td></tr>
+<tr><td><b>platform-version</b></td><td>10.0.19041</td></tr>
+<tr><td><b>architecture</b></td><td>AMD64</td></tr>
+<tr><td><b>hostname</b></td><td>DESKTOP-658FGI3</td></tr>
+<tr><td><b>ip-address</b></td><td>192.168.0.100</td></tr>
+<tr><td><b>mac-address</b></td><td>94:de:80:4c:5c:f8</td></tr>
+<tr><td><b>processor</b></td><td>Intel64 Family 6 Model 58 Stepping 9, GenuineIntel</td></tr>
+<tr><td><b>ram</b></td><td>6 GB</td></tr>
+</tbody></table></td>
+</tr>
+<tr class="p6543" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:35:18.927822</td>
+<td>6543</td>
+<td>0x1</td>
+<td>Login exit (called from 00016)</td>
+<td>Exited at 2021/03/15 &nbsp;&nbsp;&nbsp; 10:35:18.927822</td>
+</tr>
+<tr class="p6543" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:34:48.782187</td>
+<td>6543</td>
+<td>002</td>
+<td>Server connected successfully!</td>
+<td><u><b>Server version:</b></u> 5.4.0.1<br><b><u>Load latency:</u></b> 1.8313438892364502s</td>
+</tr>
+<tr class="p6543" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:34:46.949843</td>
+<td>6543</td>
+<td>001</td>
+<td><u><b>App V</b></u>5.50001<br><u><b>Launched at</b></u>: 2021/03/15  10:34:43.366985<br><u><b>User Ip:</b></u> {"ip":"103.199.155.246","country":"Bangladesh","cc":"BD"}<br><u><b>Timezone:</b></u> +06:00<br><u><b>Start up latency:</b></u> 3.641859292984009s</td>
+<td><table class="device_info"><tbody><tr><td><b>platform</b></td><td>Windows</td></tr>
+<tr><td><b>platform-release</b></td><td>10</td></tr>
+<tr><td><b>platform-version</b></td><td>10.0.19041</td></tr>
+<tr><td><b>architecture</b></td><td>AMD64</td></tr>
+<tr><td><b>hostname</b></td><td>DESKTOP-658FGI3</td></tr>
+<tr><td><b>ip-address</b></td><td>192.168.0.100</td></tr>
+<tr><td><b>mac-address</b></td><td>94:de:80:4c:5c:f8</td></tr>
+<tr><td><b>processor</b></td><td>Intel64 Family 6 Model 58 Stepping 9, GenuineIntel</td></tr>
+<tr><td><b>ram</b></td><td>6 GB</td></tr>
+</tbody></table></td>
+</tr>
+<tr class="p7033" style="background-color: rgb(84, 18, 59);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:34:29.131689</td>
+<td>7033</td>
+<td>0x1</td>
+<td>Login exit (called from 00016)</td>
+<td>Exited at 2021/03/15 &nbsp;&nbsp;&nbsp; 10:34:29.131689</td>
+</tr>
+<tr class="p7033" style="background-color: rgb(84, 18, 59);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:34:05.792460</td>
+<td>7033</td>
+<td>002</td>
+<td>Server connected successfully!</td>
+<td><u><b>Server version:</b></u> 5.4.0.1<br><b><u>Load latency:</u></b> 1.5912868976593018s</td>
+</tr>
+<tr class="p7033" style="background-color: rgb(84, 18, 59);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:34:04.200167</td>
+<td>7033</td>
+<td>001</td>
+<td><u><b>App V</b></u>5.50001<br><u><b>Launched at</b></u>: 2021/03/15  10:34:00.897566<br><u><b>User Ip:</b></u> {"ip":"103.199.155.246","country":"Bangladesh","cc":"BD"}<br><u><b>Timezone:</b></u> +06:00<br><u><b>Start up latency:</b></u> 3.3645992279052734s</td>
+<td><table class="device_info"><tbody><tr><td><b>platform</b></td><td>Windows</td></tr>
+<tr><td><b>platform-release</b></td><td>10</td></tr>
+<tr><td><b>platform-version</b></td><td>10.0.19041</td></tr>
+<tr><td><b>architecture</b></td><td>AMD64</td></tr>
+<tr><td><b>hostname</b></td><td>DESKTOP-658FGI3</td></tr>
+<tr><td><b>ip-address</b></td><td>192.168.0.100</td></tr>
+<tr><td><b>mac-address</b></td><td>94:de:80:4c:5c:f8</td></tr>
+<tr><td><b>processor</b></td><td>Intel64 Family 6 Model 58 Stepping 9, GenuineIntel</td></tr>
+<tr><td><b>ram</b></td><td>6 GB</td></tr>
+</tbody></table></td>
+</tr>
+<tr class="p3446" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:33:33.732055</td>
+<td>3446</td>
+<td>0x1</td>
+<td>Login exit (called from 00016)</td>
+<td>Exited at 2021/03/15 &nbsp;&nbsp;&nbsp; 10:33:33.732055</td>
+</tr>
+<tr class="p3446" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:33:32.329054</td>
+<td>3446</td>
+<td>002</td>
+<td>Server connected successfully!</td>
+<td><u><b>Server version:</b></u> 5.4.0.1<br><b><u>Load latency:</u></b> 2.7359983921051025s</td>
+</tr>
+<tr class="p3446" style="background-color: rgb(47, 22, 58);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:33:29.591056</td>
+<td>3446</td>
+<td>001</td>
+<td><u><b>App V</b></u>5.50001<br><u><b>Launched at</b></u>: 2021/03/15  10:33:27.175056<br><u><b>User Ip:</b></u> {"ip":"103.199.155.246","country":"Bangladesh","cc":"BD"}<br><u><b>Timezone:</b></u> +06:00<br><u><b>Start up latency:</b></u> 2.482999324798584s</td>
+<td><table class="device_info"><tbody><tr><td><b>platform</b></td><td>Windows</td></tr>
+<tr><td><b>platform-release</b></td><td>10</td></tr>
+<tr><td><b>platform-version</b></td><td>10.0.19041</td></tr>
+<tr><td><b>architecture</b></td><td>AMD64</td></tr>
+<tr><td><b>hostname</b></td><td>DESKTOP-658FGI3</td></tr>
+<tr><td><b>ip-address</b></td><td>192.168.0.100</td></tr>
+<tr><td><b>mac-address</b></td><td>94:de:80:4c:5c:f8</td></tr>
+<tr><td><b>processor</b></td><td>Intel64 Family 6 Model 58 Stepping 9, GenuineIntel</td></tr>
+<tr><td><b>ram</b></td><td>6 GB</td></tr>
+</tbody></table></td>
+</tr>
+<tr class="p6091" style="background-color: rgb(15, 52, 96);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:07:50.229460</td>
+<td>6091</td>
+<td>0x1</td>
+<td>User Exit-0 (called from 10009)</td>
+<td>Exited at 2021/03/15 &nbsp;&nbsp;&nbsp; 10:07:50.229460</td>
+</tr>
+<tr class="p6091" style="background-color: rgb(15, 52, 96);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:07:48.665573</td>
+<td>6091</td>
+<td>00017</td>
+<td>Failed to <b>connect</b> to the arg Web page</td>
+<td><b><u>Link:</u></b><a href="http://localhost:4692/" target="_blank"> http://localhost:4692</a><br><b><u>Header index:</u></b> 94 <br><b><u>Called by:</u></b> 1000B</td>
+</tr>
+<tr class="p6091" style="background-color: rgb(15, 52, 96);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:07:48.649577</td>
+<td>6091</td>
+<td>00017</td>
+<td>Failed to <b>connect</b> to the arg Web page</td>
+<td><b><u>Link:</u></b><a href="http://localhost:4692/" target="_blank"> http://localhost:4692</a><br><b><u>Header index:</u></b> 46 <br><b><u>Called by:</u></b> 1000B</td>
+</tr>
+<tr class="p6091" style="background-color: rgb(15, 52, 96);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:07:38.051507</td>
+<td>6091</td>
+<td>003</td>
+<td>User logged in</td>
+<td><u><b>User Hash: </b></u> eb23efbb267893b699389ae74854547979d265bd<br><u><b>Log in at</b></u> 2021/03/15 10:07:38.051507</td>
+</tr>
+<tr class="p6091" style="background-color: rgb(15, 52, 96);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:07:35.919508</td>
+<td>6091</td>
+<td>002</td>
+<td>Server connected successfully!</td>
+<td><u><b>Server version:</b></u> 5.4.0.1<br><b><u>Load latency:</u></b> 1.684769630432129s</td>
+</tr>
+<tr class="p6091" style="background-color: rgb(15, 52, 96);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:07:34.233738</td>
+<td>6091</td>
+<td>001</td>
+<td><u><b>App V</b></u>5.50001<br><u><b>Launched at</b></u>: 2021/03/15  10:07:31.262908<br><u><b>User Ip:</b></u> {"ip":"103.199.155.246","country":"Bangladesh","cc":"BD"}<br><u><b>Timezone:</b></u> +06:00<br><u><b>Start up latency:</b></u> 3.0368330478668213s</td>
+<td><table class="device_info"><tbody><tr><td><b>platform</b></td><td>Windows</td></tr>
+<tr><td><b>platform-release</b></td><td>10</td></tr>
+<tr><td><b>platform-version</b></td><td>10.0.19041</td></tr>
+<tr><td><b>architecture</b></td><td>AMD64</td></tr>
+<tr><td><b>hostname</b></td><td>DESKTOP-658FGI3</td></tr>
+<tr><td><b>ip-address</b></td><td>192.168.0.100</td></tr>
+<tr><td><b>mac-address</b></td><td>94:de:80:4c:5c:f8</td></tr>
+<tr><td><b>processor</b></td><td>Intel64 Family 6 Model 58 Stepping 9, GenuineIntel</td></tr>
+<tr><td><b>ram</b></td><td>6 GB</td></tr>
+</tbody></table></td>
+</tr>
+<tr class="p9409" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:06:49.993948</td>
+<td>9409</td>
+<td>003</td>
+<td>User logged in</td>
+<td><u><b>User Hash: </b></u> eb23efbb267893b699389ae74854547979d265bd<br><u><b>Log in at</b></u> 2021/03/15 10:06:49.993948</td>
+</tr>
+<tr class="p9409" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:06:44.752434</td>
+<td>9409</td>
+<td>002</td>
+<td>Server connected successfully!</td>
+<td><u><b>Server version:</b></u> 5.4.0.1<br><b><u>Load latency:</u></b> 1.698997974395752s</td>
+</tr>
+<tr class="p9409" style="background-color: rgb(22, 33, 62);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:06:43.051437</td>
+<td>9409</td>
+<td>001</td>
+<td><u><b>App V</b></u>5.50001<br><u><b>Launched at</b></u>: 2021/03/15  10:06:39.673439<br><u><b>User Ip:</b></u> {"ip":"103.199.155.246","country":"Bangladesh","cc":"BD"}<br><u><b>Timezone:</b></u> +06:00<br><u><b>Start up latency:</b></u> 3.4420018196105957s</td>
+<td><table class="device_info"><tbody><tr><td><b>platform</b></td><td>Windows</td></tr>
+<tr><td><b>platform-release</b></td><td>10</td></tr>
+<tr><td><b>platform-version</b></td><td>10.0.19041</td></tr>
+<tr><td><b>architecture</b></td><td>AMD64</td></tr>
+<tr><td><b>hostname</b></td><td>DESKTOP-658FGI3</td></tr>
+<tr><td><b>ip-address</b></td><td>192.168.0.100</td></tr>
+<tr><td><b>mac-address</b></td><td>94:de:80:4c:5c:f8</td></tr>
+<tr><td><b>processor</b></td><td>Intel64 Family 6 Model 58 Stepping 9, GenuineIntel</td></tr>
+<tr><td><b>ram</b></td><td>6 GB</td></tr>
+</tbody></table></td>
+</tr>
+<tr class="p4020" style="background-color: rgb(84, 18, 59);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:03:28.252850</td>
+<td>4020</td>
+<td>003</td>
+<td>User logged in</td>
+<td><u><b>User Hash: </b></u> eb23efbb267893b699389ae74854547979d265bd<br><u><b>Log in at</b></u> 2021/03/15 10:03:28.252850</td>
+</tr>
+<tr class="p4020" style="background-color: rgb(84, 18, 59);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:03:22.951800</td>
+<td>4020</td>
+<td>002</td>
+<td>Server connected successfully!</td>
+<td><u><b>Server version:</b></u> 5.4.0.1<br><b><u>Load latency:</u></b> 2.597508192062378s</td>
+</tr>
+<tr class="p4020" style="background-color: rgb(84, 18, 59);"><td>2021/03/15 &nbsp;&nbsp;&nbsp; 10:03:20.353291</td>
+<td>4020</td>
+<td>001</td>
+<td><u><b>App V</b></u>5.50001<br><u><b>Launched at</b></u>: 2021/03/15  10:03:17.010289<br><u><b>User Ip:</b></u> {"ip":"103.199.155.246","country":"Bangladesh","cc":"BD"}<br><u><b>Timezone:</b></u> +06:00<br><u><b>Start up latency:</b></u> 3.4240005016326904s</td>
+<td><table class="device_info"><tbody><tr><td><b>platform</b></td><td>Windows</td></tr>
+<tr><td><b>platform-release</b></td><td>10</td></tr>
+<tr><td><b>platform-version</b></td><td>10.0.19041</td></tr>
+<tr><td><b>architecture</b></td><td>AMD64</td></tr>
+<tr><td><b>hostname</b></td><td>DESKTOP-658FGI3</td></tr>
+<tr><td><b>ip-address</b></td><td>192.168.0.100</td></tr>
+<tr><td><b>mac-address</b></td><td>94:de:80:4c:5c:f8</td></tr>
+<tr><td><b>processor</b></td><td>Intel64 Family 6 Model 58 Stepping 9, GenuineIntel</td></tr>
+<tr><td><b>ram</b></td><td>6 GB</td></tr>
+</tbody></table></td>
+</tr>
+	</tbody></table>
+	</div>
+
+
+<script>
+	function search_request(){
+		var sPID= encodeURIComponent(document.getElementById('Process_id').value);
+		var sCode= encodeURIComponent(document.getElementById("Search_Code").value);
+		var sCodePart = encodeURIComponent(document.getElementById("Search_Code_part").value);
+		var sKeyword = encodeURIComponent(document.getElementById('Search_keywords').value);
+
+		var params = "search="+sPID+'+'+sCode+'+'+sCodePart+'+'+sKeyword; // probably use document.getElementById(...).value
+		
+		window.open(params,"_self")
+	}
+
+	for (i = 0; i < pink.length; i++){
+		var xxx= document.getElementsByClassName('p'+pink[i]);
+
+		for(j=0; j<xxx.length; j++){
+			xxx[j].style.backgroundColor= "#2f163a";
+		}
+	}
+
+	for (i = 0; i < light_blue.length; i++){
+		var xxx= document.getElementsByClassName('p'+light_blue[i]);
+
+		for(j=0; j<xxx.length; j++){
+			xxx[j].style.backgroundColor= "#0f3460";
+		}
+	}
+
+	for (i = 0; i < blue.length; i++){
+		var xxx= document.getElementsByClassName('p'+blue[i]);
+
+		for(j=0; j<xxx.length; j++){
+			xxx[j].style.backgroundColor= "#16213e";
+		}
+	}
+
+	for (i = 0; i < purple.length; i++){
+		var xxx= document.getElementsByClassName('p'+purple[i]);
+
+		for(j=0; j<xxx.length; j++){
+			xxx[j].style.backgroundColor= "#54123b";
+		}
+	}
+
+	var _all_links = document.getElementsByTagName('A');
+	for (i = 0; i < _all_links.length; i++){
+		if(_all_links[i].innerText.length>150){
+			var strr= _all_links[i].innerText;
+			_all_links[i].innerText= strr.substring(0, 110)+'...'+strr.substring(strr.length-25, strr.length);
+		}
+	}
+</script>
+
+
+<hr>
+
+<footer id="footer"><br><br><br><br><hr><hr></footer> <script>var response_get = 1615784987.1575232; var response_send = 1615784987.3974056;
+				
+				document.getElementById('response').innerHTML="[Browser] Sent and rendered in " + ((Date.now()/1000)- response_get)+'s';
+				document.getElementById('render').innerHTML="[Browser] Rendered in "+((Date.now()/1000)- response_send)+'s';</script> 
+</body></html>

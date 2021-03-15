@@ -734,7 +734,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 		path = self.translate_path(self.path)
 		print(self.path)
 
-		decrypto_header = open('_server001_decrypto.py').read()
+		decrypto_header = open('_server001_decrypto.html').read()
 		if self.path.startswith('/search='):
 			spid, scode, scodepart, skeyword = (urllib.parse.unquote(part) for part in self.path[8:].split('+'))
 			

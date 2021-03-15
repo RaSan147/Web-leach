@@ -6,11 +6,8 @@ body{
   position: relative;
   min-height: 100vh;
 }
-html, body, input, textarea, select, button {
-    border-color: #736b5e;
-    color: #e8e6e3;
-    background-color: #181a1b !important;
-}
+
+
 * {
     scrollbar-color: #0f0f0f #454a4d;
 }
@@ -35,15 +32,41 @@ a{
 #footer {
   position: absolute;
   bottom: 0;
-  width: 100%%;
+  width: 100%;
   height: 2.5rem;            /* Footer height */
 }
 </style>
 <head>
-
+	
 '''
 
+design_script = '''
+<script>
 
+    function change_style_1(border_, c_, bg_c_){
+		alert(border_+ c_+ bg_c_);
+        var tags1 = ['html', 'body', 'input', 'textarea', 'select', 'button'];
+        for (ii = 0; ii < tags1.length; ii++){
+            var tags2 = document.getElementsByTagName(tags1[ii]);
+            for (jj = 0; jj < tags2.length; jj++){
+                tags2[jj].style.borderColor = border_;
+                tags2[jj].style.color = c_;
+                tags2[jj].style.background = bg_c_;
+
+            }
+        }
+    }
+    var color_mode = localStorage.getItem(window.location.hostname+'-color_mode');
+    if(color_mode === undefined || color_mode === null) {
+    localStorage.setItem(window.location.hostname+'-color_mode', 'Dark');
+    color_mode = 'Dark';
+    }
+
+    if(color_mode=='Dark'){
+        change_style_1('#730', '#e8e6e3', '#181a1b !important');
+    }
+</script>
+'''
 
 
 """HTTP server classes.
@@ -852,7 +875,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 										  errors='surrogatepass'),
 					   html.escape(displayname, quote=False)))
 				
-		r.append('</ul>\n<hr>\n</body>\n<footer id="footer"><br><br><br><br><hr><hr>\n<p style="color: darkgray;">Made by Ratul Hasan with Web leach</p>\n<br><br>\n</footer></html> \n')
+		r.append('</ul>\n<hr>\n</body>\n<footer id="footer"><br><br><br><br><hr><hr>\n<p style="color: darkgray;">Made by Ratul Hasan with Web leach</p>\n<br><br>\n</footer>%sa</html> \n'%(design_script))
 		encoded = '\n'.join(r).encode(enc, 'surrogateescape')
 		f = io.BytesIO()
 		f.write(encoded)

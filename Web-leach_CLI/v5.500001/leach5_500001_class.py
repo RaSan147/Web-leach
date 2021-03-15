@@ -71,7 +71,7 @@ except:
 # MATH tools ######################
 from math import floor
 from random import choice as random_choice, randint
-from hashlib import sha1 as hashlib_sha1
+from hashlib import sha1 as hashlib_sha1, md5 as hashlib_md5
 from re import L, search as re_search,compile as re_compile
 
 from rcrypto import encrypt, decrypt
@@ -117,6 +117,12 @@ try:
 except: pass
 
 from headers_file import header_list        # f_code = 30000
+
+##########################################
+
+#Other Libs###############################
+from collections import Counter
+import re
 ##########################################
 
 # Re Define to speed up###################
@@ -154,9 +160,9 @@ death = False
 # import __main__ # used to load assets in global (idea from pydroid)
 
 
-def remove_duplicate(li):	#func_code= 00000
+def remove_duplicate(seq):	#func_code= 00000
 	"removes duplicates from a list or a tuple"
-	list(dict.fromkeys(seq))
+	return list(dict.fromkeys(seq))
 
 def clear_screen():    #func_code= 00001
 	"""clears terminl output screen"""
@@ -438,8 +444,6 @@ def _connect_net():      #func_code= 0000C
 		time.sleep(5)
 		exit(0)
 
-if __name__ == "__main__":
-	_connect_net()
 
 def run_in_local_server(port, host_dir=''):     #func_code= 0000D
 	"""opens a directory or a file in localhost server using browser
@@ -512,7 +516,7 @@ def safe_input(msg='', input_func=input):     #func_code = 0000F
 	try:
 		try:
 			try:
-				box= input_func()
+				box= input_func('')
 				return box
 			except EOFError:
 				raise LeachICancelError
@@ -963,6 +967,7 @@ class web_leach:
 		task_id: task id (int) to keep resume point stored
 		is_eror: if the funtion is running to retry the failed files *False"""
 		#global total,done, errors, sp_flags, sp_extension, overwrite_bool
+		global err_hdr_list
 		task_id=str(task_id)
 		res=0
 		if self.existing_found:
@@ -1037,7 +1042,8 @@ class web_leach:
 						else:
 							if is_error==False:
 								writer('errors.txt', 'a',str(i+[hdr(current_header,'10002')])+'\n','data/leach_projects/'+self.Project,'10002')
-								writer('err_header.txt','a','%s,'%hdr(current_header,'10002'),'data/','10002')
+								err_hdr_list += Counter([hdr(current_header,'10002')])
+								writer('err_header.txt', 'w', str(err_hdr_list),'data/','10002')
 								self.errors+=1
 								
 
@@ -1066,13 +1072,10 @@ class web_leach:
 				except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout) as e:
 					if is_error==False:
 						writer('errors.txt', 'a',str(i+[hdr(current_header,'10002')])+'\n','data/leach_projects/'+self.Project,'10002')
-						writer('err_header.txt','a','%s,'%hdr(current_header,'10002'),'data/','10002')
-						self.errors+=1
 
-						with open('data/leach_projects/errors.txt', 'w+') as error_hdr_file:
-							temp_ = error_hdr_file.read()
-							err_hdr_list = eval(temp_)
-							if type(err_hdr_list)== tuple:
+						err_hdr_list += Counter([hdr(current_header,'10002')])
+						writer('err_header.txt','w', str(err_hdr_list),'data/','10002')
+						self.errors+=1
 
 
 					else:
@@ -2336,9 +2339,40 @@ for i in range(1,166):
 		print(i)'''
 
 
+#Update err_header.txt#######################################
+with open('data/err_header.txt', 'r') as error_hdr_file:
+	temp_ = re.sub('\,{2,}', ',', error_hdr_file.read())
+
+if temp_[-1]==',': temp_= temp_[:-1]
+
+err_hdr_list = eval(temp_)
+if type(err_hdr_list)== tuple:
+	err_hdr_list = Counter(err_hdr_list)
+	writer('err_header.txt','w',str(err_hdr_list),'data/','00000')
+
+elif type(err_hdr_list)== list:
+	_t = Counter()
+	for i, j in err_hdr_list:
+		_t[i]=j
+	print(_t)
+	err_hdr_list =_t
+	exit()
+	writer('err_header.txt','w',str(err_hdr_list),'data/','00000')
+	exit()
+	
+elif type(err_hdr_list)== dict:
+	err_hdr_list = Counter(err_hdr_list)
+	
+
+#############################################################
+
+
+
 try:
 	init_upto = 'Importing Assets'
 	print("Connecting to server...")
+	_connect_net()
+	init_upto = 'Getting IP'
 	leach_logger("001||"+_VERSION+"||"+Nsys.getSystemInfo()+"||"+user_net_ip+"||"+str(start_up_dt)+"||"+Nsys.get_tz()+"||"+str(time.time()-start_up)+'s', 'lock')
 	server_start=time.time()
 
@@ -2402,6 +2436,12 @@ except KeyboardInterrupt:
 	print("Hard cancel command entered! stopping")
 	leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"'%init_upto)
 	exit(0)
+
+
+
+
+
+
 
 program_class= None
 if __name__ != "__main__":

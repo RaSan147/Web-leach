@@ -1,10 +1,12 @@
-<html>
+<html id= 'html'>
 <head>
 <script>
 var pink=%s;
 var light_blue=%s;
 var blue=%s;
 var purple=%s;
+
+document.getElementById('html').style.scrollbarColor = '#0f0f0f #454a4d';
 
 </script>
 <style type="text/css">
@@ -13,7 +15,7 @@ var purple=%s;
 html, body, input, textarea, select, button {
     background-color: #181a1b !important;
     /* border-color: #736b5e; */
-    color: rgb(216, 212, 207)
+    color: rgb(216, 212, 207);
 }
 body{
   
@@ -21,9 +23,9 @@ body{
   min-height: 100vh;
 }
 
-* {
+/* * {
     scrollbar-color: #0f0f0f #454a4d;
-}
+} */
 a{
   font-size: 20px;
   font-weight: 300;
@@ -83,7 +85,7 @@ td, th {
 
 #stats{
   line-height: 40px;
-
+}
 #footer {
   position: absolute;
   bottom: 0;
