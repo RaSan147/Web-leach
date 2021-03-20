@@ -42,6 +42,7 @@ requirements_win= ['pypiwin32', 'comtypes', 'pyopenssl', 'psutil']
 #>>>>>auto webpage generator (5.3_class)
 #>>>>>auto localhost creation after login (5.3_class)
 #>>>>>generate port based on user hash (5.3_class)
+#>>>>>added nhentai.to proxy after nhentai.xxx proxy (5.500001_class)
 
 
 ara_ara= False #to control parody noise
@@ -1124,7 +1125,7 @@ class web_leach:
 
 		if special!=None:
 			if special.startswith('nhentai'):
-				if special=="nhentai.xxx":# if special=="nhentai.to":
+				if special=="nhentai.xxx":
 					xxx_search= re_compile("https://cdn.nhentai.xxx/g/\d+/\d*t..*")
 					for imgs in soup.find_all('img'):
 						img_link=imgs.get('data-src')
@@ -1133,7 +1134,8 @@ class web_leach:
 						if xxx_search.search(img_link)!=None:
 							self.all_list.append((''.join([img_link.rpartition('t')[0], img_link.rpartition('t')[2]]), 0))
 							img_link.rpartition('t')[1]
-					'''to_search= re_compile("(https://nhentai.to/galleries/\d*/)|(https://cdn.dogehls.xyz/galleries/\d*/)")
+				elif special=="nhentai.to":
+					to_search= re_compile("(https://nhentai.to/galleries/\d*/)|(https://cdn.dogehls.xyz/galleries/\d*/)")
 					for imgs in soup.find_all('img'):
 						img_link=imgs.get('data-src')
 						if img_link== None:
@@ -1144,7 +1146,8 @@ class web_leach:
 							img_link= img_link[::-1].replace('t','',1)[::-1]
 
 						if to_search.search(img_link)!=None:
-							self.all_list.append((img_link, 0))'''
+							self.all_list.append((img_link, 0))
+
 
 				elif special=="nhentai.net":
 					net_search=re_compile("https://i.nhentai.net/galleries/\d*/")
@@ -1261,18 +1264,37 @@ class web_leach:
 				# thumb_pattern="https://t.nhentai.net/galleries/\d/\dt."
 
 		except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema):
+			leach_logger("606x1||%s||%s||%s"%(self.Project, link, hdr(current_header,'10005')), user_name)
 			print('nhentai.net server is not reachable, trying proxy server...')
 			link_y='https://nhentai.xxx/g/'+code+'/'
 			# link_y='https://nhentai.to/g/'+code+'/'
 			try:
 				page = requests.get(link_y,headers=header_())
+				if page:
+					site=".xxx"
+				else:
+					raise requests.exceptions.ConnectionError
 			except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema):
+				delete_last_line()
 				print("\033[1;31;40mError code: 606x2\nLink not found, Please recheck the link and start a new project\033[0m")
 				leach_logger("606x2||%s||%s||%s"%(self.Project, link, hdr(current_header,'10005')), user_name)
-				return False, False
+				delete_last_line()
+				print('nhentai.net server is not reachable, trying proxy server...(2)')
+				link_y='https://nhentai.to/g/'+code+'/'
+				# link_y='https://nhentai.to/g/'+code+'/'
+				try:
+					page = requests.get(link_y,headers=header_())
+					if page:
+						site=".to"
+					else:
+						raise requests.exceptions.ConnectionError
+				except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema):
+					# delete_last_line()
+					print("\033[1;31;40mError code: 606x3\nLink not found, Please recheck the link and start a new project\033[0m")
+					leach_logger("606x3||%s||%s||%s"%(self.Project, link, hdr(current_header,'10005')), user_name)
+					return False, False
 
-			site='.xxx'
-			leach_logger("606x1||%s||%s||%s"%(self.Project, link, hdr(current_header,'10005')), user_name)
+			
 		self.file_types= img
 		if page:
 			soup=bs(page.content, parser)
@@ -1440,7 +1462,7 @@ class web_leach:
 		if self.dl_done==False:
 			writer(self.Project+'.proj','a','dl_done = True\n','data/leach_projects','10008')
 		else: print("\nPlease retry some time later to get higher chances to download some or all %d missing file/s"%self.errors)
-		print('\n\nEnter "x" to open the first page\n or just press Enter to continue: ')
+		print('\n\nEnter \u001b[1m\u001b[4m\u001b[7m x \033[0m to open the first page\n or just press Enter to continue: ')
 		self.dl_done=True
 	def data_checkup(self, path = None, proj_name = None):     # f_code = 11000
 		if path!=None:
@@ -1671,10 +1693,7 @@ class web_leach:
 					sp_arg_flag['disable dl get'] = False
 					print('Enabled download save by using requests.get [DEFAULT]')
 					return 0
-					
-				elif any(i in self.Project for i in '\\/|:*"><?'):
-					print("\n>> Project name can't have ")
-					print("\\ / | : * \" > < ?\n".center(20))
+
 				else:
 					self.Project= self.Project
 					break
@@ -1688,7 +1707,7 @@ class web_leach:
 		try:
 			from_file= True
 			if temp1.endswith('.proj') and os_isfile(temp1):
-				if asker("Project file detected.\n\u29bf Do you want re-open project from that file?"):
+				if asker("Project file detected.\n\u29bf Do you want re-open project from that file?\n >> "):
 					leach_logger("10009x0||%s||fileOpen"%(self.Project),user_name)
 					if self.data_checkup(path = temp1, proj_name= temp)==0:
 						return 0
@@ -1717,6 +1736,11 @@ class web_leach:
 		
 
 		del temp, temp1
+
+		if any(i in self.Project for i in '\\/|:*"><?'):
+			print("\n>> Project name can't have ")
+			print("\\ / | : * \" > < ?\n".center(20))
+			return 0
 
 		if self.existing_found==False:
 			if self.update:
@@ -2284,6 +2308,8 @@ class web_leach:
 
 		will_open = None
 
+		exec(open('make_html.py').read(), globals())
+
 		if not 'mangafreak' in self.sp_flags:
 			#print(True)
 			first_page=make_pages(self.all_list,self.sub_dirs, self.Project, self.sequence)
@@ -2346,19 +2372,21 @@ with open('data/err_header.txt', 'r') as error_hdr_file:
 if temp_[-1]==',': temp_= temp_[:-1]
 
 err_hdr_list = eval(temp_)
+#print(type(err_hdr_list))
 if type(err_hdr_list)== tuple:
 	err_hdr_list = Counter(err_hdr_list)
+
 	writer('err_header.txt','w',str(err_hdr_list),'data/','00000')
 
 elif type(err_hdr_list)== list:
 	_t = Counter()
 	for i, j in err_hdr_list:
 		_t[i]=j
-	print(_t)
+
 	err_hdr_list =_t
-	exit()
+
 	writer('err_header.txt','w',str(err_hdr_list),'data/','00000')
-	exit()
+
 	
 elif type(err_hdr_list)== dict:
 	err_hdr_list = Counter(err_hdr_list)

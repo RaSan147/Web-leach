@@ -94,7 +94,8 @@ CON                    \|:*"><?
 606x >>>  [print debug, not stored in .db file] (Network issue) (sp_link) failed to reach sp_link like nh, mangafreak
             ||Project name||NH link||header index
           1  >>>  failed to connect nhentai.net site, possible cause wrong link or location blocked or internet issue
-          2  >>>  failed to connect nhentai.to site, possible cause wrong link or internet issue
+          2  >>>  failed to connect nhentai.xxx site, possible cause wrong link or internet issue
+          3  >>>  failed to connect nhentai.to site, possible cause wrong link or internet issue
 
 606  >>>  [deprecated] (Network issue ) (pastebin)   failed to connect to the pastebin
 

@@ -913,7 +913,11 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 						
 						if self.decrypto_dat[i][2][4]== '2':
 							self.decrypto_dat[i][4]='<b><u>NH link:</u></b> %s<br><b><u>Header index:</u></b> %s' %(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= '<i>Project:</i> while connecting <b>nhentai.xxx</b><br>Returning Failed Code' %self.decrypto_dat[i][3]
+							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s<br><i>Network issue</i> while connecting <b>nhentai.xxx</b><br>Trying Proxy server(2)' %self.decrypto_dat[i][3]
+
+						if self.decrypto_dat[i][2][4]== '3':
+							self.decrypto_dat[i][4]='<b><u>NH link:</u></b> %s<br><b><u>Header index:</u></b> %s' %(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
+							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s<br><i>Network issue</i> while connecting <b>nhentai.to</b><br>Returning Failed Code' %self.decrypto_dat[i][3]
 
 
 					elif self.decrypto_dat[i][2].startswith('00000x'):
@@ -1115,7 +1119,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 				'content="text/html; charset=%s">' % enc)
 
 			if self.is_get_req:
-				__x='''\n<div id='stats'><p style="color: darkgray;">Made by Ratul Hasan with Web leach</p><br>\n<p>[Server] %i Results Arranged in %ss</p>\n<p>[Server] Decrypted in %ss (%s powered)</p>\n<p>[Server] Table made in %ss</p>\n<p id="render"></p>\n<p id="response"></p>\n</div>'''%(len(self.decrypto_dat), str(time.time()-request_time), read_dec, decryptor_lang, str(table_made))
+				__x='''\n<div id='stats'><p style="color: darkgray;">Made by Ratul Hasan with Web leach</p><br>\n<p>[Server] %i Results Arranged in %ss</p>\n<p>[Server] Decrypted in %ss (%s powered)</p>\n<p>[Server] Table made in %ss (%s parser)</p>\n<p id="render"></p>\n<p id="response"></p>\n</div>'''%(len(self.decrypto_dat), str(time.time()-request_time), read_dec, decryptor_lang, str(table_made), _parser)
 				r.append(decrypto_header%(str(pink), str(Lblue), str(blue), str(purple), __x, '\n'.join(tables)))
 				r.append("""\n<hr>\n</body>\n<footer id="footer"><br><br><br><br><hr><hr></footer> <script>var response_get = %s; var response_send = %s;
 				

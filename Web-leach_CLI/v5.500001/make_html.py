@@ -78,6 +78,24 @@ sub_page_template="""<!DOCTYPE html>
   cursor: pointer;
 }
 
+#LARROW:not(.disabled), #RARROW:not(.disabled){
+  cursor: pointer;
+  color: rgb(200, 195, 188);
+  background-color: #103c8b;
+}
+
+.disabled{
+  cursor: default;
+  color: rgb(200, 195, 188);
+  background-color: #999;
+}
+
+
+#LARROW:not(.disabled):hover, #RARROW:not(.disabled):hover{
+  background-color: rgb(100, 149, 237);
+  color: #EEE;
+}
+
 /* Create a custom radio button */
 .checkmark {
   position: absolute;
@@ -162,7 +180,7 @@ sub_page_template="""<!DOCTYPE html>
       color: #ccc;
       padding: 10px 0;
       height: 150px;
-	    overflow-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     /* Add Animation */
@@ -507,20 +525,22 @@ sub_page_template="""<!DOCTYPE html>
 
 
       var LArrow = document.getElementById('LARROW');
-      LArrow.style.cursor= "pointer";
+      
       LArrow.style.padding='7px';
-      LArrow.style.backgroundColor = '#6495ED';
-      if (modal_img_indx == 0){LArrow.style.backgroundColor= '#999999';}
+      if (modal_img_indx == 0){LArrow.classList.add('disabled');}
+      
       LArrow.innerText='\\u00A0\\u00A0\\u00A0< Prev\\u00A0\\u00A0\\u00A0';
       LArrow.onclick = function(){ 
         if (modal_img_indx != 0){
           modal_img_indx-=1;
           modalImg.src = js_img_src[modal_img_indx];
           document.getElementsByClassName( 'close' )[0].scrollIntoView(); 
-          if (modal_img_indx+1 == js_img_src.length){RArrow.style.backgroundColor= '#999999';}
-          else{RArrow.style.backgroundColor = '#6495ED';}
-          if (modal_img_indx == 0){LArrow.style.backgroundColor= '#999999';}
-          else{LArrow.style.backgroundColor = '#6495ED';}
+          if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
+          else{RArrow.classList.remove('disabled');}
+
+          if (modal_img_indx == 0){LArrow.classList.add('disabled');}
+          else{LArrow.classList.remove('disabled');}
+
         }
         document.getElementById('capt_name').innerText = "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0"+ modalImg.src.replace(/^.*[\\/]/, '') + "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0";
       }
@@ -535,20 +555,20 @@ sub_page_template="""<!DOCTYPE html>
       
 
       var RArrow = document.getElementById('RARROW');
-      RArrow.style.cursor= "pointer";
+      
       RArrow.style.padding='7px';
-      RArrow.style.backgroundColor = '#6495ED';
-      if (modal_img_indx+1 == js_img_src.length){RArrow.style.backgroundColor= '#999999';}
+
+      if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
       RArrow.innerText='\\u00A0\\u00A0\\u00A0Next >\\u00A0\\u00A0\\u00A0'
       RArrow.onclick = function(){
           if (modal_img_indx+1 != js_img_src.length){
             modal_img_indx+=1;
             modalImg.src = js_img_src[modal_img_indx];
             document.getElementsByClassName( 'close' )[0].scrollIntoView(); 
-            if (modal_img_indx+1 == js_img_src.length){RArrow.style.backgroundColor= '#999999';}
-            else{RArrow.style.backgroundColor = '#6495ED';}
-            if (modal_img_indx == 0){LArrow.style.backgroundColor= '#999999';}
-            else{LArrow.style.backgroundColor = '#6495ED';}
+            if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
+            else{RArrow.classList.remove('disabled');}
+            if (modal_img_indx == 0){LArrow.classList.add('disabled');}
+            else{LArrow.classList.remove('disabled');}
           }
           document.getElementById('capt_name').innerHTML = "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0"+ modalImg.src.replace(/^.*[\\/]/, '') + "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0";}
 
@@ -571,10 +591,10 @@ sub_page_template="""<!DOCTYPE html>
         modalImg.src = js_img_src[modal_img_indx];
         document.getElementsByClassName( 'close' )[0].scrollIntoView(); 
       } 
-      if (modal_img_indx+1 == js_img_src.length){RArrow.style.backgroundColor= '#999999';}
-      else{RArrow.style.backgroundColor = '#6495ED';}
-      if (modal_img_indx == 0){LArrow.style.backgroundColor= '#999999';}
-      else{LArrow.style.backgroundColor = '#6495ED';}
+      if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
+          else{RArrow.classList.remove('disabled');}
+      if (modal_img_indx == 0){LArrow.classList.add('disabled');}
+          else{LArrow.classList.remove('disabled');}
       document.getElementById('capt_name').innerText = "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0"+ modalImg.src.replace(/^.*[\\/]/, '') + "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0";
     } 
 
@@ -584,10 +604,10 @@ sub_page_template="""<!DOCTYPE html>
         modalImg.src = js_img_src[modal_img_indx];
         document.getElementsByClassName( 'close' )[0].scrollIntoView();  
       }
-      if (modal_img_indx+1 == js_img_src.length){RArrow.style.backgroundColor= '#999999';}
-      else{RArrow.style.backgroundColor = '#6495ED';}
-      if (modal_img_indx == 0){LArrow.style.backgroundColor= '#999999';}
-      else{LArrow.style.backgroundColor = '#6495ED';}
+      if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
+          else{RArrow.classList.remove('disabled');}
+      if (modal_img_indx == 0){LArrow.classList.add('disabled');}
+          else{LArrow.classList.remove('disabled');}
       document.getElementById('capt_name').innerHTML = "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0"+ modalImg.src.replace(/^.*[\\/]/, '') + "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0";}
   }
 
