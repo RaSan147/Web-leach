@@ -73,7 +73,7 @@ except:
 from math import floor
 from random import choice as random_choice, randint
 from hashlib import sha1 as hashlib_sha1, md5 as hashlib_md5
-from re import L, search as re_search,compile as re_compile
+from re import search as re_search,compile as re_compile, sub as re_sub
 
 from rcrypto import encrypt, decrypt
 ###################################
@@ -123,7 +123,7 @@ from headers_file import header_list        # f_code = 30000
 
 #Other Libs###############################
 from collections import Counter
-import re
+
 ##########################################
 
 # Re Define to speed up###################
@@ -161,11 +161,11 @@ death = False
 # import __main__ # used to load assets in global (idea from pydroid)
 
 
-def remove_duplicate(seq):	#func_code= 00000
+def remove_duplicate(seq):	#func_code=00000
 	"removes duplicates from a list or a tuple"
 	return list(dict.fromkeys(seq))
 
-def clear_screen():    #func_code= 00001
+def clear_screen():    #func_code=00001
 	"""clears terminl output screen"""
 	if os_name=="Windows":
 		os_system('cls')
@@ -173,7 +173,7 @@ def clear_screen():    #func_code= 00001
 		os_system('clear')
 
 
-def delete_last_line():      #func_code= 0002
+def delete_last_line():      #func_code=0002
 	"Use this function to delete the last line in the STDOUT"
 
 	#cursor up one line
@@ -182,8 +182,9 @@ def delete_last_line():      #func_code= 0002
 	#delete last line
 	sys_write('\x1b[2K')
 
-def remove_non_ascii(text, f_code):    #func_code= 00003
-	"""removes ascii charecters from a string
+
+def remove_non_ascii(text, f_code):    #func_code=00003
+	"""[DEPRICATED] [STILL WORKS] removes ascii charecters from a string 
 
 	test: text to remove non ASCII
 
@@ -194,6 +195,17 @@ def remove_non_ascii(text, f_code):    #func_code= 00003
 		print("Failed to remove non-ascii charecters from string.\nError code: 00003x",f_code,'\nPlease inform the author.')
 		leach_logger('00003x-1||'+e.__class__.__name__+('||%s||'%str(e))+f_code+'||'+text)
 
+def remove_non_uni(text, f_code, types= 'str'):    #func_code=00018
+	try:
+		if type(text)==str:
+			text =text.encode('utf-8', 'ignore')
+			if types=='bin': return text
+			return text.decode('utf-8')
+		if types=='bin': return text.decode('utf-8','ignore').encode("utf-8")
+		return text.decode('utf-8','ignore')
+	except Exception as e:
+		print("Failed to remove non-Unicode charecters from string.\nError code: 00018x",f_code,'\nPlease inform the author.')
+		leach_logger('00018x-1||'+e.__class__.__name__+('||%s||'%str(e))+f_code+'||'+types+'||'+text)
 
 def header_():    #func_code=00004
 	"""returns a random header from header_list for requests lib"""
@@ -377,7 +389,7 @@ def leach_logger(io, key='lock'):   #func_code=0000A
 
 #################### CONNECT TO THE NET FOR THE FIRST TIME #################
 
-def run_server(port, cd=None, f_code= 'None'):      #func_code= 0000B
+def run_server(port, cd=None, f_code= 'None'):      #func_code=0000B
 	"""Runs localhost server using python.\n
 	the I/O is suppressed
 
@@ -426,7 +438,7 @@ def run_server(port, cd=None, f_code= 'None'):      #func_code= 0000B
 
 
 
-def _connect_net():      #func_code= 0000C
+def _connect_net():      #func_code=0000C
 	"""connects to the internet and returns the users global ip"""
 	global user_net_ip
 	current_header=header_()
@@ -446,7 +458,7 @@ def _connect_net():      #func_code= 0000C
 		exit(0)
 
 
-def run_in_local_server(port, host_dir=''):     #func_code= 0000D
+def run_in_local_server(port, host_dir=''):     #func_code=0000D
 	"""opens a directory or a file in localhost server using browser
 
 	port : port number\n
@@ -455,7 +467,7 @@ def run_in_local_server(port, host_dir=''):     #func_code= 0000D
 	webbrowser.open_new_tab('http://localhost:%i/%s'%(port, host_dir))
 
 
-def import_paste():      #func_code= 0000E
+def import_paste():      #func_code=0000E
 	"""will import the upload host lib here"""
 	try:pass
 		#from pastebin import send_paste
@@ -512,7 +524,7 @@ sp_arg_flag={'disable dl cancel' : False,
 
 g_mode=False
 # leach_logger('000||0000F||~||~||~||input exit code L&infin;ping for unknown reason')
-def safe_input(msg='', input_func=input):     #func_code = 0000F
+def safe_input(msg='', input_func=input):     #func_code=0000F
 	sys_write(str(msg))
 	try:
 		try:
@@ -534,7 +546,7 @@ def safe_input(msg='', input_func=input):     #func_code = 0000F
 	except KeyboardInterrupt:
 		raise LeachICancelError
 
-def asker(out='', default=None, True_False=(True, False), extra_opt=tuple(), extra_return=tuple()):      #func_code= 00010
+def asker(out='', default=None, True_False=(True, False), extra_opt=tuple(), extra_return=tuple()):      #func_code=00010
 	"""asks for yes no or equevalent inputs
 	out: printing text to ask tha question *empty string
 	default: default output for empty response *None
@@ -563,7 +575,7 @@ def asker(out='', default=None, True_False=(True, False), extra_opt=tuple(), ext
 
 
 
-def get_file_name(directory, mode= 'dir'):      #func_code= 00011
+def get_file_name(directory, mode= 'dir'):      #func_code=00011
 	"""[takes a file directory and returns the last last part of the dir (can be file or folder)
 
 	directory: the file directory, only absolute path to support multiple os
@@ -583,7 +595,7 @@ def get_file_name(directory, mode= 'dir'):      #func_code= 00011
 
 
 
-def get_file_ext(directory, mode='dir', no_format='noformat'):      #func_code= 00012
+def get_file_ext(directory, mode='dir', no_format='noformat'):      #func_code=00012
 	"""to get the extension of a file directory
 
 	directory: file directory relative or direct\n
@@ -596,7 +608,7 @@ def get_file_ext(directory, mode='dir', no_format='noformat'):      #func_code= 
 
 
 
-def reader(direc, read_mode='r'):      #func_code= 00013
+def reader(direc, read_mode='r'):      #func_code=00013
 	if type(read_mode)!=str:
 		print("Invalid read type. Mode must be a string data")
 		raise TypeError
@@ -620,7 +632,7 @@ def reader(direc, read_mode='r'):      #func_code= 00013
 
 
 
-def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, server_link):      #func_code= 00014
+def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, server_link):      #func_code=00014
 	print("An update available v"+_latest_version+"("+_latest_size+"), Do you want to update? ")
 	try:
 		reply= safe_input()
@@ -712,7 +724,7 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 
 _server_version = "5.4"
 
-def god_mode():      #func_code= 00015
+def god_mode():      #func_code=00015
 	global _server_version
 	if os_isdir('data/projects'): rename('data/projects', 'data/leach_projects')
 	if os_isdir('./projects'): rename('./projects', './Download_Projects')
@@ -807,7 +819,7 @@ if os_name=='Windows':
 	import mplay4
 
 
-def log_in():      #func_code= 00016
+def log_in():      #func_code=00016
 	global user_name
 	if boss!=1:
 		userhash=0
@@ -856,7 +868,7 @@ except Exception as e:
 	exit()
 
 
-def check_internet(link, f_code, timeout=None):       # f_code= 00017
+def check_internet(link, f_code, timeout=None):       #f_code=00017
 	"""Check if the connection is available or not
 
 	link: link to check for connection status"""
@@ -1299,7 +1311,7 @@ class web_leach:
 		if page:
 			soup=bs(page.content, parser)
 
-			title=remove_non_ascii(soup.find(id='info').find('h1').get_text(),'10005')
+			title=remove_non_uni(soup.find(id='info').find('h1').get_text(),'10005')
 			print("Indexing from",title)
 			self.file_starts=''
 			self.list_writer(code,0,'nhentai'+site,soup)
@@ -1998,7 +2010,7 @@ class web_leach:
 								#sub_dirs.append(title.replace('/','-').replace('?','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-'))
 								self.file_types=img
 								self.file_starts='https://nhentai'
-								leach_logger('10009x1||%s||is_nh||True'%(self.Project),user_name)
+								leach_logger('10009x1||%s||is_nh||True||Assigned after testing the link'%(self.Project),user_name)
 						
 						else:
 							page = self.dl_done()
@@ -2367,7 +2379,7 @@ for i in range(1,166):
 
 #Update err_header.txt#######################################
 with open('data/err_header.txt', 'r') as error_hdr_file:
-	temp_ = re.sub('\,{2,}', ',', error_hdr_file.read())
+	temp_ = re_sub('\,{2,}', ',', error_hdr_file.read())
 
 if temp_[-1]==',': temp_= temp_[:-1]
 

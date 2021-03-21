@@ -932,11 +932,12 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 							self.decrypto_dat[i][3]= "Failed to Write or Edit data due to <b>Permission Error</b>"
 						# must me elif
 
-					elif self.decrypto_dat[i][2]=='00003':
-						tempI = 'Failed to remove non-ascii charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Called from:</u></b> %s'%(self.decrypto_dat[i][6], self.decrypto_dat[i][5])
-						self.decrypto_dat[i][4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
-						self.decrypto_dat[i][3]= tempI
-						del tempI
+					elif self.decrypto_dat[i][2].startswith('00003x'):
+						if self.decrypto_dat[i][2][6:] == '-1':
+							tempI = 'Failed to remove non-ascii charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Called from:</u></b> %s'%(self.decrypto_dat[i][6], self.decrypto_dat[i][5])
+							self.decrypto_dat[i][4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
+							self.decrypto_dat[i][3]= tempI
+							del tempI
 
 					elif self.decrypto_dat[i][2]=='00006':
 						self.decrypto_dat[i][4] = '<b><u>Package name: </u></b> %s<br><b><u>Pypi internet access: </u></b>%s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
@@ -999,6 +1000,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 							self.decrypto_dat[i][3]+= '<br><b><u>Error code:</u></b> %s'%self.decrypto_dat[i][6]
 
 						except: pass
+
+					if self.decrypto_dat[i][2].startswith('00018x'):
+						if self.decrypto_dat[i][2][6:] == '-1':
+							tempI = 'Failed to remove non-UNICODE charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Return Format:</u></b> %s<br><b><u>Called from:</u></b> %s'%(self.decrypto_dat[i][7], self.decrypto_dat[i][6], self.decrypto_dat[i][5])
+							self.decrypto_dat[i][4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
+							self.decrypto_dat[i][3]= tempI
+							del tempI
+
 
 					if self.decrypto_dat[i][2].startswith('10002x'):
 						if self.decrypto_dat[i][2][6]=='1':
@@ -1072,7 +1081,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 						elif self.decrypto_dat[i][2][6]=='1':
 							self.decrypto_dat[i][3]="<b><u>Project:</u></b> %s <br><b>Assinging variables</b>"%self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]= '<b>%s</b> = <i>%s</i>'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
+							self.decrypto_dat[i][4]= '<b>%s</b> = <i>%s</i>%s'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5], '' if len(self.decrypto_dat[i])<7 else '<i>[%s]</i>'%self.decrypto_dat[i][6])
 
 						elif self.decrypto_dat[i][2][6]=='2':
 							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s <br>Indexing Start'%self.decrypto_dat[i][3]
