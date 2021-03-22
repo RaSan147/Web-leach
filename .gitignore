@@ -4,3 +4,5 @@
 **/data/projects/**/t[0-9]*.txt
 **/.kivy/logs/**.txt
 **/Web-leach_GUi_old
+**/build
+**/dist
