@@ -883,8 +883,40 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 						self.decrypto_dat[i][4]= '<b><u>Update file link:</u></b> %s <br><b><u>Header index:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
 						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Network issue:</u></b> %s'%(self.decrypto_dat[i][5])
 					
+					elif self.decrypto_dat[i][2] == '203':
+						self.decrypto_dat[i][4]= '<i>Downloaded in:</i><br> '+self.decrypto_dat[i][3]
+						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Download Complete</u></b>'
 
-					######## to be continued ####################################################
+					elif self.decrypto_dat[i][2] == '204':
+						self.decrypto_dat[i][4]= '<b><u>Update file link:</u></b> %s <br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s<br><b><u>File list:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4], self.decrypto_dat[i][5], self.decrypto_dat[i][6])
+						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Corrupted zip:</u></b> The zip contains files other than the main .EXE file<br><i>Will be depricated in v0.5.500002</i>'
+
+					elif self.decrypto_dat[i][2] == '205':
+						self.decrypto_dat[i][4]= '-'
+						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Zip extracted</u></b>'
+						
+					elif self.decrypto_dat[i][2] == '206':
+						self.decrypto_dat[i][4]= '-'
+						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Update complete</u></b>'
+						
+					elif self.decrypto_dat[i][2] == '207':
+						self.decrypto_dat[i][4]= '-'
+						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Zip removed</u></b>'
+
+					elif self.decrypto_dat[i][2] == '208':
+						self.decrypto_dat[i][4]= '<b><u>Fake EXE MD5:</u></b> %s <br><b><u>File Link:</u></b> %s<br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4], self.decrypto_dat[i][5], self.decrypto_dat[i][6])
+						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Corrupted EXE:</u></b> MD5 of Downloaded EXE don\'t match with server MD5'
+
+					elif self.decrypto_dat[i][2] == '209':
+						self.decrypto_dat[i][4]= '<b><u>Fake ZIP MD5:</u></b> %s <br><b><u>File Link:</u></b> %s<br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4], self.decrypto_dat[i][5], self.decrypto_dat[i][6])
+						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Corrupted ZIP:</u></b> MD5 of Downloaded ZIP don\'t match with server MD5'
+
+					
+					elif self.decrypto_dat[i][2] == '2FF':
+						self.decrypto_dat[i][4]= '<b><u>Error Code:</u></b> %s<br><b><u>Error String:</u></b> %s<br><b><u>File Link:</u></b> %s<br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s'%(self.decrypto_dat[i][7], self.decrypto_dat[i][8], self.decrypto_dat[i][3], self.decrypto_dat[i][4], self.decrypto_dat[i][5])
+						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Unknown error occured</u></b><br>When <i>%s</i>'%self.decrypto_dat[i][6]
+
+					####################################################
 					elif self.decrypto_dat[i][2].startswith('605x'):
 						while len(self.decrypto_dat[i]) <=4: 
 							self.decrypto_dat[i].append('')
