@@ -7,6 +7,9 @@ Index    SP project Names                   Works
   3    ?disable-dl-get         `sp_arg_flag['disable dl get'] = True`     Disabled download save by using requests.head
   4    ?enable-dl-get          `sp_arg_flag['disable dl get'] = False`    Enabled download save by using requests.get [DEFAULT]
 
+
+  -1   ?E-dl-T                 same as 1
+  -2   ?D-dl-T                 same as 2
   -3   ?D-dl                   same as 3
   -4   ?E-dl                   same as 4
 
@@ -65,9 +68,9 @@ CON                    \|:*"><?
 206  >>>  (updating program) (main file) UPDATE complete
 207  >>>  (updating program) (main file) Zip removed
 208  >>>  (verification failed) (main file) .EXE SHA1 verification Failed, removed both ZIP & EXE for safety
-            ||FAKE EXE SHA1||file link||latest version||server link
+            ||FAKE EXE MD5||file link||latest version||server link
 209  >>>  (verification failed) (main file) .ZIP SHA1 verification Failed, removed ZIP for safety
-            ||FAKE ZIP SHA1||file link||latest version||server link
+            ||FAKE ZIP MD5||file link||latest version||server link
 2FF  >>>  (Unknown Error) (main file) Unknown error occured.
             ||file link||latest version||server link||{WHEN}||ErrorName||Error string
 
