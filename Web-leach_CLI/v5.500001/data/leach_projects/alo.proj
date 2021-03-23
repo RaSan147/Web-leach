@@ -1,0 +1,12 @@
+main_link= "https://www.prothomalo.com/"
+link_startswith= ""
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['www.prothomalo.com']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 1
+sequence = True
+Project = "alo"
+dl_done = True

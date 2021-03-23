@@ -64,8 +64,12 @@ CON                    \|:*"><?
 205  >>>  (updating program) (main file) Unzip complete
 206  >>>  (updating program) (main file) UPDATE complete
 207  >>>  (updating program) (main file) Zip removed
-208  >>>  (verification failed) (main file) MD5 verification Failed, removed both ZIP & EXE for safety
-            ||FAKE EXE MD5||file link||latest version||server link
+208  >>>  (verification failed) (main file) .EXE SHA1 verification Failed, removed both ZIP & EXE for safety
+            ||FAKE EXE SHA1||file link||latest version||server link
+209  >>>  (verification failed) (main file) .ZIP SHA1 verification Failed, removed ZIP for safety
+            ||FAKE ZIP SHA1||file link||latest version||server link
+2FF  >>>  (Unknown Error) (main file) Unknown error occured.
+            ||file link||latest version||server link||{WHEN}||ErrorName||Error string
 
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

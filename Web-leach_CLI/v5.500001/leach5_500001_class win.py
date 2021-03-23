@@ -19,11 +19,11 @@
 #: You data you right. It's stored is encrypted file so others can't see it    *
 #: *****************************************************************************
 
-#py -3.7 -O -m PyInstaller "leach5_500001_class win.py" -F -n "Web leach" --version-file vtesty.version  
+#py -3.7 -O -m PyInstaller "leach5_500001_class win.py" -F -n "Web leach" --version-file vtesty.py -i "EMO Angel.ico"
 
 
 requirements_all= ['requests',  'beautifulsoup4', 'natsort']
-requirements_win= ['pypiwin32', 'comtypes', 'pyopenssl', 'psutil']
+requirements_win= ['pypiwin32', 'comtypes', 'pyopenssl', 'psutil', 'lxml']
 
 							#>>>>>>update>>>>>
 						#=========================
@@ -690,6 +690,40 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 						update_done = int(50 * _dl / update_total_length)
 						print("\r[\033[1;32;40m%s%s\033[0m]" % ('=' * update_done, ' ' * (50-update_done)) , end='')
 			leach_logger("203||"+str(_latest_version))
+
+
+			# Open,close, read file and calculate MD5 on its contents
+
+			if '_latest_check_zip_hash' in globals() and _latest_check_zip_hash:
+				try:
+					_file_name = _latest_filename+'.zip'
+					with open(_file_name, 'rb') as file_to_check:
+						# read contents of the file
+						# _data = file_to_check.read()
+						# pipe contents of the file through
+						md5_returned = hashlib_md5(file_to_check.read()).hexdigest()
+					if _latest_zip_hash == md5_returned:
+						print ("ZIP verified. \n\nPlease use the latest file '"+_latest_filename+".exe'\n this program will break in 7 seconds\n\n")
+						leach_logger("206")
+						remove(_latest_filename+'.zip')
+						leach_logger('207')
+
+						time.sleep(7)
+						exit(0)
+					else:
+						print ("\033[1;31;40mHASH verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+						leach_logger('209||%s'%md5_returned+"||"+_latest_link+'||'+_latest_version+'||'+server_link)
+						remove(_latest_filename+'.zip')
+						remove(_latest_filename+'.exe')
+						raise LeachCorruptionError
+
+				except Exception as e:
+					print ("\033[1;31;40mHASH verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+					leach_logger('2FF||'+_latest_link+'||'+_latest_version+'||'+server_link+'Hashing update ZIP||%s||%s'%(e, e.__class__.__name__))
+					remove(_latest_filename+'.zip')
+					raise LeachCorruptionError
+
+
 			print("\nUnzipping...")
 			server_fucked = False
 			with ZipFile('data/.temp/'+_latest_filename+'.zip') as zf:
@@ -707,39 +741,45 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 
 			leach_logger("205||"+str(_latest_version))
 
-			# File to check
-			_file_name = _latest_filename+'.exe'
+			if '_latest_check_exe_hash' in globals() and _latest_check_zip_hash:
+				try:
+					_file_name = _latest_filename+'.exe'
 
-			# Open,close, read file and calculate MD5 on its contents
-			with open(_file_name, 'rb') as file_to_check:
-				# read contents of the file
-				_data = file_to_check.read()
-				# pipe contents of the file through
-				md5_returned = hashlib_sha1(_data).hexdigest()
-			#print(md5_returned)
-			# Finally compare original MD5 with freshly calculated
-			if _latest_hash == md5_returned:
-				print ("MD5 verified. \n\nPlease use the latest file '"+_latest_filename+".exe'\n this program will break in 7 seconds\n\n")
-				leach_logger("206")
-				remove(_latest_filename+'.zip')
-				leach_logger('207')
+					# Open,close, read file and calculate MD5 on its contents
+					with open(_file_name, 'rb') as file_to_check:
+						# read contents of the file
+						_data = file_to_check.read()
+						# pipe contents of the file through
+						md5_returned = hashlib_md5(_data).hexdigest()
+					#print(md5_returned)
+					# Finally compare original MD5 with freshly calculated
+					if _latest_hash == md5_returned:
+						print ("EXE verified. \n\nPlease use the latest file '"+_latest_filename+".exe'\n this program will break in 7 seconds\n\n")
+						leach_logger("206")
+						remove(_latest_filename+'.zip')
+						leach_logger('207')
 
-				time.sleep(7)
-				exit(0)
-			else:
-				print ("\033[1;31;40mMD5 verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
-				leach_logger('208||%s'%md5_returned+"||"+_latest_link+'||'+_latest_version+'||'+server_link)
-				remove(_latest_filename+'.zip')
-				remove(_latest_filename+'.exe')
-				raise LeachCorruptionError
-				# remove('')
+						time.sleep(7)
+						exit(0)
+					else:
+						print ("\033[1;31;40mHASH verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+						leach_logger('208||%s'%md5_returned+"||"+_latest_link+'||'+_latest_version+'||'+server_link)
+						remove(_latest_filename+'.zip')
+						remove(_latest_filename+'.exe')
+						raise LeachCorruptionError
+				except Exception as e:
+					print ("\033[1;31;40mHASH verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+					leach_logger('2FF||'+_latest_link+'||'+_latest_version+'||'+server_link+'Hashing update EXE||%s||%s'%(e, e.__class__.__name__))
+					remove(_latest_filename+'.zip')
+					remove(_latest_filename+'.exe')
+					raise LeachCorruptionError
 		elif update_response!=False:
 			print("Failed to connect to the host server.\nPlease inform the author!!\nError code 202")
 			leach_logger('202||%s||%s||code:%s'%(_latest_link, hdr(current_header,'00014'), str(update_response.status_code)),'lock')
 
 
 
-_server_version = "5.4"
+# _server_version = "5.4"
 
 def god_mode():      #func_code=00015
 	global _server_version
@@ -3253,6 +3293,7 @@ class web_leach:
 @atexit.register
 def on_exit():
 	leach_logger('0x1||00000||Program Terminated')
+
 
 #test mangafreak all files available
 '''from os.path import os_isdir

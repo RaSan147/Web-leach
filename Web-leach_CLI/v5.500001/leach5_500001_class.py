@@ -88,7 +88,9 @@ from sys import exit as sys_exit,executable as sys_executable
 from sys import stdout as sys_stdout
 from importlib import reload
 from functools import partial
+import atexit
 sys_write=sys_stdout.write
+exit = sys_exit
 del sys_stdout
 ###################################
 
@@ -297,7 +299,10 @@ def writer(fname, mode, data, direc=None, f_code='None', encoding='utf-8'):    #
 	if any(i in fname for i in ('\\|:*"><?')):
 		leach_logger('00008x1||%s'%fname)
 		fname=fname.replace('/','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-')
-
+	if direc == None:
+		direc='./'
+	else:
+		direc ='./'+direc
 	try:
 		if direc == None:
 			if 'b' not in mode:
@@ -515,7 +520,7 @@ boss=0
 
 _VERSION="5.50001"
 
-parser='html.parser'
+parser='lxml'
 img=('jpeg','jpg','png','gif', 'webp', 'bmp', 'tif')
 
 
@@ -682,6 +687,40 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 						update_done = int(50 * _dl / update_total_length)
 						print("\r[\033[1;32;40m%s%s\033[0m]" % ('=' * update_done, ' ' * (50-update_done)) , end='')
 			leach_logger("203||"+str(_latest_version))
+
+
+			# Open,close, read file and calculate MD5 on its contents
+
+			if '_latest_check_zip_hash' in globals() and _latest_check_zip_hash:
+				try:
+					_file_name = _latest_filename+'.zip'
+					with open(_file_name, 'rb') as file_to_check:
+						# read contents of the file
+						# _data = file_to_check.read()
+						# pipe contents of the file through
+						md5_returned = hashlib_md5(file_to_check.read()).hexdigest()
+					if _latest_zip_hash == md5_returned:
+						print ("ZIP verified. \n\nPlease use the latest file '"+_latest_filename+".exe'\n this program will break in 7 seconds\n\n")
+						leach_logger("206")
+						remove(_latest_filename+'.zip')
+						leach_logger('207')
+
+						time.sleep(7)
+						exit(0)
+					else:
+						print ("\033[1;31;40mHASH verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+						leach_logger('209||%s'%md5_returned+"||"+_latest_link+'||'+_latest_version+'||'+server_link)
+						remove(_latest_filename+'.zip')
+						remove(_latest_filename+'.exe')
+						raise LeachCorruptionError
+
+				except Exception as e:
+					print ("\033[1;31;40mHASH verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+					leach_logger('2FF||'+_latest_link+'||'+_latest_version+'||'+server_link+'Hashing update ZIP||%s||%s'%(e, e.__class__.__name__))
+					remove(_latest_filename+'.zip')
+					raise LeachCorruptionError
+
+
 			print("\nUnzipping...")
 			server_fucked = False
 			with ZipFile('data/.temp/'+_latest_filename+'.zip') as zf:
@@ -699,32 +738,38 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 
 			leach_logger("205||"+str(_latest_version))
 
-			# File to check
-			_file_name = _latest_filename+'.exe'
+			if '_latest_check_exe_hash' in globals() and _latest_check_zip_hash:
+				try:
+					_file_name = _latest_filename+'.exe'
 
-			# Open,close, read file and calculate MD5 on its contents
-			with open(_file_name, 'rb') as file_to_check:
-				# read contents of the file
-				_data = file_to_check.read()
-				# pipe contents of the file through
-				md5_returned = hashlib_sha1(_data).hexdigest()
-			#print(md5_returned)
-			# Finally compare original MD5 with freshly calculated
-			if _latest_hash == md5_returned:
-				print ("MD5 verified. \n\nPlease use the latest file '"+_latest_filename+".exe'\n this program will break in 7 seconds\n\n")
-				leach_logger("206")
-				remove(_latest_filename+'.zip')
-				leach_logger('207')
+					# Open,close, read file and calculate MD5 on its contents
+					with open(_file_name, 'rb') as file_to_check:
+						# read contents of the file
+						_data = file_to_check.read()
+						# pipe contents of the file through
+						md5_returned = hashlib_md5(_data).hexdigest()
+					#print(md5_returned)
+					# Finally compare original MD5 with freshly calculated
+					if _latest_hash == md5_returned:
+						print ("EXE verified. \n\nPlease use the latest file '"+_latest_filename+".exe'\n this program will break in 7 seconds\n\n")
+						leach_logger("206")
+						remove(_latest_filename+'.zip')
+						leach_logger('207')
 
-				time.sleep(7)
-				exit(0)
-			else:
-				print ("\033[1;31;40mMD5 verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
-				leach_logger('208||%s'%md5_returned+"||"+_latest_link+'||'+_latest_version+'||'+server_link)
-				remove(_latest_filename+'.zip')
-				remove(_latest_filename+'.exe')
-				raise LeachCorruptionError
-				# remove('')
+						time.sleep(7)
+						exit(0)
+					else:
+						print ("\033[1;31;40mHASH verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+						leach_logger('208||%s'%md5_returned+"||"+_latest_link+'||'+_latest_version+'||'+server_link)
+						remove(_latest_filename+'.zip')
+						remove(_latest_filename+'.exe')
+						raise LeachCorruptionError
+				except Exception as e:
+					print ("\033[1;31;40mHASH verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+					leach_logger('2FF||'+_latest_link+'||'+_latest_version+'||'+server_link+'Hashing update EXE||%s||%s'%(e, e.__class__.__name__))
+					remove(_latest_filename+'.zip')
+					remove(_latest_filename+'.exe')
+					raise LeachCorruptionError
 		elif update_response!=False:
 			print("Failed to connect to the host server.\nPlease inform the author!!\nError code 202")
 			leach_logger('202||%s||%s||code:%s'%(_latest_link, hdr(current_header,'00014'), str(update_response.status_code)),'lock')
@@ -1043,12 +1088,12 @@ class web_leach:
 
 
 								if 'dl unzip' in self.sp_flags:
-									if os_isdir('Download_Projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+'/')==False:
-										makedirs('Download_Projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+'/')
-									with ZipFile('Download_Projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension) as zf:
-										zf.extractall(path='Download_Projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0]))
+									if os_isdir('./Download_Projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+'/')==False:
+										makedirs('./Download_Projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+'/')
+									with ZipFile('./Download_Projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension) as zf:
+										zf.extractall(path='./Download_Projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0]))
 									if 'del dl zip' in self.sp_flags:
-										remove('Download_Projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension)
+										remove('./Download_Projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension)
 
 							writer('t'+task_id+'.txt', 'w',str(res),'data/leach_projects/'+self.Project,'10002')
 
@@ -2377,6 +2422,9 @@ class web_leach:
 
 		return page
 	
+@atexit.register
+def on_exit():
+	leach_logger('0x1||00000||Program Terminated')
 
 
 #test mangafreak all files available
@@ -2387,8 +2435,9 @@ for i in range(1,166):
 
 
 #Update err_header.txt#######################################
-with open('data/err_header.txt', 'r') as error_hdr_file:
-	temp_ = re_sub('\,{2,}', ',', error_hdr_file.read())
+if os_isfile('data/err_header.txt'):
+	with open('data/err_header.txt', 'r') as error_hdr_file:
+		temp_ = re_sub('\,{2,}', ',', error_hdr_file.read())
 
 if temp_[-1]==',': temp_= temp_[:-1]
 
@@ -2456,7 +2505,7 @@ try:
 	'751fa7e19763b50a399806fdcc5dee34'
 
 	try:
-		if not os_isdir("Download_projects"): makedirs("Download_projects")
+		if not os_isdir("./Download_projects"): makedirs("./Download_projects")
 	except PermissionError:
 		print("Can't write in this directory, either change the write permission or move this program to somewhere with write permission.\nError code: 00000x101")
 		leach_logger("00000x101||Download_projects||1")
