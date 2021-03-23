@@ -19,7 +19,7 @@
 #: You data you right. It's stored is encrypted file so others can't see it    *
 #: *****************************************************************************
 
-#py -3.7 -O -m PyInstaller "leach5_500001_class win.py" -F -n "Web leach" --version-file vtesty.py -i "EMO Angel.ico"
+#py -3.7 -O -m PyInstaller "leach5_500001_class win.py" -F -n "Web leach 0.5.5.1" --version-file vtesty.py -i "EMO Angel.ico"
 
 
 requirements_all= ['requests',  'beautifulsoup4', 'natsort']
@@ -46,6 +46,7 @@ requirements_win= ['pypiwin32', 'comtypes', 'pyopenssl', 'psutil', 'lxml']
 #>>>>>auto localhost creation after login (5.3_class)
 #>>>>>generate port based on user hash (5.3_class)
 #>>>>>added nhentai.to proxy after nhentai.xxx proxy (5.500001_class)
+#>>>>>added hash verification control in _version_update (5.500001_class)
 
 
 ara_ara= False #to control parody noise
@@ -779,7 +780,7 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 
 
 
-# _server_version = "5.4"
+_server_version = "5.4"
 
 def god_mode():      #func_code=00015
 	global _server_version
@@ -2611,12 +2612,12 @@ class web_leach:
 					# sys_exit(0)
 				if self.Project=='':
 					print('You must enter a Project name here.')
-				elif self.Project == '?enable-dl-thread':
+				elif self.Project in ['?enable-dl-thread', '?E-dl-T']:
 					sp_arg_flag['disable dl cancel'] = True
 					print('Disabled download cancellation by adding join thread option')
 					return 0
 
-				elif self.Project == '?disable-dl-thread':
+				elif self.Project in ['?dnable-dl-thread', '?D-dl-T']:
 					sp_arg_flag['disable dl cancel'] = False
 					print('Enabled download cancellation by adding removing thread option [DEFAULT]')
 					return 0

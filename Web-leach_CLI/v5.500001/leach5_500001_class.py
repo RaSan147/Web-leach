@@ -43,6 +43,7 @@ requirements_win= ['pypiwin32', 'comtypes', 'pyopenssl', 'psutil', 'lxml']
 #>>>>>auto localhost creation after login (5.3_class)
 #>>>>>generate port based on user hash (5.3_class)
 #>>>>>added nhentai.to proxy after nhentai.xxx proxy (5.500001_class)
+#>>>>>added hash verification control in _version_update (5.500001_class)
 
 
 ara_ara= False #to control parody noise
@@ -1741,12 +1742,12 @@ class web_leach:
 					# sys_exit(0)
 				if self.Project=='':
 					print('You must enter a Project name here.')
-				elif self.Project == '?enable-dl-thread':
+				elif self.Project in ['?enable-dl-thread', '?E-dl-T']:
 					sp_arg_flag['disable dl cancel'] = True
 					print('Disabled download cancellation by adding join thread option')
 					return 0
 
-				elif self.Project == '?disable-dl-thread':
+				elif self.Project in ['?dnable-dl-thread', '?D-dl-T']:
 					sp_arg_flag['disable dl cancel'] = False
 					print('Enabled download cancellation by adding removing thread option [DEFAULT]')
 					return 0
