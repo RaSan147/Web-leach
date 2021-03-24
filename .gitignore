@@ -6,3 +6,4 @@
 **/Web-leach_GUi_old
 **/build
 .vscode/**
+**/__pycache__
