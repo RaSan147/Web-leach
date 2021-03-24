@@ -1,4 +1,0 @@
-10 oct -2020#####-----start-----
->>>> possible cause- visible illusion, selected something on the terminal and it paused
-<<<< sollution, select the terminal and hit enter
-10 oct -2020#####-----end-------
