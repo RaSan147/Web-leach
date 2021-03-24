@@ -1,0 +1,209 @@
+<<<<<<<<<<<<<<<<<<<<  VERSION 5.5_class  <<<<<<<<<<<<<<<<<<
+Index    SP project Names                   Works
+======   =================      ================================================================
+  1    ?enable-dl-thread       `sp_arg_flag['disable dl cancel'] = True`  Disables download cancellation by adding join thread option
+  2    ?disable-dl-thread      `sp_arg_flag['disable dl cancel'] = False` Enables download cancellation by adding removing thread option [DEFAULT]
+
+  3    ?disable-dl-get         `sp_arg_flag['disable dl get'] = True`     Disabled download save by using requests.head
+  4    ?enable-dl-get          `sp_arg_flag['disable dl get'] = False`    Enabled download save by using requests.get [DEFAULT]
+
+
+  -1   ?E-dl-T                 same as 1
+  -2   ?D-dl-T                 same as 2
+  -3   ?D-dl                   same as 3
+  -4   ?E-dl                   same as 4
+
+ key -----------------             values
+========              =================================================================
+CON                    \|:*"><?
+
+ f_codes -------------              info
+=========             ==================================================================
+00000                  main code file with launch functions
+10000                  the leach class that calls the leacher
+20000                  different number based functions I made
+30000                  a collection of headers in a array
+40000                  make_html.py file that creates webpage (.html) files based on leached data
+
+
+
+==================(0)==================
+0x0  >>>  NO internet (to run online mode) or no UPDATE.txt file (to run offline mode) detected
+
+0x1  >>>  user Exit codes
+            ||caller f_code||Message
+
+000  >>> User input cancellations code
+            ||caller f_code||Project name||Command||Situation||Message
+
+001  >>>  app launch
+            ||app version||Device info||user_net_ip||StartUp at (compressed)||User timezone||StartUp Latency (s)
+
+002  >>>  server connected, server latency and version info
+            ||Latency (s)||server version
+
+003  >>>  User logged in
+            ||User Name Hash||Log in time (compressed)
+
+==================(1)==================
+-----------> SysErr CODES<-------------
+
+101  >>>  Write Permission Error
+            ||Caller f_code||file or folder name||directory location
+
+
+
+==================(2)==================
+-----------> UPDATE CODES<-------------
+
+201  >>>  (updating program) (main file) connectiong to server
+            ||latest_version code||file location||current version||backend server version
+202  >>>  (Network issue) (main file) failed connect server
+            ||host link||header index||Error code or Exception class
+203  >>>  (updating program) (main file) download complete
+            ||download time
+204  >>>  (*ZIP files issue) (main file) The zip contains files other than the main .EXE file
+            ||file link||latest version||server link||files list
+205  >>>  (updating program) (main file) Unzip complete
+206  >>>  (updating program) (main file) UPDATE complete
+207  >>>  (updating program) (main file) Zip removed
+208  >>>  (verification failed) (main file) .EXE SHA1 verification Failed, removed both ZIP & EXE for safety
+            ||FAKE EXE MD5||file link||latest version||server link
+209  >>>  (verification failed) (main file) .ZIP SHA1 verification Failed, removed ZIP for safety
+            ||FAKE ZIP MD5||file link||latest version||server link
+2FF  >>>  (Unknown Error) (main file) Unknown error occured.
+            ||file link||latest version||server link||{WHEN}||ErrorName||Error string
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+==================(6)==================
+------------> ERROR CODES<------------
+
+601x >>>  [print debug, not stored in .db file] (corrupted file) (.proj file) and (.list file)
+          ==========CORRUPT CODES=========
+          0  >>>  missing one or both .proj and .list
+          1  >>>  (.proj file)corrupted main link
+          2  >>>  (.proj file)corrupted sub link starts with
+          3  >>>  (.proj file)corrupted file types tuple
+          4  >>>  (.proj file)corrupted file_startswith link (regex)
+          5  >>>  (.proj file)have corrupted sub dir list
+          6  >>>  (.list file)have corrupted sub link (files) list
+
+605x >>>  (Network issue ) (main_link)  failed to connect to the entered link
+            ||header index||link (default= None)||extra (default= None)
+          ==========CORRUPT CODES=========
+          0  >>>  failed to connect a link
+          1  >>>  [✓|✗|✓] (in 0000C) failed to connect with 'https://ident.me' to get user net ip from _connect_net() in 'main file'
+          2  >>>  [✗|✗|✗] failed to do 'from pastebin import send_paste' from import_paste() called by import_paste_t thread in 'main file'
+          3  >>>  [✓|✓|✗] failed to download 'who_r_u.mp3' file in god_mode in 'main file'
+          4  >>>  [✓|✓|✓] failed to download UPDATE file from server link in god_mode in 'main file'
+
+606x >>>  [print debug, not stored in .db file] (Network issue) (sp_link) failed to reach sp_link like nh, mangafreak
+            ||Project name||NH link||header index
+          1  >>>  failed to connect nhentai.net site, possible cause wrong link or location blocked or internet issue
+          2  >>>  failed to connect nhentai.xxx site, possible cause wrong link or internet issue
+          3  >>>  failed to connect nhentai.to site, possible cause wrong link or internet issue
+
+606  >>>  [deprecated] (Network issue ) (pastebin)   failed to connect to the pastebin
+
+607  >>>  [print debug, not stored in .db file] (Indexing Error) (list_writer)error occured in the (indx threads)
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+==================(000)==================
+------------> FUNC ERROR CODES<----------
+00000x  >>>   [main file non-functions]
+              101  >>  Failed to make Files or folders from main function due to permission error
+                          ||File or folder location|| 0 for File, 1 for Folder
+
+00003   >>>   [remove_non_ascii] Failed to remove non-ascii charecters from string.
+                ||ErrorName||error string||f_code||text string
+
+00006   >>>   [install_req] failed to intall missing lib
+                ||Lib name||check_internet(pypi.org)
+
+00008x  >>>   [writter]
+              1  >>>  Invalid file name (will replace `CON` charecters with "-"  except " with ')
+                          ||the file name
+              2  >>>  Invalid directory name (will replace `CON` charecters with "-"  except " with ')
+                          ||the dir
+              101>>>  Failed to write in the specific directory (Permission error)
+                          ||caller func_code||file name||write mode||directory||mkdir permission upto (only when can't write folder)
+              -1 >>>  Unknown error occured while writing a file or making directory
+                          ||ErrorName||caller func_code||file name||write mode||directory||error string
+
+00009x  >>>   [hdr]
+              X  >>>  Unknown header string sent to index. header string was not found in the heared lists (raised ValueError). Returns -1 as index
+                          ||caller f_code||error string||corrupted header string
+              -1 >>>  Unknown error occured. Returns -1 as index
+                          ||caller f_code||ErrorName||error string||corrupted header
+
+0000Bx  >>>   [run_server in `main file`]
+              1  >>>  Hosting directory data type is invalid (not string)
+                          ||Data type||converted srt form of cd parameter (? if not converted)||caller f_code
+              2  >>>  Hosting directory data type is invalid (has `CON` charecters)
+                          ||cd parameter||caller f_code
+              3  >>>  Hosting directory doesn't exist
+                          ||cd parameter||caller f_code
+
+0000Cx  >>>   [_connect_net]
+              -1 >>>  Unknown ERROR occured
+                          ||header index||error name||error string
+
+00017   >>>   [check_internet] No internet access
+                ||link||header index||caller f_code||Error code (not in prev version)
+
+------------------------------------------------------------------------------
+
+10002x  >>>   [web_leach.distribute]
+              1  >>>  Failed to download (possible cause dead link or internet outage)
+                          ||Project name||header index||download link||Error name (new in this 5.4)
+              2  >>>  Failed to unzip downloaded file (possible cause data corruption or wrong file format)
+                          ||Project name||header index||download link
+
+10003x  >>>   1  >>>  Dead dir link while Indexing [Threads]
+                          ||Project name||header index||Dir link||Error Name(5.4)||Error Message(5.4)
+              2  >>>  [Depricated] Dead dir link while Indexing [NO Threads]
+                          ||Project name||header index||Dir link
+
+10005x  >>>   [nhentai_link()](Network issue) failed to reach  nhentai
+                ||Project name||NH link||header index
+              1  >>>  failed to connect nhentai.net site, possible cause wrong link or location blocked or internet issue
+              2  >>>  [Depricated] failed to connect nhentai.to site, possible cause wrong link or internet issue
+              3  >>>  failed to connect nhentai.xxx site, possible cause wrong link or internet issue
+
+10008x  >>>   0  >>>  Started error files fixing
+                          ||Project name||Total files||Number of error files
+              1  >>>  Errors found but error file not found
+                          ||Project name
+              2  >>>  Error fixing complete
+                          ||Project name||Left errors
+
+11000x  >>>   1  >>>  RESET a complete download Project
+                          ||Project name
+              2  >>>  UPDATE an incomplete download Project
+                          ||Project name
+              3  >>>  RESET an incomplete download Project
+                          ||Project name
+              4  >>>  RESUME an incomplete download Project
+                          ||Project name
+
+
+
+10009x  >>>   0  >>>  Project progress
+                          ||Project name||Task or info
+              1  >>>  Project variables
+                          ||Project name||Var||Value
+              2  >>>  Indexing Started
+                          ||Project name||Number of sub links
+              -1 >>>  Unknown Error occured in the Indexing Threads
+                          ||Project name||ErrorName||Error string
+                
+
+
+
+
+
+
+            
+

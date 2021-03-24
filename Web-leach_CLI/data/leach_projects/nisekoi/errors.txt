@@ -1,5 +1,0 @@
-['http://images.mangafreak.net:8080/downloads/nisekoi_2', 0, '148']
-['http://images.mangafreak.net:8080/downloads/nisekoi_3', 0, '105']
-['http://images.mangafreak.net:8080/downloads/nisekoi_1', 0, '40']
-['http://images.mangafreak.net:8080/downloads/nisekoi_6', 0, '70']
-['http://images.mangafreak.net:8080/downloads/nisekoi_5', 0, '164']

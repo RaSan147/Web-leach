@@ -1,0 +1,12 @@
+main_link= "https://nhentai.to/g/299089/"
+link_startswith= "https://nhentai.xxx/g/299089/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['(C96) [Kaminari-neko (Eitarou)] Bokutachi wa Saimin Kakatte Benkyou Dokorojanai - We never learn under Hypnosis (Bokutachi wa Benkyou ga Dekinai) [English] [HypnoMangaEditor]']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = False
+dimention = 0
+sequence = True
+Project = "kirisu 3"
+dl_done = True

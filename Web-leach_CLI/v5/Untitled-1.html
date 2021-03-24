@@ -1,0 +1,64 @@
+<html>
+<style type="text/css">
+body{
+  
+  position: relative;
+  min-height: 100vh;
+}
+
+
+* {
+    scrollbar-color: #0f0f0f #454a4d;
+}
+a{
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
+  text-decoration: none;
+  color: rgb(64, 164, 247);
+}
+
+.link{
+  color: #F00;
+  background-color: rgba(146, 146, 146, 0.282);
+}
+
+.file{
+  font-weight: 300;
+  color: rgb(240, 41, 117);
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%%;
+  height: 2.5rem;            /* Footer height */
+}
+</style>
+<head>
+
+<script>
+
+    function change_style_1(border_, c_, bg_c_){
+        var tags1 = ['html', 'body', 'input', 'textarea', 'select', 'button'];
+        for (i = 0; i < tags1.length; i++){
+            var tags2 = document.getElementsByTagName(tags1[i]);
+            for (j = 0; j < tags2.length; j++){
+                tags2[j].style.borderColor = border_;
+                tags2[j].style.color = c_;
+                tags2[j].style.backgroundColor = bg_c_;
+
+            }
+        }
+    }
+    var color_mode = localStorage.getItem(window.location.hostname+'-color_mode');
+    if(color_mode === undefined || color_mode === null) {
+    localStorage.setItem(window.location.hostname+'-color_mode', 'Dark');
+    color_mode = 'Dark';
+    }
+
+    if(color_mode=='Dark'){
+        change_style_1('#736b5e', '#e8e6e3', '#181a1b !important');
+    }
+    
+</script>
