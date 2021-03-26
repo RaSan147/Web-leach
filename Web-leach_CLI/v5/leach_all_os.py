@@ -522,6 +522,10 @@ boss=0
 _VERSION="5.50001"
 
 parser='lxml'
+try:
+	bs('<br>', parser)
+except:
+	parser = 'html.parser'
 img=('jpeg','jpg','png','gif', 'webp', 'bmp', 'tif')
 
 
@@ -535,7 +539,8 @@ condERR = "Sorry,  I can't understand what you are saying. Just type yes or no. 
 user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
 
 sp_arg_flag={'disable dl cancel' : False,
-			 'disable dl get' : False}
+			 'disable dl get' : False,
+			 'ara ara': True}
 
 g_mode=False
 # leach_logger('000||0000F||~||~||~||input exit code L&infin;ping for unknown reason')
@@ -650,7 +655,7 @@ def reader(direc, read_mode='r'):      #func_code=00013
 def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, server_link):      #func_code=00014
 	print("An update available v"+_latest_version+"("+_latest_size+"), Do you want to update? ")
 	try:
-		reply= safe_input()
+		reply= asker()
 	except LeachICancelError:
 		print('\n\u001b[33;1mCancellation command entered. Skipping uppdate!\u001b[0m\n')
 		leach_logger("update-prompt||f-Exit-ask")
@@ -1754,6 +1759,15 @@ class web_leach:
 					sp_arg_flag['disable dl get'] = False
 					print('Enabled download save by using requests.get [DEFAULT]')
 					return 0
+
+				elif self.Project in ['?enable-ara-ara', '?E-noise'] :
+					sp_arg_flag['ara_ara'] = True
+					print('Enabled fun sounds [DEFAULT]')
+					return 0
+
+				elif self.Project in ['?disable-ara-ara', '?D-noise'] :
+					sp_arg_flag['ara_ara'] = False
+					print('Enabled fun sounds [DEFAULT]')
 
 				else:
 					self.Project= self.Project
