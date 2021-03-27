@@ -19,8 +19,9 @@
 #: You data you right. It's stored is encrypted file so others can't see it    *
 #: *****************************************************************************
 
-requirements_all= ['requests',  'beautifulsoup4', 'natsort']
+requirements_all= ['requests',  'beautifulsoup4', 'natsort', 'youtube-dl']
 requirements_win= ['pypiwin32', 'comtypes', 'pyopenssl', 'psutil', 'lxml']
+_VERSION="5.50002"
 
 							#>>>>>>update>>>>>
 						#=========================
@@ -44,22 +45,25 @@ requirements_win= ['pypiwin32', 'comtypes', 'pyopenssl', 'psutil', 'lxml']
 #>>>>>generate port based on user hash (5.3_class)
 #>>>>>added nhentai.to proxy after nhentai.xxx proxy (5.500001_class)
 #>>>>>added hash verification control in _version_update (5.500001_class)
+#>>>>>switched backend server code link from raw.git... to https://cdn.jsdelivr.net/ (see https://stackoverflow.com/questions/17341122/link-and-execute-external-javascript-file-hosted-on-github) (5.500002)
+
+
 
 
 ara_ara= False #to control parody noise
 
 print("LOADINS ASSETS...")
 
-cloud_data_link_global='https://raw.githubusercontent.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(v5.5%2B).txt'#'https://pastebin.com/raw/Sa9hTd0P' #backend server location
-cloud_data_link='https://raw.githubusercontent.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500001).txt'
+cloud_data_link_global='https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub/Backend_servers/_global(v5.5%2B).txt'#'https://pastebin.com/raw/Sa9hTd0P' #backend server location
+cloud_data_link='https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub/Backend_servers/update%20(server%20v5.500001).txt'
 user_net_ip='offline'
 import time
 
 
 start_up=time.time()
-no_psutil= True
-'''`True` = psutil is not installed
-	`False` = psutil is installed'''
+no_psutil= True #`True` = psutil is not installed \n`False` = psutil is installed'''
+
+no_psutil
 try:
 	import Number_sys_conv as Nsys           #f_code = 20000
 	# different number based functions I made
@@ -518,8 +522,6 @@ boss=0
 		return '/'.join(link.split('/')[:-2])+'/'
 '''
 
-
-_VERSION="5.50001"
 
 parser='lxml'
 try:
