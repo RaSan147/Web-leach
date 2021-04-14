@@ -1,5 +1,5 @@
 **/Download_projects
-*.pyc
+**.pyc
 **/leach_projects/**/t[0-9]*.txt
 **/data/projects/**/t[0-9]*.txt
 **/.kivy/logs/**.txt
