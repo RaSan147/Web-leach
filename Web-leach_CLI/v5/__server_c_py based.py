@@ -1097,11 +1097,11 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 						elif self.decrypto_dat[i][2][6]=='3':
 							self.decrypto_dat[i].append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was Incompleted</b> '%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= '<h5><b><u>Project is RESET</u></b></h5>'
+							self.decrypto_dat[i][3]= '<h5><b><u>Project is RESUMED</u></b></h5>'
 						
 						elif self.decrypto_dat[i][2][6]=='4':
 							self.decrypto_dat[i].append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was Incompleted</b> '%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= '<h5><b><u>Project is RESUMED</u></b></h5>'
+							self.decrypto_dat[i][3]= '<h5><b><u>Project is RESET</u></b></h5>'
 
 					if self.decrypto_dat[i][2].startswith("10009x"):
 						if self.decrypto_dat[i][2][6:]=='-1':

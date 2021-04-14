@@ -183,9 +183,9 @@ CON                    \|:*"><?
                           ||Project name
               2  >>>  UPDATE an incomplete download Project
                           ||Project name
-              3  >>>  RESET an incomplete download Project
+              3  >>>  RESUME an incomplete download Project
                           ||Project name
-              4  >>>  RESUME an incomplete download Project
+              4  >>>  RESET an incomplete download Project
                           ||Project name
 
 

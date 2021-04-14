@@ -1,9 +1,0 @@
-**/Download_projects
-*.pyc
-**/leach_projects/**/t[0-9]*.txt
-**/data/projects/**/t[0-9]*.txt
-**/.kivy/logs/**.txt
-**/Web-leach_GUi_old
-**/build
-.vscode/**
-**/__pycache__
