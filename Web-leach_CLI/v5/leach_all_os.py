@@ -1480,7 +1480,9 @@ class web_leach:
 		_temp =re_search(self.special_starts['mf_sc'], link)
 		if _temp:
 			_temp= str(_temp.group(1))
-			link= 'https://w11.mangafreak.net/Manga/'+ _temp.replace(' ', '_')
+			link= 'https://w11.mangafreak.net/Manga/'+ re_sub('[\+\/\\ \"\<\>\?\-]', '_', _temp)
+			link= re_sub('\_{2+}', '\_', link)
+			link= re_sub('[\!\:\.\'\,]', '', link) 
 
 			try:
 				if requests.head("http://images.mangafreak.net:8080/downloads/"+_temp.replace(' ', '_')+'_1').headers['content-length'] ==0:
