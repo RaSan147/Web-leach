@@ -4,9 +4,9 @@ block_cipher = None
 
 
 a = Analysis(['leach_win_setup.py'],
-             pathex=['D:\\Ratul\\C\\Python\\Web Leach\\Web-leach\\Web-leach_CLI\\v5'],
+             pathex=['E:\\Ratul Codes\\C\\Python\\Web Leach\\Web-leach\\Web-leach_CLI\\v5'],
              binaries=[],
-             datas=[],
+             datas=[('7z.exe', '.')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
