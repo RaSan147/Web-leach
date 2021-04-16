@@ -27,7 +27,7 @@ py -3.9 -m pip install -r r.txt
 '''
 requirements_all= ('requests',  'beautifulsoup4', 'natsort', 'google')
 requirements_win= ('pypiwin32', 'comtypes', 'pyopenssl', 'psutil', 'lxml')
-_VERSION="5.50002"
+_VERSION="5.50003"
 
 							#>>>>>>update>>>>>
 						#=========================
@@ -1814,7 +1814,8 @@ def make_pages(all_li, dir_list, project, seq):
 	first_page=None
 	dir_len = len(dir_list)
 
-	# print(all_li)
+	dir_list= natsort.natsorted(dir_list)
+	first_page = dir_path+'/Download_projects/'+ project+'/'+project+'.html'
 	for i in range(dir_len):
 		temp=[]
 		for j in range(len(all_li)):
@@ -1823,8 +1824,6 @@ def make_pages(all_li, dir_list, project, seq):
 
 		temp=remove_duplicate(temp)
 
-		if i==0:
-			first_page = dir_path+'/Download_projects/'+ project+'/'+project+'.html'
 		if seq:
 			box= sub_page_template%(str(natsort.natsorted(temp)), str((dir_list)), i, project)
 		else:
@@ -3430,6 +3429,7 @@ class web_leach:
 					print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
 				self.all_list=[]
 				self.sub_dirs= [i for i in os_listdir('Download_projects/'+self.Project) if os_isdir('Download_projects/'+self.Project+'/'+i)]
+				# natsort.natsorted([get_file_name(i[0], 'url').split('.')[0] for i in all_list])
 				for i in range(len(self.sub_dirs)):
 					for j in os_listdir('Download_projects/'+self.Project+'/'+self.sub_dirs[i]):
 						# print(j)

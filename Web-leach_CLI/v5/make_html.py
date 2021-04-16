@@ -853,7 +853,8 @@ def make_pages(all_li, dir_list, project, seq):
 	first_page=None
 	dir_len = len(dir_list)
 
-	# print(all_li)
+	dir_list= natsort.natsorted(dir_list)
+	first_page = dir_path+'/Download_projects/'+ project+'/'+project+'.html'
 	for i in range(dir_len):
 		temp=[]
 		for j in range(len(all_li)):
@@ -862,8 +863,6 @@ def make_pages(all_li, dir_list, project, seq):
 
 		temp=remove_duplicate(temp)
 
-		if i==0:
-			first_page = dir_path+'/Download_projects/'+ project+'/'+project+'.html'
 		if seq:
 			box= sub_page_template%(str(natsort.natsorted(temp)), str((dir_list)), i, project)
 		else:
@@ -872,3 +871,4 @@ def make_pages(all_li, dir_list, project, seq):
 		writer(dir_list[i]+'.html', 'w', box,'Download_projects/'+ project+'/'+dir_list[i])
 	writer(project+'.html', 'w', main_page_template%(str((dir_list)), project),'Download_projects/'+ project)
 	return first_page
+
