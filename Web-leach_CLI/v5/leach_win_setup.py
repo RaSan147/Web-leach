@@ -22,9 +22,11 @@
 py -3.9 -m pip freeze > r.txt
 py -3.9 -m pip uninstall -r r.txt -y
 py -3.9 -m pip install pyinstaller
-py -3.9 -O -m PyInstaller "leach_win_setup.py" -F -n "Web leach 0.5.5.2" --version-file vtesty.py -i "EMO Angel.ico" --add-data "7z.exe;." --upx-dir=.
+py -3.9 -O -m PyInstaller "leach_win_setup.py" -F -n "Web leach 0.5.5.3" --version-file vtesty.py -i "EMO Angel.ico" --add-data "7z.exe;." --upx-dir=.
 py -3.9 -m pip install -r r.txt
 '''
+
+
 requirements_all= ('requests',  'beautifulsoup4', 'natsort', 'google')
 requirements_win= ('pypiwin32', 'comtypes', 'pyopenssl', 'psutil', 'lxml')
 _VERSION="5.50003"
@@ -54,130 +56,144 @@ _VERSION="5.50003"
 #>>>>>switched backend server code link from raw.git... to https://cdn.jsdelivr.net/ (see https://stackoverflow.com/questions/17341122/link-and-execute-external-javascript-file-hosted-on-github) (5.500002)
 
 print("LOADINS ASSETS...")
-import ctypes
-
-def Ctitle(title): ctypes.windll.kernel32.SetConsoleTitleW(title)
-Ctitle('Loading Assets')
-
-img=('jpeg','jpg','png','gif', 'webp', 'bmp', 'tif')
-
-
-who_r_u='https://www.myinstants.com/media/sounds/who_r_u_1.mp3'
-yamatte= ('https://www.myinstants.com/media/sounds/yamatte.mp3','https://www.myinstants.com/media/sounds/ara-ara.mp3', 'https://www.myinstants.com/media/sounds/ara-ara2.mp3')
-yes= ('y', 'yes', 'yeah', 'sure', 'ok', 'lets go', "let's go", 'start', 'yep', 'yep', 'well y', 'well yes', 'well yeah', 'well sure', 'well ok', 'well lets go', "well let's go", 'well start', 'well yep', 'well yep', 'actually y', 'actually yes', 'actually yeah', 'actually sure', 'actually ok', 'actually lets go', "actually let's go", 'actually start', 'actually yep', 'actually yep')
-no = ('n', 'no', 'na', 'nah', 'nope', 'stop', 'quit', 'exit', 'not really', 'no', 'not at all', 'never', 'well n', 'well no', 'well na', 'well nah', 'well nope', 'well stop', 'well quit', 'well exit', 'well not really', 'well no', 'well not at all', 'well never', 'actually n', 'actually no', 'actually na', 'actually nah', 'actually nope', 'actually stop', 'actually quit', 'actually exit', 'actually not really', 'actually no', 'actually not at all', 'actually never')
-cond=yes+no
-condERR = "Sorry,  I can't understand what you are saying. Just type yes or no.   "
-
-user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
-
-
-g_mode=False
-ara_ara= False #to control parody noise
-no_log = False #to stop logging
-death = False
-dying= False
-server_code = None
-death_talk = 0
-
-sp_arg_flag={'disable dl cancel' : False,
-			 'disable dl get' : False,
-			 'ara ara': False if ara_ara==None else ara_ara,
-			 'no log': False if no_log==None else no_log}
-
-ara_ara= False #to control parody noise
-
-
-
-cloud_data_link_global='https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub/Backend_servers/_global(v5.5%2B).txt'#'https://pastebin.com/raw/Sa9hTd0P' #backend server location
-cloud_data_link='https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub/Backend_servers/update%20(server%20v5.500002).txt'
-user_net_ip='offline'
-import time
-
-
-start_up=time.time()
-no_psutil= True
-'''`True` = psutil is not installed
-	`False` = psutil is installed'''
-
-
 try:
-	import Number_sys_conv as Nsys           #f_code = 20000
-	# different number based functions I made
-	start_up_dt = Nsys.compressed_dt() #stores when the program was launched
-	no_psutil=False # this means psutils is available
-except:
-	pass
+	import ctypes
 
-#########################################################
+	def Ctitle(title): ctypes.windll.kernel32.SetConsoleTitleW(title)
+	Ctitle('Loading Assets')
 
-# MATH tools ######################
-from math import floor
-from random import choice as random_choice, randint
-from hashlib import sha1 as hashlib_sha1, md5 as hashlib_md5
-from re import search as re_search,compile as re_compile, sub as re_sub
-
-from rcrypto import encrypt, decrypt
-###################################
+	img=('jpeg','jpg','png','gif', 'webp', 'bmp', 'tif')
 
 
-# SYS tools #######################
-from platform import system as os_name
-os_name=os_name()
-from subprocess import call as subprocess_call, Popen as subprocess_Popen, DEVNULL as subprocess_DEVNULL
-from os import devnull as os_devnull
-from sys import exit as sys_exit,executable as sys_executable
-from sys import stdout as sys_stdout
-# from importlib import reload
-# from functools import partial
-import atexit, traceback
-sys_write=sys_stdout.write
-exit = sys_exit
-del sys_stdout
-###################################
+	who_r_u='https://www.myinstants.com/media/sounds/who_r_u_1.mp3'
+	yamatte= ('https://www.myinstants.com/media/sounds/yamatte.mp3','https://www.myinstants.com/media/sounds/ara-ara.mp3', 'https://www.myinstants.com/media/sounds/ara-ara2.mp3')
+	yes= ('y', 'yes', 'yeah', 'sure', 'ok', 'lets go', "let's go", 'start', 'yep', 'yep', 'well y', 'well yes', 'well yeah', 'well sure', 'well ok', 'well lets go', "well let's go", 'well start', 'well yep', 'well yep', 'actually y', 'actually yes', 'actually yeah', 'actually sure', 'actually ok', 'actually lets go', "actually let's go", 'actually start', 'actually yep', 'actually yep')
+	no = ('n', 'no', 'na', 'nah', 'nope', 'stop', 'quit', 'exit', 'not really', 'no', 'not at all', 'never', 'well n', 'well no', 'well na', 'well nah', 'well nope', 'well stop', 'well quit', 'well exit', 'well not really', 'well no', 'well not at all', 'well never', 'actually n', 'actually no', 'actually na', 'actually nah', 'actually nope', 'actually stop', 'actually quit', 'actually exit', 'actually not really', 'actually no', 'actually not at all', 'actually never')
+	cond=yes+no
+	condERR = "Sorry,  I can't understand what you are saying. Just type yes or no.   "
+
+	user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
 
 
+	g_mode=False
+	ara_ara= False #to control parody noise
+	no_log = False #to stop logging
+	death = False
+	dying= False
+	class server_code:
+		def server_close():
+			pass
+	death_talk = 0
 
-# FILE system tools###############
-from os import makedirs, remove, rename, system as os_system, listdir as os_listdir, getcwd as os_getcwd
-from shutil import rmtree as rmdir
-from os.path import exists as os_exists, isdir as os_isdir, isfile as os_isfile, basename as os_basename, dirname as os_dirname, realpath as os_realpath
-from zipfile import ZipFile, BadZipFile
-###################################
+	sp_arg_flag={'disable dl cancel' : False,
+				'disable dl get' : False,
+				'ara ara': False if ara_ara==None else ara_ara,
+				'no log': False if no_log==None else no_log}
+
+	ara_ara= False #to control parody noise
 
 
 
-from threading import Thread as Process
+	cloud_data_link_global='https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub/Backend_servers/_global(v5.5%2B).txt'#'https://pastebin.com/raw/Sa9hTd0P' #backend server location
+	cloud_data_link='https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub/Backend_servers/update%20(server%20v5.500003).txt'
+	user_net_ip='offline'
+	import time
+
+
+	start_up=time.time()
+	no_psutil= True
+	'''`True` = psutil is not installed
+		`False` = psutil is installed'''
+
+
+	try:
+		import Number_sys_conv as Nsys           #f_code = 20000
+		# different number based functions I made
+		start_up_dt = Nsys.compressed_dt() #stores when the program was launched
+		no_psutil=False # this means psutils is available
+	except:
+		pass
+
+	#########################################################
+
+	# SYS tools #######################
+	from sys import exit as sys_exit,executable as sys_executable
+	exit = sys_exit
+	from platform import system as os_name
+	os_name=os_name()
+	from subprocess import call as subprocess_call, Popen as subprocess_Popen, DEVNULL as subprocess_DEVNULL
+	from os import devnull as os_devnull
+	from sys import stdout as sys_stdout
+	# from importlib import reload
+	# from functools import partial
+	import atexit, traceback
+	sys_write=sys_stdout.write
+	del sys_stdout
+	###################################
+
+	# MATH tools ######################
+	from math import floor
+	from random import choice as random_choice, randint
+	from hashlib import sha1 as hashlib_sha1, md5 as hashlib_md5
+	from re import search as re_search,compile as re_compile, sub as re_sub
+
+	from rcrypto import encrypt, decrypt
+	###################################
 
 
 
-# HTML tools##############################
-from html import unescape as html_unescape, escape as html_escape
-from urllib import parse
-import webbrowser
 
-try:
+	# FILE system tools###############
+	from os import makedirs, remove, rename, system as os_system, listdir as os_listdir, getcwd as os_getcwd
+	from shutil import rmtree as rmdir
+	from os.path import exists as os_exists, isdir as os_isdir, isfile as os_isfile, basename as os_basename, dirname as os_dirname, realpath as os_realpath
+	from zipfile import ZipFile, BadZipFile
+	###################################
+
+
+
+	from threading import Thread as Process
+
+
+
+	# HTML tools##############################
+	from html import unescape as html_unescape, escape as html_escape
+	from urllib import parse
+	import webbrowser
+
 	from bs4 import BeautifulSoup as bs
+	parser='lxml'
+	try:
+		bs('<br>', parser)
+	except:
+		parser = 'html.parser'
 	from googlesearch import search as g_search
-	import requests, natsort
-except: pass
+	import requests, urllib3, natsort
 
-from headers_file import header_list        # f_code = 30000
-import _server001_
-##########################################
 
-#Other Libs###############################
-from collections import Counter
+	from headers_file import header_list        # f_code = 30000
+	import _server001_
+	##########################################
 
-##########################################
+	#Other Libs###############################
+	from collections import Counter
 
-# Re Define to speed up###################
-len = len
-range = range
-##########################################
+	##########################################
 
-process_id= randint(2003,9999) # a process ID to identify use multiple windows in the same time from log
+	# Re Define to speed up###################
+	len = len
+	range = range
+	##########################################
 
+	process_id= randint(2003,9999) # a process ID to identify use multiple windows in the same time from log
+except KeyboardInterrupt:
+	print('Hard Exit command entered\n EXITING')
+	from sys import exit as sys_exit
+	sys_exit(0)
+except EOFError:
+	print('Hard Exit command entered\n EXITING')
+	from sys import exit as sys_exit
+	sys_exit(0)
 #==================================================#
 #                ERROR CLASS                       #
 #--------------------------------------------------#
@@ -325,14 +341,7 @@ def header_():    #func_code=00004
 # if os_name=="Windows":
 # 	for i in requirements_win: install_req(i)    #required in mplay4
 
-from bs4 import BeautifulSoup as bs
-parser='lxml'
-try:
-	bs('<br>', parser)
-except:
-	parser = 'html.parser'
-import requests, urllib3, natsort
-from googlesearch import search as g_search
+
 
 def loc(x, _os_name='Linux'):    #func_code=00007
 	"""to fix dir problem based on os
@@ -514,7 +523,9 @@ def run_server(port, cd=None, f_code= 'None'):      #func_code=0000B
 
 def run_server_t(port, cd):      #func_code=0000B
 	global server_code
-	server_code = run_server(port= port, cd= cd)
+	_t = run_server(port= port, cd= cd)
+	if _t!=0:
+		server_code = _t
 	try:
 		server_code.serve_forever()
 	except OSError:
@@ -848,7 +859,7 @@ def god_mode():      #func_code=00015
 		file=requests.get(cloud_data_link, headers=current_header)
 		if file:
 			writer('updateL.ext','wb',file.content,'data/.temp','00015')
-			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip())
+			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip(), globals())
 
 			# _server_version = server_version
 			#print(decrypt(open('data/.temp/update.ext').read().strip(), "lock").strip())
@@ -877,7 +888,7 @@ def god_mode():      #func_code=00015
 		file=requests.get(cloud_data_link_global, headers=current_header)
 		if file:
 			writer('updateG.ext','wb',file.content,'data/.temp','00015')
-			exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip())
+			exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip(), globals())
 
 			# _server_version = server_version
 			#print(decrypt(open('data/.temp/update.ext').read().strip(), "lock").strip())
@@ -1814,7 +1825,6 @@ def make_pages(all_li, dir_list, project, seq):
 	first_page=None
 	dir_len = len(dir_list)
 
-	dir_list= natsort.natsorted(dir_list)
 	first_page = dir_path+'/Download_projects/'+ project+'/'+project+'.html'
 	for i in range(dir_len):
 		temp=[]
@@ -1996,9 +2006,14 @@ class web_leach:
 							
 						if file:
 							if sp_arg_flag['disable dl get']!=True:
-								# clear the file
-								writer(get_file_name(i[0])+self.sp_extension,'wb',b'','Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]], '10002')
-								loaded_file = open('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension, 'wb')
+								if self.break_all: return 0
+								try:
+									writer(get_file_name(i[0])+self.sp_extension,'wb',b'','Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]], '10002')
+									loaded_file = open('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension, 'wb')
+								except IndexError:
+									print('Something Went wrong, Returning to main Menu')
+									self.break_all =True
+									return 0
 								try:
 									for chunk in file.iter_content(chunk_size=8192):
 										if not self.break_all:
@@ -3427,15 +3442,14 @@ class web_leach:
 			if 'mangafreak' in self.sp_flags:
 				if not os_exists('Download_projects/'+self.Project+'/'):
 					print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
+					return 0
 				self.all_list=[]
-				self.sub_dirs= [i for i in os_listdir('Download_projects/'+self.Project) if os_isdir('Download_projects/'+self.Project+'/'+i)]
-				# natsort.natsorted([get_file_name(i[0], 'url').split('.')[0] for i in all_list])
+				self.sub_dirs= natsort.natsorted([i for i in os_listdir('Download_projects/'+self.Project) if os_isdir('Download_projects/'+self.Project+'/'+i)])
 				for i in range(len(self.sub_dirs)):
 					for j in os_listdir('Download_projects/'+self.Project+'/'+self.sub_dirs[i]):
 						# print(j)
 						if os_isfile('Download_projects/'+self.Project+'/'+self.sub_dirs[i]+'/'+j):
 							self.all_list.append([j,i])
-				# print(self.all_list, self.sub_dirs)
 				first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
 
 			if will_open=='x':
@@ -3560,7 +3574,7 @@ class web_leach:
 						print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
 						return 0
 					self.all_list=[]
-					self.sub_dirs= [i for i in os_listdir('Download_projects/'+self.Project) if os_isdir('Download_projects/'+self.Project+'/'+i)]
+					self.sub_dirs= natsort.natsorted([i for i in os_listdir('Download_projects/'+self.Project) if os_isdir('Download_projects/'+self.Project+'/'+i)])
 					for i in range(len(self.sub_dirs)):
 						for j in os_listdir('Download_projects/'+self.Project+'/'+self.sub_dirs[i]):
 							# print(j)

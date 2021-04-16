@@ -6,8 +6,8 @@ VSVersionInfo(
   ffi=FixedFileInfo(
 # filevers and prodvers should be always a tuple with four items: (1, 2, 3, 4)
 # Set not needed items to zero 0.
-filevers=(0, 5, 5, 2),
-prodvers=(0, 5, 5, 2),
+filevers=(0, 5, 5, 3),
+prodvers=(0, 5, 5, 3),
 # Contains a bitmask that specifies the valid bits 'flags'r
 mask=0x3f,
 # Contains a bitmask that specifies the Boolean attributes of the file.
@@ -31,12 +31,12 @@ StringFileInfo(
     u'040904B0',
     [StringStruct(u'CompanyName', u'Chrono world'),
     StringStruct(u'FileDescription', u'Fast Data collector'),
-    StringStruct(u'FileVersion', u'0.5.500002'),
+    StringStruct(u'FileVersion', u'0.5.5000023'),
     StringStruct(u'InternalName', u'Web Leach'),
     StringStruct(u'LegalCopyright', u'Copyright (c) The Apache Software Foundation'),
-    StringStruct(u'OriginalFilename', u'Web Leach 0.5.5.2.exe'),
+    StringStruct(u'OriginalFilename', u'Web Leach 0.5.5.3.exe'),
     StringStruct(u'ProductName', u'Web Leach'),
-    StringStruct(u'ProductVersion', u'0.5.5.2')])
+    StringStruct(u'ProductVersion', u'0.5.5.3')])
   ]), 
 VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
   ]

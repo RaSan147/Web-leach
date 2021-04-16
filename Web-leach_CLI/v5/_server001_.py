@@ -528,7 +528,10 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
 		self.end_headers()
 
 		if self.command != 'HEAD' and body:
-			self.wfile.write(body)
+			try:
+				self.wfile.write(body)
+			except ConnectionAbortedError:
+				return 0
 
 	def send_response(self, code, message=None):
 		"""Add the response header to the headers buffer and log the
@@ -746,6 +749,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 		try:
 			f = open(path, 'rb')
 		except OSError:
+
 			self.send_error(HTTPStatus.NOT_FOUND, "File not found")
 			return None
 
