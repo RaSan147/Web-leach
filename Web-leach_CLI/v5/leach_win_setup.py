@@ -55,6 +55,10 @@ _VERSION="5.50003"
 #>>>>>added nhentai.to proxy after nhentai.xxx proxy (5.500001_class)
 #>>>>>added hash verification control in _version_update (5.500001_class)
 #>>>>>switched backend server code link from raw.git... to https://cdn.jsdelivr.net/ (see https://stackoverflow.com/questions/17341122/link-and-execute-external-javascript-file-hosted-on-github) (5.500002)
+#>>>>>DEPRICATING https://github.com/Ratulhasan14789/Web-Leach_pub/blob/main/Backend_servers/_global(v5.5+).txt
+#>>>>>NEW GLOBAL SERVER https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(aboveV5.5).txt
+#>>>>>NEW LOCAL SERVER https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500003).txt
+
 
 print("LOADINS ASSETS...")
 
@@ -107,8 +111,9 @@ try:
 
 
 	# _server_version = "5.5"
-	cloud_data_link_global='https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub/Backend_servers/_global(v5.5%2B).txt'#'https://pastebin.com/raw/Sa9hTd0P' #backend server location
-	cloud_data_link='https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub/Backend_servers/update%20(server%20v5.500003).txt'
+
+	cloud_data_link_global='https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(aboveV5.5).txt'
+	cloud_data_link='https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500003).txt'
 	user_net_ip='offline'
 
 
@@ -3732,6 +3737,7 @@ try:
 		exec(__update__L)
 		if float(_VERSION)<float(_latest_version):
 			_version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, cloud_data_link)
+
 
 	else: exit(0)
 
