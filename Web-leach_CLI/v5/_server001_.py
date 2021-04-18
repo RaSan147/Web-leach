@@ -1,5 +1,7 @@
 directory_explorer_header = '''
 <html>
+
+<head>
 <style type="text/css">
 body{
   
@@ -39,7 +41,7 @@ a{
   height: 2.5rem;            /* Footer height */
 }
 </style>
-<head>
+
 
 '''
 

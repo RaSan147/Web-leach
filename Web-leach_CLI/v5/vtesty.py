@@ -30,8 +30,8 @@ StringFileInfo(
   StringTable(
     u'040904B0',
     [StringStruct(u'CompanyName', u'Chrono world'),
-    StringStruct(u'FileDescription', u'Fast Data collector'),
-    StringStruct(u'FileVersion', u'0.5.5000023'),
+    StringStruct(u'FileDescription', u'Fast Data Downloader'),
+    StringStruct(u'FileVersion', u'0.5.500003'),
     StringStruct(u'InternalName', u'Web Leach'),
     StringStruct(u'LegalCopyright', u'Copyright (c) The Apache Software Foundation'),
     StringStruct(u'OriginalFilename', u'Web Leach 0.5.5.3.exe'),

@@ -20,7 +20,7 @@
 #: *****************************************************************************
 
 requirements_all= ('requests',  'beautifulsoup4', 'natsort', 'google')
-requirements_win= ('pypiwin32', 'comtypes', 'pyopenssl', 'psutil', 'lxml')
+requirements_win= ('pypiwin32', 'comtypes', 'psutil', 'lxml')
 _VERSION="5.5000201"
 
 							#>>>>>>update>>>>>
@@ -94,9 +94,9 @@ try:
 	import Number_sys_conv as Nsys           #f_code = 20000
 	# different number based functions I made
 	start_up_dt = Nsys.compressed_dt() #stores when the program was launched
-	no_psutil=False # this means psutils is available
 except:
-	pass
+	from datetime import datetime
+	start_up_dt= str(datetime.now())
 
 #########################################################
 
@@ -147,12 +147,21 @@ import webbrowser
 
 try:
 	from bs4 import BeautifulSoup as bs
+	parser='lxml'
+	try:
+		bs('<br>', parser)
+	except:
+		parser = 'html.parser'
 	from googlesearch import search as g_search
-	import requests, natsort
-except: pass
+	import requests, urllib3, natsort
+	import _server001_
+	import mplay4
+
+except:
+	has_all_libs = False
+
 
 from headers_file import header_list        # f_code = 30000
-import _server001_
 ##########################################
 
 #Other Libs###############################
@@ -299,29 +308,27 @@ def install_req(pkz):     #func_code=00006
 
 if no_psutil:
 	install_req('psutil') #required to get win sys info
+	
+
+if has_all_libs == False:
+	for i in requirements_all: install_req(i)
+
+	if os_name=="Windows":
+		for i in requirements_win: install_req(i)    #required in mplay4
+
+	from bs4 import BeautifulSoup as bs
+	parser='lxml'
+	try:
+		bs('<br>', parser)
+	except:
+		parser = 'html.parser'
+	from googlesearch import search as g_search
+	import requests, urllib3, natsort
+	import _server001_
+	import mplay4
 	import Number_sys_conv as Nsys
 
-	start_up_dt = Nsys.compressed_dt()
-	no_psutil=False
-
-for i in requirements_all: install_req(i)
-#install_req('requests')
-#install_req('beautifulsoup4')
-#install_req('natsort')
-
-
-
-if os_name=="Windows":
-	for i in requirements_win: install_req(i)    #required in mplay4
-
-from bs4 import BeautifulSoup as bs
-parser='lxml'
-try:
-	bs('<br>', parser)
-except:
-	parser = 'html.parser'
-import requests, urllib3, natsort
-from googlesearch import search as g_search
+	start_up_dt = Nsys.compressed_dt(start_up_dt)
 
 def loc(x, _os_name='Linux'):    #func_code=00007
 	"""to fix dir problem based on os

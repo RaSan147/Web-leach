@@ -18,18 +18,19 @@
 #: help me finding bugs and assist user. When needed I'll ask for your data.   *
 #: You data you right. It's stored is encrypted file so others can't see it    *
 #: *****************************************************************************
+
+
 '''
 py -3.9 -m pip freeze > r.txt
 py -3.9 -m pip uninstall -r r.txt -y
-py -3.9 -m pip install pyinstaller
+py -3.9 -m pip install pyinstaller, 'requests',  'beautifulsoup4', 'natsort', 'google', 'pypiwin32', 'comtypes', 'psutil', 'lxml'
 py -3.9 -O -m PyInstaller "leach_win_setup.py" -F -n "Web leach 0.5.5.3" --version-file vtesty.py -i "EMO Angel.ico" --add-data "7z.exe;." --upx-dir=.
-py -3.9 -m pip install -r r.txt
 '''
 
-
 requirements_all= ('requests',  'beautifulsoup4', 'natsort', 'google')
-requirements_win= ('pypiwin32', 'comtypes', 'pyopenssl', 'psutil', 'lxml')
+requirements_win= ('pypiwin32', 'comtypes', 'psutil', 'lxml', 'pywin32-ctypes')
 _VERSION="5.50003"
+
 
 							#>>>>>>update>>>>>
 						#=========================
@@ -56,11 +57,17 @@ _VERSION="5.50003"
 #>>>>>switched backend server code link from raw.git... to https://cdn.jsdelivr.net/ (see https://stackoverflow.com/questions/17341122/link-and-execute-external-javascript-file-hosted-on-github) (5.500002)
 
 print("LOADINS ASSETS...")
+
 try:
 	import ctypes
-
 	def Ctitle(title): ctypes.windll.kernel32.SetConsoleTitleW(title)
+
 	Ctitle('Loading Assets')
+
+	import time
+
+	start_up=time.time()
+
 
 	img=('jpeg','jpg','png','gif', 'webp', 'bmp', 'tif')
 
@@ -71,18 +78,24 @@ try:
 	no = ('n', 'no', 'na', 'nah', 'nope', 'stop', 'quit', 'exit', 'not really', 'no', 'not at all', 'never', 'well n', 'well no', 'well na', 'well nah', 'well nope', 'well stop', 'well quit', 'well exit', 'well not really', 'well no', 'well not at all', 'well never', 'actually n', 'actually no', 'actually na', 'actually nah', 'actually nope', 'actually stop', 'actually quit', 'actually exit', 'actually not really', 'actually no', 'actually not at all', 'actually never')
 	cond=yes+no
 	condERR = "Sorry,  I can't understand what you are saying. Just type yes or no.   "
-
+	__update__G = 'pass'
+	__update__L = 'pass'
 	user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
 
 
 	g_mode=False
-	ara_ara= False #to control parody noise
+	ara_ara= True #to control parody noise
 	no_log = False #to stop logging
 	death = False
 	dying= False
 	class server_code:
-		def server_close():
+		def __init__(self=None):
 			pass
+		def server_close(self=None):
+			pass
+		def serve_forever(self=None):
+			pass
+
 	death_talk = 0
 
 	sp_arg_flag={'disable dl cancel' : False,
@@ -93,26 +106,15 @@ try:
 	ara_ara= False #to control parody noise
 
 
-
-	cloud_data_link_global='https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub/Backend_servers/_global(v5.5%2B).txt'#'https://pastebin.com/raw/Sa9hTd0P' #backend server location
-	cloud_data_link='https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub/Backend_servers/update%20(server%20v5.500003).txt'
+	# _server_version = "5.5"
+	cloud_data_link_global='https://raw.githubusercontent.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(v5.5%2B).txt'#'https://pastebin.com/raw/Sa9hTd0P' #backend server location
+	cloud_data_link='https://raw.githubusercontent.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500003).txt'
 	user_net_ip='offline'
-	import time
 
 
-	start_up=time.time()
-	no_psutil= True
-	'''`True` = psutil is not installed
-		`False` = psutil is installed'''
 
-
-	try:
-		import Number_sys_conv as Nsys           #f_code = 20000
-		# different number based functions I made
-		start_up_dt = Nsys.compressed_dt() #stores when the program was launched
-		no_psutil=False # this means psutils is available
-	except:
-		pass
+	import Number_sys_conv as Nsys           #f_code = 20000
+	start_up_dt = Nsys.cdt_()
 
 	#########################################################
 
@@ -160,7 +162,6 @@ try:
 	from html import unescape as html_unescape, escape as html_escape
 	from urllib import parse
 	import webbrowser
-
 	from bs4 import BeautifulSoup as bs
 	parser='lxml'
 	try:
@@ -169,31 +170,37 @@ try:
 		parser = 'html.parser'
 	from googlesearch import search as g_search
 	import requests, urllib3, natsort
+	import _server001_
+
 
 
 	from headers_file import header_list        # f_code = 30000
-	import _server001_
 	##########################################
 
 	#Other Libs###############################
 	from collections import Counter
 
-	##########################################
 
-	# Re Define to speed up###################
-	len = len
-	range = range
-	##########################################
+	import mplay4
 
-	process_id= randint(2003,9999) # a process ID to identify use multiple windows in the same time from log
+	##########################################
 except KeyboardInterrupt:
-	print('Hard Exit command entered\n EXITING')
-	from sys import exit as sys_exit
-	sys_exit(0)
+	print('Hand Cancel Command entered.\nExiting...')
+	import sys
+	sys.exit(0)
 except EOFError:
-	print('Hard Exit command entered\n EXITING')
-	from sys import exit as sys_exit
-	sys_exit(0)
+	print('Hand Cancel Command entered.\nExiting...')
+	import sys
+	sys.exit(0)
+
+
+# Re Define to speed up###################
+len = len
+range = range
+##########################################
+
+process_id= randint(2003,9999) # a process ID to identify use multiple windows in the same time from log
+
 #==================================================#
 #                ERROR CLASS                       #
 #--------------------------------------------------#
@@ -520,16 +527,23 @@ def run_server(port, cd=None, f_code= 'None'):      #func_code=0000B
 	except KeyboardInterrupt:
 		pass
 
-
+server_running = False
 def run_server_t(port, cd):      #func_code=0000B
-	global server_code
+	global server_code, server_running
 	_t = run_server(port= port, cd= cd)
 	if _t!=0:
+		server_code = None
 		server_code = _t
+	else:
+		return 0
 	try:
+		server_running = True
 		server_code.serve_forever()
+
 	except OSError:
 		exit()
+	except:
+		pass
 
 
 def _connect_net():      #func_code=0000C
@@ -541,10 +555,10 @@ def _connect_net():      #func_code=0000C
 		user_net_ip=requests.get('https://api.myip.com/',headers=current_header, timeout=3).content.decode()
 		# print(time.time()-gfh)#return [True, '0']
 	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError) as e:
-		print("\033[1;31;40mError code: 605x1\nNo internet connection!\nThe program will break in 5 seconds\033[0m")
+		print("\033[1;31;40mError code: 605x1\nNo internet connection!\033[0m\nChecking Offline mode...")
 		leach_logger("605x1||%s||%s"%(hdr(current_header,'0000C'), e.__class__.__name__), 'lock')
-		time.sleep(5)
-		exit(0)
+
+
 	except Exception as e:
 		print(e.__class__.__name__, "occurred. Please inform the Author.\nError code: 0000Cx-1(%s)"%e.__class__.__name__)
 		leach_logger("0000Cx-1||"+hdr(current_header,'0000C')+'||%s||%s'%(e.__class__.__name__, str(e)), 'lock')
@@ -832,10 +846,8 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 
 
 
-_server_version = "5.4"
-
 def god_mode():      #func_code=00015
-	global _server_version
+	global _server_version, __update__G, __update__L
 	if os_isdir('data/projects'): rename('data/projects', 'data/leach_projects')
 	if os_isdir('./projects'): rename('./projects', './Download_Projects')
 
@@ -859,7 +871,7 @@ def god_mode():      #func_code=00015
 		file=requests.get(cloud_data_link, headers=current_header)
 		if file:
 			writer('updateL.ext','wb',file.content,'data/.temp','00015')
-			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip(), globals())
+			__update__L= decrypt(open('data/.temp/updateL.ext').read(), "lock").strip()
 
 			# _server_version = server_version
 			#print(decrypt(open('data/.temp/update.ext').read().strip(), "lock").strip())
@@ -888,7 +900,7 @@ def god_mode():      #func_code=00015
 		file=requests.get(cloud_data_link_global, headers=current_header)
 		if file:
 			writer('updateG.ext','wb',file.content,'data/.temp','00015')
-			exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip(), globals())
+			__update__G= decrypt(open('data/.temp/updateG.ext').read(), "lock").strip()
 
 			# _server_version = server_version
 			#print(decrypt(open('data/.temp/update.ext').read().strip(), "lock").strip())
@@ -912,8 +924,7 @@ def god_mode():      #func_code=00015
 		time.sleep(5)
 		exit(0)
 
-	if float(_VERSION)<float(_latest_version):
-		_version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, cloud_data_link)
+	
 	return 'online'
 
 #def upload_paste(data,f_name):
@@ -925,8 +936,6 @@ def god_mode():      #func_code=00015
 """
 
 
-if os_name=='Windows':
-	import mplay4
 
 
 def log_in():      #func_code=00016
@@ -1859,6 +1868,10 @@ def check_internet(link, f_code, timeout=None):       #f_code=00017
 	except (requests.exceptions.ConnectionError, requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout, requests.exceptions.SSLError, urllib3.exceptions.SSLError):
 		leach_logger('00017||%s||%s||%s'%(link, hdr(current_header, '00017'), f_code))
 		return False
+	except KeyboardInterrupt:
+		return False
+	except EOFError:
+		return False
 
 
 class web_leach:
@@ -2531,7 +2544,7 @@ class web_leach:
 		else: print("\nPlease retry some time later to get higher chances to download some or all %d missing file/s"%self.errors)
 		print('\n\nEnter \u001b[1m\u001b[4m\u001b[7m x \033[0m to open the first page\n or just press Enter to continue: ')
 		self.dl_done=True
-	def data_checkup(self, path = None, proj_name = None):     # f_code = 11000
+	def data_checkup(self, path = None, proj_name = None, offline = False):     # f_code = 11000
 		if path!=None:
 			proj_path=path
 			list_path=path[:-5]+'.list'
@@ -2644,6 +2657,7 @@ class web_leach:
 			if proj_good and list_good:
 				if path!=None:
 					self.Project=get_file_name(path)[:-5]
+				if offline: return (True, True)
 				if self.dl_done:
 					print('It seems  the old prject download was complete!!')
 					try:
@@ -2705,10 +2719,12 @@ class web_leach:
 						self.Project= Project
 						self.existing_found= False
 					elif temp== False: return 0
-					del temp
+				return (True, True)
 			else:
 				print("Could not load data from file. Please start over.")
 				self.existing_found=False
+
+				return (False, False)
 
 
 				#print('error')
@@ -2718,10 +2734,15 @@ class web_leach:
 			# self.existing_found=0
 			print('Insufficient data!\n')
 			self.corruptions+=[0]
+			return (False, False)
 	def main(self):      #func_code= 10009
 		global death, sp_arg_flag, server_code, dying, death_talk
 		"""runs the mainloop of the projects runtime code"""
 		self.__init__()
+		try:
+			if not server_running: server_launcher.start()
+		except:
+			pass
 
 
 		while True:
@@ -3443,8 +3464,8 @@ class web_leach:
 				if not os_exists('Download_projects/'+self.Project+'/'):
 					print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
 					return 0
+				self.sub_dirs= natsort.natsorted([get_file_name(i[0]) for i in self.all_list if os_isdir('Download_projects/'+self.Project+'/'+get_file_name(i[0]))])
 				self.all_list=[]
-				self.sub_dirs= natsort.natsorted([i for i in os_listdir('Download_projects/'+self.Project) if os_isdir('Download_projects/'+self.Project+'/'+i)])
 				for i in range(len(self.sub_dirs)):
 					for j in os_listdir('Download_projects/'+self.Project+'/'+self.sub_dirs[i]):
 						# print(j)
@@ -3467,21 +3488,38 @@ class web_leach:
 
 	
 	def main_offline(self):
-		global death, sp_arg_flag
+		global death, sp_arg_flag, server_code, dying, death_talk, server_launcher
 		"""runs the mainloop of the projects runtime code"""
 		self.__init__()
+		try:
+			server_launcher.start()
+		except:
+			pass
 
 
 		while True:
 			try:
+				if death or dying: raise LeachICancelError
 				self.Project=safe_input('\nEnter Batch download directory (Project name): ')
 
 			except LeachICancelError:
-				death = True
-				print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
-				leach_logger("0x1||10009||User Exit-0")
+				dying = True
+				while dying:
+					try:
+						death_talk+=1
+						death = True
+						if death_talk<2: print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
+						leach_logger("0x1||10009||User Exit-0")
 
-				exit(0)
+						while server_code == None: time.sleep(.5)
+
+						server_code.server_close()
+						dying = False
+						exit(0)
+					except EOFError:
+						return 0
+					except KeyboardInterrupt:
+						return 0
 
 			if self.Project=='':
 				print('You must enter a Project name here.')
@@ -3526,6 +3564,8 @@ class web_leach:
 				break
 
 		temp = self.Project
+		proj_good=False
+		list_good=False
 		temp1= temp.replace('"','')
 		if temp1[0]=="'" and temp1[1]=="'": temp[1:-1]
 		try:
@@ -3533,8 +3573,10 @@ class web_leach:
 			if temp1.endswith('.proj') and os_isfile(temp1):
 				if asker("Project file detected.\n\u29bf Do you want re-open project from that file?\n >> "):
 					leach_logger("10009x0||%s||fileOpen"%(self.Project),user_name)
-					if self.data_checkup(path = temp1, proj_name= temp)==0:
+					_temp =self.data_checkup(path = temp1, proj_name= temp, offline = True)
+					if _temp==0:
 						return 0
+					proj_good, list_good = _temp
 				else: from_file = False
 			else: from_file= False
 
@@ -3547,10 +3589,10 @@ class web_leach:
 				leach_logger("10009x0||%s||Checking Project Database"%(self.Project),user_name)
 				if self.Project in open('data/projects.db').read().split('\n'):
 					print('Existing Project name found!')
-					proj_good=False
-					list_good=False
-					if self.data_checkup()==0:
+					_temp= self.data_checkup(offline = True)
+					if _temp==0:
 						return 0
+					proj_good, list_good = _temp
 			del from_file
 		except LeachICancelError:
 			print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
@@ -3569,12 +3611,12 @@ class web_leach:
 		if proj_good and list_good:
 			Ctitle('[Analizing] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
 			if 'mangafreak' in self.sp_flags:
-				if dl_done:
+				if self.dl_done:
 					if not os_exists('Download_projects/'+self.Project+'/'):
 						print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
 						return 0
+					self.sub_dirs= natsort.natsorted([get_file_name(i[0]) for i in self.all_list if os_isdir('Download_projects/'+self.Project+'/'+get_file_name(i[0]))])
 					self.all_list=[]
-					self.sub_dirs= natsort.natsorted([i for i in os_listdir('Download_projects/'+self.Project) if os_isdir('Download_projects/'+self.Project+'/'+i)])
 					for i in range(len(self.sub_dirs)):
 						for j in os_listdir('Download_projects/'+self.Project+'/'+self.sub_dirs[i]):
 							# print(j)
@@ -3585,8 +3627,8 @@ class web_leach:
 
 					
 					print("Local webpage created")
-					if asker("Wanna check the page??\n leave a enter to pass", default=False):
-						run_in_local_server(self.port, host_dir='Download_projects/%s/%s.html'%(self.Project, self.Project))
+					if asker("Wanna check the page??\n leave an enter to pass\n >> ", default=False):
+						run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
 
 
 				else:
@@ -3594,11 +3636,11 @@ class web_leach:
 			else:
 				first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
 				print("Local webpage created")
-				if asker("Wanna check the page??\n leave a enter to pass\n >> ", default=False):
-					run_in_local_server(port, host_dir='Download_projects/%s/%s.html'%(Project, Project))
+				if asker("Wanna check the page??\n leave an enter to pass\n >> ", default=False):
+					run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
 
 		else:
-			print('Sorry, it seems the project data was Corrupted!\nRetry when online...')
+			print('Sorry, it seems there\'s no previous project with this name. \nThere is a chance that the project data was Corrupted!\nRetry when online...')
 
 	
 @atexit.register
@@ -3685,6 +3727,16 @@ try:
 				print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
 				exit(0)
 
+	elif run_mod== 'online':
+		exec(__update__G)
+		exec(__update__L)
+		if float(_VERSION)<float(_latest_version):
+			_version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, cloud_data_link)
+
+	else: exit(0)
+
+	init_upto = 'Loading backend server'
+
 
 	'751fa7e19763b50a399806fdcc5dee34'
 
@@ -3730,7 +3782,8 @@ except KeyboardInterrupt:
 program_class= None
 port= (int(ush, 16) % (6000 - 4000 + 1)) + 4000
 
-Process(target=run_server_t, args= (port, 'Download_projects')).start()
+server_launcher= Process(target=run_server_t, args= (port, 'Download_projects'))
+
 
 if __name__=='__main__':
 	program_class = web_leach()
