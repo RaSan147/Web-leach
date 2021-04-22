@@ -1148,7 +1148,10 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 					tr='<tr class = "p%s">'%_decrypto_dat[1]
 
 					for j in range(5):
-						tr+=td_t%_decrypto_dat[j]
+						try:
+							tr+=td_t%_decrypto_dat[j]
+						except:
+							print(_decrypto_dat)
 					tr+='</tr>'
 					# print(bs(tr, "html.parser").text)
 
@@ -1800,5 +1803,6 @@ if __name__ == '__main__':
 		handler_class = CGIHTTPRequestHandler
 	else:
 		handler_class = partial(SimpleHTTPRequestHandler,
-								directory=args.directory)
+					directory=args.directory)
+		
 	test(HandlerClass=handler_class, port=args.port, bind=args.bind)
