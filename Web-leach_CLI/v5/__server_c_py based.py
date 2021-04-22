@@ -774,19 +774,19 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 					return f
 				if decryptor_lang =='C':
 					try:
-						temp_dec= RxAsuna.Cdecrypt(dec_raw , decrypto_key)
-						for i in temp_dec.replace('\r\n', '\n').split('\n')[::-1]:
-							if i!='':self.decrypto_dat.append(i[40:].split('||')[:-1])
+						self.decrypto_dat = RxAsuna.Cdecrypt(dec_raw , decrypto_key).replace('\r\n', '\n').split('\n')
 					except UnicodeDecodeError:
 						print("Failed!\nEncoding Issue\nSwitching to Python mode")
+						decryptor_lang =None
+					except FileNotFoundError:
+						print("Failed!\nExecutable file not found\nSwitching to Python mode")
 						decryptor_lang =None
 
 					#decryptor_lang = 'C'
 					
 				if decryptor_lang ==None or decryptor_lang == 'Python':
 					try:
-						for i in dec_raw.replace('\r\n', '\n').split('\n')[::-1]:
-							if i!='':self.decrypto_dat.append(RxAsuna.PYdecrypt(i, decrypto_key)[40:].split('||')[:-1])
+						self.decrypto_dat= RxAsuna.PYdecrypt(dec_raw, decrypto_key, 'list')
 						decryptor_lang = 'Python'
 					except Exception as e:
 						print("can't execute the Decryption program, try Recheck if the file Exists\n\n")
@@ -819,311 +819,322 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 				tables=[]
 				td_t = '<td>%s</td>\n'
 				table_made = time.time()
-				for i in range(len(self.decrypto_dat)):
-					if spid!='' and spid!= self.decrypto_dat[i][1]: continue
-					if scode!='' and scode!= self.decrypto_dat[i][2]: continue
-					if scodepart!='' and scodepart not in self.decrypto_dat[i][2]: continue
+				table_len= len(self.decrypto_dat)
+				while self.decrypto_dat!=[]:
+					_decrypto_dat=self.decrypto_dat.pop()
+					if _decrypto_dat=='':
+						table_len-=1
+						continue
+					_decrypto_dat = _decrypto_dat[40:].split('||')[:-1]
+					# print(_decrypto_dat)
+					if spid!='' and spid!= _decrypto_dat[1]: continue
+					if scode!='' and scode!= _decrypto_dat[2]: continue
+					if scodepart!='' and scodepart not in _decrypto_dat[2]: continue
 					
 					try:
-						self.decrypto_dat[i][0]= "%s/%s/%s &nbsp&nbsp&nbsp %s:%s:%s" %Nsys.dec_dt(self.decrypto_dat[i][0])
+						_decrypto_dat[0]= "%s/%s/%s &nbsp&nbsp&nbsp %s:%s:%s" %Nsys.dec_dt(_decrypto_dat[0])
 					except KeyError: pass
 
-					if self.decrypto_dat[i][1] not in self.PIDs: self.PIDs.append(self.decrypto_dat[i][1])
+					if _decrypto_dat[1] not in self.PIDs: self.PIDs.append(_decrypto_dat[1])
 
-					if self.decrypto_dat[i][2]=='0x0':
-						self.decrypto_dat[i].append('Failed to start up')
-						self.decrypto_dat[i].append("No intenter connection (for online mode) nor Update file found (for offline mode)")
+					if _decrypto_dat[2]=='0x0':
+						_decrypto_dat.append('Failed to start up')
+						_decrypto_dat.append("No intenter connection (for online mode) nor Update file found (for offline mode)")
 
-					elif self.decrypto_dat[i][2]=='0x1':
-						self.decrypto_dat[i][3]= '%s (called from %s)' %(self.decrypto_dat[i][4],self.decrypto_dat[i][3])
-						self.decrypto_dat[i][4]= "Exited at %s" %self.decrypto_dat[i][0]
-						# self.decrypto_dat[i]= self.decrypto_dat[i][:5]
-					elif self.decrypto_dat[i][2]=='000':
-						if self.decrypto_dat[i][5]=='f-Stop':
-							temp= " (Called from %s)"%self.decrypto_dat[i][3]
-							temp1= "Input cancelled from \"%s\""%self.decrypto_dat[i][4]
-							temp2= ' (Where %s)'%self.decrypto_dat[i][6]
-							self.decrypto_dat[i][3]= temp1+temp+temp2
+					elif _decrypto_dat[2]=='0x1':
+						_decrypto_dat[3]= '%s (called from %s)' %(_decrypto_dat[4],_decrypto_dat[3])
+						_decrypto_dat[4]= "Exited at %s" %_decrypto_dat[0]
+						# _decrypto_dat= _decrypto_dat[:5]
+					elif _decrypto_dat[2]=='000':
+						if _decrypto_dat[5]=='f-Stop':
+							temp= " (Called from %s)"%_decrypto_dat[3]
+							temp1= "Input cancelled from \"%s\""%_decrypto_dat[4]
+							temp2= ' (Where %s)'%_decrypto_dat[6]
+							_decrypto_dat[3]= temp1+temp+temp2
 							del temp, temp1, temp2
-							self.decrypto_dat[i][4]= self.decrypto_dat[i][7]
-							#self.decrypto_dat[i]=self.decrypto_dat[i][:5]
+							_decrypto_dat[4]= _decrypto_dat[7]
+							#_decrypto_dat=_decrypto_dat[:5]
 
 							
 
-					elif self.decrypto_dat[i][2]=='001':
-						temp= "<u><b>App V</u></b>"+self.decrypto_dat[i][3]+"<br><u><b>Launched at</u></b>: "+("%s/%s/%s  %s:%s:%s" %Nsys.dec_dt(self.decrypto_dat[i][6]))+"<br><u><b>User Ip:</u></b> "+self.decrypto_dat[i][5]+(
-								"<br><u><b>Timezone:</u></b> %s<br><u><b>Start up latency:</u></b> %s"%(self.decrypto_dat[i][7],self.decrypto_dat[i][8]))
+					elif _decrypto_dat[2]=='001':
+						temp= "<u><b>App V</u></b>"+_decrypto_dat[3]+"<br><u><b>Launched at</u></b>: "+("%s/%s/%s  %s:%s:%s" %Nsys.dec_dt(_decrypto_dat[6]))+"<br><u><b>User Ip:</u></b> "+_decrypto_dat[5]+(
+								"<br><u><b>Timezone:</u></b> %s<br><u><b>Start up latency:</u></b> %s"%(_decrypto_dat[7],_decrypto_dat[8]))
 
-						_temp = eval(self.decrypto_dat[i][4])
+						_temp = eval(_decrypto_dat[4])
 						_temp2=''
 						for key in _temp:
 							_temp2+='<tr><td><b>%s</b></td><td>%s</td></tr>\n'%(key, _temp[key])
 
 						_temp2 = '<table class= "device_info">%s</table>'%_temp2
-						self.decrypto_dat[i][3]=temp
-						self.decrypto_dat[i][4]= _temp2
+						_decrypto_dat[3]=temp
+						_decrypto_dat[4]= _temp2
 						del temp, _temp, _temp2
-						#self.decrypto_dat[i]=self.decrypto_dat[i][:5]
+						#_decrypto_dat=_decrypto_dat[:5]
 
 
-					elif self.decrypto_dat[i][2]== '002':
-						self.decrypto_dat[i][4]= "<u><b>Server version:</u></b> "+self.decrypto_dat[i][4]+"<br><b><u>Load latency:</b></u> "+self.decrypto_dat[i][3]
-						self.decrypto_dat[i][3]= "Server connected successfully!"
+					elif _decrypto_dat[2]== '002':
+						_decrypto_dat[4]= "<u><b>Server version:</u></b> "+_decrypto_dat[4]+"<br><b><u>Load latency:</b></u> "+_decrypto_dat[3]
+						_decrypto_dat[3]= "Server connected successfully!"
 						
-					elif self.decrypto_dat[i][2]== '003':
-						# print(self.decrypto_dat[i][4])
-						self.decrypto_dat[i][4] = "<u><b>User Hash: </u></b> "+self.decrypto_dat[i][3]+"<br><u><b>Log in at</u></b> "+"%s/%s/%s %s:%s:%s" %Nsys.dec_dt(self.decrypto_dat[i][4])
-						self.decrypto_dat[i][3] = 'User logged in'
+					elif _decrypto_dat[2]== '003':
+						# print(_decrypto_dat[4])
+						_decrypto_dat[4] = "<u><b>User Hash: </u></b> "+_decrypto_dat[3]+"<br><u><b>Log in at</u></b> "+"%s/%s/%s %s:%s:%s" %Nsys.dec_dt(_decrypto_dat[4])
+						_decrypto_dat[3] = 'User logged in'
 
-					elif self.decrypto_dat[i][2] == "201":
-						self.decrypto_dat[i][3] = '<i>(Updating app)</i><br>Updating to <b><u>latest version:</u></b> %sb <br><u><b>From:</b></u> %s'%(self.decrypto_dat[i][3],self.decrypto_dat[i][4])
-						self.decrypto_dat[i][4] = '<b><u>Current version:</u></b> %s <br><b><u>Server version:</u></b> %s'%(self.decrypto_dat[i][5], self.decrypto_dat[i][6])
-						
-					elif self.decrypto_dat[i][2] == '202':
-						self.decrypto_dat[i][4]= '<b><u>Update file link:</u></b> %s <br><b><u>Header index:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
-						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Network issue:</u></b> %s'%(self.decrypto_dat[i][5])
+					elif _decrypto_dat[2] == "201":
+						_decrypto_dat[3] = '<i>(Updating app)</i><br>Updating to <b><u>latest version:</u></b> %sb <br><u><b>From:</b></u> %s'%(_decrypto_dat[3],_decrypto_dat[4])
+						if len(_decrypto_dat) == 6:
+							_decrypto_dat[4] = '<b><u>Server version:</u></b> %s'%( _decrypto_dat[5])
+						elif len(_decrypto_dat) == 7:
+							_decrypto_dat[4] = '<b><u>Current version:</u></b> %s <br><b><u>Server version:</u></b> %s'%(_decrypto_dat[5], _decrypto_dat[6])
+
+					elif _decrypto_dat[2] == '202':
+						_decrypto_dat[4]= '<b><u>Update file link:</u></b> %s <br><b><u>Header index:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4])
+						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Network issue:</u></b> %s'%(_decrypto_dat[5])
 					
-					elif self.decrypto_dat[i][2] == '203':
-						self.decrypto_dat[i][4]= '<i>Downloaded in:</i><br> '+self.decrypto_dat[i][3]
-						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Download Complete</u></b>'
+					elif _decrypto_dat[2] == '203':
+						_decrypto_dat.append('<i>Downloaded in:</i><br> '+_decrypto_dat[3])
+						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Download Complete</u></b>'
 
-					elif self.decrypto_dat[i][2] == '204':
-						self.decrypto_dat[i][4]= '<b><u>Update file link:</u></b> %s <br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s<br><b><u>File list:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4], self.decrypto_dat[i][5], self.decrypto_dat[i][6])
-						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Corrupted zip:</u></b> The zip contains files other than the main .EXE file<br><i>Will be depricated in v0.5.500002</i>'
+					elif _decrypto_dat[2] == '204':
+						_decrypto_dat[4]= '<b><u>Update file link:</u></b> %s <br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s<br><b><u>File list:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4], _decrypto_dat[5], _decrypto_dat[6])
+						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Corrupted zip:</u></b> The zip contains files other than the main .EXE file<br><i>Will be depricated in v0.5.500002</i>'
 
-					elif self.decrypto_dat[i][2] == '205':
-						self.decrypto_dat[i][4]= '-'
-						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Zip extracted</u></b>'
+					elif _decrypto_dat[2] == '205':
+						_decrypto_dat.append('-')
+						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Zip extracted</u></b>'
 						
-					elif self.decrypto_dat[i][2] == '206':
-						self.decrypto_dat[i][4]= '-'
-						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Update complete</u></b>'
+					elif _decrypto_dat[2] == '206':
+						_decrypto_dat.append('<i>(Updating app)</i><br><b><u>Update complete</u></b>')
+						_decrypto_dat.append('-')
 						
-					elif self.decrypto_dat[i][2] == '207':
-						self.decrypto_dat[i][4]= '-'
-						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Zip removed</u></b>'
+					elif _decrypto_dat[2] == '207':
+						_decrypto_dat.append('<i>(Updating app)</i><br><b><u>Zip removed</u></b>')
+						_decrypto_dat.append('-')
 
-					elif self.decrypto_dat[i][2] == '208':
-						self.decrypto_dat[i][4]= '<b><u>Fake EXE MD5:</u></b> %s <br><b><u>File Link:</u></b> %s<br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4], self.decrypto_dat[i][5], self.decrypto_dat[i][6])
-						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Corrupted EXE:</u></b> MD5 of Downloaded EXE don\'t match with server MD5'
+					elif _decrypto_dat[2] == '208':
+						_decrypto_dat[4]= '<b><u>Fake EXE MD5:</u></b> %s <br><b><u>File Link:</u></b> %s<br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4], _decrypto_dat[5], _decrypto_dat[6])
+						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Corrupted EXE:</u></b> MD5 of Downloaded EXE don\'t match with server MD5'
 
-					elif self.decrypto_dat[i][2] == '209':
-						self.decrypto_dat[i][4]= '<b><u>Fake ZIP MD5:</u></b> %s <br><b><u>File Link:</u></b> %s<br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4], self.decrypto_dat[i][5], self.decrypto_dat[i][6])
-						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Corrupted ZIP:</u></b> MD5 of Downloaded ZIP don\'t match with server MD5'
+					elif _decrypto_dat[2] == '209':
+						_decrypto_dat[4]= '<b><u>Fake ZIP MD5:</u></b> %s <br><b><u>File Link:</u></b> %s<br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4], _decrypto_dat[5], _decrypto_dat[6])
+						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Corrupted ZIP:</u></b> MD5 of Downloaded ZIP don\'t match with server MD5'
 
 					
-					elif self.decrypto_dat[i][2] == '2FF':
-						self.decrypto_dat[i][4]= '<b><u>Error Code:</u></b> %s<br><b><u>Error String:</u></b> %s<br><b><u>File Link:</u></b> %s<br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s'%(self.decrypto_dat[i][7], self.decrypto_dat[i][8], self.decrypto_dat[i][3], self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-						self.decrypto_dat[i][3]= '<i>(Updating app)</i><br><b><u>Unknown error occured</u></b><br>When <i>%s</i>'%self.decrypto_dat[i][6]
+					elif _decrypto_dat[2] == '2FF':
+						if len(_decrypto_dat)==8:
+							_decrypto_dat = '||'.join(_decrypto_dat).replace('Hashing', '||Hashing').split('||')
+						
+						_decrypto_dat[4]= '<b><u>Error Code:</u></b> %s<br><b><u>Error String:</u></b> %s<br><b><u>File Link:</u></b> %s<br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s'%(_decrypto_dat[7], _decrypto_dat[8], _decrypto_dat[3], _decrypto_dat[4], _decrypto_dat[5])
+						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Unknown error occured</u></b><br>When <i>%s</i>'%_decrypto_dat[6]
 
 					####################################################
-					elif self.decrypto_dat[i][2].startswith('605x'):
-						while len(self.decrypto_dat[i]) <=4: 
-							self.decrypto_dat[i].append('')
-						#print(self.decrypto_dat[i])
-						if self.decrypto_dat[i][2][4] == '1':
-							self.decrypto_dat[i][4]='<b><u>Header index:</u></b>%s<br><b><u>Error code:</u></b> %s' %(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
-							self.decrypto_dat[i][3]= '<i>Network issue</i> in <b>_connect_net()</b><br>Failed to connect <a href="https://ident.me" target="_blank" rel="noopener noreferrer">https://ident.me</a><br>Failed to obtain user ip<br>Running Offline mode'
+					elif _decrypto_dat[2].startswith('605x'):
+						while len(_decrypto_dat) <=4: 
+							_decrypto_dat.append('')
+						#print(_decrypto_dat)
+						if _decrypto_dat[2][4] == '1':
+							_decrypto_dat[4]='<b><u>Header index:</u></b>%s<br><b><u>Error code:</u></b> %s' %(_decrypto_dat[3], _decrypto_dat[4])
+							_decrypto_dat[3]= '<i>Network issue</i> in <b>_connect_net()</b><br>Failed to connect <a href="https://ident.me" target="_blank" rel="noopener noreferrer">https://ident.me</a><br>Failed to obtain user ip<br>Running Offline mode'
 
-						if self.decrypto_dat[i][2][4]== '2':
+						if _decrypto_dat[2][4]== '2':
 							pass #will not be used
 							#depricating soon
 						
-						if self.decrypto_dat[i][2][4]== '3':
-							self.decrypto_dat[i][4] = '<b><u>Header index:</u></b> %s<br><b><u>File link:</u></b> %s<br><b><u>Error code:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]='Failed to download "Who are you" file from net'
+						if _decrypto_dat[2][4]== '3':
+							_decrypto_dat[4] = '<b><u>Header index:</u></b> %s<br><b><u>File link:</u></b> %s<br><b><u>Error code:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4], _decrypto_dat[5])
+							_decrypto_dat[3]='Failed to download "Who are you" file from net'
 
-						if self.decrypto_dat[i][2][4]== '4':
-							self.decrypto_dat[i][4]= '<b><u>Server link:</u></b> %s<br><b><u>Header index:</u></b> %s <br><b><u>Error code:</u></b> %s'%(self.decrypto_dat[i][4],self.decrypto_dat[i][3], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3] = "Failed to load Update.txt file.<br>Loading <b>offline mode</b>"
+						if _decrypto_dat[2][4]== '4':
+							_decrypto_dat[4]= '<b><u>Server link:</u></b> %s<br><b><u>Header index:</u></b> %s <br><b><u>Error code:</u></b> %s'%(_decrypto_dat[4],_decrypto_dat[3], _decrypto_dat[5])
+							_decrypto_dat[3] = "Failed to load Update.txt file.<br>Loading <b>offline mode</b>"
 
 						################################################################
-					elif self.decrypto_dat[i][2].startswith('606x'):
-						if self.decrypto_dat[i][2][4] == '1':
-							self.decrypto_dat[i][4]='<b><u>NH link:</u></b> %s<br><b><u>Header index:</u></b> %s' %(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s<br><i>Network issue</i> while connecting <b>nhentai.net</b><br>Trying Proxy server' %self.decrypto_dat[i][3]
+					elif _decrypto_dat[2].startswith('606x'):
+						if _decrypto_dat[2][4] == '1':
+							_decrypto_dat[4]='<b><u>NH link:</u></b> %s<br><b><u>Header index:</u></b> %s' %(_decrypto_dat[4], _decrypto_dat[5])
+							_decrypto_dat[3]= '<b><u>Project:</u></b> %s<br><i>Network issue</i> while connecting <b>nhentai.net</b><br>Trying Proxy server' %_decrypto_dat[3]
 						
-						if self.decrypto_dat[i][2][4]== '2':
-							self.decrypto_dat[i][4]='<b><u>NH link:</u></b> %s<br><b><u>Header index:</u></b> %s' %(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s<br><i>Network issue</i> while connecting <b>nhentai.xxx</b><br>Trying Proxy server(2)' %self.decrypto_dat[i][3]
+						if _decrypto_dat[2][4]== '2':
+							_decrypto_dat[4]='<b><u>NH link:</u></b> %s<br><b><u>Header index:</u></b> %s' %(_decrypto_dat[4], _decrypto_dat[5])
+							_decrypto_dat[3]= '<b><u>Project:</u></b> %s<br><i>Network issue</i> while connecting <b>nhentai.xxx</b><br>Trying Proxy server(2)' %_decrypto_dat[3]
 
-						if self.decrypto_dat[i][2][4]== '3':
-							self.decrypto_dat[i][4]='<b><u>NH link:</u></b> %s<br><b><u>Header index:</u></b> %s' %(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s<br><i>Network issue</i> while connecting <b>nhentai.to</b><br>Returning Failed Code' %self.decrypto_dat[i][3]
+						if _decrypto_dat[2][4]== '3':
+							_decrypto_dat[4]='<b><u>NH link:</u></b> %s<br><b><u>Header index:</u></b> %s' %(_decrypto_dat[4], _decrypto_dat[5])
+							_decrypto_dat[3]= '<b><u>Project:</u></b> %s<br><i>Network issue</i> while connecting <b>nhentai.to</b><br>Returning Failed Code' %_decrypto_dat[3]
 
 
-					elif self.decrypto_dat[i][2].startswith('00000x'):
-						if self.decrypto_dat[i][2][6:9] == '101':
-							if self.decrypto_dat[i][4]=='0':
-								self.decrypto_dat[i][4]="<b><u>File"
+					elif _decrypto_dat[2].startswith('00000x'):
+						if _decrypto_dat[2][6:9] == '101':
+							if _decrypto_dat[4]=='0':
+								_decrypto_dat[4]="<b><u>File"
 							else:
-								self.decrypto_dat[i][4]="<b><u>Folder"
+								_decrypto_dat[4]="<b><u>Folder"
 
-							self.decrypto_dat[i][4] += ' location: "'+self.decrypto_dat[i][3]+'"</u></b>'
+							_decrypto_dat[4] += ' location: "'+_decrypto_dat[3]+'"</u></b>'
 
-							self.decrypto_dat[i][3]= "Failed to Write or Edit data due to <b>Permission Error</b>"
+							_decrypto_dat[3]= "Failed to Write or Edit data due to <b>Permission Error</b>"
 						# must me elif
 
-					elif self.decrypto_dat[i][2].startswith('00003x'):
-						if self.decrypto_dat[i][2][6:] == '-1':
-							tempI = 'Failed to remove non-ascii charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Called from:</u></b> %s'%(self.decrypto_dat[i][6], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
-							self.decrypto_dat[i][3]= tempI
+					elif _decrypto_dat[2].startswith('00003x'):
+						if _decrypto_dat[2][6:] == '-1':
+							tempI = 'Failed to remove non-ascii charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Called from:</u></b> %s'%(_decrypto_dat[6], _decrypto_dat[5])
+							_decrypto_dat[4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4])
+							_decrypto_dat[3]= tempI
 							del tempI
 
-					elif self.decrypto_dat[i][2]=='00006':
-						self.decrypto_dat[i][4] = '<b><u>Package name: </u></b> %s<br><b><u>Pypi internet access: </u></b>%s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
-						self.decrypto_dat[i][3] = 'Failed to <i>install</i> <b>required</b> packages'
+					elif _decrypto_dat[2]=='00006':
+						_decrypto_dat[4] = '<b><u>Package name: </u></b> %s<br><b><u>Pypi internet access: </u></b>%s'%(_decrypto_dat[3], _decrypto_dat[4])
+						_decrypto_dat[3] = 'Failed to <i>install</i> <b>required</b> packages'
 
-					elif self.decrypto_dat[i][2].startswith('00008x'):
-						if self.decrypto_dat[i][2][6:9]=='101':
-							if len(self.decrypto_dat[i])==7:
-								tempI = 'Failed to Write "%s" <b>in</b> "%s" due to <b><i>permission error</i></b>'%(self.decrypto_dat[i][4], self.decrypto_dat[i][6])
+					elif _decrypto_dat[2].startswith('00008x'):
+						if _decrypto_dat[2][6:9]=='101':
+							if len(_decrypto_dat)==7:
+								tempI = 'Failed to Write "%s" <b>in</b> "%s" due to <b><i>permission error</i></b>'%(_decrypto_dat[4], _decrypto_dat[6])
 							else: 
-								tempI = 'Failed to create "%s" folder for writing "%s" <b><i>in</i></b> "%s" due to <b><i>permission error</i></b>'%(self.decrypto_dat[i][7],self.decrypto_dat[i][4], self.decrypto_dat[i][6])
+								tempI = 'Failed to create "%s" folder for writing "%s" <b><i>in</i></b> "%s" due to <b><i>permission error</i></b>'%(_decrypto_dat[7],_decrypto_dat[4], _decrypto_dat[6])
 							
-							self.decrypto_dat[i][4] = "<b><u>Write mode:</u></b> %s <br><b><u>Called by:</u></b> %s"%(self.decrypto_dat[i][5], self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= tempI
+							_decrypto_dat[4] = "<b><u>Write mode:</u></b> %s <br><b><u>Called by:</u></b> %s"%(_decrypto_dat[5], _decrypto_dat[3])
+							_decrypto_dat[3]= tempI
 							del tempI
 
-						elif self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i].append('<b><u>Provided file name:</u></b> %s'%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= 'Invalid <i>file name</i><br>Replacing <i>\\|:*<>?</i> with <i>-</i> and <i>"</i> with <i>\'</i>'
+						elif _decrypto_dat[2][6]=='1':
+							_decrypto_dat.append('<b><u>Provided file name:</u></b> %s'%_decrypto_dat[3])
+							_decrypto_dat[3]= 'Invalid <i>file name</i><br>Replacing <i>\\|:*<>?</i> with <i>-</i> and <i>"</i> with <i>\'</i>'
 
-						elif self.decrypto_dat[i][2][6]=='2':
-							self.decrypto_dat[i].append('<b><u>Provided directory:</u></b> %s'%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3] = 'Invalid <i>Directory</i><br>Replacing <i>\\|:*<>?</i> with <i>-</i> and <i>"</i> with <i>\'</i>'
+						elif _decrypto_dat[2][6]=='2':
+							_decrypto_dat.append('<b><u>Provided directory:</u></b> %s'%_decrypto_dat[3])
+							_decrypto_dat[3] = 'Invalid <i>Directory</i><br>Replacing <i>\\|:*<>?</i> with <i>-</i> and <i>"</i> with <i>\'</i>'
 
-						elif self.decrypto_dat[i][2][6:8]=='-1':
-							_t ='<b><u>Error code:</u></b> %s <br><b><u>Error string:</u></b><i> %s</i><br><b><u>Called by:</u></b> %s <br><b><u>File name:</u></b> %s <br><b><u>Write mode:</u></b> %s <br><b><u>Directory:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][8], self.decrypto_dat[i][4], self.decrypto_dat[i][5], self.decrypto_dat[i][6], self.decrypto_dat[i][7])
-							self.decrypto_dat[i][3] = '<b>Unknown Error occured</b> while writing <i>%s</i> inside <i>%s</i>'%(self.decrypto_dat[i][5], self.decrypto_dat[i][7])
+						elif _decrypto_dat[2][6:8]=='-1':
+							_t ='<b><u>Error code:</u></b> %s <br><b><u>Error string:</u></b><i> %s</i><br><b><u>Called by:</u></b> %s <br><b><u>File name:</u></b> %s <br><b><u>Write mode:</u></b> %s <br><b><u>Directory:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[8], _decrypto_dat[4], _decrypto_dat[5], _decrypto_dat[6], _decrypto_dat[7])
+							_decrypto_dat[3] = '<b>Unknown Error occured</b> while writing <i>%s</i> inside <i>%s</i>'%(_decrypto_dat[5], _decrypto_dat[7])
 
-							self.decrypto_dat[i][4]= _t
+							_decrypto_dat[4]= _t
 
 							del _t
 
-					if self.decrypto_dat[i][2].startswith('00009x'):
-						if self.decrypto_dat[i][2][6:8]=='-1':
-							self.decrypto_dat[i][4]= '<b><u>Unknown Header:</u></b> %s <b><u>Error string:</u></b> %s'%self.decrypto_dat[i][5], self.decrypto_dat[i][4]
-							self.decrypto_dat[i][3]= '<b>Data CORRUPTION</b><br> <I>Invalid header request found</I><br><b><u>Called by:</u></b> %s<br><i>returning value -1</i>'%self.decrypto_dat[i][3]
+					if _decrypto_dat[2].startswith('00009x'):
+						if _decrypto_dat[2][6:8]=='-1':
+							_decrypto_dat[4]= '<b><u>Unknown Header:</u></b> %s <b><u>Error string:</u></b> %s'%_decrypto_dat[5], _decrypto_dat[4]
+							_decrypto_dat[3]= '<b>Data CORRUPTION</b><br> <I>Invalid header request found</I><br><b><u>Called by:</u></b> %s<br><i>returning value -1</i>'%_decrypto_dat[3]
 						
 						else:
-							_temp= '<b>Unknown Error occured</b> while searching header index. <br>possible cause: <i>Data Corrupted</i><b><u>Called by:</u></b> %s'%(self.decrypto_dat[i][4])
-							self.decrypto_dat[i][4]= '<b><u>Error code:</u></b> %s <br><b><u>Error string:</u></b> %s <br><b><u>Corrupted Header: </u></b>%s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][5], self.decrypto_dat[i][6])
-							self.decrypto_dat[i][3]
+							_temp= '<b>Unknown Error occured</b> while searching header index. <br>possible cause: <i>Data Corrupted</i><b><u>Called by:</u></b> %s'%(_decrypto_dat[4])
+							_decrypto_dat[4]= '<b><u>Error code:</u></b> %s <br><b><u>Error string:</u></b> %s <br><b><u>Corrupted Header: </u></b>%s'%(_decrypto_dat[3], _decrypto_dat[5], _decrypto_dat[6])
+							_decrypto_dat[3]
 						
-					if self.decrypto_dat[i][2].startswith('0000Bx'):
-						if self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i][4]= '<b><u>arg data type:</u></b> %s <br><b><u>Arg:</u></b> "%s" <br><b><u>Called by:</u></b> %s'%(self.decrypto_dat[i][3], '?Failed to convert to string' if self.decrypto_dat[i][4]=='?' else self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= 'Failed to <i>host server</i> from <i>entered</i> directory<br><b>The directory Arg is not a string</b>'
+					if _decrypto_dat[2].startswith('0000Bx'):
+						if _decrypto_dat[2][6]=='1':
+							_decrypto_dat[4]= '<b><u>arg data type:</u></b> %s <br><b><u>Arg:</u></b> "%s" <br><b><u>Called by:</u></b> %s'%(_decrypto_dat[3], '?Failed to convert to string' if _decrypto_dat[4]=='?' else _decrypto_dat[4], _decrypto_dat[5])
+							_decrypto_dat[3]= 'Failed to <i>host server</i> from <i>entered</i> directory<br><b>The directory Arg is not a string</b>'
 
-						if self.decrypto_dat[i][2][6]=='2':
-							self.decrypto_dat[i][2]
+						if _decrypto_dat[2][6]=='2':
+							_decrypto_dat[2]
 
-					if self.decrypto_dat[i][2].startswith('0000Cx'):
-						if self.decrypto_dat[i][2][6:8]=='-1':
-							self.decrypto_dat[i][4]= '<b><u>Error Name:</u></b> %s <br><b><u>Error string:</u></b> %s <br><b><u>Header Index:</u></b> %s'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5], self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= "Failed to connect IP server <i>(retuens user ip)</i><br><b>Unknown Error occured</b>."
+					if _decrypto_dat[2].startswith('0000Cx'):
+						if _decrypto_dat[2][6:8]=='-1':
+							_decrypto_dat[4]= '<b><u>Error Name:</u></b> %s <br><b><u>Error string:</u></b> %s <br><b><u>Header Index:</u></b> %s'%(_decrypto_dat[4], _decrypto_dat[5], _decrypto_dat[3])
+							_decrypto_dat[3]= "Failed to connect IP server <i>(retuens user ip)</i><br><b>Unknown Error occured</b>."
 
-					if self.decrypto_dat[i][2]=='00017':
-						self.decrypto_dat[i][4] = '<b><u>Link:</u></b><a href="%s" target="_blank"> %s</a><br><b><u>Header index:</u></b> %s <br><b><u>Called by:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][3], self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-						self.decrypto_dat[i][3] = 'Failed to <b>connect</b> to the arg Web page'
+					if _decrypto_dat[2]=='00017':
+						_decrypto_dat[4] = '<b><u>Link:</u></b><a href="%s" target="_blank"> %s</a><br><b><u>Header index:</u></b> %s <br><b><u>Called by:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[3], _decrypto_dat[4], _decrypto_dat[5])
+						_decrypto_dat[3] = 'Failed to <b>connect</b> to the arg Web page'
 						try:
-							self.decrypto_dat[i][3]+= '<br><b><u>Error code:</u></b> %s'%self.decrypto_dat[i][6]
+							_decrypto_dat[3]+= '<br><b><u>Error code:</u></b> %s'%_decrypto_dat[6]
 
 						except: pass
 
-					if self.decrypto_dat[i][2].startswith('00018x'):
-						if self.decrypto_dat[i][2][6:] == '-1':
-							tempI = 'Failed to remove non-UNICODE charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Return Format:</u></b> %s<br><b><u>Called from:</u></b> %s'%(self.decrypto_dat[i][7], self.decrypto_dat[i][6], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(self.decrypto_dat[i][3], self.decrypto_dat[i][4])
-							self.decrypto_dat[i][3]= tempI
+					if _decrypto_dat[2].startswith('00018x'):
+						if _decrypto_dat[2][6:] == '-1':
+							tempI = 'Failed to remove non-UNICODE charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Return Format:</u></b> %s<br><b><u>Called from:</u></b> %s'%(_decrypto_dat[7], _decrypto_dat[6], _decrypto_dat[5])
+							_decrypto_dat[4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4])
+							_decrypto_dat[3]= tempI
 							del tempI
 
 
-					if self.decrypto_dat[i][2].startswith('10002x'):
-						if self.decrypto_dat[i][2][6]=='1':
-							temp= eval(self.decrypto_dat[i][5])[0]
-							self.decrypto_dat[i][4]= '<b><u>Header index:</u></b> %s <br><b><u>Dl link:</u></b> <i><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></i>'%(self.decrypto_dat[i][4], temp, temp)
-							self.decrypto_dat[i][3]= '<b><u>Project:</u> "<i>%s</i>"</b><br>Failed to downlaod a file.'%self.decrypto_dat[i][3]
-							try: self.decrypto_dat[i][3]+= '<br><b><u>Error code:</u></b> '+ self.decrypto_dat[i][6]
+					if _decrypto_dat[2].startswith('10002x'):
+						if _decrypto_dat[2][6]=='1':
+							temp= eval(_decrypto_dat[5])[0]
+							_decrypto_dat[4]= '<b><u>Header index:</u></b> %s <br><b><u>Dl link:</u></b> <i><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></i>'%(_decrypto_dat[4], temp, temp)
+							_decrypto_dat[3]= '<b><u>Project:</u> "<i>%s</i>"</b><br>Failed to downlaod a file.'%_decrypto_dat[3]
+							try: _decrypto_dat[3]+= '<br><b><u>Error code:</u></b> '+ _decrypto_dat[6]
 							except: pass
 							del temp
 
-						elif self.decrypto_dat[i][2][6]=='2':
-							self.decrypto_dat[i][4]= '<b><u>Header index:</u></b> %s <br><b><u>Dl link:</u></b> <i><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></i>'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= '<b><u>Project:</u> "<i>%s</i>"</b><br>Failed to <b>Unzip</b> downlaoded zip file.'%self.decrypto_dat[i][3]
+						elif _decrypto_dat[2][6]=='2':
+							_decrypto_dat[4]= '<b><u>Header index:</u></b> %s <br><b><u>Dl link:</u></b> <i><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></i>'%(_decrypto_dat[4], _decrypto_dat[5], _decrypto_dat[5])
+							_decrypto_dat[3]= '<b><u>Project:</u> "<i>%s</i>"</b><br>Failed to <b>Unzip</b> downlaoded zip file.'%_decrypto_dat[3]
 
 
 					
-					if self.decrypto_dat[i][2].startswith('10003x'):
-						if self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i][4]= '<b><u>Header index:</u></b> %s <br><b><u>Dl link:</u></b> <i>%s</i>'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
+					if _decrypto_dat[2].startswith('10003x'):
+						if _decrypto_dat[2][6]=='1':
+							_decrypto_dat[4]= '<b><u>Header index:</u></b> %s <br><b><u>Dl link:</u></b> <i>%s</i>'%(_decrypto_dat[4], _decrypto_dat[5])
 							try:
-								self.decrypto_dat[i][4]+= '<br><b><u>Error CODE:</u></b> %s <br><b><u>Error string:</u></b> %s'%(self.decrypto_dat[i][6], self.decrypto_dat[i][7])
+								_decrypto_dat[4]+= '<br><b><u>Error CODE:</u></b> %s <br><b><u>Error string:</u></b> %s'%(_decrypto_dat[6], _decrypto_dat[7])
 							except: pass
-							self.decrypto_dat[i][3]= '<b><u>Project:</u> "<i>%s</i>"</b><br>Failed to <b>Connect</b> link for <i>indexing<br>Possible cause dead link or no internet</i>.'%self.decrypto_dat[i][3]
+							_decrypto_dat[3]= '<b><u>Project:</u> "<i>%s</i>"</b><br>Failed to <b>Connect</b> link for <i>indexing<br>Possible cause dead link or no internet</i>.'%_decrypto_dat[3]
 
-					if self.decrypto_dat[i][2].startswith('10005x'):
-						if self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i][4]= '<b><u>NH link:</u></b><i><a href="%s" target="_blank" rel="noopener noreferrer"> %s </a></i><br><b><u>Header index:</u></b> %s '%(self.decrypto_dat[i][4], self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s <br><b><i>is NH</i></b><br>failed to connect nhentai.net site, possible cause wrong link or location blocked or internet issue. Attempting proxy'%(self.decrypto_dat[i][3])
+					if _decrypto_dat[2].startswith('10005x'):
+						if _decrypto_dat[2][6]=='1':
+							_decrypto_dat[4]= '<b><u>NH link:</u></b><i><a href="%s" target="_blank" rel="noopener noreferrer"> %s </a></i><br><b><u>Header index:</u></b> %s '%(_decrypto_dat[4], _decrypto_dat[4], _decrypto_dat[5])
+							_decrypto_dat[3]= '<b><u>Project:</u></b> %s <br><b><i>is NH</i></b><br>failed to connect nhentai.net site, possible cause wrong link or location blocked or internet issue. Attempting proxy'%(_decrypto_dat[3])
 							
-						elif self.decrypto_dat[i][2][6]== '2':
-							self.decrypto_dat[i][4]= '<b><u>NH link:</u></b><i><a href="%s" target="_blank" rel="noopener noreferrer"> %s </a></i><br><b><u>Header index:</u></b> %s <br><i>[Depricated in 5.4]</i>'%(self.decrypto_dat[i][4], self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s <br><b><i>is NH</i></b><br>failed to connect nhentai.xxx site, possible cause wrong link or internet issue'%(self.decrypto_dat[i][3])
+						elif _decrypto_dat[2][6]== '2':
+							_decrypto_dat[4]= '<b><u>NH link:</u></b><i><a href="%s" target="_blank" rel="noopener noreferrer"> %s </a></i><br><b><u>Header index:</u></b> %s <br><i>[Depricated in 5.4]</i>'%(_decrypto_dat[4], _decrypto_dat[4], _decrypto_dat[5])
+							_decrypto_dat[3]= '<b><u>Project:</u></b> %s <br><b><i>is NH</i></b><br>failed to connect nhentai.xxx site, possible cause wrong link or internet issue'%(_decrypto_dat[3])
 
-					if self.decrypto_dat[i][2].startswith('10008x'):
-						if self.decrypto_dat[i][2][6]=='0':
-							self.decrypto_dat[i][3]= '<b><u>Project:</u> %s</b><br>Error Fixing began'%self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]= '<b><u>Total files:</u></b> %s <br><b><u>Error files:</u></b> %s'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
+					if _decrypto_dat[2].startswith('10008x'):
+						if _decrypto_dat[2][6]=='0':
+							_decrypto_dat[3]= '<b><u>Project:</u> %s</b><br>Error Fixing began'%_decrypto_dat[3]
+							_decrypto_dat[4]= '<b><u>Total files:</u></b> %s <br><b><u>Error files:</u></b> %s'%(_decrypto_dat[4], _decrypto_dat[5])
 
-						elif self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i][3]= '<b><u>CORRUPTION Detected</u></b><br><b><u>Project Name:</u></b> %s'%self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]= '<b>Error file missing</b><br>Some downalod error occured in previous download however the  <b><u>error.txt</u> file is missing</b>'
+						elif _decrypto_dat[2][6]=='1':
+							_decrypto_dat[3]= '<b><u>CORRUPTION Detected</u></b><br><b><u>Project Name:</u></b> %s'%_decrypto_dat[3]
+							_decrypto_dat[4]= '<b>Error file missing</b><br>Some downalod error occured in previous download however the  <b><u>error.txt</u> file is missing</b>'
 
-						elif self.decrypto_dat[i][2][6]=='2':
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s <br><b><u>Error Fixing process complete</u></b>'% self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]= '<b><u>Left errors:</u></b> '+self.decrypto_dat[i][4]
+						elif _decrypto_dat[2][6]=='2':
+							_decrypto_dat[3]= '<b><u>Project:</u></b> %s <br><b><u>Error Fixing process complete</u></b>'% _decrypto_dat[3]
+							_decrypto_dat[4]= '<b><u>Left errors:</u></b> '+_decrypto_dat[4]
 
-					if self.decrypto_dat[i][2].startswith('11000x'):
-						if self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i].append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was completed</b> '%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= '<h5><b><u>Project was RESET</u></b></h5>'
+					if _decrypto_dat[2].startswith('11000x'):
+						if _decrypto_dat[2][6]=='1':
+							_decrypto_dat.append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was completed</b> '%_decrypto_dat[3])
+							_decrypto_dat[3]= '<h5><b><u>Project was RESET</u></b></h5>'
 
-						elif self.decrypto_dat[i][2][6]=='2':
-							self.decrypto_dat[i].append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was completed</b> '%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= '<h5><b><u>Project is UPDATING</u></b></h5>'
+						elif _decrypto_dat[2][6]=='2':
+							_decrypto_dat.append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was completed</b> '%_decrypto_dat[3])
+							_decrypto_dat[3]= '<h5><b><u>Project is UPDATING</u></b></h5>'
 
-						elif self.decrypto_dat[i][2][6]=='3':
-							self.decrypto_dat[i].append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was Incompleted</b> '%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= '<h5><b><u>Project is RESET</u></b></h5>'
+						elif _decrypto_dat[2][6]=='3':
+							_decrypto_dat.append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was Incompleted</b> '%_decrypto_dat[3])
+							_decrypto_dat[3]= '<h5><b><u>Project is RESUMED</u></b></h5>'
 						
-						elif self.decrypto_dat[i][2][6]=='4':
-							self.decrypto_dat[i].append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was Incompleted</b> '%self.decrypto_dat[i][3])
-							self.decrypto_dat[i][3]= '<h5><b><u>Project is RESUMED</u></b></h5>'
+						elif _decrypto_dat[2][6]=='4':
+							_decrypto_dat.append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was Incompleted</b> '%_decrypto_dat[3])
+							_decrypto_dat[3]= '<h5><b><u>Project is RESET</u></b></h5>'
 
-					if self.decrypto_dat[i][2].startswith("10009x"):
-						if self.decrypto_dat[i][2][6:]=='-1':
-							self.decrypto_dat[i][3]='<b><u>Project:</u></b> %s <br><b>UnknownError occured</b>' %self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]= '<b><u>Error Code:</u></b> %s <br><b><u>Error String:</u></b> %s'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5])
-						elif self.decrypto_dat[i][2][6]=='0':
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s <br>Name entered'%self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]+='<br>Asking for inputs'
+					if _decrypto_dat[2].startswith("10009x"):
+						if _decrypto_dat[2][6:]=='-1':
+							_decrypto_dat[3]='<b><u>Project:</u></b> %s <br><b>UnknownError occured</b>' %_decrypto_dat[3]
+							_decrypto_dat[4]= '<b><u>Error Code:</u></b> %s <br><b><u>Error String:</u></b> %s'%(_decrypto_dat[4], _decrypto_dat[5])
+						elif _decrypto_dat[2][6]=='0':
+							_decrypto_dat[3]= '<b><u>Project:</u></b> %s <br>Name entered'%_decrypto_dat[3]
+							_decrypto_dat[4]+='<br>Asking for inputs'
 
-						elif self.decrypto_dat[i][2][6]=='1':
-							self.decrypto_dat[i][3]="<b><u>Project:</u></b> %s <br><b>Assinging variables</b>"%self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]= '<b>%s</b> = <i>%s</i>%s'%(self.decrypto_dat[i][4], self.decrypto_dat[i][5], '' if len(self.decrypto_dat[i])<7 else '<i>[%s]</i>'%self.decrypto_dat[i][6])
+						elif _decrypto_dat[2][6]=='1':
+							_decrypto_dat[3]="<b><u>Project:</u></b> %s <br><b>Assinging variables</b>"%_decrypto_dat[3]
+							_decrypto_dat[4]= '<b>%s</b> = <i>%s</i>%s'%(_decrypto_dat[4], _decrypto_dat[5], '' if len(_decrypto_dat)<7 else '<i>[%s]</i>'%_decrypto_dat[6])
 
-						elif self.decrypto_dat[i][2][6]=='2':
-							self.decrypto_dat[i][3]= '<b><u>Project:</u></b> %s <br>Indexing Start'%self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]= '<b><u>Total links:</u></b> %s'%self.decrypto_dat[i][4]
+						elif _decrypto_dat[2][6]=='2':
+							_decrypto_dat[3]= '<b><u>Project:</u></b> %s <br>Indexing Start'%_decrypto_dat[3]
+							_decrypto_dat[4]= '<b><u>Total links:</u></b> %s'%_decrypto_dat[4]
 
-						elif self.decrypto_dat[i][2][6]=='3':
-							self.decrypto_dat[i][3]="<b><u>Project:</u></b> %s <br><b>Indexing complete</b>"%self.decrypto_dat[i][3]
-							self.decrypto_dat[i][4]= '<b><u>Indexed links:</u></b> %s <br><b><u>FOund results:</u></b> %s '%(self.decrypto_dat[i][4], self.decrypto_dat[i][5]) 
-
-
+						elif _decrypto_dat[2][6]=='3':
+							_decrypto_dat[3]="<b><u>Project:</u></b> %s <br><b>Indexing complete</b>"%_decrypto_dat[3]
+							_decrypto_dat[4]= '<b><u>Indexed links:</u></b> %s <br><b><u>FOund results:</u></b> %s '%(_decrypto_dat[4], _decrypto_dat[5]) 
 
 
 
@@ -1131,11 +1142,16 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 
 
-					self.decrypto_dat[i] = self.decrypto_dat[i][:5] #uncomment when done
-					tr='<tr class = "p%s">'%self.decrypto_dat[i][1]
 
-					for j in range(len(self.decrypto_dat[i])):
-						tr+=td_t%self.decrypto_dat[i][j]
+
+					_decrypto_dat = _decrypto_dat[:5] #uncomment when done
+					tr='<tr class = "p%s">'%_decrypto_dat[1]
+
+					for j in range(5):
+						try:
+														tr+=td_t%_decrypto_dat[j]
+						except:
+							print(_decrypto_dat)
 					tr+='</tr>'
 					# print(bs(tr, "html.parser").text)
 
@@ -1160,7 +1176,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 				'content="text/html; charset=%s">' % enc)
 
 			if self.is_get_req:
-				__x='''\n<div id='stats'><p style="color: darkgray;">Made by Ratul Hasan with Web leach</p><br>\n<p>[Server] %i Results Arranged in %ss</p>\n<p>[Server] Decrypted in %ss (%s powered)</p>\n<p>[Server] Table made in %ss (%s parser)</p>\n<p id="render"></p>\n<p id="response"></p>\n</div>'''%(len(self.decrypto_dat), str(time.time()-request_time), read_dec, decryptor_lang, str(table_made), _parser)
+				__x='''\n<div id='stats'><p style="color: darkgray;">Made by Ratul Hasan with Web leach</p><br>\n<p>[Server] %i Results Arranged in %ss</p>\n<p>[Server] Decrypted in %ss (%s powered)</p>\n<p>[Server] Table made in %ss (%s parser)</p>\n<p id="render"></p>\n<p id="response"></p>\n</div>'''%(table_len, str(time.time()-request_time), read_dec, decryptor_lang, str(table_made), _parser)
 				r.append(decrypto_header%(str(pink), str(Lblue), str(blue), str(purple), __x, '\n'.join(tables)))
 				r.append("""\n<hr>\n</body>\n<footer id="footer"><br><br><br><br><hr><hr></footer> <script>var response_get = %s; var response_send = %s;
 				
@@ -1787,5 +1803,6 @@ if __name__ == '__main__':
 		handler_class = CGIHTTPRequestHandler
 	else:
 		handler_class = partial(SimpleHTTPRequestHandler,
-								directory=args.directory)
+					directory=args.directory)
+		
 	test(HandlerClass=handler_class, port=args.port, bind=args.bind)

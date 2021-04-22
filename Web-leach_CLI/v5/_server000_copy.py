@@ -1322,6 +1322,7 @@ def test(HandlerClass=BaseHTTPRequestHandler,
 		print(serve_message.format(host=sa[0], port=sa[1]))
 		try:
 			httpd.serve_forever()
+			print(0)
 		except KeyboardInterrupt:
 			print("\nKeyboard interrupt received, exiting.")
 			sys.exit(0)

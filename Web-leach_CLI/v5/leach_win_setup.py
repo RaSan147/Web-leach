@@ -2,7 +2,7 @@
 #: *****************************************************************************
 #:                The code in this file was created by Ratul Hasan             *
 #:                     So complete credit goes to creator(me)                  *
-#:       requests, bs4, psutils and comtype Librarys are used in this code     *
+#:       requests, bs4, psutils and comtype Libraries are used in this code     *
 #: *****************************************************************************
 #: Sharing this code without my permission is not allowed                      *
 #: *****************************************************************************
@@ -19,16 +19,23 @@
 #: You data you right. It's stored is encrypted file so others can't see it    *
 #: *****************************************************************************
 
-#py -3.7 -O -m PyInstaller "leach_win_setup.py" -F -n "Web leach 0.5.5.2" --version-file vtesty.py -i "EMO Angel.ico"
 
+'''
+py -3.9 -m pip freeze > r.txt
+py -3.9 -m pip uninstall -r r.txt -y
+py -3.9 -m pip install pyinstaller-4.3.zip, 'requests',  'beautifulsoup4', 'natsort', 'google', 'pypiwin32', 'comtypes', 'psutil', 'lxml'
+py -3.9 -O -m PyInstaller "leach_win_setup.py" -F -n "Web leach 0.5.5.3" --version-file vtesty.py -i "EMO Angel.ico" --add-data "7z.exe;." --upx-dir=.
+'''
 
-requirements_all= ['requests',  'beautifulsoup4', 'natsort']
-requirements_win= ['pypiwin32', 'comtypes', 'pyopenssl', 'psutil', 'lxml']
+requirements_all= ('requests',  'beautifulsoup4', 'natsort', 'google')
+requirements_win= ('pypiwin32', 'comtypes', 'psutil', 'lxml', 'pywin32-ctypes')
+_VERSION="5.50004"
+
 
 							#>>>>>>update>>>>>
 						#=========================
 #>>>>>used re.compile to speed up (4.0)
-#>>>>>added nhentai support wiht proxy (4.0)
+#>>>>>added nhentai support with proxy (4.0)
 #>>>>>fixed title dir prob (4.1)
 #>>>>>dimention added (4.1)
 #>>>>>added updater
@@ -40,97 +47,156 @@ requirements_win= ['pypiwin32', 'comtypes', 'pyopenssl', 'psutil', 'lxml']
 #>>>>>multi-thread indexing for more than 3 files to index(5.1)
 #>>>>>developed leach logger by removing text and adding error codes (5.1)
 #>>>>>converted to class mode (5.3_class)
-#>>>>>download puaseable (5.3_class)
-#>>>>>backward compatitable (5.3_class)
+#>>>>>download pausable (5.3_class)
+#>>>>>backward compatible (5.3_class)
 #>>>>>auto webpage generator (5.3_class)
 #>>>>>auto localhost creation after login (5.3_class)
 #>>>>>generate port based on user hash (5.3_class)
 #>>>>>added nhentai.to proxy after nhentai.xxx proxy (5.500001_class)
 #>>>>>added hash verification control in _version_update (5.500001_class)
+#>>>>>switched backend server code link from raw.git... to https://cdn.jsdelivr.net/ (see https://stackoverflow.com/questions/17341122/link-and-execute-external-javascript-file-hosted-on-github) (5.500002)
+#>>>>>DEPRICATING https://github.com/Ratulhasan14789/Web-Leach_pub/blob/main/Backend_servers/_global(v5.5+).txt
+#>>>>>NEW GLOBAL SERVER https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(aboveV5.5).txt
+#>>>>>NEW LOCAL SERVER https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500003).txt
 
-
-ara_ara= False #to control parody noise
 
 print("LOADINS ASSETS...")
 
-cloud_data_link_global='https://raw.githubusercontent.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(v5.5%2B).txt'#'https://pastebin.com/raw/Sa9hTd0P' #backend server location
-cloud_data_link='https://raw.githubusercontent.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500001).txt'
-user_net_ip='offline'
-import time
-
-
-start_up=time.time()
-no_psutil= True
-'''`True` = psutil is not installed
-	`False` = psutil is installed'''
 try:
+	import ctypes
+	def Ctitle(title): ctypes.windll.kernel32.SetConsoleTitleW(title)
+
+	Ctitle('Loading Assets')
+
+	import time
+
+	start_up=time.time()
+
+
+	img=('jpeg','jpg','png','gif', 'webp', 'bmp', 'tif')
+
+
+	who_r_u='https://www.myinstants.com/media/sounds/who_r_u_1.mp3'
+	yamatte= ('https://www.myinstants.com/media/sounds/yamatte.mp3','https://www.myinstants.com/media/sounds/ara-ara.mp3', 'https://www.myinstants.com/media/sounds/ara-ara2.mp3')
+	yes= ('y', 'yes', 'yeah', 'sure', 'ok', 'lets go', "let's go", 'start', 'yep', 'yep', 'well y', 'well yes', 'well yeah', 'well sure', 'well ok', 'well lets go', "well let's go", 'well start', 'well yep', 'well yep', 'actually y', 'actually yes', 'actually yeah', 'actually sure', 'actually ok', 'actually lets go', "actually let's go", 'actually start', 'actually yep', 'actually yep')
+	no = ('n', 'no', 'na', 'nah', 'nope', 'stop', 'quit', 'exit', 'not really', 'no', 'not at all', 'never', 'well n', 'well no', 'well na', 'well nah', 'well nope', 'well stop', 'well quit', 'well exit', 'well not really', 'well no', 'well not at all', 'well never', 'actually n', 'actually no', 'actually na', 'actually nah', 'actually nope', 'actually stop', 'actually quit', 'actually exit', 'actually not really', 'actually no', 'actually not at all', 'actually never')
+	cond=yes+no
+	condERR = "Sorry,  I can't understand what you are saying. Just type yes or no.   "
+	__update__G = 'pass'
+	__update__L = 'pass'
+	user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
+
+
+	g_mode=False
+	ara_ara= True #to control parody noise
+	no_log = False #to stop logging
+	death = False
+	dying= False
+	class server_code:
+		def __init__(self=None):
+			pass
+		def server_close(self=None):
+			pass
+		def serve_forever(self=None):
+			pass
+
+	death_talk = 0
+
+	sp_arg_flag={'disable dl cancel' : False,
+				'disable dl get' : False,
+				'ara ara': False if ara_ara==None else ara_ara,
+				'no log': False if no_log==None else no_log}
+
+	ara_ara= False #to control parody noise
+
+
+	# _server_version = "5.5"
+
+	cloud_data_link_global='https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(aboveV5.5).txt'
+	cloud_data_link='https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500003).txt'
+	user_net_ip='offline'
+
+
+
 	import Number_sys_conv as Nsys           #f_code = 20000
-	# different number based functions I made
-	start_up_dt = Nsys.compressed_dt() #stores when the program was launched
-	no_psutil=False # this means psutils is available
-except:
-	pass
+	start_up_dt = Nsys.cdt_()
 
-#########################################################
+	#########################################################
 
-# MATH tools ######################
-from math import floor
-from random import choice as random_choice, randint
-from hashlib import sha1 as hashlib_sha1, md5 as hashlib_md5
-from re import search as re_search,compile as re_compile, sub as re_sub
+	# SYS tools #######################
+	from sys import exit as sys_exit,executable as sys_executable
+	exit = sys_exit
+	from platform import system as os_name
+	os_name=os_name()
+	from subprocess import call as subprocess_call, Popen as subprocess_Popen, DEVNULL as subprocess_DEVNULL
+	from os import devnull as os_devnull
+	from sys import stdout as sys_stdout
+	# from importlib import reload
+	# from functools import partial
+	import atexit, traceback
+	sys_write=sys_stdout.write
+	del sys_stdout
+	###################################
 
-from rcrypto import encrypt, decrypt
-###################################
+	# MATH tools ######################
+	from math import floor
+	from random import choice as random_choice, randint
+	from hashlib import sha1 as hashlib_sha1, md5 as hashlib_md5
+	from re import search as re_search,compile as re_compile, sub as re_sub
 
-
-# SYS tools #######################
-from platform import system as os_name
-os_name=os_name()
-from subprocess import call as subprocess_call, Popen as subprocess_Popen, DEVNULL as subprocess_DEVNULL
-from os import devnull as os_devnull
-from sys import exit as sys_exit,executable as sys_executable
-from sys import stdout as sys_stdout
-from importlib import reload
-from functools import partial
-import atexit
-sys_write=sys_stdout.write
-exit = sys_exit
-del sys_stdout
-###################################
+	from rcrypto import encrypt, decrypt
+	###################################
 
 
 
-# FILE system tools###############
-from os import makedirs, remove, rename, system as os_system, listdir as os_listdir
-from shutil import rmtree as rmdir
-from os.path import exists as os_exists, isdir as os_isdir, isfile as os_isfile, basename as os_basename, dirname as os_dirname, realpath as os_realpath
-from zipfile import ZipFile, BadZipFile
-###################################
+	# FILE system tools###############
+	from os import makedirs, remove, rename, system as os_system, listdir as os_listdir, getcwd as os_getcwd
+	from shutil import rmtree as rmdir
+	from os.path import exists as os_exists, isdir as os_isdir, isfile as os_isfile, basename as os_basename, dirname as os_dirname, realpath as os_realpath
+	from zipfile import ZipFile, BadZipFile
+	###################################
 
 
 
-from threading import Thread as Process, current_thread
+	from threading import Thread as Process
 
 
 
-# HTML tools##############################
-from html import unescape as html_unescape, escape as html_escape
-from urllib import parse
-import webbrowser
-
-try:
+	# HTML tools##############################
+	from html import unescape as html_unescape, escape as html_escape
+	from urllib import parse
+	import webbrowser
 	from bs4 import BeautifulSoup as bs
+	parser='lxml'
+	try:
+		bs('<br>', parser)
+	except:
+		parser = 'html.parser'
+	from googlesearch import search as g_search
 	import requests, natsort
-except: pass
+	import _server001_
 
-from headers_file import header_list        # f_code = 30000
 
-##########################################
 
-#Other Libs###############################
-from collections import Counter
+	from headers_file import header_list        # f_code = 30000
+	##########################################
 
-##########################################
+	#Other Libs###############################
+	from collections import Counter
+
+
+	import mplay4
+
+	##########################################
+except KeyboardInterrupt:
+	print('Hand Cancel Command entered.\nExiting...')
+	import sys
+	sys.exit(0)
+except EOFError:
+	print('Hand Cancel Command entered.\nExiting...')
+	import sys
+	sys.exit(0)
+
 
 # Re Define to speed up###################
 len = len
@@ -162,21 +228,34 @@ class LeachCorruptionError(Exception):             #
 #                                                  #
 ####################################################
 
-death = False
+
 
 # import __main__ # used to load assets in global (idea from pydroid)
 
 
-def remove_duplicate(seq):	#func_code=00000
+def remove_duplicate(seq, return_type = list):	#func_code=00000
 	"removes duplicates from a list or a tuple"
-	return list(dict.fromkeys(seq))
+	return return_type(dict.fromkeys(seq))
+
+def trans_str(txt, dicts): #func_code=?????
+	"""replaces all the matching charecters of a string for multuple times
+	txt: string data
+	dicts: dict of { find : replace }"""
+	for i in dicts.keys():
+		a= dicts[i]
+		for j in i:
+			txt = txt.replace(j, a)
+
+	return txt
+
 
 def clear_screen():    #func_code=00001
-	"""clears terminl output screen"""
+	"""clears terminal output screen"""
 	if os_name=="Windows":
 		os_system('cls')
 	else:
 		os_system('clear')
+
 
 
 def delete_last_line():      #func_code=0002
@@ -190,11 +269,11 @@ def delete_last_line():      #func_code=0002
 
 
 def remove_non_ascii(text, f_code):    #func_code=00003
-	"""[DEPRICATED] [STILL WORKS] removes ascii charecters from a string 
+	"""[DEPRECATED] [STILL WORKS] removes ascii charecters from a string
 
 	test: text to remove non ASCII
 
-	f_code: The function Code called this funtion"""
+	f_code: The function Code called this function"""
 	try:
 		return ''.join([i if ord(i) < 128 else '' for i in text])
 	except Exception as e:
@@ -202,7 +281,7 @@ def remove_non_ascii(text, f_code):    #func_code=00003
 		leach_logger('00003x-1||'+e.__class__.__name__+('||%s||'%str(e))+f_code+'||'+text)
 
 def remove_non_uni(text, f_code, types= 'str'):    #func_code=00018
-	"""Converts a stirng or binary to unicode string or binary by removing all non unicode char
+	"""Converts a string or binary to unicode string or binary by removing all non unicode char
 
 	text: str to work on
 
@@ -269,20 +348,19 @@ def header_():    #func_code=00004
 #install_req('natsort')
 
 
-from bs4 import BeautifulSoup as bs
-import requests, natsort
 
 # if os_name=="Windows":
 # 	for i in requirements_win: install_req(i)    #required in mplay4
 
 
-def loc(x, os_name='Linux'):    #func_code=00007
+
+def loc(x, _os_name='Linux'):    #func_code=00007
 	"""to fix dir problem based on os
 
 	x: directory
 
 	os_name: Os name *Linux"""
-	if os_name == 'Windows':
+	if _os_name == 'Windows':
 		return x.replace('/', '\\')
 	else:
 		return x.replace('\\', '/')
@@ -302,7 +380,8 @@ def writer(fname, mode, data, direc=None, f_code='None', encoding='utf-8'):    #
 	# err_logged = False
 	if any(i in fname for i in ('\\|:*"><?')):
 		leach_logger('00008x1||%s'%fname)
-		fname=fname.replace('/','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-')
+
+		fname= trans_str(fname, {'/\\|:*><?': '-', '"':"'"})
 	if direc == None:
 		direc='./'
 	else:
@@ -319,7 +398,7 @@ def writer(fname, mode, data, direc=None, f_code='None', encoding='utf-8'):    #
 			locs=loc(direc, 'Linux')
 			if any(i in locs for i in ('\\|:*"><?')):
 				leach_logger('00008x2||%s'%locs)
-				locs=locs.replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-').replace('\\','-')
+				locs= trans_str(locs, {'\\|:*><?': '-', '"':"'"})
 
 			if os_isdir(locs):
 				if locs.endswith('/'):
@@ -355,12 +434,12 @@ def writer(fname, mode, data, direc=None, f_code='None', encoding='utf-8'):    #
 				writer(fname, mode, data, locs, f_code)
 	except Exception as e:
 		if e.__class__.__name__== "PermissionError":
-			print(e.__class__.__name__,"occured while writing", fname, 'in', 'current directory' if dir==None else dir,'\nPlease inform the author. Error code: %sx101'%f_code)
+			print(e.__class__.__name__,"occurred while writing", fname, 'in', 'current directory' if dir==None else dir,'\nPlease inform the author. Error code: %sx101'%f_code)
 			leach_logger('00008x101||%s||%s||%s||%s'%(f_code, fname, mode, direc))
 			raise LeachPermissionError
 		else:
 			leach_logger('00008x-1||'+e.__class__.__name__+'||%s||%s||%s||%s||%s'%(f_code, fname, mode, direc,str(e)))
-			print(e.__class__.__name__,"occured while writing", fname, 'in', 'current directory' if dir==None else dir,'\nPlease inform the author. Error code: 00008x'+f_code)
+			print(e.__class__.__name__,"occurred while writing", fname, 'in', 'current directory' if dir==None else dir,'\nPlease inform the author. Error code: 00008x'+f_code)
 			raise e
 
 
@@ -369,14 +448,14 @@ def hdr(header, f_code=''):    #func_code=00009
 	"""returns the index of a header"""
 	try:
 		return str(header_list.index(header['User-Agent']))
-	except ValueError:
+	except ValueError as e:
 		print("DATA CORRUPTION found\nError code: 00009x"+f_code)
 
 		leach_logger('00009x'+f_code+'||'+ str(e)+'||'+header)
 		return str((-1, header))
 
 	except Exception as e:
-		print("Some error occured caused, possible cause: DATA CORRUPTION\nError code: 00009x"+f_code)
+		print("Some error occurred caused, possible cause: DATA CORRUPTION\nError code: 00009x"+f_code)
 
 		leach_logger('00009x-1||'+'||' +f_code+e.__class__.__name__+'||'+ str(e)+'||'+header)
 		return str((-1, header))
@@ -384,10 +463,12 @@ def hdr(header, f_code=''):    #func_code=00009
 
 def leach_logger(io, key='lock'):   #func_code=0000A
 	"""saves encrypted logger data to file\n
-	(new in 5.3_class: auto adds dt_() at the begning)
+	(new in 5.3_class: auto adds dt_() at the begining)
 
 	io: the log message\n
 	key: salt text"""
+	if sp_arg_flag['no log']:
+		return 0
 	try:
 		while True:
 			try:
@@ -413,7 +494,7 @@ def run_server(port, cd=None, f_code= 'None'):      #func_code=0000B
 
 	port : PORT number\n
 	cd : the directory to host"""
-	
+
 	if cd!=None and type(cd)!=str:
 		temp= type(cd)
 		try:
@@ -430,7 +511,7 @@ def run_server(port, cd=None, f_code= 'None'):      #func_code=0000B
 		leach_logger("0000Bx2||%s||%s"%(cd, f_code))
 		time.sleep(5)
 		sys_exit()
-	
+
 	elif cd!=None and not os_isdir(cd):
 		print(cd,"not found!\nPlease inform the author\nError code: 0000Bx3")
 		leach_logger("0000Bx3||"+cd+'||'+f_code)
@@ -438,22 +519,35 @@ def run_server(port, cd=None, f_code= 'None'):      #func_code=0000B
 		sys_exit()
 
 	try:
-		if check_internet("http://localhost:%i"%port, '1000B', timeout=2)==False:
+		if check_internet("http://localhost:%i"%port, '0000B', timeout=2)==False:
 			if cd!=None:
-				server_code = subprocess_Popen(['python', '_server000_.py', str(port), '-d', cd], 
-				stdin=open(os_devnull), start_new_session=True, stdout=subprocess_DEVNULL, stderr=subprocess_DEVNULL)
-				
+				return _server001_.run_server(port, cd)
+
 			else:
-				server_code = subprocess_Popen(['python', '_server000_.py', str(port)], 
-				stdin=open(os_devnull), start_new_session=True, stdout=subprocess_DEVNULL, stderr=subprocess_DEVNULL)
-			
-			return server_code
+				return _server001_.run_server(port)
 		else: return 0
 	except EOFError:
 		pass
 	except KeyboardInterrupt:
 		pass
 
+server_running = False
+def run_server_t(port, cd):      #func_code=0000B
+	global server_code, server_running
+	_t = run_server(port= port, cd= cd)
+	if _t!=0:
+		server_code = None
+		server_code = _t
+	else:
+		return 0
+	try:
+		server_running = True
+		server_code.serve_forever()
+
+	except OSError:
+		exit()
+	except:
+		pass
 
 
 def _connect_net():      #func_code=0000C
@@ -464,13 +558,13 @@ def _connect_net():      #func_code=0000C
 		# gfh= time.time()
 		user_net_ip=requests.get('https://api.myip.com/',headers=current_header, timeout=3).content.decode()
 		# print(time.time()-gfh)#return [True, '0']
-	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema) as e:
-		print("\033[1;31;40mError code: 605x1\nNo internet connection!\nThe program will break in 5 seconds\033[0m")
+	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.SSLError) as e:
+		print("\033[1;31;40mError code: 605x1\nNo internet connection!\033[0m\nChecking Offline mode...")
 		leach_logger("605x1||%s||%s"%(hdr(current_header,'0000C'), e.__class__.__name__), 'lock')
-		time.sleep(5)
-		exit(0)
+
+
 	except Exception as e:
-		print(e.__class__.__name__, "occured. Please inform the Author.\nError code: 0000Cx-1(%s)"%e.__class__.__name__)
+		print(e.__class__.__name__, "occurred. Please inform the Author.\nError code: 0000Cx-1(%s)"%e.__class__.__name__)
 		leach_logger("0000Cx-1||"+hdr(current_header,'0000C')+'||%s||%s'%(e.__class__.__name__, str(e)), 'lock')
 		time.sleep(5)
 		exit(0)
@@ -510,7 +604,7 @@ import_paste_t.start()
 boss=0
 
 
-'''def go_prev_dir(link):    #func_code=0000E
+def go_prev_dir(link):    #func_code=0000E
 	"""returns the previous path str of web link or directory\n
 	**warning: returns only in linux directory format"""
 	link=loc(link,'Linux')
@@ -519,28 +613,9 @@ boss=0
 	# x=link.split('/')
 	else:
 		return '/'.join(link.split('/')[:-2])+'/'
-'''
 
 
-_VERSION="5.50000001"
 
-parser='lxml'
-img=('jpeg','jpg','png','gif', 'webp', 'bmp', 'tif')
-
-
-who_r_u='https://www.myinstants.com/media/sounds/who_r_u_1.mp3'
-yamatte= ['https://www.myinstants.com/media/sounds/yamatte.mp3','https://www.myinstants.com/media/sounds/ara-ara.mp3', 'https://www.myinstants.com/media/sounds/ara-ara2.mp3']
-yes= ('y', 'yes', 'yeah', 'sure', 'ok', 'lets go', "let's go", 'start', 'yep', 'yeap', 'well y', 'well yes', 'well yeah', 'well sure', 'well ok', 'well lets go', "well let's go", 'well start', 'well yep', 'well yeap', 'actually y', 'actually yes', 'actually yeah', 'actually sure', 'actually ok', 'actually lets go', "actually let's go", 'actually start', 'actually yep', 'actually yeap')
-no = ('n', 'no', 'na', 'nah', 'nope', 'stop', 'quit', 'exit', 'not really', 'no', 'not at all', 'never', 'well n', 'well no', 'well na', 'well nah', 'well nope', 'well stop', 'well quit', 'well exit', 'well not really', 'well no', 'well not at all', 'well never', 'actually n', 'actually no', 'actually na', 'actually nah', 'actually nope', 'actually stop', 'actually quit', 'actually exit', 'actually not really', 'actually no', 'actually not at all', 'actually never')
-cond=yes+no
-condERR = "Sorry,  I can't understand what you are saying. Just type yes or no.   "
-
-user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
-
-sp_arg_flag={'disable dl cancel' : False,
-			 'disable dl get' : False}
-
-g_mode=False
 # leach_logger('000||0000F||~||~||~||input exit code L&infin;ping for unknown reason')
 def safe_input(msg='', input_func=input):     #func_code=0000F
 	sys_write(str(msg))
@@ -565,7 +640,7 @@ def safe_input(msg='', input_func=input):     #func_code=0000F
 		raise LeachICancelError
 
 def asker(out='', default=None, True_False=(True, False), extra_opt=tuple(), extra_return=tuple()):      #func_code=00010
-	"""asks for yes no or equevalent inputs
+	"""asks for yes no or equivalent inputs
 	out: printing text to ask tha question *empty string
 	default: default output for empty response *None
 	True_False: returning data instead of true and false *(True, False)"""
@@ -630,7 +705,7 @@ def reader(direc, read_mode='r'):      #func_code=00013
 	if type(read_mode)!=str:
 		print("Invalid read type. Mode must be a string data")
 		raise TypeError
-	if read_mode in ['w', 'wb', 'a', 'ab', 'x', 'xb']:
+	if read_mode in ('w', 'wb', 'a', 'ab', 'x', 'xb'):
 		print("\033[1;31;40mInvaid read mode:\033[0m\033[1m %s is not a valid read mode.\nTry using 'r' or 'rb' based on your need\033[0m")
 		raise LeachKnownError
 	if 'b' in read_mode:
@@ -653,16 +728,16 @@ def reader(direc, read_mode='r'):      #func_code=00013
 def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, server_link):      #func_code=00014
 	print("An update available v"+_latest_version+"("+_latest_size+"), Do you want to update? ")
 	try:
-		reply= safe_input()
+		reply= asker()
 	except LeachICancelError:
-		print('\n\u001b[33;1mCancellation command entered. Skipping uppdate!\u001b[0m\n')
+		print('\n\u001b[33;1mCancellation command entered. Skipping update!\u001b[0m\n')
 		leach_logger("update-prompt||f-Exit-ask")
 		return 0
 	if reply:
 		print('\nConnecting...')
-		leach_logger("201||"+str(_latest_version)+'||'+_latest_link+'||'+server_version,'lock')
+		leach_logger("201||"+str(_latest_version)+'||'+_latest_link+'||'+_VERSION+'||'+server_version,'lock')
 		update_x= time.time()
-		
+
 		#update_filename='Web Leach v4.1'
 		#import urllib
 
@@ -714,7 +789,7 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 
 				except Exception as e:
 					print ("\033[1;31;40mHASH verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
-					leach_logger('2FF||'+_latest_link+'||'+_latest_version+'||'+server_link+'Hashing update ZIP||%s||%s'%(e, e.__class__.__name__))
+					leach_logger('2FF||'+_latest_link+'||'+_latest_version+'||'+server_link+'||Hashing update ZIP||%s||%s'%(e, e.__class__.__name__))
 					remove(_latest_filename+'.zip')
 					raise LeachCorruptionError
 
@@ -727,8 +802,9 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 					fucked_list=list(zf.namelist())
 
 				else:
-					zf.extractall(pwd=b'lock')
-			
+					subprocess_call(['7z.exe', 'e', '-y', '-plock', './data/.temp/'+_latest_filename+'.zip'], stdin=open(os_devnull), start_new_session=True, stdout=subprocess_DEVNULL, stderr=subprocess_DEVNULL)
+
+
 			if server_fucked:
 				leach_logger("204||"+_latest_link+'||'+_latest_version+'||'+server_link+'||'+str(fucked_list))
 				remove(_latest_filename+'.zip')
@@ -774,10 +850,8 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 
 
 
-_server_version = "5.4"
-
 def god_mode():      #func_code=00015
-	global _server_version
+	global _server_version, __update__G, __update__L
 	if os_isdir('data/projects'): rename('data/projects', 'data/leach_projects')
 	if os_isdir('./projects'): rename('./projects', './Download_Projects')
 
@@ -791,17 +865,17 @@ def god_mode():      #func_code=00015
 				else:
 					raise requests.exceptions.ConnectionError
 
-		except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout) as e:
+		except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.SSLError) as e:
 			print("\033[1;31;40mError code: 605x3\nNo internet connection!\033[0m\nRunning offline mode")
 			leach_logger("605x3||%s||%s||%s"%(hdr(current_header,'00015'),who_r_u, e.__class__.__name__), 'lock')
 			return 'offline'
 	current_header=header_()
-	# cloud_data_link = 'htt://jhhgj.com'
+
 	try:
 		file=requests.get(cloud_data_link, headers=current_header)
 		if file:
 			writer('updateL.ext','wb',file.content,'data/.temp','00015')
-			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip())
+			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip(), globals())
 
 			# _server_version = server_version
 			#print(decrypt(open('data/.temp/update.ext').read().strip(), "lock").strip())
@@ -814,13 +888,13 @@ def god_mode():      #func_code=00015
 			return 'offline'
 
 		#remove('data/.temp/update.ext')
-	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema) as e:
+	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.SSLError) as e:
 		print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds")
 		leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, e.__class__.__name__), 'lock')
 		time.sleep(3)
 		return 'offline'
 	except Exception as e:
-		print(e.__class__.__name__,": Unknown error occured. Error code 00015x-1\nPlease inform the author.")
+		print(e.__class__.__name__,": Unknown error occurred. Error code 00015x-1\nPlease inform the author.")
 		leach_logger("00015x-1||%s||%s||%s"%(e.__class__.__name__,str(e),hdr(current_header,'00015')), 'lock')
 		time.sleep(5)
 		exit(0)
@@ -830,7 +904,7 @@ def god_mode():      #func_code=00015
 		file=requests.get(cloud_data_link_global, headers=current_header)
 		if file:
 			writer('updateG.ext','wb',file.content,'data/.temp','00015')
-			exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip())
+			exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip(), globals())
 
 			# _server_version = server_version
 			#print(decrypt(open('data/.temp/update.ext').read().strip(), "lock").strip())
@@ -843,19 +917,18 @@ def god_mode():      #func_code=00015
 			return 'offline'
 
 		#remove('data/.temp/update.ext')
-	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema) as e:
+	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.SSLError) as e:
 		print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds...")
 		leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, e.__class__.__name__), 'lock')
 		time.sleep(3)
 		return 'offline'
 	except Exception as e:
-		print(e.__class__.__name__,": Unknown error occured. Error code 00015x-1\nPlease inform the author.")
+		print(e.__class__.__name__,": Unknown error occurred. Error code 00015x-1\nPlease inform the author.")
 		leach_logger("00015x-1||%s||%s||%s"%(e.__class__.__name__,str(e),hdr(current_header,'00015')), 'lock')
 		time.sleep(5)
 		exit(0)
 
-	if float(_VERSION)<float(_latest_version):
-		_version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, cloud_data_link)
+
 	return 'online'
 
 #def upload_paste(data,f_name):
@@ -867,8 +940,6 @@ def god_mode():      #func_code=00015
 """
 
 
-if os_name=='Windows':
-	import mplay4
 
 
 def log_in():      #func_code=00016
@@ -963,7 +1034,7 @@ sub_page_template="""<!DOCTYPE html>
       font-weight: 700;
     }
 
-    
+
     #spacer{
       background-color: #222;
       color:rgb(57, 148, 190);
@@ -1105,12 +1176,12 @@ sub_page_template="""<!DOCTYPE html>
     }
 
     @-webkit-keyframes zoom {
-      from {-webkit-transform:scale(0)} 
+      from {-webkit-transform:scale(0)}
       to {-webkit-transform:scale(1)}
     }
 
     @keyframes zoom {
-      from {transform:scale(0)} 
+      from {transform:scale(0)}
       to {transform:scale(1)}
     }
 
@@ -1221,7 +1292,7 @@ sub_page_template="""<!DOCTYPE html>
 }
   </style>
   </head>
-  
+
   <body>
   <div id="contents">
   <div id='customize_tools' style="margin: 4%%;">
@@ -1301,7 +1372,7 @@ sub_page_template="""<!DOCTYPE html>
       imgx.style.margin= 'auto';
       imgx.id = 'myImg';
 
-      
+
       var images_const = document.getElementById("images");
       images_const.appendChild(imgx);
       if (i < (images_loc.length)-1) {
@@ -1331,7 +1402,7 @@ sub_page_template="""<!DOCTYPE html>
   function pagination () {
     var page_direction=document.getElementById("pagination");
     if (page_direction==null){page_direction.innerHTML = '<span/>'}
-    
+
     if (current_page_index != 0) {
       var prev_a= document.createElement("A");
       prev_a.href= "../"+pages_list[current_page_index-1]+"/"+pages_list[current_page_index-1]+".html";
@@ -1341,9 +1412,9 @@ sub_page_template="""<!DOCTYPE html>
         localStorage.setItem(proj_name, current_page_index-1);
       };
       page_direction.appendChild(prev_a);
-      
+
     }
-    
+
     page_direction.innerHTML+='<span style="padding : 15%%;"></span>'
 
     if (current_page_index != pages_list.length-1){
@@ -1355,20 +1426,20 @@ sub_page_template="""<!DOCTYPE html>
         localStorage.setItem(proj_name, current_page_index+1);
       };
       page_direction.appendChild(next_a);
-    } 
+    }
 
-    
+
   }
-  
+
   pagination();
   function displayValue() {
-    
+
     var values = getValue();
     var str = "Page Status: "+values[1]+"<br>Border Status: "+ values[0];
     var img_div1 = document.getElementById('images');
     var eleIMG = document.getElementsByClassName('per_img');
     var breaks = img_div1.getElementsByTagName("BR");
-    
+
     if (values[0] == "be") {
       for (i = 0; i < eleIMG.length; i++) {
         eleIMG[i].border = "4px";
@@ -1379,14 +1450,14 @@ sub_page_template="""<!DOCTYPE html>
         eleIMG[i].border = "0px";
       }
     }
-    
+
     if (values[1] == "noS") {
       for (i = breaks.length-1; i >= 0; i--) {
         breaks[i].style.display = 'none'
       }
     }
-    
-    
+
+
     if (values[1] == "shortS") {
       var y = img_div1.childElementCount;
       for (i = breaks.length-1; i >= 0; i--) {
@@ -1433,21 +1504,21 @@ sub_page_template="""<!DOCTYPE html>
         var RArrow= document.createElement('SPAN');
         RArrow.id= 'RARROW';
         captionText.appendChild(RArrow);
-      
+
         no_arrow=false;}
 
 
       var LArrow = document.getElementById('LARROW');
-      
+
       LArrow.style.padding='7px';
       if (modal_img_indx == 0){LArrow.classList.add('disabled');}
-      
+
       LArrow.innerText='\\u00A0\\u00A0\\u00A0< Prev\\u00A0\\u00A0\\u00A0';
-      LArrow.onclick = function(){ 
+      LArrow.onclick = function(){
         if (modal_img_indx != 0){
           modal_img_indx-=1;
           modalImg.src = js_img_src[modal_img_indx];
-          document.getElementsByClassName( 'close' )[0].scrollIntoView(); 
+          document.getElementsByClassName( 'close' )[0].scrollIntoView();
           if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
           else{RArrow.classList.remove('disabled');}
 
@@ -1459,16 +1530,16 @@ sub_page_template="""<!DOCTYPE html>
       }
 
 
-      
+
 
       document.getElementById('capt_name').innerText= "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0"+modalImg.src.replace(/^.*[\\/]/, '') +"\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0";
-      
 
 
-      
+
+
 
       var RArrow = document.getElementById('RARROW');
-      
+
       RArrow.style.padding='7px';
 
       if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
@@ -1477,7 +1548,7 @@ sub_page_template="""<!DOCTYPE html>
           if (modal_img_indx+1 != js_img_src.length){
             modal_img_indx+=1;
             modalImg.src = js_img_src[modal_img_indx];
-            document.getElementsByClassName( 'close' )[0].scrollIntoView(); 
+            document.getElementsByClassName( 'close' )[0].scrollIntoView();
             if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
             else{RArrow.classList.remove('disabled');}
             if (modal_img_indx == 0){LArrow.classList.add('disabled');}
@@ -1485,7 +1556,7 @@ sub_page_template="""<!DOCTYPE html>
           }
           document.getElementById('capt_name').innerHTML = "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0"+ modalImg.src.replace(/^.*[\\/]/, '') + "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0";}
 
-      
+
       modal.onkeydown =document.addEventListener('keydown',key_control);
 }}
 
@@ -1498,24 +1569,24 @@ sub_page_template="""<!DOCTYPE html>
 
     if(event.keyCode==38){modalImg.style.transition='width .6s, height .6s'; modalImg.style.width = modalImg.width*1.1+'px';}
 
-    if(event.keyCode==37){ 
+    if(event.keyCode==37){
       if (modal_img_indx != 0){
         modal_img_indx-=1;
         modalImg.src = js_img_src[modal_img_indx];
-        document.getElementsByClassName( 'close' )[0].scrollIntoView(); 
-      } 
+        document.getElementsByClassName( 'close' )[0].scrollIntoView();
+      }
       if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
           else{RArrow.classList.remove('disabled');}
       if (modal_img_indx == 0){LArrow.classList.add('disabled');}
           else{LArrow.classList.remove('disabled');}
       document.getElementById('capt_name').innerText = "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0"+ modalImg.src.replace(/^.*[\\/]/, '') + "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0";
-    } 
+    }
 
     if(event.keyCode==39){
       if (modal_img_indx+1 != js_img_src.length){
         modal_img_indx+=1;
         modalImg.src = js_img_src[modal_img_indx];
-        document.getElementsByClassName( 'close' )[0].scrollIntoView();  
+        document.getElementsByClassName( 'close' )[0].scrollIntoView();
       }
       if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
           else{RArrow.classList.remove('disabled');}
@@ -1541,7 +1612,7 @@ sub_page_template="""<!DOCTYPE html>
     }
 
   }
-  
+
 
     if(last_opened === undefined || last_opened === null) {
     localStorage.setItem(proj_name, current_page_index);
@@ -1645,7 +1716,7 @@ button {
   background:#fff;
 }
 body{
-  
+
   position: relative;
   min-height: 100vh;
 }
@@ -1760,13 +1831,14 @@ for (var i = 0; i < pages_list.length; i++){
 </script>"""
 
 
+
 dir_path = os_dirname(os_realpath(__file__))
 
 def make_pages(all_li, dir_list, project, seq):
 	first_page=None
 	dir_len = len(dir_list)
 
-	# print(all_li)
+	first_page = dir_path+'/Download_projects/'+ project+'/'+project+'.html'
 	for i in range(dir_len):
 		temp=[]
 		for j in range(len(all_li)):
@@ -1775,17 +1847,14 @@ def make_pages(all_li, dir_list, project, seq):
 
 		temp=remove_duplicate(temp)
 
-		if i==0:
-			first_page = dir_path+'/Download_projects/'+ project+'/'+project+'.html'
 		if seq:
 			box= sub_page_template%(str(natsort.natsorted(temp)), str((dir_list)), i, project)
 		else:
 			box= sub_page_template%(str(temp), str((dir_list)), i, project)
-		
+
 		writer(dir_list[i]+'.html', 'w', box,'Download_projects/'+ project+'/'+dir_list[i])
 	writer(project+'.html', 'w', main_page_template%(str((dir_list)), project),'Download_projects/'+ project)
 	return first_page
-
 
 def check_internet(link, f_code, timeout=None):       #f_code=00017
 	"""Check if the connection is available or not
@@ -1795,13 +1864,17 @@ def check_internet(link, f_code, timeout=None):       #f_code=00017
 	try:
 		if timeout==None: r=requests.head(link, headers=current_header)
 		else: r=requests.head(link, headers=current_header, timeout= timeout)
-		
+
 		if r:
 			return True
 		else:
 			leach_logger('00017||%s||%s||%s||%s'%(link, hdr(current_header, '00017'), f_code, str(r.status_code)))
-	except (requests.exceptions.ConnectionError, requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout) as e:
+	except (requests.exceptions.ConnectionError, requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout, requests.exceptions.SSLError):
 		leach_logger('00017||%s||%s||%s'%(link, hdr(current_header, '00017'), f_code))
+		return False
+	except KeyboardInterrupt:
+		return False
+	except EOFError:
 		return False
 
 
@@ -1831,7 +1904,7 @@ class web_leach:
 
 		self.homepage= ''	# just assigning the homepage variable
 		self.indx_count= 0	# counts the number of indexed links
-		self.all_list = []	# assigning a set so that duplication can be cancelled, will
+		self.all_list = []	# assigning a list, but duplicates will be cancelled in process
 		self.existing_found=False	# indicates if valid existing project is found
 		self.dl_done=False	# indicates if the project scrapping was done or not
 		self.sequence=True	# indicates if the files will be sorted or not
@@ -1852,15 +1925,15 @@ class web_leach:
 		self.re_error = 0   # number of errors after retrying errors
 
 		self.special_starts ={'nh':'https://nhentai\.((net)|(to)|(xxx))/g/',
-		'mangafreak':'https://w[\d]+\.mangafreak.net/(M|m)anga/',
+		'mangafreak':'https://w[^\/]+\.mangafreak.net/(?:M|m)anga/([^\?\#]+)',
 		'nh_sc':'^nh (\d+)$',
 		'mf_sc':'^mf (.+)$',
 		'pinterest':'https://www.pinterest.com/',
-		'mf_read':'https://w[\d]+\.mangafreak.net/Read1_(.+)'}
+		'mf_read':'https:\/\/w[\d]+\.mangafreak\.net\/Read1_([^\?\#]+)(?:_\d+)[\?\#]?.*',
+		'mf_read_chap':'https:\/\/w[\d]+\.mangafreak\.net\/Read1_([^\?\#]+)(_\d+)[\?\#]?.*'}
 
 
 		self.port= (int(ush, 16) % (6000 - 4000 + 1)) + 4000
-		self.run_server_t('Download_projects')
 
 	def catch_KeyboardInterrupt(self, func, *args):       #func_code= 11001
 		try:
@@ -1885,13 +1958,19 @@ class web_leach:
 
 
 
-	def run_server(self, cd=None):      #func_code= 10010
-		if not death:
-			self.server_code = run_server(self.port, cd)
+	# def run_server(self, cd=None):      #func_code= 10010
+	# 	if not death:
+	# 		self.server_code = run_server(self.port, cd)
+	# 		try:
+	# 			self.server_code.serve_forever()
+	# 		except (AttributeError):
+	# 			exit()
 
-	def run_server_t(self, cd = None):
-		self.server_code= None
-		Process(target= self.run_server, args = (cd,)).start()
+
+
+	# def run_server_t(self, cd = None):
+	# 	self.server_code= None
+	# 	Process(target= self.run_server, args = (cd,)).start()
 
 	def distribute(self, lists,task_id,is_error=False):      #func_code= 10002
 		"""run downloads in this function from a list of download links
@@ -1907,20 +1986,23 @@ class web_leach:
 				res=eval(open('data/leach_projects/'+self.Project+'/t'+task_id+'.txt').read().strip()) # resume point of the list (index # int)
 		self.done+=res
 
-		
+
 
 		time.sleep(1.2) # to make sure other threads started safely and the restore points are calculated correctly
 
 		for j in lists:
 			if self.break_all== True: return 0
 			download=True	# switch for download it or not
+			streaming = not is_error
+			if 'ignore_on_null_content' in self.sp_flags or 'stop_on_null_content' in self.sp_flags:
+				streaming = False
 			if is_error:
 				i=list(j)
 			else:
 				i=list(self.all_list2[j])
 
 			if lists.index(j)>=res:
-				current_header=header_()	# randomises header from list on every download to at least try to fool server
+				current_header=header_()	# randomizes header from list on every download to at least try to fool server
 				try:
 					if self.overwrite_bool==False:
 						if self.sub_dirs[i[1]].endswith('\\') or self.sub_dirs[i[1]].endswith('/'):
@@ -1931,25 +2013,45 @@ class web_leach:
 						if sp_arg_flag['disable dl get']==True:
 							file=requests.head(i[0], headers= current_header, timeout=2)
 						else:
-							file=requests.get(i[0], headers= current_header, timeout=2, stream= (not is_error))
+							file=requests.get(i[0], headers= current_header, timeout=2, stream= streaming)
+						if 'stop_on_null_content' in self.sp_flags: # do not save null files
+							if len(file.content)==0:
+								break
+						if 'ignore_on_null_content' in self.sp_flags: # do not save null files
+							if len(file.content)==0:
+								continue
+
 						if file:
 							if sp_arg_flag['disable dl get']!=True:
-								# clear the file
-								writer(get_file_name(i[0])+self.sp_extension,'wb',b'','Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]], '10002')
-								loaded_file = open('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension, 'wb')
-								for chunk in file.iter_content(chunk_size=8192):
-									if not self.break_all:
-										loaded_file.write(chunk)
-										self.dl_chunks+=1
-									
-									else:
-										loaded_file.close()
-										if os_exists('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension):
-											remove('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension)
+								if self.break_all: return 0
+								try:
+									writer(get_file_name(i[0])+self.sp_extension,'wb',b'','Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]], '10002')
+									loaded_file = open('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension, 'wb')
+								except IndexError:
+									print('Something Went wrong, Returning to main Menu')
+									self.break_all =True
+									return 0
+								try:
+									for chunk in file.iter_content(chunk_size=8192):
+										if not self.break_all:
+											loaded_file.write(chunk)
+											self.dl_chunks+=1
 
-										return 0
-								loaded_file.close()
-								
+										else:
+											loaded_file.close()
+											if os_exists('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension):
+												remove('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension)
+
+												return 0
+									loaded_file.close()
+								except (requests.exceptions.SSLError):
+									loaded_file.close()
+									_temp = requests.get(i[0], headers= current_header, timeout=2).content
+									print(type(_temp))
+									writer(get_file_name(i[0])+self.sp_extension,'wb', _temp,'Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]], '10002')
+									del _temp
+
+
 
 
 								if 'dl unzip' in self.sp_flags:
@@ -1965,7 +2067,7 @@ class web_leach:
 							delete_last_line()
 							#print(done)
 							percent=floor(((self.done+1)/self.total)*32)
-							
+
 							print('Downloaded ['+'\u001b[7m'+(' '*percent)+'\u001b[0m'+' '*(32-percent)+'] ['+str(self.done+1) + '/'+str(self.total)+']',task_id)
 							res+=1
 							self.done+=1
@@ -1977,11 +2079,11 @@ class web_leach:
 								err_hdr_list += Counter([hdr(current_header,'10002')])
 								writer('err_header.txt', 'w', str(err_hdr_list),'data/','10002')
 								self.errors+=1
-								
+
 
 							else:
 								self.re_error +=1
-								if self.re_error<4: 
+								if self.re_error<4:
 									print("Failed to download from '%s'"%i[0])
 								else:
 									if self.re_error!=4:delete_last_line()
@@ -2001,7 +2103,7 @@ class web_leach:
 						self.done+=1
 						if is_error:
 							self.errors-=1
-				except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout) as e:
+				except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout, requests.exceptions.SSLError) as e:
 					if is_error==False:
 						writer('errors.txt', 'a',str(i+[hdr(current_header,'10002')])+'\n','data/leach_projects/'+self.Project,'10002')
 
@@ -2012,7 +2114,7 @@ class web_leach:
 
 					else:
 						self.re_error +=1
-						if self.re_error<4: 
+						if self.re_error<4:
 							print("Failed to download from '%s'"%i[0])
 						else:
 							if self.re_error!=4:delete_last_line()
@@ -2029,7 +2131,7 @@ class web_leach:
 						self.errors+=1
 					else:
 						self.re_error +=1
-						if self.re_error<4: 
+						if self.re_error<4:
 							print("Failed to download from '%s'"%i[0])
 						else:
 							if self.re_error!=4:delete_last_line()
@@ -2039,17 +2141,24 @@ class web_leach:
 
 						leach_logger('10002x2||'+self.Project+'||'+hdr(current_header,'10002')+'||'+str(i), user_name)
 
-		self.error_triggers+=[int(task_id)]
+
+
+
+				except: # for test only
+					self.break_all = True
+					traceback.print_exc()
+
+		self.error_triggers.append(int(task_id))
 
 
 	def list_writer(self, link, list_range,special=None, soup=None):      #func_code= 10003
 		"""indexes the list of links or a single link and and adds & aligns files (of specified file formats) by relative folders in the all_list list
 		link: single link or a list of links to index
 		#types: file types to index in all_list
-		file_link_starts: (regex) srting that will check and if the file links starts with
+		file_link_starts: (regex) string that will check and if the file links starts with
 		list_range: a range objet containing the index of the links
 		special: gives a headsup that if the link is from any special cases *None
-		soup: a response soup object that will speed the indexing a li'l bit up *None"""
+		soup: a response soup object that will speed the indexing a little bit up *None"""
 		# global all_list, sub_dirs, indx_count
 
 		start_checker=re_compile('^'+self.file_starts)
@@ -2134,7 +2243,7 @@ class web_leach:
 							temp_home= go_prev_dir(temp_home)
 							img_link=img_link.replace('../','',1)
 						img_link=temp_home+img_link
-					
+
 					if '//' not in img_link:
 						temp=self.homepage_searcher.search(link[i]).group()
 						if temp.endswith('/'):
@@ -2149,7 +2258,7 @@ class web_leach:
 				delete_last_line()
 				print('Indexed ['+ str(self.indx_count+1) + '/'+str(dir_len)+'] '+link[i])
 				self.indx_count+=1
-	
+
 
 
 	if os_name=='Windows':
@@ -2194,7 +2303,7 @@ class web_leach:
 				# site="https://nhentai.net/"
 				# thumb_pattern="https://t.nhentai.net/galleries/\d/\dt."
 
-		except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema):
+		except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError):
 			leach_logger("606x1||%s||%s||%s"%(self.Project, link, hdr(current_header,'10005')), user_name)
 			print('nhentai.net server is not reachable, trying proxy server...')
 			link_y='https://nhentai.xxx/g/'+code+'/'
@@ -2205,7 +2314,7 @@ class web_leach:
 					site=".xxx"
 				else:
 					raise requests.exceptions.ConnectionError
-			except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema):
+			except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError):
 				delete_last_line()
 				print("\033[1;31;40mError code: 606x2\nLink not found, Please recheck the link and start a new project\033[0m")
 				leach_logger("606x2||%s||%s||%s"%(self.Project, link, hdr(current_header,'10005')), user_name)
@@ -2219,13 +2328,13 @@ class web_leach:
 						site=".to"
 					else:
 						raise requests.exceptions.ConnectionError
-				except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema):
+				except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError):
 					# delete_last_line()
 					print("\033[1;31;40mError code: 606x3\nLink not found, Please recheck the link and start a new project\033[0m")
 					leach_logger("606x3||%s||%s||%s"%(self.Project, link, hdr(current_header,'10005')), user_name)
 					return False, False
 
-			
+
 		self.file_types= img
 		if page:
 			soup=bs(page.content, parser)
@@ -2234,7 +2343,7 @@ class web_leach:
 			print("Indexing from",title)
 			self.file_starts=''
 			self.list_writer(code,0,'nhentai'+site,soup)
-			self.sub_dirs.append(parse.unquote(html_unescape(title)).replace('/','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-'))
+			self.sub_dirs.append(trans_str(parse.unquote(html_unescape(title)), {'/\\|:*><?': '-', '"':"'"}))
 			# print(self.sub_dirs)
 			return link_y, title
 		else:
@@ -2244,7 +2353,7 @@ class web_leach:
 
 
 	def check_sp_links(self,link, sp=None):      #func_code= 10006
-		"""checks if the link has any special case and any specific spcial case
+		"""checks if the link has any special case and any specific special case
 		link: link of the project
 		sp: specifies the special case check *None"""
 
@@ -2301,57 +2410,102 @@ class web_leach:
 		#: user needs to manually last chapter"""
 		#global sub_dirs, all_list, sp_extension
 
+		_temp =re_search(self.special_starts['mf_sc'], link)
+		if _temp:
+			_temp= str(_temp.group(1))
+			_temp= re_sub('[\!\:\.\'\,]', '', _temp)
+			_temp= re_sub('[\+\/\\ \"\<\>\?\-]', '_', _temp)
+			link= 'https://w11.mangafreak.net/Manga/'+ _temp
+			link= re_sub('\_{2+}', '\_', link)
 
-		if re_search(self.special_starts['mf_sc'], link):
-			link= 'https://w11.mangafreak.net/Manga/'+str(re_search(self.special_starts['mf_sc'], link).group(1))
-			self.main_link= link
-		inp = re_search('https://w11.mangafreak.net/(M|m)anga/([^\?]*)',link)
+			try:
+				if requests.head("http://images.mangafreak.net:8080/downloads/"+_temp+'_1').headers['content-length'] ==0:
+					raise ValueError
+				else:
+					self.main_link= link
 
+			except Exception:
+				link = None
+				print("Checking in google for the accurate link")
+				query= 'mangafreak '+ _temp
+				for i in g_search(query, tld="com", num=3, stop=3, pause=2):
+					if re_search(self.special_starts['mf_read'], i):
+						link = i
+						print ("Link found - "+i)
+						break
+					elif re_search(self.special_starts['mangafreak'], i):
+						link = i
+						print ("Link found - "+i)
+						break
+
+			if link == None:
+				print("It seems the title is incorrect. Please recheck the title and re-start the project")
+				return ''
+
+
+		_temp = re_search(self.special_starts['mf_read'], link)
+
+		if _temp:
+			link= 'https://w11.mangafreak.net/Manga/'+str(_temp.group(1))
+
+		inp = re_search(self.special_starts['mangafreak'],link)
+
+		self.main_link= link
 		if inp!=None:
-			title=inp.group(2)
+			title=inp.group(1)
 			self.sp_flags.append('mangafreak')
 
 		else:
+			print("It seems the title is incorrect. Please recheck the title and re-start the project")
 			return ""
 
 		last_ch=-1
+		_msg = "\n\033[32;1m**\033[0mPlease enter the last chapter number...\n leave it empty to auto detect\n\n >>"
 		while True:
 			try:
-				try:
-					if last_ch<1:
-						last_ch= int(safe_input("\n\033[32;1m**\033[0mPlease enter the last chapter number: "))
-				except LeachICancelError:
-					print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
-					leach_logger("000||10007||%s||f-Stop||is_mangafreak||did not ans Mangafreak chapter no"%self.Project)
-					return 0
-				while True:
-					try:
-						if requests.head("http://images.mangafreak.net:8080/downloads/"+title+'_'+str(last_ch)):
-							self.sp_extension='.zip'
-							print("Found!")
-							break
-							# except request.URLError:
-							# 	print("This chapter is not found!!")
-							# 		break
-						else:
-							print("This chapter is not found!!")
-					except:
-						print("This chapter is not found!!")
+				last_ch= safe_input(_msg).strip()
+			except LeachICancelError:
+				print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
+				leach_logger("000||10007||%s||f-Stop||is_mangafreak||did not ans Mangafreak chapter no"%self.Project)
+				return 0
+
+			if last_ch =='':
+				last_ch = None
 				break
 
-			except:
+
+			try:
+				last_ch = int(last_ch)
+				break
+			except ValueError:
+				_msg= "\n\033[31;1m**\033[0mJust enter the last chapter number (like 135)...\n leave it empty to auto detect\n\n >> "
+
+
+		self.sub_dirs = ['.']
+
+		if last_ch==None:
+			last_ch=0
+			print('Counting Links... (0)')
+			while True:
 				try:
-					last_ch= int(safe_input("\n\033[31;1m**\033[0mJust enter the last chapter number (like 135): "))
+					if requests.head("http://images.mangafreak.net:8080/downloads/"+title+'_'+str(last_ch+1)).headers['content-length'] !=0:
+
+						last_ch +=1
+						delete_last_line()
+						print('Counting Links... (%i)'% last_ch)
+					else:
+						break
+				except Exception:
 					break
-				except LeachICancelError:
-					print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
-					leach_logger('000||10007||'+self.Project+"||f-Stop||is_mangafreak||tried to ans Mangafreak chapter no||"+str(last_ch))
-					return 0
+
+			delete_last_line()
+			print("Total %i links found from mangafreak.\nIf its not right, retry by pressing ctrl+C\n\n"%last_ch)
 
 
-		self.sub_dirs.append('.')
 		for i in range(1,last_ch+1):
 			self.all_list.append(("http://images.mangafreak.net:8080/downloads/"+title+'_'+str(i),0))
+
+		self.sp_extension = '.zip'
 
 		return "mangafreak.net"
 
@@ -2360,7 +2514,7 @@ class web_leach:
 		else it will return 0"""
 
 		if self.check_sp_links(self.main_link, 'pinterest'):
-			temp= input()
+			_= input()
 	def retry_errors(self):      #func_code= 10008
 		while sorted(self.error_triggers)!=[1,2,3,4,5,6,7,8,9, 10]:
 			if self.break_all:
@@ -2380,7 +2534,6 @@ class web_leach:
 					if i.strip()!=b'':
 						try: errs.append(eval(i.decode())[:2])
 						except TypeError: print(i)
-														
 				#errs= [eval(i)[:2] for i in err_file if i!='']
 
 				self.distribute(errs,11, is_error= True)
@@ -2395,7 +2548,7 @@ class web_leach:
 		else: print("\nPlease retry some time later to get higher chances to download some or all %d missing file/s"%self.errors)
 		print('\n\nEnter \u001b[1m\u001b[4m\u001b[7m x \033[0m to open the first page\n or just press Enter to continue: ')
 		self.dl_done=True
-	def data_checkup(self, path = None, proj_name = None):     # f_code = 11000
+	def data_checkup(self, path = None, proj_name = None, offline = False):     # f_code = 11000
 		if path!=None:
 			proj_path=path
 			list_path=path[:-5]+'.list'
@@ -2508,6 +2661,7 @@ class web_leach:
 			if proj_good and list_good:
 				if path!=None:
 					self.Project=get_file_name(path)[:-5]
+				if offline: return (True, True)
 				if self.dl_done:
 					print('It seems  the old prject download was complete!!')
 					try:
@@ -2536,7 +2690,7 @@ class web_leach:
 						leach_logger('11000x2||%s'%self.Project,user_name)
 					elif temp=='fresh':
 						#print("Okay! Enter a new project name in the next line.")
-						
+
 						Project = self.Project
 						self.__init__()
 						self.Project= Project
@@ -2563,16 +2717,18 @@ class web_leach:
 						#clear file data
 						#writer(self.Project+'.list','w','','data/leach_projects','10009')
 						#writer(self.Project+'.proj','w','','data/leach_projects','10009')
-						
+
 						Project = self.Project
 						self.__init__()
 						self.Project= Project
 						self.existing_found= False
 					elif temp== False: return 0
-					del temp
+				return (True, True)
 			else:
 				print("Could not load data from file. Please start over.")
 				self.existing_found=False
+
+				return (False, False)
 
 
 				#print('error')
@@ -2580,58 +2736,77 @@ class web_leach:
 			#download_files(listx,state)
 		else:
 			# self.existing_found=0
-			print('Insufiicient data!\n')
+			print('Insufficient data!\n')
 			self.corruptions+=[0]
+			return (False, False)
 	def main(self):      #func_code= 10009
-		global death, sp_arg_flag
+		global death, sp_arg_flag, server_code, dying, death_talk
 		"""runs the mainloop of the projects runtime code"""
 		self.__init__()
-
 		try:
-			while True:
-				try:
-					self.Project=safe_input('\nEnter Batch download directory (Project name): ')
+			if not server_running: server_launcher.start()
+		except:
+			pass
 
-				except LeachICancelError:
-					death = True
-					print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
-					leach_logger("0x1||10009||User Exit-0")
+
+		while True:
+			try:
+				if death or dying: raise LeachICancelError
+				self.Project=safe_input('\nEnter Batch download directory (Project name): ')
+
+			except LeachICancelError:
+				dying = True
+				while dying:
 					try:
-						self.server_code.kill()
-					except: pass
+						death_talk+=1
+						death = True
+						if death_talk<2: print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
+						leach_logger("0x1||10009||User Exit-0")
 
-					
+						while server_code == None: time.sleep(.5)
 
-					exit(0)
-					# sys_exit(0)
-				if self.Project=='':
-					print('You must enter a Project name here.')
-				elif self.Project in ['?enable-dl-thread', '?E-dl-T']:
-					sp_arg_flag['disable dl cancel'] = True
-					print('Disabled download cancellation by adding join thread option')
-					return 0
+						server_code.server_close()
+						dying = False
+						exit(0)
+					except EOFError:
+						return 0
+					except KeyboardInterrupt:
+						return 0
+				# sys_exit(0)
+			if self.Project=='':
+				print('You must enter a Project name here.')
+			elif self.Project in ['?enable-dl-thread', '?E-dl-T']:
+				sp_arg_flag['disable dl cancel'] = True
+				print('Disabled download cancellation by adding join thread option')
+				return 0
 
-				elif self.Project in ['?dnable-dl-thread', '?D-dl-T']:
-					sp_arg_flag['disable dl cancel'] = False
-					print('Enabled download cancellation by adding removing thread option [DEFAULT]')
-					return 0
-				elif self.Project in ['?disable-dl-get', '?D-dl']:
-					sp_arg_flag['disable dl get'] = True
-					print('Disabled download save by using requests.head')
-					return 0
+			elif self.Project in ['?disable-dl-thread', '?D-dl-T']:
+				sp_arg_flag['disable dl cancel'] = False
+				print('Enabled download cancellation by adding removing thread option [DEFAULT]')
+				return 0
+			elif self.Project in ['?disable-dl-get', '?D-dl']:
+				sp_arg_flag['disable dl get'] = True
+				print('Disabled download save by using requests.head')
+				return 0
 
-				elif self.Project in ['?enable-dl-get', '?E-dl'] :
-					sp_arg_flag['disable dl get'] = False
-					print('Enabled download save by using requests.get [DEFAULT]')
-					return 0
+			elif self.Project in ['?enable-dl-get', '?E-dl'] :
+				sp_arg_flag['disable dl get'] = False
+				print('Enabled download save by using requests.get [DEFAULT]')
+				return 0
 
-				else:
-					self.Project= self.Project
-					break
-		except EOFError:
-			exit(0)
-		except KeyboardInterrupt:
-			exit(0)
+			elif self.Project in ['?enable-ara-ara', '?E-noise'] :
+				sp_arg_flag['ara_ara'] = True
+				print('Enabled fun sounds [DEFAULT]')
+				return 0
+
+			elif self.Project in ['?disable-ara-ara', '?D-noise'] :
+				sp_arg_flag['ara_ara'] = False
+				print('Enabled fun sounds [DEFAULT]')
+
+			else:
+				self.Project= self.Project
+				break
+
 		temp = self.Project
 		temp1= temp.replace('"','')
 		if temp1[0]=="'" and temp1[1]=="'": temp[1:-1]
@@ -2649,7 +2824,7 @@ class web_leach:
 				if any([i in self.Project for i in '/\<>?"*|:']):
 					print('Project name can\'t have these charecters : /\<>?"*|:\n\n')
 					return 0
-					
+
 				# self.project_dir=self.Project[:].replace('/','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-')
 				leach_logger("10009x0||%s||Checking Project Database"%(self.Project),user_name)
 				if self.Project in open('data/projects.db').read().split('\n'):
@@ -2662,9 +2837,10 @@ class web_leach:
 		except LeachICancelError:
 			print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
 			leach_logger("000||10009||%s||f-Stop||is_proj_file||user probably freaked out for too much Ques"%self.Project)
+
 			return 0
 
-		
+
 
 		del temp, temp1
 
@@ -2672,6 +2848,8 @@ class web_leach:
 			print("\n>> Project name can't have ")
 			print("\\ / | : * \" > < ?\n".center(20))
 			return 0
+
+		Ctitle('Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
 
 		if self.existing_found==False:
 			if self.update:
@@ -2685,11 +2863,16 @@ class web_leach:
 					page = self.dl_page()
 					if page:
 						link_true= True
+					else:
+						self.main_link=safe_input("\033[1;31;40mLink Unavailable! \033[0mIt seems the previous link is unaccessable right now.\nPlease Retry the project sometimes later with stable internet connection\n(possible cause: no internet or wrong link)\n")
+						return 0
 
 				if self.check_sp_links(self.main_link,'mangafreak'):
 					print("Update isn't available for mangafreak")
+					self.sp_flags.append('ignore_on_null_content') # do not save null files
+					self.sp_flags.append('stop_on_null_content') # stops downloading after receiving a null file
 					try:
-						if asker('\u29bf Do you want to re-download files from the same link?'):
+						if asker('\u29bf Do you want to re-download files from the same link?\n >> '):
 							will_unzip=asker("\nThe download files are in zip format.\n\u29bf Do you wish to Extract them?\n>> ")
 
 							if will_unzip:
@@ -2698,12 +2881,12 @@ class web_leach:
 									self.sp_flags.append("del dl zip")
 							try:
 								self.link_startswith= self.mangafreak_link(self.main_link)
-	
+
 							except EOFError:
 								print("Cancel command entered! stopping")
 								return 0
 							except KeyboardInterrupt:
-								print("cancel command entered! stopping")
+								print("Cancel command entered! stopping")
 								return 0
 							if self.link_startswith== 0: # cancel code
 								return 0
@@ -2768,9 +2951,11 @@ class web_leach:
 							sub_links2+=[self.main_link]
 						if self.dimention==2 or self.dimention==3:
 							soup=bs(page.content, parser)
-							# link_startswith=input("\n(optional but recomanded to be more precice):\n1. Sub-Links Starts With : ")
+							# link_startswith=input("\n(optional but recommended to be more precise):\n1. Sub-Links Starts With : ")
 							leach_logger('10009x1||%s||l_starts||%s'%(self.Project, self.link_startswith), user_name)
 							sub_links2+=list(set([sub_link.get('href').strip() for sub_link in soup.find_all('a') if sub_link.get('href')!=None]))
+
+						Ctitle('[Indexing] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
 
 						for i in sub_links2:
 
@@ -2841,7 +3026,7 @@ class web_leach:
 								else:
 									if i.startswith('/'): i=temp+i
 									else: i=temp+'/'+i
-								
+
 
 							if link_startswith_re.search(i)!=None:
 								sub_links.append(i)
@@ -2850,7 +3035,7 @@ class web_leach:
 
 						sub_links=natsort.natsorted(remove_duplicate(sub_links), key= lambda x: x.lower())
 
-						
+
 					except LeachICancelError:
 						print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
 						leach_logger("000||10009||%s||f-Stop||asking4home||user probably freaked out for too much Ques"%self.Project)
@@ -2883,76 +3068,90 @@ class web_leach:
 					leach_logger('10009x1||%s||m_link||%s'%(self.Project, self.main_link), user_name)
 					while link_true==False:
 						if self.check_sp_links(self.main_link,['nh', 'mangafreak']):
-							break
-						page = self.dl_page()
-						if page:
-							link_true= True
+							if self.check_sp_links(self.main_link,'mangafreak'):
+								print("mangafreak link detected!!")
+								is_mangafreak=asker("\u29bf Do you want to download manga images from this links?? (\u001b[1m\u001b[4m\u001b[7m y \033[0m/\u001b[1m\u001b[4m\u001b[7m n \033[0m)\n>> ")
+								if is_mangafreak:
+									self.sp_flags.append('ignore_on_null_content') # do not save null files
+									self.sp_flags.append('stop_on_null_content') # stops downloading after receiving a null file
 
+									will_unzip=asker("\nThe download files are in zip format.\n\u29bf Do you wish to Extract them?\n>> ")
 
-					if self.check_sp_links(self.main_link,'mangafreak'):
-						print("mangafreak link detected!!")
-						is_mangafreak=asker("\u29bf Do you want to download manga images from this links?? (\u001b[1m\u001b[4m\u001b[7m y \033[0m/\u001b[1m\u001b[4m\u001b[7m n \033[0m)\n>> ")
-						if is_mangafreak:
-							will_unzip=asker("\nThe download files are in zip format.\n\u29bf Do you wish to Extract them?\n>> ")
-
-							if will_unzip:
-								self.sp_flags.append("dl unzip")
-								if asker("\u29bf Shall I delete the downloaded zip files?\n>> "):
-									self.sp_flags.append("del dl zip")
-							self.link_startswith= self.mangafreak_link(self.main_link)
-							self.file_types=('zip',)
-							self.file_starts=''
-
-							leach_logger('10009x1||%s||is_mangafreak.sp_flags||%s'%(self.Project,str(self.sp_flags)),user_name)
-							# sub_links=''
-							#exit(0)
-						
-						else:
-							page = self.dl_done()
-							if page:
-								link_true= True
-
-					if  self.check_sp_links(self.main_link,'nh'): #main_link.startswith('https://nhentai.net/g/') or main_link.startswith('https://nhentai.to/g/'):
-						print("nhentai link detected!!")
-						is_nh=asker("\u29bf Do you want to download doujin images from this links?? (\u001b[1m\u001b[4m\u001b[7m y \033[0m/\u001b[1m\u001b[4m\u001b[7m n \033[0m)\n>> \n( ͡° ͜ʖ ͡°)\t")
-						####( io )
-						if is_nh:
-							if os_name=='Windows' and ara_ara:
-								self.play_yamatte_t.start()
-
-							self.link_startswith, title=self.nhantai_link(self.main_link)
-							#print(link_startswith,title)
-							if self.link_startswith==0 and title==0:
-								return 0
-
-							if title!=False and self.link_startswith!='':
-								#sub_dirs.append(title.replace('/','-').replace('?','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-'))
-								self.file_types=img
-								self.file_starts='https://nhentai'
-								leach_logger('10009x1||%s||is_nh||True||Assigned after testing the link'%(self.Project),user_name)
-						
-						else:
-							page = self.dl_done()
-							if page:
-								link_true= True
-					if self.check_sp_links(self.main_link,'pinterest'):
-						print("Pinterest link detected.\nDo you want to try the special features for pinterest images?\nWarning: All images may not be the same from the website as you see\n")
-						if asker('>> '):
-
-							if self.check_sp_links(self.main_link, 'pinterest-pin'):
-								try:
-									self.dimention= int(safe_input("Enter the index of your choice (1/2/3): "))
-								except ValueError:
-									self.dimention= -1
-								while self.dimention not in [1,2,3]:
+									if will_unzip:
+										self.sp_flags.append("dl unzip")
+										if asker("\u29bf Shall I delete the downloaded zip files?\n>> "):
+											self.sp_flags.append("del dl zip")
 									try:
-										self.dimention = int(safe_input("\033[1;31;40mInvalid input!\033[0m\nEnter 1 or 2 or 3:  "))
-									except ValueError:
-										self.dimention= -1
+										_temp = self.mangafreak_link(self.main_link)
+										if _temp==0:
+											return 0
+										if _temp!= '':
+											self.link_startswith=_temp
+											del _temp
+											self.file_types=('zip',)
+											self.file_starts=''
+
+											leach_logger('10009x1||%s||is_mangafreak.sp_flags||%s'%(self.Project,str(self.sp_flags)),user_name)
+											link_true = True
+											break
+
+									except EOFError:
+										print("Cancel command entered! stopping")
+										return 0
+									except KeyboardInterrupt:
+										print("cancel command entered! stopping")
+										return 0
+									# sub_links=''
+									#exit(0)
 
 
 
-							self.link_startswith='https://www.pinterest.com'
+							if  self.check_sp_links(self.main_link,'nh'): #main_link.startswith('https://nhentai.net/g/') or main_link.startswith('https://nhentai.to/g/'):
+								print("nhentai link detected!!")
+								is_nh=asker("\u29bf Do you want to download doujin images from this links?? (\u001b[1m\u001b[4m\u001b[7m y \033[0m/\u001b[1m\u001b[4m\u001b[7m n \033[0m)\n>> \n( ͡° ͜ʖ ͡°)\t")
+								####( io )
+								if is_nh:
+									if os_name=='Windows' and ara_ara:
+										self.play_yamatte_t.start()
+
+									self.link_startswith, title=self.nhantai_link(self.main_link)
+									#print(link_startswith,title)
+									if self.link_startswith==0 and title==0:
+										return 0
+
+									if title!=False and self.link_startswith!='':
+										#sub_dirs.append(title.replace('/','-').replace('?','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-'))
+										self.file_types=img
+										self.file_starts='https://nhentai'
+										leach_logger('10009x1||%s||is_nh||True||Assigned after testing the link'%(self.Project),user_name)
+										link_true = True
+										break
+
+							if self.check_sp_links(self.main_link,'pinterest'):
+								print("Pinterest link detected.\nDo you want to try the special features for pinterest images?\nWarning: All images may not be the same from the website as you see\n")
+								if asker('>> '):
+
+									if self.check_sp_links(self.main_link, 'pinterest-pin'):
+										try:
+											self.dimention= int(safe_input("Enter the index of your choice (1/2/3): "))
+										except ValueError:
+											self.dimention= -1
+										while self.dimention not in [1,2,3]:
+											try:
+												self.dimention = int(safe_input("\033[1;31;40mInvalid input!\033[0m\nEnter 1 or 2 or 3:  "))
+											except ValueError:
+												self.dimention= -1
+
+
+
+									self.link_startswith='https://www.pinterest.com'
+						if link_true==False:
+							page = self.dl_page()
+							if page:
+								link_true= True
+							else:
+								self.main_link=safe_input("\033[1;31;40mLink Unavaiable! \033[0m(possible cause: no internet or wrong link)\n\nPlease re-enter the link: ")
+
 
 
 					if self.link_startswith=='':
@@ -2983,7 +3182,7 @@ class web_leach:
 							#print(page.content)
 							#time.sleep(1000)
 							soup=bs(page.content, parser)
-							self.link_startswith=safe_input("\n(optional but recomanded to be more precice):\n1. Sub-Links Starts With : ")
+							self.link_startswith=safe_input("\n(optional but recommended to be more precise):\n1. Sub-Links Starts With : ")
 							leach_logger('10009x1||%s||l_starts||%s'%(self.Project, self.link_startswith), user_name)
 							sub_links2+=list(set([sub_link.get('href').strip() for sub_link in soup.find_all('a') if sub_link.get('href')!=None]))
 
@@ -3021,6 +3220,8 @@ class web_leach:
 				print("Checking links...")
 
 				link_startswith_re=re_compile('^'+self.link_startswith)
+
+				Ctitle('[Indexing] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
 
 				for i in sub_links2:
 
@@ -3091,7 +3292,7 @@ class web_leach:
 						else:
 							if i.startswith('/'): i=temp+i
 							else: i=temp+'/'+i
-						
+
 
 					if link_startswith_re.search(i)!=None:
 						sub_links.append(i)
@@ -3106,7 +3307,7 @@ class web_leach:
 			if self.sub_dirs==[]:
 				leach_logger("10009x2||%s||%i"%(self.Project, len(sub_links)), user_name)
 				for i in sub_links:
-					self.sub_dirs.append(parse.unquote(html_unescape(i)).replace('?','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-'))
+					self.sub_dirs.append(trans_str(parse.unquote(html_unescape(i)), {'/\\|:*><?': '-', '"':"'"}))
 				# sub_dirs=sub_links[:]
 
 				len_sub_links= len(sub_links)
@@ -3139,14 +3340,14 @@ class web_leach:
 						print("\u001b[33;1mProject indexing cancelled by Keyboard\u001b[0m")
 						self.break_all= True
 						return 0
-					
+
 				except Exception as e:
 					print("\033[1;31;40mcode: Error 607\n The program will break in 5 seconds\033[0m")
 					leach_logger("10009x-1||%s||%s||%s"%(self.Project, e.__class__.__name__, str(e)), user_name)
 					time.sleep(5)
 					exit(0)
 
-			
+
 
 			if self.sequence: self.all_list=natsort.natsorted(self.all_list, key = lambda x: x[0].lower())
 
@@ -3189,6 +3390,15 @@ class web_leach:
 
 		all_list_r=list(range(self.total))
 
+		Ctitle('[Downloading] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
+
+		print('Downloaded ['+'\u001b[7m'+(' '*0)+'\u001b[0m'+' '*(32-0)+'] ['+str(0) + '/'+str(self.total)+']')
+
+		try:
+			makedirs('Download_projects/'+self.Project)
+		except:
+			pass
+
 		print('Downloaded ['+'\u001b[7m'+(' '*0)+'\u001b[0m'+' '*(32-0)+'] ['+str(0) + '/'+str(self.total)+']')
 
 		t11= Process(target=self.distribute, args=(all_list_r[::10],1))
@@ -3229,7 +3439,9 @@ class web_leach:
 				t9.join()
 				t10.join()
 				t99.join()
-			
+
+				Ctitle('[Download Complete] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
+
 			except EOFError:
 				print("Hard cancel command entered! stopping")
 				self.break_all = True
@@ -3238,6 +3450,8 @@ class web_leach:
 				self.break_all = True
 
 		will_open = None
+
+		# exec(open('make_html.py').read(), globals())
 
 		if not 'mangafreak' in self.sp_flags:
 			#print(True)
@@ -3257,18 +3471,17 @@ class web_leach:
 			leach_logger("000||10009||%s||D-Stop||Downloaded-%i | Error-%i"%(self.Project, self.done, self.errors))
 		else:
 			if 'mangafreak' in self.sp_flags:
-				if not os_exists('Download_projects/'+Project+'/'):\
-					print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the donwload project\n*its required for Manga Freak Projects")						
-				sub_dirs = natsort.natsorted([get_file_name(i[0], 'url').split('.')[0] for i in self.all_list], key= lambda x: x.lower())
-				all_list =[]
-				for i in range(len(sub_dirs)):
-					try:
-						for j in os_listdir('Download_projects/'+self.Project+'/'+sub_dirs[i]):
-							#print(j)
-							if os_isfile('Download_projects/'+self.Project+'/'+sub_dirs[i]+'/'+j) and not j.endswith('.html'):
-								all_list.append([j,i])
-					except OSError: continue
-				first_page = make_pages(all_list,sub_dirs, self.Project, True)
+				if not os_exists('Download_projects/'+self.Project+'/'):
+					print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
+					return 0
+				self.sub_dirs= natsort.natsorted([get_file_name(i[0]) for i in self.all_list if os_isdir('Download_projects/'+self.Project+'/'+get_file_name(i[0]))])
+				self.all_list=[]
+				for i in range(len(self.sub_dirs)):
+					for j in os_listdir('Download_projects/'+self.Project+'/'+self.sub_dirs[i]):
+						# print(j)
+						if os_isfile('Download_projects/'+self.Project+'/'+self.sub_dirs[i]+'/'+j):
+							self.all_list.append([j,i])
+				first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
 
 			if will_open=='x':
 				run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
@@ -3278,16 +3491,176 @@ class web_leach:
 		try:
 			page =requests.get(self.main_link, headers=header_(), timeout=5)
 			writer(self.Project+'.html','wb',page.content,'data/leach_projects/%s'%self.Project,'10009')
-			
-		except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema):
+
+		except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError):
 			self.main_link=safe_input("\033[1;31;40mInvalid URL! \033[0m(possible cause: no internet or wrong link)\n\nPlease re-enter the link: ")
-		
+			return False
+
 
 		return page
-	
+
+
+
+	def main_offline(self):
+		global death, sp_arg_flag, server_code, dying, death_talk, server_launcher
+		"""runs the mainloop of the projects runtime code"""
+		self.__init__()
+		try:
+			server_launcher.start()
+		except:
+			pass
+
+
+		while True:
+			try:
+				if death or dying: raise LeachICancelError
+				self.Project=safe_input('\nEnter Batch download directory (Project name): ')
+
+			except LeachICancelError:
+				dying = True
+				while dying:
+					try:
+						death_talk+=1
+						death = True
+						if death_talk<2: print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
+						leach_logger("0x1||10009||User Exit-0")
+
+						while server_code == None: time.sleep(.5)
+
+						server_code.server_close()
+						dying = False
+						exit(0)
+					except EOFError:
+						return 0
+					except KeyboardInterrupt:
+						return 0
+
+			if self.Project=='':
+				print('You must enter a Project name here.')
+
+			elif self.Project in ['?disable-log', '?D-log']:
+				sp_arg_flag['no log'] = True
+				print('Disabled logging')
+				return 0
+			elif self.Project in ['?eisable-log', '?E-log']:
+				sp_arg_flag['no log'] = False
+				print('Enabled logging [DEFAULT]')
+			elif self.Project in ['?enable-dl-thread', '?E-dl-T']:
+				sp_arg_flag['disable dl cancel'] = True
+				print('Disabled download cancellation by adding join thread option')
+				return 0
+
+			elif self.Project in ['?disable-dl-thread', '?D-dl-T']:
+				sp_arg_flag['disable dl cancel'] = False
+				print('Enabled download cancellation by adding removing thread option [DEFAULT]')
+				return 0
+			elif self.Project in ['?disable-dl-get', '?D-dl']:
+				sp_arg_flag['disable dl get'] = True
+				print('Disabled download save by using requests.head')
+				return 0
+
+			elif self.Project in ['?enable-dl-get', '?E-dl'] :
+				sp_arg_flag['disable dl get'] = False
+				print('Enabled download save by using requests.get [DEFAULT]')
+				return 0
+
+			elif self.Project in ['?enable-ara-ara', '?E-noise'] :
+				sp_arg_flag['ara_ara'] = True
+				print('Enabled fun sounds [DEFAULT]')
+				return 0
+
+			elif self.Project in ['?disable-ara-ara', '?D-noise'] :
+				sp_arg_flag['ara_ara'] = False
+				print('Enabled fun sounds [DEFAULT]')
+
+			else:
+				self.Project= self.Project
+				break
+
+		temp = self.Project
+		proj_good=False
+		list_good=False
+		temp1= temp.replace('"','')
+		if temp1[0]=="'" and temp1[1]=="'": temp[1:-1]
+		try:
+			from_file= True
+			if temp1.endswith('.proj') and os_isfile(temp1):
+				if asker("Project file detected.\n\u29bf Do you want re-open project from that file?\n >> "):
+					leach_logger("10009x0||%s||fileOpen"%(self.Project),user_name)
+					_temp =self.data_checkup(path = temp1, proj_name= temp, offline = True)
+					if _temp==0:
+						return 0
+					proj_good, list_good = _temp
+				else: from_file = False
+			else: from_file= False
+
+			if from_file == False:
+				if any([i in self.Project for i in '/\<>?"*|:']):
+					print('Project name can\'t have these charecters : /\<>?"*|:\n\n')
+					return 0
+
+				# self.project_dir=self.Project[:].replace('/','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-')
+				leach_logger("10009x0||%s||Checking Project Database"%(self.Project),user_name)
+				if self.Project in open('data/projects.db').read().split('\n'):
+					print('Existing Project name found!')
+					_temp= self.data_checkup(offline = True)
+					if _temp==0:
+						return 0
+					proj_good, list_good = _temp
+			del from_file
+		except LeachICancelError:
+			print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
+			leach_logger("000||10009||%s||f-Stop||is_proj_file||user probably freaked out for too much Ques"%self.Project)
+			return 0
+
+
+
+		del temp, temp1
+
+		if any(i in self.Project for i in '\\/|:*"><?'):
+			print("\n>> Project name can't have ")
+			print("\\ / | : * \" > < ?\n".center(20))
+			return 0
+
+		if proj_good and list_good:
+			Ctitle('[Analizing] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
+			if 'mangafreak' in self.sp_flags:
+				if self.dl_done:
+					if not os_exists('Download_projects/'+self.Project+'/'):
+						print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
+						return 0
+					self.sub_dirs= natsort.natsorted([get_file_name(i[0]) for i in self.all_list if os_isdir('Download_projects/'+self.Project+'/'+get_file_name(i[0]))])
+					self.all_list=[]
+					for i in range(len(self.sub_dirs)):
+						for j in os_listdir('Download_projects/'+self.Project+'/'+self.sub_dirs[i]):
+							# print(j)
+							if os_isfile('Download_projects/'+self.Project+'/'+self.sub_dirs[i]+'/'+j):
+								self.all_list.append([j,i])
+					# print(self.all_list, self.sub_dirs)
+					first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
+
+
+					print("Local webpage created")
+					if asker("Wanna check the page??\n leave an enter to pass\n >> ", default=False):
+						run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
+
+
+				else:
+					print("can't generate web pages offline from incomplete manga freak download")
+			else:
+				first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
+				print("Local webpage created")
+				if asker("Wanna check the page??\n leave an enter to pass\n >> ", default=False):
+					run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
+
+		else:
+			print('Sorry, it seems there\'s no previous project with this name. \nThere is a chance that the project data was Corrupted!\nRetry when online...')
+
+
 @atexit.register
 def on_exit():
 	leach_logger('0x1||00000||Program Terminated')
+
 
 
 #test mangafreak all files available
@@ -3320,10 +3693,12 @@ if os_isfile('data/err_header.txt'):
 
 		writer('err_header.txt','w',str(err_hdr_list),'data/','00000')
 
-		
+
 	elif type(err_hdr_list)== dict:
 		err_hdr_list = Counter(err_hdr_list)
-		
+else:
+	err_hdr_list = Counter()
+
 
 #############################################################
 
@@ -3332,6 +3707,7 @@ if os_isfile('data/err_header.txt'):
 try:
 	init_upto = 'Importing Assets'
 	print("Connecting to server...")
+	Ctitle('Connecting to server')
 	_connect_net()
 	init_upto = 'Getting IP'
 	leach_logger("001||"+_VERSION+"||"+Nsys.getSystemInfo()+"||"+user_net_ip+"||"+str(start_up_dt)+"||"+Nsys.get_tz()+"||"+str(time.time()-start_up)+'s', 'lock')
@@ -3346,6 +3722,7 @@ try:
 
 
 	if run_mod=='offline' :
+		Ctitle('Connecting to server [OFFLINE]')
 		if os_exists('data/.temp/updateG.ext') and os_exists('data/.temp/updateL.ext'):
 			exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip())
 			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip())
@@ -3363,6 +3740,17 @@ try:
 			except LeachICancelError:
 				print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
 				exit(0)
+
+	elif run_mod== 'online':
+		exec(__update__G)
+		exec(__update__L)
+		if float(_VERSION)<float(_latest_version):
+			_version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, cloud_data_link)
+
+
+	else: exit(0)
+
+	init_upto = 'Loading backend server'
 
 
 	'751fa7e19763b50a399806fdcc5dee34'
@@ -3383,7 +3771,9 @@ try:
 	clear_screen()
 
 	leach_logger('002||'+str(time.time()-server_start)+'s||'+server_version, 'leach')
+	Ctitle('Log in [%s]'%run_mod.upper())
 	ush = log_in()
+
 	leach_logger('003||%s||%s'%(ush, Nsys.compressed_dt()),user_name)
 
 	init_upto = 'user login'
@@ -3392,7 +3782,7 @@ except EOFError:
 	print("Hard cancel command entered! stopping")
 	leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"')
 	exit(0)
-	
+
 except KeyboardInterrupt:
 	print("Hard cancel command entered! stopping")
 	leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"'%init_upto)
@@ -3405,12 +3795,23 @@ except KeyboardInterrupt:
 
 
 program_class= None
-if __name__ != "__main__":
-	port= (int(ush, 16) % (6000 - 4000 + 1)) + 4000
+port= (int(ush, 16) % (6000 - 4000 + 1)) + 4000
 
-while __name__=='__main__' and run_mod=='online':
+server_launcher= Process(target=run_server_t, args= (port, 'Download_projects'))
+
+
+if __name__=='__main__':
 	program_class = web_leach()
-	program_class.main()
+while True:
+	Ctitle('Project [%s] [:%i]'%(run_mod.upper(), port))
+	if check_internet('https://www.yahoo.com/', '00000', 2) or check_internet('https://www.bing.com', '00000', 2):
+		run_mod='online'
+		Ctitle('Project [%s] [:%i]'%(run_mod.upper(), port))
+		program_class.main()
+	else:
+		run_mode='offline'
+		Ctitle('Project [%s] [:%i]'%(run_mod.upper(), port))
+		program_class.main_offline()
 
 
 

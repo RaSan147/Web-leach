@@ -17,7 +17,7 @@
 
 
 
-base_li= {'0':0,
+base_li0= {'0':0,
 
     '1':1,
 
@@ -147,10 +147,7 @@ base_li= {'0':0,
 
 }
 
-key_list = list(base_li.keys()) 
-
-val_list = list(base_li.values()) 
-
+base_li= "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ?!"
 #import sys
 
 def dec2base(n,base):
@@ -159,7 +156,7 @@ def dec2base(n,base):
 
     while n!=0:
 
-        out+=key_list[val_list.index(n%base)]
+        out+=base_li[n%base]
 
         n//=base
 
@@ -170,23 +167,16 @@ def dec2base(n,base):
 
 
 def base2dec(n, base):
-
     out=0
-
     n=n[::-1]
 
     for  i in range(len(n)):
 
-        out+=base_li[n[i]]*(base**(i))
+        out+=base_li0[n[i]]*(base**(i))
 
     return out
 
-
-
-
-
 from datetime import datetime
-from mmap import mmap
 
 def dt_():
     return str(datetime.now())
@@ -194,9 +184,9 @@ def dt_():
 # print(dt_())
 #print(int(str(dt_()).replace('-','').replace(' ','').replace('.','').replace(':','')))
 
-def compressed_dt():
+def compressed_dt(_dt= None):
 
-    dt_now= int(str(dt_()).replace('-','').replace(' ','').replace('.','').replace(':',''))
+    dt_now= int((_dt if _dt!=None else dt_()).replace('-','').replace(' ','').replace('.','').replace(':',''))
 
     return dec2base(dt_now,63)
 
@@ -222,12 +212,9 @@ def get_tz():
     return (str(tznow)[-6:])
 
 
-
-
-
 import platform,socket,uuid,logging
 
-from re import findall as re_findall, compile as re_compile
+from re import findall as re_findall
 
 
 
@@ -269,7 +256,7 @@ def getSystemInfo():
 
 
         
-def atoi(text):
+'''def atoi(text):
     return int(text) if text.isdigit() else text
 
 
@@ -286,7 +273,7 @@ def sorting_algoN(test_string):
 
         a=[0]
 
-    return a
+    return a'''
 
 # print(sys.argv)
 

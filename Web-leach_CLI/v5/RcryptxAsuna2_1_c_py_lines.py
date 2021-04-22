@@ -202,7 +202,7 @@ def _encrypt(text,C):
 	return text
 
 
-def PYencrypt(texts, key):
+def PYencrypt(texts, key, typer= 'str'):
 	returner = []
 	for text in texts.replace('\r\n', '\n').split('\n'):
 		if text!='':
@@ -214,7 +214,7 @@ def PYencrypt(texts, key):
 
 			returner.append(''.join(text))
 
-	return '\n'.join(returner)
+	return '\n'.join(returner) if typer =='str' else returner
 
 
 def _decrypt(text,C):
@@ -230,7 +230,7 @@ def _decrypt(text,C):
 		i+=8
 	return text
 
-def PYdecrypt(texts, key):
+def PYdecrypt(texts, key, typer= 'str'):
 	returner = []
 	key=key[::-1]
 	for text in texts.replace('\r\n', '\n').split('\n'):
@@ -243,7 +243,7 @@ def PYdecrypt(texts, key):
 
 			returner.append(''.join(text))
 
-	return '\n'.join(returner)
+	return '\n'.join(returner) if typer =='str' else returner
 
 
 def test(msg=False,key=False, mode = 'py'):
