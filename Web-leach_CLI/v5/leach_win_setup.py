@@ -75,15 +75,6 @@ try:
 
 	img=('jpeg','jpg','png','gif', 'webp', 'bmp', 'tif')
 
-	who_r_u='https://www.myinstants.com/media/sounds/who_r_u_1.mp3'
-	yamatte= ('https://www.myinstants.com/media/sounds/yamatte.mp3','https://www.myinstants.com/media/sounds/ara-ara.mp3', 'https://www.myinstants.com/media/sounds/ara-ara2.mp3')
-	yes= ('y', 'yes', 'yeah', 'sure', 'ok', 'lets go', "let's go", 'start', 'yep', 'yep', 'well y', 'well yes', 'well yeah', 'well sure', 'well ok', 'well lets go', "well let's go", 'well start', 'well yep', 'well yep', 'actually y', 'actually yes', 'actually yeah', 'actually sure', 'actually ok', 'actually lets go', "actually let's go", 'actually start', 'actually yep', 'actually yep')
-	no = ('n', 'no', 'na', 'nah', 'nope', 'stop', 'quit', 'exit', 'not really', 'no', 'not at all', 'never', 'well n', 'well no', 'well na', 'well nah', 'well nope', 'well stop', 'well quit', 'well exit', 'well not really', 'well no', 'well not at all', 'well never', 'actually n', 'actually no', 'actually na', 'actually nah', 'actually nope', 'actually stop', 'actually quit', 'actually exit', 'actually not really', 'actually no', 'actually not at all', 'actually never')
-	cond=yes+no
-	condERR = "Sorry,  I can't understand what you are saying. Just type yes or no.   "
-	__update__G = 'pass'
-	__update__L = 'pass'
-	user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
 
 	who_r_u='https://www.myinstants.com/media/sounds/who_r_u_1.mp3'
 	yamatte= ('https://www.myinstants.com/media/sounds/yamatte.mp3','https://www.myinstants.com/media/sounds/ara-ara.mp3', 'https://www.myinstants.com/media/sounds/ara-ara2.mp3')
@@ -94,6 +85,7 @@ try:
 	__update__G = 'pass'
 	__update__L = 'pass'
 	user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
+
 
 	g_mode=False
 	ara_ara= True #to control parody noise
@@ -128,6 +120,7 @@ try:
 	start_up_dt = Nsys.cdt_()
 
 	#########################################################
+
 
 	# SYS tools #######################
 	from sys import exit as sys_exit,executable as sys_executable
@@ -927,6 +920,7 @@ def god_mode():      #func_code=00015
 		leach_logger("00015x-1||%s||%s||%s"%(e.__class__.__name__,str(e),hdr(current_header,'00015')), 'lock')
 		time.sleep(5)
 		exit(0)
+
 
 	return 'online'
 
@@ -2019,6 +2013,7 @@ class web_leach:
 						if 'ignore_on_null_content' in self.sp_flags: # do not save null files
 							if len(file.content)==0:
 								continue
+
 						if file:
 							if sp_arg_flag['disable dl get']!=True:
 								if self.break_all: return 0
@@ -3060,6 +3055,7 @@ class web_leach:
 					leach_logger('10009x1||%s||m_link||%s'%(self.Project, self.main_link), user_name)
 					while link_true==False:
 						if self.check_sp_links(self.main_link,['nh', 'mangafreak']):
+
 							if self.check_sp_links(self.main_link,'mangafreak'):
 								print("mangafreak link detected!!")
 								is_mangafreak=asker("\u29bf Do you want to download manga images from this links?? (\u001b[1m\u001b[4m\u001b[7m y \033[0m/\u001b[1m\u001b[4m\u001b[7m n \033[0m)\n>> ")
@@ -3117,6 +3113,7 @@ class web_leach:
 										leach_logger('10009x1||%s||is_nh||True||Assigned after testing the link'%(self.Project),user_name)
 										link_true = True
 										break
+									
 							if self.check_sp_links(self.main_link,'pinterest'):
 								print("Pinterest link detected.\nDo you want to try the special features for pinterest images?\nWarning: All images may not be the same from the website as you see\n")
 								if asker('>> '):
@@ -3381,7 +3378,6 @@ class web_leach:
 
 		Ctitle('[Downloading] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
 
-
 		print('Downloaded ['+'\u001b[7m'+(' '*0)+'\u001b[0m'+' '*(32-0)+'] ['+str(0) + '/'+str(self.total)+']')
 
 		try:
@@ -3429,6 +3425,7 @@ class web_leach:
 				t99.join()
 
 				Ctitle('[Download Complete] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
+
 			except EOFError:
 				print("Hard cancel command entered! stopping")
 				self.break_all = True
@@ -3601,7 +3598,6 @@ class web_leach:
 			return 0
 
 
-
 		del temp, temp1
 
 		if any(i in self.Project for i in '\\/|:*"><?'):
@@ -3626,6 +3622,7 @@ class web_leach:
 					# print(self.all_list, self.sub_dirs)
 					first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
 
+
 					print("Local webpage created")
 					if asker("Wanna check the page??\n leave an enter to pass\n >> ", default=False):
 						run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
@@ -3641,6 +3638,7 @@ class web_leach:
 
 		else:
 			print('Sorry, it seems there\'s no previous project with this name. \nThere is a chance that the project data was Corrupted!\nRetry when online...')
+
 
 @atexit.register
 def on_exit():
@@ -3726,8 +3724,8 @@ try:
 				exit(0)
 
 	elif run_mod== 'online':
-		exec(__update__G)
-		exec(__update__L)
+		# exec(__update__G)
+		# exec(__update__L)
 		if float(_VERSION)<float(_latest_version):
 			_version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, cloud_data_link)
 

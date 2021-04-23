@@ -23,6 +23,7 @@ requirements_all= ('requests',  'beautifulsoup4', 'natsort', 'google')
 requirements_win= ('pypiwin32', 'comtypes', 'psutil', 'lxml', 'pywin32-ctypes')
 _VERSION="5.50004"
 
+
 							#>>>>>>update>>>>>
 						#=========================
 #>>>>>used re.compile to speed up (4.0)
@@ -104,17 +105,11 @@ try:
 
 	ara_ara= False #to control parody noise
 
-
 	# _server_version = "5.5"
 
 	cloud_data_link_global='https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(aboveV5.5).txt'
 	cloud_data_link='https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500003).txt'
 	user_net_ip='offline'
-
-
-	no_Nsys= True
-	'''`True` = all Nsys deps is not installed
-		`False` = all Nsys deps is installed'''
 
 
 	try:
@@ -556,14 +551,6 @@ def run_server_t(port, cd):      #func_code=0000B
 	except:
 		pass
 
-def run_server_t(port, cd):      #func_code=0000B
-	global server_code
-	server_code = run_server(port= port, cd= cd)
-	try:
-		server_code.serve_forever()
-	except OSError:
-		exit()
-
 
 def _connect_net():      #func_code=0000C
 	"""connects to the internet and returns the users global ip"""
@@ -891,10 +878,6 @@ def god_mode():      #func_code=00015
 		if file:
 			writer('updateL.ext','wb',file.content,'data/.temp','00015')
 			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip(), globals())
-
-			# _server_version = server_version
-			#print(decrypt(open('data/.temp/update.ext').read().strip(), "lock").strip())
-			#AssertionErrorprint(server_version)
 			# time.sleep(500)
 		else:
 			print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds")
@@ -1616,6 +1599,7 @@ class web_leach:
 				last_ch = None
 				break
 
+
 			try:
 				last_ch = int(last_ch)
 				break
@@ -2095,6 +2079,8 @@ class web_leach:
 							leach_logger('10009x1||%s||l_starts||%s'%(self.Project, self.link_startswith), user_name)
 							sub_links2+=list(set([sub_link.get('href').strip() for sub_link in soup.find_all('a') if sub_link.get('href')!=None]))
 
+						Ctitle('[Indexing] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
+
 						for i in sub_links2:
 
 
@@ -2181,9 +2167,6 @@ class web_leach:
 
 
 
-
-
-
 			else:
 				if os_exists('data/leach_projects/'+self.Project): rmdir('data/leach_projects/'+self.Project)
 				if self.corruptions!=[] and self.corruptions != [0]:
@@ -2206,7 +2189,6 @@ class web_leach:
 					leach_logger('10009x1||%s||m_link||%s'%(self.Project, self.main_link), user_name)
 					while link_true==False:
 						if self.check_sp_links(self.main_link,['nh', 'mangafreak']):
-
 							
 							if self.check_sp_links(self.main_link,'mangafreak'):
 								print("mangafreak link detected!!")
@@ -2290,7 +2272,6 @@ class web_leach:
 								link_true= True
 							else:
 								self.main_link=safe_input("\033[1;31;40mLink Unavaiable! \033[0m(possible cause: no internet or wrong link)\n\nPlease re-enter the link: ")
-
 
 
 					if self.link_startswith=='':
@@ -2538,8 +2519,6 @@ class web_leach:
 		except:
 			pass
 
-		print('Downloaded ['+'\u001b[7m'+(' '*0)+'\u001b[0m'+' '*(32-0)+'] ['+str(0) + '/'+str(self.total)+']')
-
 		t11= Process(target=self.distribute, args=(all_list_r[::10],1))
 		t2= Process(target=self.distribute, args=(all_list_r[1::10],2))
 		t3= Process(target=self.distribute, args=(all_list_r[2::10],3))
@@ -2737,6 +2716,7 @@ class web_leach:
 				if any([i in self.Project for i in '/\<>?"*|:']):
 					print('Project name can\'t have these charecters : /\<>?"*|:\n\n')
 					return 0
+					
 				# self.project_dir=self.Project[:].replace('/','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-')
 				leach_logger("10009x0||%s||Checking Project Database"%(self.Project),user_name)
 				if self.Project in open('data/projects.db').read().split('\n'):
