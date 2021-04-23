@@ -252,7 +252,6 @@ def trans_str(txt, dicts): #func_code=?????
 		a= dicts[i]
 		for j in i:
 			txt = txt.replace(j, a)
-
 	return txt
 
 
@@ -343,7 +342,6 @@ def install_req(pkz):     #func_code=00006
 
 
 
-
 if has_all_libs == False:
 	for i in requirements_all: install_req(i)
 
@@ -390,7 +388,6 @@ def writer(fname, mode, data, direc=None, f_code='None', encoding='utf-8'):    #
 	# err_logged = False
 	if any(i in fname for i in ('\\|:*"><?')):
 		leach_logger('00008x1||%s'%fname)
-
 		fname= trans_str(fname, {'/\\|:*><?': '-', '"':"'"})
 	if direc == None:
 		direc='./'
@@ -558,6 +555,14 @@ def run_server_t(port, cd):      #func_code=0000B
 		exit()
 	except:
 		pass
+
+def run_server_t(port, cd):      #func_code=0000B
+	global server_code
+	server_code = run_server(port= port, cd= cd)
+	try:
+		server_code.serve_forever()
+	except OSError:
+		exit()
 
 
 def _connect_net():      #func_code=0000C
@@ -1282,7 +1287,6 @@ class web_leach:
 
 
 
-
 				except: # for test only
 					self.break_all = True
 					traceback.print_exc()
@@ -1612,7 +1616,6 @@ class web_leach:
 				last_ch = None
 				break
 
-
 			try:
 				last_ch = int(last_ch)
 				break
@@ -1628,7 +1631,6 @@ class web_leach:
 			while True:
 				try:
 					if requests.head("http://images.mangafreak.net:8080/downloads/"+title+'_'+str(last_ch+1)).headers['content-length'] !=0:
-
 						last_ch +=1
 						delete_last_line()
 						print('Counting Links... (%i)'% last_ch)
@@ -1636,7 +1638,6 @@ class web_leach:
 						break
 				except Exception:
 					break
-
 			delete_last_line()
 			print("Total %i links found from mangafreak.\nIf its not right, retry by pressing ctrl+C\n\n"%last_ch)
 
@@ -2205,6 +2206,8 @@ class web_leach:
 					leach_logger('10009x1||%s||m_link||%s'%(self.Project, self.main_link), user_name)
 					while link_true==False:
 						if self.check_sp_links(self.main_link,['nh', 'mangafreak']):
+
+							
 							if self.check_sp_links(self.main_link,'mangafreak'):
 								print("mangafreak link detected!!")
 								is_mangafreak=asker("\u29bf Do you want to download manga images from this links?? (\u001b[1m\u001b[4m\u001b[7m y \033[0m/\u001b[1m\u001b[4m\u001b[7m n \033[0m)\n>> ")
@@ -2240,7 +2243,6 @@ class web_leach:
 										return 0
 									# sub_links=''
 									#exit(0)
-
 
 
 							if  self.check_sp_links(self.main_link,'nh'): #main_link.startswith('https://nhentai.net/g/') or main_link.startswith('https://nhentai.to/g/'):
@@ -2735,7 +2737,6 @@ class web_leach:
 				if any([i in self.Project for i in '/\<>?"*|:']):
 					print('Project name can\'t have these charecters : /\<>?"*|:\n\n')
 					return 0
-
 				# self.project_dir=self.Project[:].replace('/','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-')
 				leach_logger("10009x0||%s||Checking Project Database"%(self.Project),user_name)
 				if self.Project in open('data/projects.db').read().split('\n'):
@@ -2749,7 +2750,6 @@ class web_leach:
 			print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
 			leach_logger("000||10009||%s||f-Stop||is_proj_file||user probably freaked out for too much Ques"%self.Project)
 			return 0
-
 
 
 		del temp, temp1

@@ -75,7 +75,6 @@ try:
 
 	img=('jpeg','jpg','png','gif', 'webp', 'bmp', 'tif')
 
-
 	who_r_u='https://www.myinstants.com/media/sounds/who_r_u_1.mp3'
 	yamatte= ('https://www.myinstants.com/media/sounds/yamatte.mp3','https://www.myinstants.com/media/sounds/ara-ara.mp3', 'https://www.myinstants.com/media/sounds/ara-ara2.mp3')
 	yes= ('y', 'yes', 'yeah', 'sure', 'ok', 'lets go', "let's go", 'start', 'yep', 'yep', 'well y', 'well yes', 'well yeah', 'well sure', 'well ok', 'well lets go', "well let's go", 'well start', 'well yep', 'well yep', 'actually y', 'actually yes', 'actually yeah', 'actually sure', 'actually ok', 'actually lets go', "actually let's go", 'actually start', 'actually yep', 'actually yep')
@@ -86,6 +85,15 @@ try:
 	__update__L = 'pass'
 	user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
 
+	who_r_u='https://www.myinstants.com/media/sounds/who_r_u_1.mp3'
+	yamatte= ('https://www.myinstants.com/media/sounds/yamatte.mp3','https://www.myinstants.com/media/sounds/ara-ara.mp3', 'https://www.myinstants.com/media/sounds/ara-ara2.mp3')
+	yes= ('y', 'yes', 'yeah', 'sure', 'ok', 'lets go', "let's go", 'start', 'yep', 'yep', 'well y', 'well yes', 'well yeah', 'well sure', 'well ok', 'well lets go', "well let's go", 'well start', 'well yep', 'well yep', 'actually y', 'actually yes', 'actually yeah', 'actually sure', 'actually ok', 'actually lets go', "actually let's go", 'actually start', 'actually yep', 'actually yep')
+	no = ('n', 'no', 'na', 'nah', 'nope', 'stop', 'quit', 'exit', 'not really', 'no', 'not at all', 'never', 'well n', 'well no', 'well na', 'well nah', 'well nope', 'well stop', 'well quit', 'well exit', 'well not really', 'well no', 'well not at all', 'well never', 'actually n', 'actually no', 'actually na', 'actually nah', 'actually nope', 'actually stop', 'actually quit', 'actually exit', 'actually not really', 'actually no', 'actually not at all', 'actually never')
+	cond=yes+no
+	condERR = "Sorry,  I can't understand what you are saying. Just type yes or no.   "
+	__update__G = 'pass'
+	__update__L = 'pass'
+	user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
 
 	g_mode=False
 	ara_ara= True #to control parody noise
@@ -109,13 +117,11 @@ try:
 
 	ara_ara= False #to control parody noise
 
-
 	# _server_version = "5.5"
 
 	cloud_data_link_global='https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(aboveV5.5).txt'
 	cloud_data_link='https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500003).txt'
 	user_net_ip='offline'
-
 
 
 	import Number_sys_conv as Nsys           #f_code = 20000
@@ -245,7 +251,6 @@ def trans_str(txt, dicts): #func_code=?????
 		a= dicts[i]
 		for j in i:
 			txt = txt.replace(j, a)
-
 	return txt
 
 
@@ -380,7 +385,6 @@ def writer(fname, mode, data, direc=None, f_code='None', encoding='utf-8'):    #
 	# err_logged = False
 	if any(i in fname for i in ('\\|:*"><?')):
 		leach_logger('00008x1||%s'%fname)
-
 		fname= trans_str(fname, {'/\\|:*><?': '-', '"':"'"})
 	if direc == None:
 		direc='./'
@@ -876,10 +880,6 @@ def god_mode():      #func_code=00015
 		if file:
 			writer('updateL.ext','wb',file.content,'data/.temp','00015')
 			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip(), globals())
-
-			# _server_version = server_version
-			#print(decrypt(open('data/.temp/update.ext').read().strip(), "lock").strip())
-			#AssertionErrorprint(server_version)
 			# time.sleep(500)
 		else:
 			print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds")
@@ -927,7 +927,6 @@ def god_mode():      #func_code=00015
 		leach_logger("00015x-1||%s||%s||%s"%(e.__class__.__name__,str(e),hdr(current_header,'00015')), 'lock')
 		time.sleep(5)
 		exit(0)
-
 
 	return 'online'
 
@@ -2020,7 +2019,6 @@ class web_leach:
 						if 'ignore_on_null_content' in self.sp_flags: # do not save null files
 							if len(file.content)==0:
 								continue
-
 						if file:
 							if sp_arg_flag['disable dl get']!=True:
 								if self.break_all: return 0
@@ -2140,7 +2138,6 @@ class web_leach:
 						writer('left_errors.txt', 'a',str(tuple(i)+(hdr(current_header,'10002'),"Bad zip"))+'\n','data/leach_projects/'+self.Project,'10002')
 
 						leach_logger('10002x2||'+self.Project+'||'+hdr(current_header,'10002')+'||'+str(i), user_name)
-
 
 
 
@@ -2489,7 +2486,6 @@ class web_leach:
 			while True:
 				try:
 					if requests.head("http://images.mangafreak.net:8080/downloads/"+title+'_'+str(last_ch+1)).headers['content-length'] !=0:
-
 						last_ch +=1
 						delete_last_line()
 						print('Counting Links... (%i)'% last_ch)
@@ -2497,7 +2493,6 @@ class web_leach:
 						break
 				except Exception:
 					break
-
 			delete_last_line()
 			print("Total %i links found from mangafreak.\nIf its not right, retry by pressing ctrl+C\n\n"%last_ch)
 
@@ -3043,9 +3038,6 @@ class web_leach:
 
 
 
-
-
-
 			else:
 				if os_exists('data/leach_projects/'+self.Project): rmdir('data/leach_projects/'+self.Project)
 				if self.corruptions!=[] and self.corruptions != [0]:
@@ -3105,7 +3097,6 @@ class web_leach:
 									#exit(0)
 
 
-
 							if  self.check_sp_links(self.main_link,'nh'): #main_link.startswith('https://nhentai.net/g/') or main_link.startswith('https://nhentai.to/g/'):
 								print("nhentai link detected!!")
 								is_nh=asker("\u29bf Do you want to download doujin images from this links?? (\u001b[1m\u001b[4m\u001b[7m y \033[0m/\u001b[1m\u001b[4m\u001b[7m n \033[0m)\n>> \n( ͡° ͜ʖ ͡°)\t")
@@ -3126,7 +3117,6 @@ class web_leach:
 										leach_logger('10009x1||%s||is_nh||True||Assigned after testing the link'%(self.Project),user_name)
 										link_true = True
 										break
-
 							if self.check_sp_links(self.main_link,'pinterest'):
 								print("Pinterest link detected.\nDo you want to try the special features for pinterest images?\nWarning: All images may not be the same from the website as you see\n")
 								if asker('>> '):
@@ -3151,7 +3141,6 @@ class web_leach:
 								link_true= True
 							else:
 								self.main_link=safe_input("\033[1;31;40mLink Unavaiable! \033[0m(possible cause: no internet or wrong link)\n\nPlease re-enter the link: ")
-
 
 
 					if self.link_startswith=='':
@@ -3392,14 +3381,13 @@ class web_leach:
 
 		Ctitle('[Downloading] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
 
+
 		print('Downloaded ['+'\u001b[7m'+(' '*0)+'\u001b[0m'+' '*(32-0)+'] ['+str(0) + '/'+str(self.total)+']')
 
 		try:
 			makedirs('Download_projects/'+self.Project)
 		except:
 			pass
-
-		print('Downloaded ['+'\u001b[7m'+(' '*0)+'\u001b[0m'+' '*(32-0)+'] ['+str(0) + '/'+str(self.total)+']')
 
 		t11= Process(target=self.distribute, args=(all_list_r[::10],1))
 		t2= Process(target=self.distribute, args=(all_list_r[1::10],2))
@@ -3441,7 +3429,6 @@ class web_leach:
 				t99.join()
 
 				Ctitle('[Download Complete] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
-
 			except EOFError:
 				print("Hard cancel command entered! stopping")
 				self.break_all = True
@@ -3639,7 +3626,6 @@ class web_leach:
 					# print(self.all_list, self.sub_dirs)
 					first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
 
-
 					print("Local webpage created")
 					if asker("Wanna check the page??\n leave an enter to pass\n >> ", default=False):
 						run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
@@ -3655,7 +3641,6 @@ class web_leach:
 
 		else:
 			print('Sorry, it seems there\'s no previous project with this name. \nThere is a chance that the project data was Corrupted!\nRetry when online...')
-
 
 @atexit.register
 def on_exit():
@@ -3698,7 +3683,6 @@ if os_isfile('data/err_header.txt'):
 		err_hdr_list = Counter(err_hdr_list)
 else:
 	err_hdr_list = Counter()
-
 
 #############################################################
 

@@ -1149,7 +1149,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 					for j in range(5):
 						try:
-														tr+=td_t%_decrypto_dat[j]
+							tr+=td_t%_decrypto_dat[j]
 						except:
 							print(_decrypto_dat)
 					tr+='</tr>'
