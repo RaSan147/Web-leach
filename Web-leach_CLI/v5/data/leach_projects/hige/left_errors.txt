@@ -1,3 +1,0 @@
-['http://images.mangafreak.net:8080/downloads/Hige_Wo_Soru_Soshite_Joshikosei_Wo_Hirou_7', 0, '125', 'Error dl']
-['http://images.mangafreak.net:8080/downloads/Hige_Wo_Soru_Soshite_Joshikosei_Wo_Hirou_15', 0, '12', 'Error dl']
-['http://images.mangafreak.net:8080/downloads/Hige_Wo_Soru_Soshite_Joshikosei_Wo_Hirou_1', 0, '149', 'Error dl']

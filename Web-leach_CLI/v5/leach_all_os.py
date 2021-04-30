@@ -54,6 +54,14 @@ _VERSION="5.50004"
 
 print("LOADINS ASSETS...")
 
+import Number_sys_conv as Nsys           #f_code = 20000
+# different number based functions I made
+start_up_dt = Nsys.compressed_dt() #stores when the program was launched
+
+import time
+
+start_up=time.time()
+
 try:
 	import ctypes
 	def Ctitle(title):
@@ -64,9 +72,6 @@ try:
 
 	Ctitle('Loading Assets')
 
-	import time
-
-	start_up=time.time()
 
 
 	img=('jpeg','jpg','png','gif', 'webp', 'bmp', 'tif')
@@ -77,12 +82,15 @@ try:
 	yes= ('y', 'yes', 'yeah', 'sure', 'ok', 'lets go', "let's go", 'start', 'yep', 'yep', 'well y', 'well yes', 'well yeah', 'well sure', 'well ok', 'well lets go', "well let's go", 'well start', 'well yep', 'well yep', 'actually y', 'actually yes', 'actually yeah', 'actually sure', 'actually ok', 'actually lets go', "actually let's go", 'actually start', 'actually yep', 'actually yep')
 	no = ('n', 'no', 'na', 'nah', 'nope', 'stop', 'quit', 'exit', 'not really', 'no', 'not at all', 'never', 'well n', 'well no', 'well na', 'well nah', 'well nope', 'well stop', 'well quit', 'well exit', 'well not really', 'well no', 'well not at all', 'well never', 'actually n', 'actually no', 'actually na', 'actually nah', 'actually nope', 'actually stop', 'actually quit', 'actually exit', 'actually not really', 'actually no', 'actually not at all', 'actually never')
 	cond=yes+no
-	condERR = "Sorry,  I can't understand what you are saying. Just type yes or no.   "
+	condERR = "/y/Sorry,  I can't understand what you are saying./=/\n Just type yes or no.   "
+	hard_cancel = '/y/Hand Cancel Command entered.\nExiting.../=/'
+
+
 	__update__G = 'pass'
 	__update__L = 'pass'
 	user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
 
-
+	has_all_libs = True
 	g_mode=False
 	ara_ara= True #to control parody noise
 	no_log = False #to stop logging
@@ -112,14 +120,6 @@ try:
 	user_net_ip='offline'
 
 
-	try:
-		import Number_sys_conv as Nsys           #f_code = 20000
-		# different number based functions I made
-		start_up_dt = Nsys.compressed_dt() #stores when the program was launched
-	except:
-		from datetime import datetime
-		start_up_dt= str(datetime.now())
-
 	#########################################################
 
 
@@ -137,7 +137,7 @@ try:
 	sys_write=sys_stdout.write
 	del sys_stdout
 	###################################
-
+	
 	# MATH tools ######################
 	from math import floor
 	from random import choice as random_choice, randint
@@ -175,7 +175,7 @@ try:
 		except:
 			parser = 'html.parser'
 		from googlesearch import search as g_search
-		import requests, natsort
+		import requests, natsort, urllib3
 		import _server001_
 		if os_name=='Windows': import mplay4
 
@@ -188,17 +188,18 @@ try:
 
 	#Other Libs###############################
 	from collections import Counter
-
+	from print_text import xprint
+	import dig_info
+	
 	##########################################
 except KeyboardInterrupt:
-	print('Hand Cancel Command entered.\nExiting...')
+	xprint(hard_cancel)
 	import sys
 	sys.exit(0)
 except EOFError:
-	print('Hand Cancel Command entered.\nExiting...')
+	xprint(hard_cancel)
 	import sys
 	sys.exit(0)
-
 
 # Re Define to speed up###################
 len = len
@@ -278,7 +279,7 @@ def remove_non_ascii(text, f_code):    #func_code=00003
 	try:
 		return ''.join([i if ord(i) < 128 else '' for i in text])
 	except Exception as e:
-		print("Failed to remove non-ascii charecters from string.\nError code: 00003x",f_code,'\nPlease inform the author.')
+		xprint("Failed to remove non-ascii charecters from string.\nError code: 00003x",f_code,'\nPlease inform the author.')
 		leach_logger('00003x-1||'+e.__class__.__name__+('||%s||'%str(e))+f_code+'||'+text)
 
 def remove_non_uni(text, f_code, types= 'str'):    #func_code=00018
@@ -298,7 +299,7 @@ def remove_non_uni(text, f_code, types= 'str'):    #func_code=00018
 		if types=='bin': return text.decode('utf-8','ignore').encode("utf-8")
 		return text.decode('utf-8','ignore')
 	except Exception as e:
-		print("Failed to remove non-Unicode charecters from string.\nError code: 00018x",f_code,'\nPlease inform the author.')
+		xprint("/r/Failed to remove non-Unicode charecters from string.\nError code: 00018x",f_code,'/y/\nPlease inform the author./=/')
 		leach_logger('00018x-1||'+e.__class__.__name__+('||%s||'%str(e))+f_code+'||'+types+'||'+text)
 		return remove_non_ascii(text, f_code)
 
@@ -326,16 +327,18 @@ import pkg_resources as pkg_r
 def install_req(pkz):     #func_code=00006
 	"""install requirement package if not installed"""
 	if pkz not in (pkg.key for pkg in pkg_r.working_set):
-		print("Installing missing libraries")
+		xprint("/y/Installing missing libraries/=/")
 		install(pkz)
 		delete_last_line()
 	reload(pkg_r)
 	if pkz not in (pkg.key for pkg in pkg_r.working_set):
-		print('Failed to install and load required Library: "%s"\nThe app will close in 5 seconds'%pkz)
+		xprint('/r/Failed to install and load required Library: "%s"/y/\nThe app will close in 5 seconds/=/'%pkz)
 		try: leach_logger('00006||%s||%s'%(pkz, str(check_internet("https://pypi.org", '00006'))))
 		except NameError: pass
 
-
+if os_name=='Windows':
+	if not 'psutils' in (pkg.key for pkg in pkg_r.working_set):
+		has_all_libs = False
 
 if has_all_libs == False:
 	for i in requirements_all: install_req(i)
@@ -353,9 +356,7 @@ if has_all_libs == False:
 	import requests, natsort
 	import _server001_
 	if os_name=="Windows": import mplay4
-	import Number_sys_conv as Nsys
 
-	start_up_dt = Nsys.compressed_dt(start_up_dt)
 
 def loc(x, _os_name='Linux'):    #func_code=00007
 	"""to fix dir problem based on os
@@ -436,12 +437,12 @@ def writer(fname, mode, data, direc=None, f_code='None', encoding='utf-8'):    #
 				writer(fname, mode, data, locs, f_code)
 	except Exception as e:
 		if e.__class__.__name__== "PermissionError":
-			print(e.__class__.__name__,"occurred while writing", fname, 'in', 'current directory' if dir==None else dir,'\nPlease inform the author. Error code: %sx101'%f_code)
+			xprint('/r/',e.__class__.__name__,"occurred while writing", fname, 'in', 'current directory' if dir==None else dir,'/y/\nPlease inform the author. Error code: %sx101/=/'%f_code)
 			leach_logger('00008x101||%s||%s||%s||%s'%(f_code, fname, mode, direc))
 			raise LeachPermissionError
 		else:
 			leach_logger('00008x-1||'+e.__class__.__name__+'||%s||%s||%s||%s||%s'%(f_code, fname, mode, direc,str(e)))
-			print(e.__class__.__name__,"occurred while writing", fname, 'in', 'current directory' if dir==None else dir,'\nPlease inform the author. Error code: 00008x'+f_code)
+			xprint('/r/',e.__class__.__name__,"occurred while writing", fname, 'in', 'current directory' if dir==None else dir,'/y/\nPlease inform the author. Error code: 00008x'+f_code, '/=/')
 			raise e
 
 
@@ -451,13 +452,13 @@ def hdr(header, f_code=''):    #func_code=00009
 	try:
 		return str(header_list.index(header['User-Agent']))
 	except ValueError as e:
-		print("DATA CORRUPTION found\nError code: 00009x"+f_code)
+		xprint("/y/DATA CORRUPTION found\nError code: 00009x"+f_code,'/=/')
 
 		leach_logger('00009x'+f_code+'||'+ str(e)+'||'+header)
 		return str((-1, header))
 
 	except Exception as e:
-		print("Some error occurred caused, possible cause: DATA CORRUPTION\nError code: 00009x"+f_code)
+		xprint("/y/Some error occurred caused, possible cause: DATA CORRUPTION\nError code: 00009x"+f_code,'/=/')
 
 		leach_logger('00009x-1||'+'||' +f_code+e.__class__.__name__+'||'+ str(e)+'||'+header)
 		return str((-1, header))
@@ -503,19 +504,19 @@ def run_server(port, cd=None, f_code= 'None'):      #func_code=0000B
 			cd= str(cd)
 		except:
 			cd= '?'
-		print("Invalid localhost directory. Please inform the author.\nError code: 0000Bx1")
+		xprint("/=/Invalid localhost directory. Please inform the author.\nError code: 0000Bx1/=/")
 		leach_logger("0000Bx1||%s||%s||%s"%(temp, cd, f_code))
 		time.sleep(5)
 		sys_exit()
 
 	elif cd!= None and any(i in cd for i in '\\|:*"><?'):
-		print("Invalid localhost directory. Please inform the author.\nError code: 0000Bx2")
+		xprint("/y/Invalid localhost directory. Please inform the author.\nError code: 0000Bx2/=/")
 		leach_logger("0000Bx2||%s||%s"%(cd, f_code))
 		time.sleep(5)
 		sys_exit()
 
 	elif cd!=None and not os_isdir(cd):
-		print(cd,"not found!\nPlease inform the author\nError code: 0000Bx3")
+		xprint('/y/'+cd,"not found!\nPlease inform the author\nError code: 0000Bx3/=/")
 		leach_logger("0000Bx3||"+cd+'||'+f_code)
 		time.sleep(5)
 		sys_exit()
@@ -560,13 +561,13 @@ def _connect_net():      #func_code=0000C
 		# gfh= time.time()
 		user_net_ip=requests.get('https://api.myip.com/',headers=current_header, timeout=3).content.decode()
 		# print(time.time()-gfh)#return [True, '0']
-	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.SSLError) as e:
-		print("\033[1;31;40mError code: 605x1\nNo internet connection!\033[0m\nChecking Offline mode...")
+	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError) as e:
+		xprint("/r/40mError code: 605x1\nNo internet connection!/=/\nChecking Offline mode...")
 		leach_logger("605x1||%s||%s"%(hdr(current_header,'0000C'), e.__class__.__name__), 'lock')
 
 
 	except Exception as e:
-		print(e.__class__.__name__, "occurred. Please inform the Author.\nError code: 0000Cx-1(%s)"%e.__class__.__name__)
+		xprint('/r/',e.__class__.__name__, "occurred. Please inform the Author.\nError code: 0000Cx-1(%s)/=/"%e.__class__.__name__)
 		leach_logger("0000Cx-1||"+hdr(current_header,'0000C')+'||%s||%s'%(e.__class__.__name__, str(e)), 'lock')
 		time.sleep(5)
 		exit(0)
@@ -587,7 +588,7 @@ def import_paste():      #func_code=0000E
 		#from pastebin import send_paste
 		#current_header index=1
 	except requests.exceptions.ConnectionError:
-		print("\033[1;31;40mError code: 605x2\nNo internet connection!\nThe program will break in 5 seconds\033[0m")
+		xprint("/r/40mError code: 605x2\nNo internet connection!\nThe program will break in 5 seconds/=/")
 		leach_logger("605x2||header_index=1", 'lock')
 		time.sleep(5)
 		exit(0)
@@ -646,7 +647,7 @@ def asker(out='', default=None, True_False=(True, False), extra_opt=tuple(), ext
 	out: printing text to ask tha question *empty string
 	default: default output for empty response *None
 	True_False: returning data instead of true and false *(True, False)"""
-	print(out,end='')
+	xprint(out,end='')
 
 	if len(extra_opt)!=len(extra_return):
 		print('Additional options and Additional return data don\'t have equal length')
@@ -657,7 +658,7 @@ def asker(out='', default=None, True_False=(True, False), extra_opt=tuple(), ext
 		return default
 	#Ques2 = Ques2
 	while Ques2 not in cond+extra_opt:
-		print(condERR)
+		xprint(condERR)
 		Ques2 = safe_input().lower()
 		#Ques2 = Ques2
 	if Ques2 in cond:
@@ -701,14 +702,38 @@ def get_file_ext(directory, mode='dir', no_format='noformat'):      #func_code=0
 	else:
 		return temp.split('.')[-1]
 
+def get_dir(directory, mode= 'dir'):      #func_code=?????
+	"""[takes a file directory and returns the last last part of the dir (can be file or folder)
 
+	directory: the file directory, only absolute path to support multiple os
+	mode: url or file directory (os based)
+	"""
+	if mode=='url':
+		fragment_removed = directory.split("#")[0]  # keep to left of first #
+		query_string_removed = fragment_removed.split("?")[0]
+		scheme_removed = query_string_removed.split("://")[-1].split(":")[-1]
+		
+		dirs= scheme_removed.split('/')
+		if dirs[-1]=='':
+			dirs.pop()
+		if dirs==[]:
+			return '__HomePage__'
+		else:
+			return dirs[-1]
+	elif mode=='dir':
+		if os_basename(directory)=='':
+			return os_basename(os_dirname(directory))
+		else:
+			return os_basename(directory)
+	else:
+		raise ValueError
 
 def reader(direc, read_mode='r'):      #func_code=00013
 	if type(read_mode)!=str:
 		print("Invalid read type. Mode must be a string data")
 		raise TypeError
 	if read_mode in ('w', 'wb', 'a', 'ab', 'x', 'xb'):
-		print("\033[1;31;40mInvaid read mode:\033[0m\033[1m %s is not a valid read mode.\nTry using 'r' or 'rb' based on your need\033[0m")
+		xprint("/r/Invaid read mode:/=/ %s is not a valid read mode.\nTry using 'r' or 'rb' based on your need/=/")
 		raise LeachKnownError
 	if 'b' in read_mode:
 		read_mode='rb'
@@ -867,7 +892,7 @@ def god_mode():      #func_code=00015
 				else:
 					raise requests.exceptions.ConnectionError
 
-		except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.SSLError) as e:
+		except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.SSLError, urllib3.exceptions.SSLError) as e:
 			print("\033[1;31;40mError code: 605x3\nNo internet connection!\033[0m\nRunning offline mode")
 			leach_logger("605x3||%s||%s||%s"%(hdr(current_header,'00015'),who_r_u, e.__class__.__name__), 'lock')
 			return 'offline'
@@ -886,7 +911,7 @@ def god_mode():      #func_code=00015
 			return 'offline'
 
 		#remove('data/.temp/update.ext')
-	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.SSLError) as e:
+	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError) as e:
 		print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds")
 		leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, e.__class__.__name__), 'lock')
 		time.sleep(3)
@@ -915,7 +940,7 @@ def god_mode():      #func_code=00015
 			return 'offline'
 
 		#remove('data/.temp/update.ext')
-	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.SSLError) as e:
+	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError) as e:
 		print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds...")
 		leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, e.__class__.__name__), 'lock')
 		time.sleep(3)
@@ -1002,7 +1027,7 @@ def check_internet(link, f_code, timeout=None):       #f_code=00017
 			return True
 		else:
 			leach_logger('00017||%s||%s||%s||%s'%(link, hdr(current_header, '00017'), f_code, str(r.status_code)))
-	except (requests.exceptions.ConnectionError, requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout, requests.exceptions.SSLError):
+	except (requests.exceptions.ConnectionError, requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout, requests.exceptions.SSLError, urllib3.exceptions.SSLError):
 		leach_logger('00017||%s||%s||%s'%(link, hdr(current_header, '00017'), f_code))
 		return False
 	except KeyboardInterrupt:
@@ -1044,6 +1069,7 @@ class web_leach:
 		self.update= False	# indicates if the project is getting an update or not
 		self.corruptions=[]	# list of corruptions in project data if there's any or empty
 		self.sub_dirs=[]	# list of sub directories on the project folder
+		self.sub_links = [] # needed in requests.get() reference value (fixes many issues)
 		self.homepage_searcher=re_compile('(https?://[^/]*)')	# compiled regex tool for getting homepage
 		self.Project=''	# project name (case insensitive *need to work on it)
 		self.main_link=''	# the main link
@@ -1130,6 +1156,8 @@ class web_leach:
 
 			if lists.index(j)>=res:
 				current_header=header_()	# randomizes header from list on every download to at least try to fool server
+				if self.sub_links!=[]:
+					current_header['referer']=self.sub_links[i[1]]
 				try:
 					if self.overwrite_bool==False:
 						if self.sub_dirs[i[1]].endswith('\\') or self.sub_dirs[i[1]].endswith('/'):
@@ -1171,7 +1199,7 @@ class web_leach:
 
 												return 0
 									loaded_file.close()
-								except (requests.exceptions.SSLError):
+								except (requests.exceptions.SSLError, urllib3.exceptions.SSLError):
 									loaded_file.close()
 									_temp = requests.get(i[0], headers= current_header, timeout=2).content
 									print(type(_temp))
@@ -1230,7 +1258,7 @@ class web_leach:
 						self.done+=1
 						if is_error:
 							self.errors-=1
-				except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout, requests.exceptions.SSLError) as e:
+				except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout, requests.exceptions.SSLError, urllib3.exceptions.SSLError) as e:
 					if is_error==False:
 						writer('errors.txt', 'a',str(i+[hdr(current_header,'10002')])+'\n','data/leach_projects/'+self.Project,'10002')
 
@@ -1429,7 +1457,7 @@ class web_leach:
 				# site="https://nhentai.net/"
 				# thumb_pattern="https://t.nhentai.net/galleries/\d/\dt."
 
-		except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError):
+		except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError):
 			leach_logger("606x1||%s||%s||%s"%(self.Project, link, hdr(current_header,'10005')), user_name)
 			print('nhentai.net server is not reachable, trying proxy server...')
 			link_y='https://nhentai.xxx/g/'+code+'/'
@@ -1440,7 +1468,7 @@ class web_leach:
 					site=".xxx"
 				else:
 					raise requests.exceptions.ConnectionError
-			except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError):
+			except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError):
 				delete_last_line()
 				print("\033[1;31;40mError code: 606x2\nLink not found, Please recheck the link and start a new project\033[0m")
 				leach_logger("606x2||%s||%s||%s"%(self.Project, link, hdr(current_header,'10005')), user_name)
@@ -1454,7 +1482,7 @@ class web_leach:
 						site=".to"
 					else:
 						raise requests.exceptions.ConnectionError
-				except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError):
+				except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError):
 					# delete_last_line()
 					print("\033[1;31;40mError code: 606x3\nLink not found, Please recheck the link and start a new project\033[0m")
 					leach_logger("606x3||%s||%s||%s"%(self.Project, link, hdr(current_header,'10005')), user_name)
@@ -1686,7 +1714,7 @@ class web_leach:
 					print('db found')
 					existing_data=f.read().decode().strip().split('\n')
 				try:
-					global Project, main_link, link_startswith, file_types, sub_dirs, sp_flags, sp_extension, overwrite_bool, dimention, dl_done, sequence
+					global Project, main_link, link_startswith, file_types, sub_dirs, sp_flags, sp_extension, overwrite_bool, dimention, dl_done, sequence, sub_links
 					dl_done=False
 					Project = self.Project
 					for i in existing_data:
@@ -1710,7 +1738,12 @@ class web_leach:
 							self.Project=get_file_name(path)[:-5]
 					try:
 						self.sequence = sequence
-					except: sequence= None
+					except: self.sequence= None
+					try:
+						self.sub_links = sub_links
+					except:
+						pass
+
 
 					del Project, main_link, link_startswith, file_types, sub_dirs, sp_flags, sp_extension, overwrite_bool, dimention, dl_done, sequence
 					proj_good= True
@@ -1790,8 +1823,17 @@ class web_leach:
 					print('It seems  the old prject download was complete!!')
 					try:
 						temp= asker(out='\u29bf Do you want to get updated data from the project link?\n\u29bf If you want make a fresh start with that project name type \u001b[1m\u001b[4m\u001b[7m fresh \033[0m/\u001b[1m\u001b[4m\u001b[7m f \033[0m\n\u29bf To open the project in Browser enter \u001b[1m\u001b[4m\u001b[7m x \033[0m\n\u001b[33;1m  >> \033[0m',extra_opt=('x','fresh', 'f'), extra_return=('run','fresh', 'fresh')) #Do you want make a fresh start with that project name??\n\033[1;33mWarning!\033[0m last project data will be erased\n(downloaded files will be safe, unless the program replaces the files with new ones)\n\033[32m>> \033[0m'):
-						if temp=='run':
+						
+					except LeachICancelError:
+						print("\n\u001b[33;1mCancellation command entered.\nReturning to main options\u001b[0m")
+						leach_logger("000||11000||%s||f-Stop||was_done||don't want to update proj or anything"%(self.Project))
+						return 0
+
+					if temp=='run':
 							if 'mangafreak' in self.sp_flags:
+								if not os_isdir('Download_projects/'+self.Project):
+									xprint('/y/It seems the Downloaded folder is missing!/=/\nPlease re-donwload (update) the project...')
+									return 0
 								self.all_list=[]
 								self.sub_dirs= [i for i in os_listdir('Download_projects/'+self.Project) if os_isdir('Download_projects/'+self.Project+'/'+i)]
 								for i in range(len(self.sub_dirs)):
@@ -1803,10 +1845,6 @@ class web_leach:
 							first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
 							run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
 							return 0
-					except LeachICancelError:
-						print("\n\u001b[33;1mCancellation command entered.\nReturning to main options\u001b[0m")
-						leach_logger("000||11000||%s||f-Stop||was_done||don't want to update proj or anything"%(self.Project))
-						return 0
 					if temp==True:
 						self.existing_found= False
 						self.update= True
@@ -1979,7 +2017,7 @@ class web_leach:
 			if self.update:
 				if os_exists('data/leach_projects/'+self.Project): rmdir('data/leach_projects/'+self.Project)
 				self.sub_dirs=[]
-				sub_links=[]
+				self.sub_links=[]
 				self.all_list=[]
 				self.dl_done=False
 
@@ -1994,7 +2032,7 @@ class web_leach:
 				if self.check_sp_links(self.main_link,'mangafreak'):
 					print("Update isn't available for mangafreak")
 					self.sp_flags.append('ignore_on_null_content') # do not save null files
-					self.sp_flags.append('stop_on_null_content') # stops downloading after receiving a null file
+					#self.sp_flags.append('stop_on_null_content') # stops downloading after receiving a null file
 					try:
 						if asker('\u29bf Do you want to re-download files from the same link?\n >> '):
 							will_unzip=asker("\nThe download files are in zip format.\n\u29bf Do you wish to Extract them?\n>> ")
@@ -2052,7 +2090,7 @@ class web_leach:
 						self.sequence=asker("\n\n\u29bf Will download in sequncial order? ")
 					except LeachICancelError:
 						print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
-						leach_logger("000||10009||%s||f-Stop||is_mangafreak||user probably freaked out for too much Ques"%self.Project)
+						leach_logger("000||10009||%s||f-Stop||user left while asking self.sequence "%self.Project)
 						return 0
 
 					link_startswith_re=re_compile('^'+self.link_startswith)
@@ -2153,11 +2191,11 @@ class web_leach:
 
 
 							if link_startswith_re.search(i)!=None:
-								sub_links.append(i)
-						#print(sub_links)
+								self.sub_links.append(i)
+						#print(self.sub_links)
 						del sub_links2
 
-						sub_links=natsort.natsorted(remove_duplicate(sub_links), key= lambda x: x.lower())
+						self.sub_links=natsort.natsorted(remove_duplicate(sub_links), key= lambda x: x.lower())
 
 
 					except LeachICancelError:
@@ -2177,7 +2215,7 @@ class web_leach:
 
 				self.all_list=[]
 				self.sub_dirs=[]
-				sub_links=[]
+				self.sub_links=[]
 				sub_links2=[]
 				#sub_links_filtered=[]
 				self.file_types=set()
@@ -2415,30 +2453,30 @@ class web_leach:
 
 
 					if link_startswith_re.search(i)!=None:
-						sub_links.append(i)
+						self.sub_links.append(i)
 				#print(sub_links)
 				del sub_links2
 
 
-				sub_links=natsort.natsorted(remove_duplicate(sub_links), key= lambda x: x.lower())
+				self.sub_links=natsort.natsorted(remove_duplicate(self.sub_links), key= lambda x: x.lower())
 
 
 
 			if self.sub_dirs==[]:
-				leach_logger("10009x2||%s||%i"%(self.Project, len(sub_links)), user_name)
-				for i in sub_links:
-					self.sub_dirs.append(trans_str(parse.unquote(html_unescape(i)), {'/\\|:*><?': '-', '"':"'"}))
-				# sub_dirs=sub_links[:]
+				leach_logger("10009x2||%s||%i"%(self.Project, len(self.sub_links)), user_name)
+				for i in self.sub_links:
+					self.sub_dirs.append(trans_str(parse.unquote(html_unescape(get_dir(i))), {'/\\|:*><?': '-', '"':"'"}))
+				# sub_dirs=self.sub_links[:]
 
-				len_sub_links= len(sub_links)
+				len_sub_links= len(self.sub_links)
 
 
 
 
 				sub_range=range(len_sub_links)
-				indx1= Process(target=self.list_writer, args=(sub_links, sub_range[::3]))
-				indx2= Process(target=self.list_writer, args=(sub_links, sub_range[1::3]))
-				indx3= Process(target=self.list_writer, args=(sub_links, sub_range[2::3]))
+				indx1= Process(target=self.list_writer, args=(self.sub_links, sub_range[::3]))
+				indx2= Process(target=self.list_writer, args=(self.sub_links, sub_range[1::3]))
+				indx3= Process(target=self.list_writer, args=(self.sub_links, sub_range[2::3]))
 
 				try:
 
@@ -2495,6 +2533,7 @@ class web_leach:
 		writer(self.Project+'.proj','a','dimention = %s\n'%str(self.dimention),'data/leach_projects','10009')
 		writer(self.Project+'.proj','a','sequence = %s\n'%str(self.sequence),'data/leach_projects','10009')
 		writer(self.Project+'.proj','a','Project = "%s"\n'%str(self.Project),'data/leach_projects','10009')
+		writer(self.Project+'.proj','a','sub_links = "%s"\n'%str(self.sub_links),'data/leach_projects','10009')
 
 		print('\n')
 		self.total=len(self.all_list2)
@@ -2610,7 +2649,7 @@ class web_leach:
 			page =requests.get(self.main_link, headers=header_(), timeout=5)
 			writer(self.Project+'.html','wb',page.content,'data/leach_projects/%s'%self.Project,'10009')
 
-		except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError):
+		except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError):
 			self.main_link=safe_input("\033[1;31;40mInvalid URL! \033[0m(possible cause: no internet or wrong link)\n\nPlease re-enter the link: ")
 			return False
 
@@ -2827,7 +2866,7 @@ try:
 	Ctitle('Connecting to server')
 	_connect_net()
 	init_upto = 'Getting IP'
-	leach_logger("001||"+_VERSION+"||"+Nsys.getSystemInfo()+"||"+user_net_ip+"||"+str(start_up_dt)+"||"+Nsys.get_tz()+"||"+str(time.time()-start_up)+'s', 'lock')
+	leach_logger("001||"+_VERSION+"||"+dig_info.getSystemInfo()+"||"+user_net_ip+"||"+str(start_up_dt)+"||"+Nsys.get_tz()+"||"+str(time.time()-start_up)+'s', 'lock')
 	server_start=time.time()
 
 
@@ -2844,7 +2883,7 @@ try:
 			exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip())
 			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip())
 		else:
-			print("Failed to startup. Please connet to the internet for the first initialization")
+			xprint("/r/Failed to startup. /y/Please connet to the internet for the first initialization/=/")
 			leach_logger('0x0')
 
 			try:
@@ -2904,8 +2943,6 @@ except KeyboardInterrupt:
 	print("Hard cancel command entered! stopping")
 	leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"'%init_upto)
 	exit(0)
-
-
 
 
 

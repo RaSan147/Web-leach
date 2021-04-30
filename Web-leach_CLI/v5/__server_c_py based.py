@@ -117,7 +117,7 @@ import webbrowser
 
 import RcryptxAsuna2_1_c_py_lines as RxAsuna
 import Number_sys_conv as Nsys
-
+import re
 try:
 	from bs4 import BeautifulSoup as bs
 except:
@@ -834,6 +834,13 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 					try:
 						_decrypto_dat[0]= "%s/%s/%s &nbsp&nbsp&nbsp %s:%s:%s" %Nsys.dec_dt(_decrypto_dat[0])
 					except KeyError: pass
+					except IndexError as e:
+						if re.search('\d+/\d+/\d+ &nbsp&nbsp&nbsp \d:\d:\d.?\d*', _decrypto_dat[0]):
+							pass
+						else:
+							raise e
+					except:
+						print(_decrypto_dat)
 
 					if _decrypto_dat[1] not in self.PIDs: self.PIDs.append(_decrypto_dat[1])
 
