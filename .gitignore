@@ -5,6 +5,7 @@
 **/.kivy/logs/**.txt
 **/Web-leach_GUi_old
 **/build/
+**/dist
 .vscode/**
 **/__pycache__
 **/venv

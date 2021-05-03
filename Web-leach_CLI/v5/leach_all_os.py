@@ -49,7 +49,8 @@ _VERSION="5.50004"
 #>>>>>switched backend server code link from raw.git... to https://cdn.jsdelivr.net/ (see https://stackoverflow.com/questions/17341122/link-and-execute-external-javascript-file-hosted-on-github) (5.500002)
 #>>>>>DEPRICATING https://github.com/Ratulhasan14789/Web-Leach_pub/blob/main/Backend_servers/_global(v5.5+).txt
 #>>>>>NEW GLOBAL SERVER https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(aboveV5.5).txt
-#>>>>>NEW LOCAL SERVER https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500003).txt
+#>>>>>NEW LOCAL SERVER https://gitcdn.xyz/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500004).txt
+#>>>>>TRYING NEW LOCAL SERVER https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update (server v5.500004).txt
 
 
 print("LOADINS ASSETS...")
@@ -117,7 +118,7 @@ try:
 	# _server_version = "5.5"
 
 	cloud_data_link_global='https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(aboveV5.5).txt'
-	cloud_data_link='https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500004).txt'
+	cloud_data_link='https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update (server v5.500004).txt'
 	user_net_ip='offline'
 
 
