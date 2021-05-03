@@ -7,11 +7,15 @@ Index    SP project Names                   Works
   3    ?disable-dl-get         `sp_arg_flag['disable dl get'] = True`     Disabled download save by using requests.head
   4    ?enable-dl-get          `sp_arg_flag['disable dl get'] = False`    Enabled download save by using requests.get [DEFAULT]
 
+  5    ?disable-browser         `sp_arg_flag['disable browser'] = True`   Disabled opening Downloads in browser
+  6    ?enable-browser          `sp_arg_flag['disable browser'] = False`  Enabled opening Downloads in browser [DEFAULT]
 
   -1   ?E-dl-T                 same as 1
   -2   ?D-dl-T                 same as 2
   -3   ?D-dl                   same as 3
   -4   ?E-dl                   same as 4
+  -5   ?D-br                   same as 5
+  -6   ?E-br                   same as 6
 
  key -----------------             values
 ========              =================================================================
@@ -198,7 +202,7 @@ CON                    \|:*"><?
                           ||Project name||Number of sub links
               -1 >>>  Unknown Error occured in the Indexing Threads
                           ||Project name||ErrorName||Error string
-
+               
 
 
 
@@ -270,8 +274,6 @@ CON                    \|:*"><?
                     port : PORT number
                     cd : the directory to host *None -> current directory
                     f_code: (str) code of the running func *empty string
-
-
 
 
 

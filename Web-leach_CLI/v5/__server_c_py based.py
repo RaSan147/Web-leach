@@ -821,11 +821,11 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 				table_made = time.time()
 				table_len= len(self.decrypto_dat)
 				while self.decrypto_dat!=[]:
-					_decrypto_dat=self.decrypto_dat.pop()
-					if _decrypto_dat=='':
+					_decrypto_dat_=self.decrypto_dat.pop()
+					if _decrypto_dat_=='':
 						table_len-=1
 						continue
-					_decrypto_dat = _decrypto_dat[40:].split('||')[:-1]
+					_decrypto_dat = _decrypto_dat_[40:].split('||')[:-1]
 					# print(_decrypto_dat)
 					if spid!='' and spid!= _decrypto_dat[1]: continue
 					if scode!='' and scode!= _decrypto_dat[2]: continue
@@ -835,12 +835,16 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 						_decrypto_dat[0]= "%s/%s/%s &nbsp&nbsp&nbsp %s:%s:%s" %Nsys.dec_dt(_decrypto_dat[0])
 					except KeyError: pass
 					except IndexError as e:
-						if re.search('\d+/\d+/\d+ &nbsp&nbsp&nbsp \d:\d:\d.?\d*', _decrypto_dat[0]):
-							pass
-						else:
-							raise e
+						try:
+							if re.search('\d+/\d+/\d+ &nbsp&nbsp&nbsp \d:\d:\d.?\d*', _decrypto_dat[0]):
+								pass
+							else:
+								raise e
+						except: continue
+						print([_decrypto_dat_])
 					except:
-						print(_decrypto_dat)
+						print([_decrypto_dat_])
+						continue
 
 					if _decrypto_dat[1] not in self.PIDs: self.PIDs.append(_decrypto_dat[1])
 
@@ -856,11 +860,21 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 						if _decrypto_dat[5]=='f-Stop':
 							temp= " (Called from %s)"%_decrypto_dat[3]
 							temp1= "Input cancelled from \"%s\""%_decrypto_dat[4]
-							temp2= ' (Where %s)'%_decrypto_dat[6]
+							temp2= ' (<b>Situation:</b> %s)'%_decrypto_dat[6]
 							_decrypto_dat[3]= temp1+temp+temp2
 							del temp, temp1, temp2
 							_decrypto_dat[4]= _decrypto_dat[7]
-							#_decrypto_dat=_decrypto_dat[:5]
+
+						if _decrypto_dat[5]=='D-Break':
+							temp= " (Called from %s)"%_decrypto_dat[3]
+							_decrypto_dat[3] = "Thread download task cancelled"+temp
+
+						if _decrypto_dat[5]=='D-Stop':
+							temp= " (Called from %s)"%_decrypto_dat[3]
+							_decrypto_dat[3] = "Download Cancelled"
+							temp= '<b>Downloaded:</b> %s<br><b>Error:</b> %s'%tuple(_decrypto_dat[4].split('|'))
+							_decrypto_dat[4] = temp
+						
 
 							
 

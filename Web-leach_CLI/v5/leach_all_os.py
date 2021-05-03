@@ -107,16 +107,17 @@ try:
 	death_talk = 0
 
 	sp_arg_flag={'disable dl cancel' : False,
-				'disable dl get' : False,
-				'ara ara': False if ara_ara==None else ara_ara,
-				'no log': False if no_log==None else no_log}
+		      'disable dl get' : False,
+		      'ara ara': False if ara_ara==None else ara_ara,
+		      'no log': False if no_log==None else no_log,
+              'no browser': False}
 
 	ara_ara= False #to control parody noise
 
 	# _server_version = "5.5"
 
 	cloud_data_link_global='https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(aboveV5.5).txt'
-	cloud_data_link='https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500003).txt'
+	cloud_data_link='https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500004).txt'
 	user_net_ip='offline'
 
 
@@ -137,7 +138,7 @@ try:
 	sys_write=sys_stdout.write
 	del sys_stdout
 	###################################
-	
+
 	# MATH tools ######################
 	from math import floor
 	from random import choice as random_choice, randint
@@ -190,7 +191,7 @@ try:
 	from collections import Counter
 	from print_text import xprint
 	import dig_info
-	
+
 	##########################################
 except KeyboardInterrupt:
 	xprint(hard_cancel)
@@ -240,7 +241,7 @@ def remove_duplicate(seq, return_type = list):	#func_code=00000
 	"removes duplicates from a list or a tuple"
 	return return_type(dict.fromkeys(seq))
 
-def trans_str(txt, dicts): #func_code=?????
+def trans_str(txt, dicts): #func_code=00019
 	"""replaces all the matching charecters of a string for multuple times
 	txt: string data
 	dicts: dict of { find : replace }"""
@@ -579,6 +580,8 @@ def run_in_local_server(port, host_dir=''):     #func_code=0000D
 	port : port number\n
 	host_dir : desired file or folder directory"""
 
+	if sp_arg_flag['no browser']: return 0
+
 	webbrowser.open_new_tab('http://localhost:%i/%s'%(port, host_dir))
 
 
@@ -633,6 +636,7 @@ def safe_input(msg='', input_func=input):     #func_code=0000F
 				raise LeachICancelError
 			except LeachICancelError:
 				leach_logger('000||0000F||~||~||~||input exit code L&infin;ping for unknown reason')
+				exit(0)
 		except EOFError:
 			raise LeachICancelError
 		except KeyboardInterrupt:
@@ -702,7 +706,7 @@ def get_file_ext(directory, mode='dir', no_format='noformat'):      #func_code=0
 	else:
 		return temp.split('.')[-1]
 
-def get_dir(directory, mode= 'dir'):      #func_code=?????
+def get_dir(directory, mode= 'dir'):      #func_code=0001A
 	"""[takes a file directory and returns the last last part of the dir (can be file or folder)
 
 	directory: the file directory, only absolute path to support multiple os
@@ -712,7 +716,7 @@ def get_dir(directory, mode= 'dir'):      #func_code=?????
 		fragment_removed = directory.split("#")[0]  # keep to left of first #
 		query_string_removed = fragment_removed.split("?")[0]
 		scheme_removed = query_string_removed.split("://")[-1].split(":")[-1]
-		
+
 		dirs= scheme_removed.split('/')
 		if dirs[-1]=='':
 			dirs.pop()
@@ -1136,7 +1140,8 @@ class web_leach:
 		res=0
 		if self.existing_found:
 			if os_exists('data/leach_projects/'+self.Project+'/t'+task_id+'.txt'):
-				res=eval(open('data/leach_projects/'+self.Project+'/t'+task_id+'.txt').read().strip()) # resume point of the list (index # int)
+				res=open('data/leach_projects/'+self.Project+'/t'+task_id+'.txt').read().strip()
+				res= eval(res) if res!='' else 0# resume point of the list (index # int)
 		self.done+=res
 
 
@@ -1177,13 +1182,14 @@ class web_leach:
 								continue
 
 						if file:
+							if self.break_all:return 0
 							if sp_arg_flag['disable dl get']!=True:
 								if self.break_all: return 0
 								try:
 									writer(get_file_name(i[0])+self.sp_extension,'wb',b'','Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]], '10002')
 									loaded_file = open('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension, 'wb')
 								except IndexError:
-									print('Something Went wrong, Returning to main Menu')
+									xprint('\n/y/Something Went wrong, Returning to main Menu/=/\n')
 									self.break_all =True
 									return 0
 								try:
@@ -1197,12 +1203,11 @@ class web_leach:
 											if os_exists('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension):
 												remove('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension)
 
-												return 0
+											return 0
 									loaded_file.close()
 								except (requests.exceptions.SSLError, urllib3.exceptions.SSLError):
 									loaded_file.close()
 									_temp = requests.get(i[0], headers= current_header, timeout=2).content
-									print(type(_temp))
 									writer(get_file_name(i[0])+self.sp_extension,'wb', _temp,'Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]], '10002')
 									del _temp
 
@@ -1697,7 +1702,7 @@ class web_leach:
 
 		if self.dl_done==False:
 			writer(self.Project+'.proj','a','dl_done = True\n','data/leach_projects','10008')
-		else: print("\nPlease retry some time later to get higher chances to download some or all %d missing file/s"%self.errors)
+		elif self.errors>0: print("\nPlease retry some time later to get higher chances to download some or all %d missing file/s"%self.errors)
 		print('\n\nEnter \u001b[1m\u001b[4m\u001b[7m x \033[0m to open the first page\n or just press Enter to continue: ')
 		self.dl_done=True
 	def data_checkup(self, path = None, proj_name = None, offline = False):     # f_code = 11000
@@ -1823,28 +1828,30 @@ class web_leach:
 					print('It seems  the old prject download was complete!!')
 					try:
 						temp= asker(out='\u29bf Do you want to get updated data from the project link?\n\u29bf If you want make a fresh start with that project name type \u001b[1m\u001b[4m\u001b[7m fresh \033[0m/\u001b[1m\u001b[4m\u001b[7m f \033[0m\n\u29bf To open the project in Browser enter \u001b[1m\u001b[4m\u001b[7m x \033[0m\n\u001b[33;1m  >> \033[0m',extra_opt=('x','fresh', 'f'), extra_return=('run','fresh', 'fresh')) #Do you want make a fresh start with that project name??\n\033[1;33mWarning!\033[0m last project data will be erased\n(downloaded files will be safe, unless the program replaces the files with new ones)\n\033[32m>> \033[0m'):
-						
+
 					except LeachICancelError:
 						print("\n\u001b[33;1mCancellation command entered.\nReturning to main options\u001b[0m")
 						leach_logger("000||11000||%s||f-Stop||was_done||don't want to update proj or anything"%(self.Project))
 						return 0
 
 					if temp=='run':
-							if 'mangafreak' in self.sp_flags:
-								if not os_isdir('Download_projects/'+self.Project):
-									xprint('/y/It seems the Downloaded folder is missing!/=/\nPlease re-donwload (update) the project...')
-									return 0
-								self.all_list=[]
-								self.sub_dirs= [i for i in os_listdir('Download_projects/'+self.Project) if os_isdir('Download_projects/'+self.Project+'/'+i)]
-								for i in range(len(self.sub_dirs)):
-									for j in os_listdir('Download_projects/'+self.Project+'/'+self.sub_dirs[i]):
-										# print(j)
-										if os_isfile('Download_projects/'+self.Project+'/'+self.sub_dirs[i]+'/'+j):
-											self.all_list.append([j,i])
-								# print(self.all_list, self.sub_dirs)
-							first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
-							run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
-							return 0
+						exec(open('make_html.py').read(), globals())
+						if 'mangafreak' in self.sp_flags:
+							if not os_exists('Download_projects/'+self.Project+'/'):
+								print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
+								return 0
+							self.sub_dirs= natsort.natsorted([get_file_name(i[0]) for i in self.all_list if os_isdir('Download_projects/'+self.Project+'/'+get_file_name(i[0]))])
+							self.all_list=[]
+							for i in range(len(self.sub_dirs)):
+								for j in os_listdir('Download_projects/'+self.Project+'/'+self.sub_dirs[i]):
+									# print(j)
+									if os_isfile('Download_projects/'+self.Project+'/'+self.sub_dirs[i]+'/'+j) and (not j.endswith('.html')):
+										self.all_list.append([j,i])
+
+							self.sequence= True
+						first_page=make_pages(self.all_list,self.sub_dirs, self.Project, self.sequence)
+						run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
+						return 0
 					if temp==True:
 						self.existing_found= False
 						self.update= True
@@ -1914,7 +1921,7 @@ class web_leach:
 		while True:
 			try:
 				if death or dying: raise LeachICancelError
-				self.Project=safe_input('\nEnter Batch download directory (Project name): ')
+				self.Project=safe_input('\nEnter Batch download directory (Project name): ').strip()
 
 			except LeachICancelError:
 				dying = True
@@ -1935,38 +1942,48 @@ class web_leach:
 					except KeyboardInterrupt:
 						return 0
 				# sys_exit(0)
+			__command = self.Project.lower()
 			if self.Project=='':
 				print('You must enter a Project name here.')
-			elif self.Project in ['?enable-dl-thread', '?E-dl-T']:
+			elif __command in ['?disable-dl-thread', '?d-dl-t']:
 				sp_arg_flag['disable dl cancel'] = True
 				print('Disabled download cancellation by adding join thread option')
 				return 0
 
-			elif self.Project in ['?disable-dl-thread', '?D-dl-T']:
+			elif __command in ['?enable-dl-thread', '?e-dl-t']:
 				sp_arg_flag['disable dl cancel'] = False
 				print('Enabled download cancellation by adding removing thread option [DEFAULT]')
 				return 0
-			elif self.Project in ['?disable-dl-get', '?D-dl']:
+			elif __command in ['?disable-dl-get', '?d-dl']:
 				sp_arg_flag['disable dl get'] = True
 				print('Disabled download save by using requests.head')
 				return 0
 
-			elif self.Project in ['?enable-dl-get', '?E-dl'] :
+			elif __command in ['?enable-dl-get', '?e-dl'] :
 				sp_arg_flag['disable dl get'] = False
 				print('Enabled download save by using requests.get [DEFAULT]')
 				return 0
 
-			elif self.Project in ['?enable-ara-ara', '?E-noise'] :
+			elif __command in ['?enable-ara-ara', '?e-noise'] :
 				sp_arg_flag['ara_ara'] = True
 				print('Enabled fun sounds [DEFAULT]')
 				return 0
 
-			elif self.Project in ['?disable-ara-ara', '?D-noise'] :
+			elif __command in ['?disable-ara-ara', '?d-noise'] :
 				sp_arg_flag['ara_ara'] = False
 				print('Enabled fun sounds [DEFAULT]')
 
+			elif __command in ['?disable-browser', '?d-br']:
+				sp_arg_flag['no browser'] = True
+				print('Disabled opening Downloads in browser')
+				return 0
+
+			elif __command in ['?enable-browser', '?e-br'] :
+				sp_arg_flag['no browser'] = False
+				print('Enabled opening Downloads in browser [DEFAULT]')
+				return 0
+
 			else:
-				self.Project= self.Project
 				break
 
 		temp = self.Project
@@ -2090,7 +2107,8 @@ class web_leach:
 						self.sequence=asker("\n\n\u29bf Will download in sequncial order? ")
 					except LeachICancelError:
 						print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
-						leach_logger("000||10009||%s||f-Stop||user left while asking self.sequence "%self.Project)
+
+						leach_logger("000||10009||%s||f-Stop||UI||user left while asking self.sequence "%self.Project)
 						return 0
 
 					link_startswith_re=re_compile('^'+self.link_startswith)
@@ -2176,7 +2194,7 @@ class web_leach:
 									i= self.homepage+i
 								except LeachICancelError:
 									print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
-									leach_logger("000||10009||%s||f-Stop||discontinued||user probably freaked out for too much Ques"%self.Project)
+									leach_logger("000||10009||%s||f-Stop||asking4home||maybe user tired"%self.Project)
 									return 0
 							elif self.partial_do_all==1 and i.startswith('/'):
 								i=self.homepage+i
@@ -2208,7 +2226,7 @@ class web_leach:
 			else:
 				if os_exists('data/leach_projects/'+self.Project): rmdir('data/leach_projects/'+self.Project)
 				if self.corruptions!=[] and self.corruptions != [0]:
-					leach_logger("10009x1||%s||Corruptions||%s"%(self.Project,  str(self.corruptions,open('data/leach_projects/'+self.Project+'.proj').readlines())), user_name)
+					leach_logger("10009x1||%s||Corruptions||%s||%s"%(self.Project,  str(self.corruptions),'<br>'.join(open('data/leach_projects/'+self.Project+'.proj').readlines())), user_name)
 
 				writer('errors.txt', 'a','','data/leach_projects/'+self.Project,'10009') #reset error file
 
@@ -2227,7 +2245,7 @@ class web_leach:
 					leach_logger('10009x1||%s||m_link||%s'%(self.Project, self.main_link), user_name)
 					while link_true==False:
 						if self.check_sp_links(self.main_link,['nh', 'mangafreak']):
-							
+
 							if self.check_sp_links(self.main_link,'mangafreak'):
 								print("mangafreak link detected!!")
 								is_mangafreak=asker("\u29bf Do you want to download manga images from this links?? (\u001b[1m\u001b[4m\u001b[7m y \033[0m/\u001b[1m\u001b[4m\u001b[7m n \033[0m)\n>> ")
@@ -2370,7 +2388,7 @@ class web_leach:
 
 				except LeachICancelError:
 					print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
-					leach_logger("000||10009||%s||f-Stop||discontinued||user probably freaked out for too much Ques"%self.Project)
+					leach_logger("000||10009||%s||f-Stop||asking4sequence||probably user didnt get it"%self.Project)
 					return 0
 				#else: all_list=list(all_list)
 				#leach_logger("++%s'+'%s'+%s'+'%s'++"%(main_link, link_startswith,str(file_types),file_starts), user_name)
@@ -2438,7 +2456,7 @@ class web_leach:
 							i= self.homepage+i
 						except LeachICancelError:
 							print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
-							leach_logger("000||10009||%s||f-Stop||discontinued||user probably freaked out for too much Ques"%self.Project)
+							leach_logger("000||10009||%s||f-Stop||asking4home||probablyuser tired"%self.Project)
 							return 0
 					elif self.partial_do_all==1 and i.startswith('/'):
 						i=self.homepage+i
@@ -2489,12 +2507,12 @@ class web_leach:
 						indx3.join()
 
 					except EOFError:
-						leach_logger("000||10009||%s||f-Stop||is_indexing||user probably freaked out for any link being indexed")
+						leach_logger("000||10009||%s||f-Stop||is_indexing||probably something unwanted came")
 						print("\u001b[33;1mProject indexing cancelled by Keyboard\u001b[0m")
 						self.break_all= True
 						return 0
 					except KeyboardInterrupt:
-						leach_logger("000||10009||%s||f-Stop||is_indexing||user probably freaked out for any link being indexed")
+						leach_logger("000||10009||%s||f-Stop||is_indexing||probably something unwanted came")
 						print("\u001b[33;1mProject indexing cancelled by Keyboard\u001b[0m")
 						self.break_all= True
 						return 0
@@ -2533,7 +2551,7 @@ class web_leach:
 		writer(self.Project+'.proj','a','dimention = %s\n'%str(self.dimention),'data/leach_projects','10009')
 		writer(self.Project+'.proj','a','sequence = %s\n'%str(self.sequence),'data/leach_projects','10009')
 		writer(self.Project+'.proj','a','Project = "%s"\n'%str(self.Project),'data/leach_projects','10009')
-		writer(self.Project+'.proj','a','sub_links = "%s"\n'%str(self.sub_links),'data/leach_projects','10009')
+		writer(self.Project+'.proj','a','sub_links = %s\n'%str(self.sub_links),'data/leach_projects','10009')
 
 		print('\n')
 		self.total=len(self.all_list2)
@@ -2620,12 +2638,12 @@ class web_leach:
 				# print([t11.is_alive(),t2.is_alive(),t3.is_alive(),t4.is_alive(),t5.is_alive(),t6.is_alive(),t7.is_alive(),t8.is_alive(),t9.is_alive(),t10.is_alive(), t99.is_alive()])
 			except LeachICancelError:
 				self.break_all= True
-				leach_logger("000||10009||%s||D-Break||Download stopped"%(self.Project))
+				leach_logger("000||10009||%s||D-Break||~||~"%(self.Project))
 				break
 
 		if self.break_all:
 			print("\u001b[33;1mProject continuation cancelled by Keyboard\u001b[0m")
-			leach_logger("000||10009||%s||D-Stop||Downloaded-%i | Error-%i"%(self.Project, self.done, self.errors))
+			leach_logger("000||10009||%s||D-Stop||Downloading||%i|%i"%(self.Project, self.done, self.errors))
 		else:
 			if 'mangafreak' in self.sp_flags:
 				if not os_exists('Download_projects/'+self.Project+'/'):
@@ -2636,7 +2654,7 @@ class web_leach:
 				for i in range(len(self.sub_dirs)):
 					for j in os_listdir('Download_projects/'+self.Project+'/'+self.sub_dirs[i]):
 						# print(j)
-						if os_isfile('Download_projects/'+self.Project+'/'+self.sub_dirs[i]+'/'+j):
+						if os_isfile('Download_projects/'+self.Project+'/'+self.sub_dirs[i]+'/'+j) and (not j.endswith('.html')):
 							self.all_list.append([j,i])
 				first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
 
@@ -2692,46 +2710,48 @@ class web_leach:
 					except KeyboardInterrupt:
 						return 0
 
+			__command = self.Project.lower()
 			if self.Project=='':
 				print('You must enter a Project name here.')
-
-			elif self.Project in ['?disable-log', '?D-log']:
-				sp_arg_flag['no log'] = True
-				print('Disabled logging')
-				return 0
-			elif self.Project in ['?eisable-log', '?E-log']:
-				sp_arg_flag['no log'] = False
-				print('Enabled logging [DEFAULT]')
-			elif self.Project in ['?enable-dl-thread', '?E-dl-T']:
+			elif __command in ['?disable-dl-thread', '?d-dl-t']:
 				sp_arg_flag['disable dl cancel'] = True
 				print('Disabled download cancellation by adding join thread option')
 				return 0
 
-			elif self.Project in ['?disable-dl-thread', '?D-dl-T']:
+			elif __command in ['?enable-dl-thread', '?e-dl-t']:
 				sp_arg_flag['disable dl cancel'] = False
 				print('Enabled download cancellation by adding removing thread option [DEFAULT]')
 				return 0
-			elif self.Project in ['?disable-dl-get', '?D-dl']:
+			elif __command in ['?disable-dl-get', '?d-dl']:
 				sp_arg_flag['disable dl get'] = True
 				print('Disabled download save by using requests.head')
 				return 0
 
-			elif self.Project in ['?enable-dl-get', '?E-dl'] :
+			elif __command in ['?enable-dl-get', '?e-dl'] :
 				sp_arg_flag['disable dl get'] = False
 				print('Enabled download save by using requests.get [DEFAULT]')
 				return 0
 
-			elif self.Project in ['?enable-ara-ara', '?E-noise'] :
+			elif __command in ['?enable-ara-ara', '?e-noise'] :
 				sp_arg_flag['ara_ara'] = True
 				print('Enabled fun sounds [DEFAULT]')
 				return 0
 
-			elif self.Project in ['?disable-ara-ara', '?D-noise'] :
+			elif __command in ['?disable-ara-ara', '?d-noise'] :
 				sp_arg_flag['ara_ara'] = False
 				print('Enabled fun sounds [DEFAULT]')
 
+			elif __command in ['?disable-browser', '?d-br']:
+				sp_arg_flag['no browser'] = True
+				print('Disabled opening Downloads in browser')
+				return 0
+
+			elif __command in ['?enable-browser', '?e-br'] :
+				sp_arg_flag['no browser'] = False
+				print('Enabled opening Downloads in browser [DEFAULT]')
+				return 0
+
 			else:
-				self.Project= self.Project
 				break
 
 		temp = self.Project
@@ -2755,7 +2775,7 @@ class web_leach:
 				if any([i in self.Project for i in '/\<>?"*|:']):
 					print('Project name can\'t have these charecters : /\<>?"*|:\n\n')
 					return 0
-					
+
 				# self.project_dir=self.Project[:].replace('/','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-')
 				leach_logger("10009x0||%s||Checking Project Database"%(self.Project),user_name)
 				if self.Project in open('data/projects.db').read().split('\n'):
@@ -2779,6 +2799,7 @@ class web_leach:
 			return 0
 
 		if proj_good and list_good:
+			exec(open('make_html.py').read(), globals())
 			Ctitle('[Analizing] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
 			if 'mangafreak' in self.sp_flags:
 				if self.dl_done:
@@ -2790,7 +2811,7 @@ class web_leach:
 					for i in range(len(self.sub_dirs)):
 						for j in os_listdir('Download_projects/'+self.Project+'/'+self.sub_dirs[i]):
 							# print(j)
-							if os_isfile('Download_projects/'+self.Project+'/'+self.sub_dirs[i]+'/'+j):
+							if os_isfile('Download_projects/'+self.Project+'/'+self.sub_dirs[i]+'/'+j) and (not j.endswith('.html')):
 								self.all_list.append([j,i])
 					# print(self.all_list, self.sub_dirs)
 					first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
@@ -2804,7 +2825,7 @@ class web_leach:
 				else:
 					print("can't generate web pages offline from incomplete manga freak download")
 			else:
-				first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
+				first_page=make_pages(self.all_list,self.sub_dirs, self.Project, self.sequence)
 				print("Local webpage created")
 				if asker("Wanna check the page??\n leave an enter to pass\n >> ", default=False):
 					run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
@@ -2943,6 +2964,8 @@ except KeyboardInterrupt:
 	print("Hard cancel command entered! stopping")
 	leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"'%init_upto)
 	exit(0)
+
+
 
 
 

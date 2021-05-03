@@ -6,7 +6,17 @@ sub_page_template="""<!DOCTYPE html>
 
 <head>
   <title></title>
+  <script>
+  const page_style = ['bd', "shortS"];
 
+  var images_loc = %s;
+  var pages_list = %s;
+  var current_page_index = %i;
+  var proj_name= '%s';
+  document.title = pages_list[current_page_index];
+
+  </script>
+  
   <style type="text/css">
     .container {
       margin: 80px auto;
@@ -22,7 +32,7 @@ sub_page_template="""<!DOCTYPE html>
       padding: 2px 6px 2px 6px;
       border-top: 1px solid #828d94;
       box-shadow: 4px 4px #5050506b;
-      border-left: 1px solid rgb(130, 141, 148)
+      border-left: 1px solid #828D94;
     }
 
 #lastleft{
@@ -30,7 +40,7 @@ sub_page_template="""<!DOCTYPE html>
   font-weight: 600;
   font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
   text-decoration: none;
-  color: rgb(6, 165, 238);
+  color: #06A5EE;
 }
 
     body {
@@ -53,7 +63,7 @@ sub_page_template="""<!DOCTYPE html>
     
     #spacer{
       background-color: #222;
-      color:rgb(57, 148, 190);
+      color: #3094BE;
       font-weight: 500;
 
     }
@@ -80,19 +90,19 @@ sub_page_template="""<!DOCTYPE html>
 
 #LARROW:not(.disabled), #RARROW:not(.disabled){
   cursor: pointer;
-  color: rgb(200, 195, 188);
+  color: #C8C3BC;
   background-color: #103c8b;
 }
 
 .disabled{
   cursor: default;
-  color: rgb(200, 195, 188);
+  color: #C8C3BC;
   background-color: #999;
 }
 
 
 #LARROW:not(.disabled):hover, #RARROW:not(.disabled):hover{
-  background-color: rgb(100, 149, 237);
+  background-color: #6495ED;
   color: #EEE;
 }
 
@@ -142,8 +152,7 @@ sub_page_template="""<!DOCTYPE html>
     #myImg {
       cursor: pointer;
       transition: 0.3s;
-      max-width: 100%%;
-      max-height: 100vh;
+      max-width: 95vw;
     }
 
     /* #myImg:hover {opacity: 0.7;} */
@@ -159,7 +168,6 @@ sub_page_template="""<!DOCTYPE html>
       width: 100%%; /* Full width */
       height: 100%%; /* Full height */
       overflow: auto; /* Enable scroll if needed */
-      background-color: rgb(0,0,0); /* Fallback color */
       background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
     }
 
@@ -297,7 +305,7 @@ sub_page_template="""<!DOCTYPE html>
   font-weight: 600;
   font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
   text-decoration: none;
-  color: rgb(6, 165, 238);
+  color: #06A5EE;
 }
 
 #footer {
@@ -370,13 +378,31 @@ sub_page_template="""<!DOCTYPE html>
 
 <script type="text/javascript">
 
-  var images_loc = %s;
-  var pages_list = %s;
-  var current_page_index = %i;
-  var proj_name= '%s';
-  document.title = pages_list[current_page_index];
-
   document.getElementById('go2main').href= '../'+proj_name+'.html';
+
+  var style_= JSON.parse(localStorage.getItem('style?'+proj_name));
+  
+  function stylish(style){
+    style_temp = style;
+    
+    localStorage.setItem('style?'+proj_name, JSON.stringify(style_temp));
+    var ele = document.getElementsByTagName('input');
+    for (i = 0; i < ele.length; i++) {
+      if (ele[i].type = "radio") {
+        if (ele[i].value==style_temp[0]){
+          ele[i].checked = true;
+        }
+        else{
+          ele[i].checked = false;
+        }
+      }
+    }
+
+    document.getElementById("pageFormats").value = style_temp[1];
+    
+    
+  }
+  
 
   function display_imgs() {
     for (i = 0; i < images_loc.length; i++) {
@@ -448,9 +474,12 @@ sub_page_template="""<!DOCTYPE html>
   }
   
   pagination();
-  function displayValue() {
+  function displayValue(values=false) {
     
-    var values = getValue();
+    if(values==false){var values = getValue();}
+    
+    stylish(values);
+    
     var str = "Page Status: "+values[1]+"<br>Border Status: "+ values[0];
     var img_div1 = document.getElementById('images');
     var eleIMG = document.getElementsByClassName('per_img');
@@ -482,6 +511,9 @@ sub_page_template="""<!DOCTYPE html>
     }
   }
 
+  if(style_==null){displayValue(page_style);}
+  else{displayValue(style_);}
+
 
   //###  modal (floating image script)    #####
 
@@ -511,15 +543,24 @@ sub_page_template="""<!DOCTYPE html>
       modal_img_indx = js_img_src.indexOf(modalImg.src);
 
       if(no_arrow){
+        const LAdiv = document.createElement("DIV");
+        LAdiv.style.display = 'inline-block';
         var LArrow= document.createElement('SPAN');
         LArrow.id= 'LARROW';
-        captionText.appendChild(LArrow);
+        LAdiv.appendChild(LArrow);
+        captionText.appendChild(LAdiv);
+        
         var captionText_ = document.createElement("SPAN");
         captionText_.id = 'capt_name';
         captionText.appendChild(captionText_);
+        
+        const RAdiv = document.createElement("DIV");
+        RAdiv.style.display = 'inline-block';
         var RArrow= document.createElement('SPAN');
         RArrow.id= 'RARROW';
-        captionText.appendChild(RArrow);
+        RAdiv.appendChild(RArrow);
+        captionText.appendChild(RAdiv);
+        
       
         no_arrow=false;}
 
@@ -576,6 +617,13 @@ sub_page_template="""<!DOCTYPE html>
       modal.onkeydown =document.addEventListener('keydown',key_control);
 }}
 
+var span = document.getElementsByClassName( 'close' )[0];
+
+  span.onclick = function() {
+    modal.style.display = "none";
+    modalImg.removeEventListener('keydown',key_control);
+  }
+
   function key_control(event){
 
     var RArrow = document.getElementById('RARROW');
@@ -609,14 +657,14 @@ sub_page_template="""<!DOCTYPE html>
       if (modal_img_indx == 0){LArrow.classList.add('disabled');}
           else{LArrow.classList.remove('disabled');}
       document.getElementById('capt_name').innerHTML = "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0"+ modalImg.src.replace(/^.*[\\/]/, '') + "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0";}
+
+    if(event.keyCode==27){
+      modal.style.display = "none";
+      modalImg.removeEventListener('keydown',key_control);
+    }
   }
 
-  var span = document.getElementsByClassName( 'close' )[0];
-
-  span.onclick = function() {
-    modal.style.display = "none";
-    modalImg.removeEventListener('keydown',key_control);
-  }
+  
   //################################################
 
   //############ Pop up ###########################
@@ -739,15 +787,16 @@ body{
 html, body, input, textarea, select, button {
     border-color: #736b5e;
     color: #e8e6e3;
-    background-color: rgb(19, 21, 22);
+    background-color: #131516;
 }
 * {
     scrollbar-color: #0f0f0f #454a4d;
 }
 #allA{
   text-align: center;
-  margin-left: 12%%;
-  margin-right: 12%%;
+  margin-left: 5%%;
+  margin-right: 5%%;
+  width: 85%%;
 }
 
 #lastleft{
@@ -755,7 +804,7 @@ html, body, input, textarea, select, button {
   font-weight: 600;
   font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
   text-decoration: none;
-  color: rgb(6, 165, 238);
+  color: #06A5EE;
 }
 
 #proj_title{
@@ -766,7 +815,10 @@ html, body, input, textarea, select, button {
   font-weight: 600;
   font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
   text-decoration: none;
-  color: rgb(6, 165, 238);
+  color: #06A5EE;
+  overflow-wrap: break-word;
+  padding-left: 5%%;
+  padding-right: 5%%;
 }
 
 #footer {
@@ -790,7 +842,9 @@ html, body, input, textarea, select, button {
   </div>
   <h2 style="text-align: center;" id="proj_title"></h2>
   <hr style="width: 80%%;">
+  <center>
   <div id='allA'></div>
+  </center>
   <br><br>
 
 
@@ -806,7 +860,6 @@ html, body, input, textarea, select, button {
 document.getElementById('proj_title').innerText=proj_name;
 
 var all_li= document.getElementById('allA');
-all_li.style.alignContent ='center';
 for (var i = 0; i < pages_list.length; i++){
   var linkX =document.createElement('A');
   var linkContainer = document.createElement('DIV');

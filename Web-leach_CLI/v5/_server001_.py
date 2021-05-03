@@ -9,12 +9,12 @@ body{
   min-height: 100vh;
 }
 html, body, input, textarea, select, button {
-    border-color: #736b5e;
-    color: #e8e6e3;
-    background-color: #181a1b !important;
+	border-color: #736b5e;
+	color: #e8e6e3;
+	background-color: #181a1b !important;
 }
 * {
-    scrollbar-color: #0f0f0f #454a4d;
+	scrollbar-color: #0f0f0f #454a4d;
 }
 a{
   font-size: 20px;
@@ -144,7 +144,7 @@ import html
 import http.client
 import io
 import mimetypes
-from operator import truediv
+# from operator import truediv
 import os
 import posixpath
 import select
@@ -154,6 +154,8 @@ import socketserver
 import sys
 import time
 import urllib.parse
+
+import contextlib
 import natsort
 from functools import partial
 
@@ -530,10 +532,7 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
 		self.end_headers()
 
 		if self.command != 'HEAD' and body:
-			try:
-				self.wfile.write(body)
-			except ConnectionAbortedError:
-				return 0
+			self.wfile.write(body)
 
 	def send_response(self, code, message=None):
 		"""Add the response header to the headers buffer and log the
@@ -859,7 +858,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 										  errors='surrogatepass'),
 					   html.escape(displayname, quote=False)))
 				
-		r.append('</ul>\n<hr>\n</body>\n<footer id="footer"><br><br><br><br><hr><hr>\n<p style="color: darkgray;">Made by Ratul Hasan with Web leach</p>\n<br><br>\n</footer></html> \n')
+		r.append('</ul><br><br>\n<hr>\n</body>\n<footer id="footer"><br><br><br><br><hr><hr>\n<p style="color: darkgray;">Made by Ratul Hasan with Web leach</p>\n<br><br>\n</footer></html> \n')
 		encoded = '\n'.join(r).encode(enc, 'surrogateescape')
 		f = io.BytesIO()
 		f.write(encoded)
@@ -1289,24 +1288,52 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 				self.log_message("CGI script exited OK")
 
 
+def _get_best_family(*address):
+	infos = socket.getaddrinfo(
+		*address,
+		type=socket.SOCK_STREAM,
+		flags=socket.AI_PASSIVE,
+	)
+	family, type, proto, canonname, sockaddr = next(iter(infos))
+	return family, sockaddr
+
+
 def test(HandlerClass=BaseHTTPRequestHandler,
 		 ServerClass=ThreadingHTTPServer,
-		 protocol="HTTP/1.0", port=8000, bind=""):
+		 protocol="HTTP/1.0", port=8000, bind=None):
 	"""Test the HTTP request handler class.
 
 	This runs an HTTP server on port 8000 (or the port argument).
 
 	"""
-	server_address = (bind, port)
+	if sys.version_info>(3,7,2):
+		ServerClass.address_family, server_address = _get_best_family(bind, port)
+	else:
+		server_address = (bind, port)
 
 	HandlerClass.protocol_version = protocol
 	return ServerClass(server_address, HandlerClass)
 
 
+
+# ensure dual-stack is not disabled; ref #38907
+class DualStackServer(ThreadingHTTPServer):
+	def handle_error(self, request, client_address):
+		pass
+	def server_bind(self):
+		# suppress exception when protocol is IPv4
+		with contextlib.suppress(Exception):
+			self.socket.setsockopt(
+				socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 0)
+		return super().server_bind()
+
+
 def run_server(port = 8000, cd = os.getcwd()):
 	handler_class = partial(SimpleHTTPRequestHandler,
 				directory=cd)
-	return test(HandlerClass=handler_class, port=port, bind='')
+	
+	return test(HandlerClass=handler_class,
+		ServerClass=DualStackServer, port=port, bind=None)
 
 if __name__ == '__main__':
 	import argparse
@@ -1314,7 +1341,8 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--cgi', action='store_true',
 					   help='Run as CGI Server')
-	parser.add_argument('--bind', '-b', default='', metavar='ADDRESS',
+	parser.add_argument('--bind', '-b', default=None,
+						metavar='ADDRESS',
 						help='Specify alternate bind address '
 							 '[default: all interfaces]')
 	parser.add_argument('--directory', '-d', default=os.getcwd(),
@@ -1330,4 +1358,9 @@ if __name__ == '__main__':
 	else:
 		handler_class = partial(SimpleHTTPRequestHandler,
 								directory=args.directory)
-	test(HandlerClass=handler_class, port=args.port, bind=args.bind)
+	try:
+		test(HandlerClass=handler_class,
+			ServerClass=DualStackServer, port=args.port, bind=args.bind).serve_forever()
+	except KeyboardInterrupt:
+				print("\nKeyboard interrupt received, exiting.")
+				sys.exit(0)
