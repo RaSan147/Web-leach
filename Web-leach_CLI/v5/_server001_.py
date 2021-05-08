@@ -1308,7 +1308,9 @@ def test(HandlerClass=BaseHTTPRequestHandler,
 	"""
 	if sys.version_info>(3,7,2):
 		ServerClass.address_family, server_address = _get_best_family(bind, port)
+		
 	else:
+		if bind==None: bind=''
 		server_address = (bind, port)
 
 	HandlerClass.protocol_version = protocol
