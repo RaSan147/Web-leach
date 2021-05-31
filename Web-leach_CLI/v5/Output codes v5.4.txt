@@ -154,6 +154,9 @@ CON                    \|:*"><?
               -1 >>>  Unknown ERROR occured
                           ||header index||error name||error string
 
+00013   >>>   [reader] File not found
+                ||f_code||filename
+
 00017   >>>   [check_internet] No internet access
                 ||link||header index||caller f_code||Error code (not in prev version)
 

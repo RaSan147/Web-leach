@@ -18,131 +18,131 @@
 
 base_li0= {'0':0,
 
-    '1':1,
+	'1':1,
 
-    '2':2 ,
+	'2':2 ,
 
-    '3':3 ,
+	'3':3 ,
 
-    '4':4 ,
+	'4':4 ,
 
-    '5':5 ,
+	'5':5 ,
 
-    '6':6 ,
+	'6':6 ,
 
-    '7':7 ,
+	'7':7 ,
 
-    '8':8 ,
+	'8':8 ,
 
-    '9':9 ,
+	'9':9 ,
 
-    'a':10 ,
+	'a':10 ,
 
-    'b':11 ,
+	'b':11 ,
 
-    'c':12 ,
+	'c':12 ,
 
-    'd':13 ,
+	'd':13 ,
 
-    'e':14 ,
+	'e':14 ,
 
-    'f':15 ,
+	'f':15 ,
 
-    'g':16 ,
+	'g':16 ,
 
-    'h':17 ,
+	'h':17 ,
 
-    'i':18 ,
+	'i':18 ,
 
-    'j':19 ,
+	'j':19 ,
 
-    'k':20 ,
+	'k':20 ,
 
-    'l':21 ,
+	'l':21 ,
 
-    'm':22 ,
+	'm':22 ,
 
-    'n':23 ,
+	'n':23 ,
 
-    'o':24 ,
+	'o':24 ,
 
-    'p':25 ,
+	'p':25 ,
 
-    'q':26 ,
+	'q':26 ,
 
-    'r':27 ,
+	'r':27 ,
 
-    's':28 ,
+	's':28 ,
 
-    't':29 ,
+	't':29 ,
 
-    'u':30 ,
+	'u':30 ,
 
-    'v':31 ,
+	'v':31 ,
 
-    'w':32 ,
+	'w':32 ,
 
-    'x':33 ,
+	'x':33 ,
 
-    'y':34 ,
+	'y':34 ,
 
-    'z':35 ,
+	'z':35 ,
 
-    'A':36 ,
+	'A':36 ,
 
-    'B':37 ,
+	'B':37 ,
 
-    'C':38 ,
+	'C':38 ,
 
-    'D':39 ,
+	'D':39 ,
 
-    'E':40 ,
+	'E':40 ,
 
-    'F':41 ,
+	'F':41 ,
 
-    'G':42 ,
+	'G':42 ,
 
-    'H':43 ,
+	'H':43 ,
 
-    'I':44 ,
+	'I':44 ,
 
-    'J':45 ,
+	'J':45 ,
 
-    'K':46 ,
+	'K':46 ,
 
-    'L':47 ,
+	'L':47 ,
 
-    'M':48 ,
+	'M':48 ,
 
-    'N':49 ,
+	'N':49 ,
 
-    'O':50 ,
+	'O':50 ,
 
-    'P':51 ,
+	'P':51 ,
 
-    'Q':52 ,
+	'Q':52 ,
 
-    'R':53 ,
+	'R':53 ,
 
-    'S':54 ,
+	'S':54 ,
 
-    'T':55 ,
+	'T':55 ,
 
-    'U':56 ,
+	'U':56 ,
 
-    'V':57 ,
+	'V':57 ,
 
-    'W':58 ,
+	'W':58 ,
 
-    'X':59 ,
+	'X':59 ,
 
-    'Y':60 ,
+	'Y':60 ,
 
-    'Z':61 ,
+	'Z':61 ,
 
-    '?':62 ,
+	'?':62 ,
 
-    '!':63 
+	'!':63 
 
 }
 
@@ -151,84 +151,106 @@ base_li= "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ?!"
 
 def dec2base(n,base):
 
-    out=''
+	out=''
 
-    while n!=0:
+	while n!=0:
 
-        out+=base_li[n%base]
+		out+=base_li[n%base]
 
-        n//=base
+		n//=base
 
-    
+	
 
-    return out[::-1]
+	return out[::-1]
 
 
 
 def base2dec(n, base):
-    out=0
-    n=n[::-1]
+	out=0
+	n=n[::-1]
 
-    for  i in range(len(n)):
+	for  i in range(len(n)):
 
-        out+=base_li0[n[i]]*(base**(i))
+		out+=base_li0[n[i]]*(base**(i))
 
-    return out
+	return out
 
 from datetime import datetime
 
 def dt_():
-    return str(datetime.now())
+	return str(datetime.now())
 
 # print(dt_())
 #print(int(str(dt_()).replace('-','').replace(' ','').replace('.','').replace(':','')))
 
 def compressed_dt(_dt= None):
 
-    dt_now= int((_dt if _dt!=None else dt_()).replace('-','').replace(' ','').replace('.','').replace(':',''))
+	dt_now= int((_dt if _dt!=None else dt_()).replace('-','').replace(' ','').replace('.','').replace(':',''))
 
-    return dec2base(dt_now,63)
+	return dec2base(dt_now,63)
 
 def dec_dt(dt):
-    ddt = str(base2dec(dt, 63))
-    #print(ddt)
-    YYYY = ddt[:4]
-    MM= ddt[4:6]
-    DD= ddt[6:8]
-    hh= ddt[8:10]
-    mm= ddt[10:12]
-    ss= ddt[12:14]+'.'+ddt[14:]
+	ddt = str(base2dec(dt, 63))
+	#print(ddt)
+	YYYY = ddt[:4]
+	MM= ddt[4:6]
+	DD= ddt[6:8]
+	hh= ddt[8:10]
+	mm= ddt[10:12]
+	ss= ddt[12:14]+'.'+ddt[14:]
 
-    return (YYYY,MM,DD,hh, mm, ss)
+	return (YYYY,MM,DD,hh, mm, ss)
 
 # print(dec_dt(compressed_dt()))
 cdt_ = compressed_dt
 
 def get_tz():
 
-    tznow = datetime.now().astimezone()
+	tznow = datetime.now().astimezone()
 
-    return (str(tznow)[-6:])
+	return (str(tznow)[-6:])
 
-        
+
+def flatten_array(out, output_type = list):
+	'''Will flatten `list`, `tuple`, `set`'''
+	if not isinstance(out, list):
+		out= list(out)
+	i=0
+	l =len(out)
+	while i<l:
+		if isinstance(out[i], (list, tuple, set)):
+			out.extend(flatten_array(out.pop(i)))
+			l-=1
+		else: i+=1
+	if not isinstance(out, output_type):
+		out= output_type(out)
+	return out
+
+# from time import time
+# arr = [1,[],[],[],[],2, 3, [], 4, [], 5, [6], 7, 8, 9, [10,[1,1,3]], []]*500
+# print(len(arr))
+# x=time()
+# oo= flatten_array(arr)
+# print(len(oo))
+# print(time()-x)
 '''def atoi(text):
-    return int(text) if text.isdigit() else text
+	return int(text) if text.isdigit() else text
 
 
 def sorting_algoN(test_string): 
 
 
-    a= sorting_algoN_re.findall(test_string)
+	a= sorting_algoN_re.findall(test_string)
 
-    if a!=[]:
+	if a!=[]:
 
-        a=[atoi(x) for x in a]
+		a=[atoi(x) for x in a]
 
-    else:
+	else:
 
-        a=[0]
+		a=[0]
 
-    return a'''
+	return a'''
 
 # print(sys.argv)
 

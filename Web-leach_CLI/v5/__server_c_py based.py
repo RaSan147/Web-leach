@@ -872,7 +872,11 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 						if _decrypto_dat[5]=='D-Stop':
 							temp= " (Called from %s)"%_decrypto_dat[3]
 							_decrypto_dat[3] = "Download Cancelled"
-							temp= '<b>Downloaded:</b> %s<br><b>Error:</b> %s'%tuple(_decrypto_dat[4].split('|'))
+							try:
+								temp= '<b>Downloaded:</b> %s<br><b>Error:</b> %s'%tuple(_decrypto_dat[4].split('|'))
+							except:
+								print([_decrypto_dat_])
+								continue
 							_decrypto_dat[4] = temp
 						
 

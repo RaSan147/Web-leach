@@ -35,21 +35,21 @@ sub_page_template="""<!DOCTYPE html>
       border-left: 1px solid #828D94;
     }
 
-#lastleft{
-  font-size: 20px;
-  font-weight: 600;
-  font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
-  text-decoration: none;
-  color: #06A5EE;
-}
+    #lastleft{
+      font-size: 20px;
+      font-weight: 600;
+      font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
+      text-decoration: none;
+      color: #06A5EE;
+    }
 
     body {
       font-family: Arial, Helvetica, sans-serif;
       position: relative;
       min-height: 100vh;
       background-color: #222;
-
     }
+
     #pageFormats{
       background-color: rgba(117, 117, 119, 0.507);
       height: 35px;
@@ -65,89 +65,88 @@ sub_page_template="""<!DOCTYPE html>
       background-color: #222;
       color: #3094BE;
       font-weight: 500;
-
     }
 
-  .containerR {
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
+    .containerR {
+      display: block;
+      position: relative;
+      padding-left: 35px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      font-size: 22px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
 
-/* Hide the browser's default radio button */
-.containerR input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-}
+    /* Hide the browser's default radio button */
+    .containerR input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
 
-#LARROW:not(.disabled), #RARROW:not(.disabled){
-  cursor: pointer;
-  color: #C8C3BC;
-  background-color: #103c8b;
-}
+    #LARROW:not(.disabled), #RARROW:not(.disabled){
+      cursor: pointer;
+      color: #C8C3BC;
+      background-color: #103c8b;
+    }
 
-.disabled{
-  cursor: default;
-  color: #C8C3BC;
-  background-color: #999;
-}
+    .disabled{
+      cursor: default;
+      color: #C8C3BC;
+      background-color: #999;
+    }
 
 
-#LARROW:not(.disabled):hover, #RARROW:not(.disabled):hover{
-  background-color: #6495ED;
-  color: #EEE;
-}
+    #LARROW:not(.disabled):hover, #RARROW:not(.disabled):hover{
+      background-color: #6495ED;
+      color: #EEE;
+    }
 
-/* Create a custom radio button */
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 18px;
-  width: 18px;
-  background-color: #eee;
-  border-radius: 60%%;
-}
+    /* Create a custom radio button */
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 18px;
+      width: 18px;
+      background-color: #eee;
+      border-radius: 60%%;
+    }
 
-/* On mouse-over, add a grey background color */
-.containerR:hover input ~ .checkmark {
-  background-color: #ccc;
-}
+    /* On mouse-over, add a grey background color */
+    .containerR:hover input ~ .checkmark {
+      background-color: #ccc;
+    }
 
-/* When the radio button is checked, add a blue background */
-.containerR input:checked ~ .checkmark {
-  background-color: #3ab7ff;
-}
+    /* When the radio button is checked, add a blue background */
+    .containerR input:checked ~ .checkmark {
+      background-color: #3ab7ff;
+    }
 
-/* Create the indicator (the dot/circle - hidden when not checked) */
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
 
-/* Show the indicator (dot/circle) when checked */
-.containerR input:checked ~ .checkmark:after {
-  display: block;
-}
+    /* Show the indicator (dot/circle) when checked */
+    .containerR input:checked ~ .checkmark:after {
+      display: block;
+    }
 
-/* Style the indicator (dot/circle) */
-.container .checkmark:after {
- 	top: 9px;
-  left: 9px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%%;
-  background: white;
-}
+    /* Style the indicator (dot/circle) */
+    .container .checkmark:after {
+      top: 9px;
+      left: 9px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%%;
+      background: white;
+    }
 
     #myImg {
       cursor: pointer;
@@ -235,85 +234,85 @@ sub_page_template="""<!DOCTYPE html>
     }
 
     .popup .overlay {
-  position:fixed;
-  top:0px;
-  left:0px;
-  width:100vw;
-  height:100vh;
-  background:rgba(0,0,0,0.7);
-  z-index:1;
-  display:none;
-}
+      position:fixed;
+      top:0px;
+      left:0px;
+      width:100vw;
+      height:100vh;
+      background:rgba(0,0,0,0.7);
+      z-index:1;
+      display:none;
+    }
 
-.popup .content {
-  position:fixed;
-  top:50%%;
-  left:50%%;
-  color: #AAA;
-  transform:translate(-50%%,-50%%) scale(0);
-  background:#222;
-  width:500px;
-  height:250px;
-  z-index:2;
-  text-align:center;
-  padding:20px;
-  box-sizing:border-box;
-  font-family:"Open Sans",sans-serif;
-}
+    .popup .content {
+      position:fixed;
+      top:50%%;
+      left:50%%;
+      color: #AAA;
+      transform:translate(-50%%,-50%%) scale(0);
+      background:#222;
+      width:500px;
+      height:250px;
+      z-index:2;
+      text-align:center;
+      padding:20px;
+      box-sizing:border-box;
+      font-family:"Open Sans",sans-serif;
+    }
 
-.popup .close-btn {
-  cursor:pointer;
-  position:absolute;
-  right:20px;
-  top:20px;
-  width:30px;
-  height:30px;
-  background:#222;
-  color:#fff;
-  font-size:25px;
-  font-weight:600;
-  line-height:30px;
-  text-align:center;
-  border-radius:50%%;
-}
+    .popup .close-btn {
+      cursor:pointer;
+      position:absolute;
+      right:20px;
+      top:20px;
+      width:30px;
+      height:30px;
+      background:#222;
+      color:#fff;
+      font-size:25px;
+      font-weight:600;
+      line-height:30px;
+      text-align:center;
+      border-radius:50%%;
+    }
 
-.popup.active .overlay {
-  display:block;
-}
+    .popup.active .overlay {
+      display:block;
+    }
 
-.popup.active .content {
-  transition:all 300ms ease-in-out;
-  transform:translate(-50%%,-50%%) scale(1);
-}
+    .popup.active .content {
+      transition:all 300ms ease-in-out;
+      transform:translate(-50%%,-50%%) scale(1);
+    }
 
-#button {
-  position:absolute;
-  top:50%%;
-  left:50%%;
-  transform:translate(-50%%,-50%%);
-  padding:15px;
-  font-size:18px;
-  border:2px solid #222;
-  color:#222;
-  text-transform:uppercase;
-  font-weight:600;
-  background:#fff;
-}
+    #button {
+      position:absolute;
+      top:50%%;
+      left:50%%;
+      transform:translate(-50%%,-50%%);
+      padding:15px;
+      font-size:18px;
+      border:2px solid #222;
+      color:#222;
+      text-transform:uppercase;
+      font-weight:600;
+      background:#fff;
+    }
 
-#go2main{
-  font-size: 20px;
-  font-weight: 600;
-  font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
-  text-decoration: none;
-  color: #06A5EE;
-}
+    #go2main{
+      font-size: 20px;
+      font-weight: 600;
+      font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
+      text-decoration: none;
+      color: #06A5EE;
+    }
 
-#footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%%;
-  height: 2.5rem;            /* Footer height */
-}
+    #footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%%;
+      height: 2.5rem;            /* Footer height */
+    }
   </style>
   </head>
   
@@ -715,118 +714,118 @@ main_page_template="""
 
 <style>
   .popup .overlay {
-  position:fixed;
-  top:0px;
-  left:0px;
-  width:100vw;
-  height:100vh;
-  background:rgba(0,0,0,0.7);
-  z-index:1;
-  display:none;
-}
+    position:fixed;
+    top:0px;
+    left:0px;
+    width:100vw;
+    height:100vh;
+    background:rgba(0,0,0,0.7);
+    z-index:1;
+    display:none;
+  }
 
-.popup .content {
-  position:fixed;
-  top:50%%;
-  left:50%%;
-  color: #AAA;
-  transform:translate(-50%%,-50%%) scale(0);
-  background:#222;
-  width:500px;
-  height:250px;
-  z-index:2;
-  text-align:center;
-  padding:20px;
-  box-sizing:border-box;
-  font-family:"Open Sans",sans-serif;
-}
+  .popup .content {
+    position:fixed;
+    top:50%%;
+    left:50%%;
+    color: #AAA;
+    transform:translate(-50%%,-50%%) scale(0);
+    background:#222;
+    width:500px;
+    height:250px;
+    z-index:2;
+    text-align:center;
+    padding:20px;
+    box-sizing:border-box;
+    font-family:"Open Sans",sans-serif;
+  }
 
-.popup .close-btn {
-  cursor:pointer;
-  position:absolute;
-  right:20px;
-  top:20px;
-  width:30px;
-  height:30px;
-  background:#222;
-  color:#fff;
-  font-size:25px;
-  font-weight:600;
-  line-height:30px;
-  text-align:center;
-  border-radius:50%%;
-}
+  .popup .close-btn {
+    cursor:pointer;
+    position:absolute;
+    right:20px;
+    top:20px;
+    width:30px;
+    height:30px;
+    background:#222;
+    color:#fff;
+    font-size:25px;
+    font-weight:600;
+    line-height:30px;
+    text-align:center;
+    border-radius:50%%;
+  }
 
-.popup.active .overlay {
-  display:block;
-}
+  .popup.active .overlay {
+    display:block;
+  }
 
-.popup.active .content {
-  transition:all 300ms ease-in-out;
-  transform:translate(-50%%,-50%%) scale(1);
-}
+  .popup.active .content {
+    transition:all 300ms ease-in-out;
+    transform:translate(-50%%,-50%%) scale(1);
+  }
 
-button {
-  position:absolute;
-  top:50%%;
-  left:50%%;
-  transform:translate(-50%%,-50%%);
-  padding:15px;
-  font-size:18px;
-  border:2px solid #222;
-  color:#222;
-  text-transform:uppercase;
-  font-weight:600;
-  background:#fff;
-}
-body{
-  
-  position: relative;
-  min-height: 100vh;
-}
-html, body, input, textarea, select, button {
-    border-color: #736b5e;
-    color: #e8e6e3;
-    background-color: #131516;
-}
-* {
-    scrollbar-color: #0f0f0f #454a4d;
-}
-#allA{
-  text-align: center;
-  margin-left: 5%%;
-  margin-right: 5%%;
-  width: 85%%;
-}
+  button {
+    position:absolute;
+    top:50%%;
+    left:50%%;
+    transform:translate(-50%%,-50%%);
+    padding:15px;
+    font-size:18px;
+    border:2px solid #222;
+    color:#222;
+    text-transform:uppercase;
+    font-weight:600;
+    background:#fff;
+  }
+  body{
+    
+    position: relative;
+    min-height: 100vh;
+  }
+  html, body, input, textarea, select, button {
+      border-color: #736b5e;
+      color: #e8e6e3;
+      background-color: #131516;
+  }
+  * {
+      scrollbar-color: #0f0f0f #454a4d;
+  }
+  #allA{
+    text-align: center;
+    margin-left: 5%%;
+    margin-right: 5%%;
+    width: 85%%;
+  }
 
-#lastleft{
-  font-size: 20px;
-  font-weight: 600;
-  font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
-  text-decoration: none;
-  color: #06A5EE;
-}
+  #lastleft{
+    font-size: 20px;
+    font-weight: 600;
+    font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
+    text-decoration: none;
+    color: #06A5EE;
+  }
 
-#proj_title{
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
-.list_class{
-  font-size: 20px;
-  font-weight: 600;
-  font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
-  text-decoration: none;
-  color: #06A5EE;
-  overflow-wrap: break-word;
-  padding-left: 5%%;
-  padding-right: 5%%;
-}
+  #proj_title{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  }
+  .list_class{
+    font-size: 20px;
+    font-weight: 600;
+    font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
+    text-decoration: none;
+    color: #06A5EE;
+    overflow-wrap: break-word;
+    padding-left: 5%%;
+    padding-right: 5%%;
+  }
 
-#footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%%;
-  height: 2.5rem;            /* Footer height */
-}
+  #footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%%;
+    height: 2.5rem;            /* Footer height */
+  }
 </style>
 
 </head>
@@ -902,7 +901,7 @@ for (var i = 0; i < pages_list.length; i++){
 
 dir_path = os_dirname(os_realpath(__file__))
 
-def make_pages(all_li, dir_list, project, seq):
+def make_pages(all_li, dir_list, project, seq, ext=''):
 	first_page=None
 	dir_len = len(dir_list)
 
@@ -912,7 +911,12 @@ def make_pages(all_li, dir_list, project, seq):
 		temp=[]
 		for j in range(len(all_li)):
 			if all_li[j][1] == i:
-				temp.append(html_escape(html_unescape(get_file_name(all_li[j][0])).replace('/','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-')))
+				temp.append(html_escape(html_unescape(get_file_name(all_li[j][0])
+										).replace('/','-').replace('\\','-'
+										).replace('|','-').replace(':','-'
+										).replace('*','-').replace('"',"'"
+										).replace('>','-').replace('<','-'
+										).replace('?','-')+ext))
 
 		temp=remove_duplicate(temp)
 

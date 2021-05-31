@@ -1,4 +1,4 @@
-# pylint:disable=W0312
+#pylint:disable=W0312
 #: *****************************************************************************
 #:                The code in this file was created by Ratul Hasan             *
 #:                     So complete credit goes to creator(me)                  *
@@ -28,7 +28,7 @@ py -3.9 -O -m PyInstaller "leach_win_setup.py" -F -n "Web leach 0.5.5.4" --versi
 '''
 
 requirements_all= ('requests',  'beautifulsoup4', 'natsort', 'google')
-requirements_win= ('pypiwin32', 'comtypes', 'psutil', 'lxml', 'pywin32-ctypes', 'kivy')
+requirements_win= ('pypiwin32', 'comtypes', 'psutil', 'lxml', 'pywin32-ctypes')
 _VERSION="5.50004"
 
 
@@ -61,7 +61,7 @@ _VERSION="5.50004"
 #>>>>>TRYING NEW LOCAL SERVER https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update (server v5.500004).txt
 
 
-print("LOADING ASSETS...")
+print("LOADINS ASSETS...")
 
 import Number_sys_conv as Nsys           #f_code = 20000
 # different number based functions I made
@@ -71,23 +71,11 @@ import time
 
 start_up=time.time()
 
-from print_text import XprintClass
-
-XprintEngine = XprintClass()
-xprint =XprintEngine.slowtype
-
 try:
 	import ctypes
-	def Ctitle(title):
-		try:
-			ctypes.windll.kernel32.SetConsoleTitleW(title)
-		except:
-			print('\33]0;%s\a'%title, end='', flush=True)
+	def Ctitle(title): ctypes.windll.kernel32.SetConsoleTitleW(title)
 
 	Ctitle('Loading Assets')
-
-	true= True
-	false= False
 
 
 
@@ -107,7 +95,7 @@ try:
 	__update__L = 'pass'
 	user_list=['bec6113e5eca1d00da8af7027a2b1b070d85b5ea','eb23efbb267893b699389ae74854547979d265bd']
 
-	has_all_libs = True
+
 	g_mode=False
 	ara_ara= True #to control parody noise
 	no_log = False #to stop logging
@@ -152,7 +140,7 @@ try:
 	from subprocess import call as subprocess_call, Popen as subprocess_Popen, DEVNULL as subprocess_DEVNULL
 	from os import devnull as os_devnull
 	from sys import stdout as sys_stdout
-	from importlib import reload
+	# from importlib import reload
 	# from functools import partial
 	import atexit, traceback
 	sys_write=sys_stdout.write
@@ -190,21 +178,16 @@ try:
 	from html import unescape as html_unescape, escape as html_escape
 	from urllib import parse
 	import webbrowser
-
+	from bs4 import BeautifulSoup as bs
+	parser='lxml'
 	try:
-		from bs4 import BeautifulSoup as bs
-		parser='lxml'
-		try:
-			bs('<br>', parser)
-		except:
-			parser = 'html.parser'
-		from googlesearch import search as g_search
-		import requests, natsort, urllib3
-		import _server001_
-		if os_name=='Windows': import mplay4
-
+		bs('<br>', parser)
 	except:
-		has_all_libs = False
+		parser = 'html.parser'
+	from googlesearch import search as g_search
+	import requests, natsort, urllib3
+	import _server001_
+
 
 
 	from headers_file import header_list        # f_code = 30000
@@ -212,7 +195,9 @@ try:
 
 	#Other Libs###############################
 	from collections import Counter
+	from print_text import xprint
 	import dig_info
+	import mplay4
 
 	##########################################
 except KeyboardInterrupt:
@@ -306,24 +291,22 @@ def remove_non_ascii(text, f_code):    #func_code=00003
 		xprint("Failed to remove non-ascii charecters from string.\nError code: 00003x",f_code,'\nPlease inform the author.')
 		leach_logger('00003x-1||'+e.__class__.__name__+('||%s||'%str(e))+f_code+'||'+text)
 
-def remove_non_uni(text, f_code='?????', types= 'str', encoding= 'utf-8'):    #func_code=00018
+def remove_non_uni(text, f_code, types= 'str'):    #func_code=00018
 	"""Converts a string or binary to unicode string or binary by removing all non unicode char
 
 	text: str to work on
 
 	f_code: caller func code
 
-	types: output type ('str' or 'bytes')
-
-	encoding: output encoding *utf-8"""
+	types: output type ('str' or 'bytes')"""
 
 	try:
 		if type(text)==str:
-			text =text.encode(encoding, 'ignore')
+			text =text.encode('utf-8', 'ignore')
 			if types=='bin': return text
-			return text.decode(encoding)
-		if types=='bin': return text.decode(encoding,'ignore').encode(encoding)
-		return text.decode(encoding,'ignore')
+			return text.decode('utf-8')
+		if types=='bin': return text.decode('utf-8','ignore').encode("utf-8")
+		return text.decode('utf-8','ignore')
 	except Exception as e:
 		xprint("/r/Failed to remove non-Unicode charecters from string.\nError code: 00018x",f_code,'/y/\nPlease inform the author./=/')
 		leach_logger('00018x-1||'+e.__class__.__name__+('||%s||'%str(e))+f_code+'||'+types+'||'+text)
@@ -333,63 +316,53 @@ def header_():    #func_code=00004
 	"""returns a random header from header_list for requests lib"""
 	return( {'User-Agent':random_choice(header_list)})
 
-def install(pack, alias=None):    #func_code=00005
-	"""Just install package
+# def install(pack, alias=None):    #func_code=00005
+# 	"""Just install package
 
-	pack: the name the library (beautifulsoup4, requests)\n
-	alias: if the pip package name is different from lib name, then used alias (not required here) [beautifulsoup4 (pip)=> bs4 (lib name) """
+# 	pack: the name the libraby (beautifulsoup4, requests)\n
+# 	alias: if the pip package name is different from lib name, then used alias (not required here) [beautifulsoup4 (pip)=> bs4 (lib name) """
 
-	if alias == None:
-		alias = pack
+# 	if alias == None:
+# 		alias = pack
 
-	subprocess_call([sys_executable, "-m", "pip", "install",'--disable-pip-version-check','--quiet', alias])
+# 	subprocess_call([sys_executable, "-m", "pip", "install",'--disable-pip-version-check','--quiet', alias])
 
 
-import pkg_resources as pkg_r
+# import pkg_resources as pkg_r
 # installed_pkgs=[pkg.key for pkg in pkg_resources.working_set] # list of installed packages
 
 # print(pkg_resources)
 
-def install_req(pkz):     #func_code=00006
-	"""install requirement package if not installed"""
-	if pkz not in (pkg.key for pkg in pkg_r.working_set):
-		xprint("/y/Installing missing libraries/=/")
-		install(pkz)
-		delete_last_line()
-	reload(pkg_r)
-	if pkz not in (pkg.key for pkg in pkg_r.working_set):
-		xprint('/r/Failed to install and load required Library: "%s"/y/\nThe app will close in 5 seconds/=/'%pkz)
-		try: leach_logger('00006||%s||%s'%(pkz, str(check_internet("https://pypi.org", '00006'))))
-		except NameError: pass
-		return False
-	return True
+# def install_req(pkz):     #func_code=00006
+# 	"""install requirement package if not installed"""
+# 	if pkz not in (pkg.key for pkg in pkg_r.working_set):
+# 		print("Installing missing libraries")
+# 		install(pkz)
+# 		delete_last_line()
+# 	reload(pkg_r)
+# 	if pkz not in (pkg.key for pkg in pkg_r.working_set):
+# 		print('Failed to install and load required Library: "%s"\nThe app will close in 5 seconds'%pkz)
+# 		try: leach_logger('00006||%s||%s'%(pkz, str(check_internet("https://pypi.org", '00006'))))
+# 		except NameError: pass
 
-if os_name=='Windows':
-	if not 'psutils' in (pkg.key for pkg in pkg_r.working_set):
-		has_all_libs = False
 
-if has_all_libs == False:
-	for i in requirements_all: 
-		if not install_req(i):
-			time.sleep(5)
-			exit()
+# if no_psutil:
+# 	install_req('psutil') #required to get win sys info
+# 	import Number_sys_conv as Nsys
 
-	if os_name=="Windows":
-		for i in requirements_win: 
-			if not install_req(i):
-				time.sleep(5)
-				exit()    #required in mplay4
+# 	start_up_dt = Nsys.compressed_dt()
+# 	no_psutil=False
 
-	from bs4 import BeautifulSoup as bs
-	parser='lxml'
-	try:
-		bs('<br>', parser)
-	except:
-		parser = 'html.parser'
-	from googlesearch import search as g_search
-	import requests, natsort
-	import _server001_
-	if os_name=="Windows": import mplay4
+# for i in requirements_all: install_req(i)
+#install_req('requests')
+#install_req('beautifulsoup4')
+#install_req('natsort')
+
+
+
+# if os_name=="Windows":
+# 	for i in requirements_win: install_req(i)    #required in mplay4
+
 
 
 def loc(x, _os_name='Linux'):    #func_code=00007
@@ -505,7 +478,7 @@ def leach_logger(io, key='lock'):   #func_code=0000A
 	io: the log message\n
 	key: salt text"""
 	if sp_arg_flag['no log']:
-		return None
+		return 0
 	try:
 		while True:
 			try:
@@ -569,12 +542,7 @@ def run_server(port, cd=None, f_code= 'None'):      #func_code=0000B
 		pass
 
 server_running = False
-def run_server_t(port, cd='./'):      #func_code=0000B
-	"""Runs server in a thread and returns the thread to server_code
-	port: the server port
-	cd: Directory to run the server. *`current dir`
-	"""
-
+def run_server_t(port, cd):      #func_code=0000B
 	global server_code, server_running
 	_t = run_server(port= port, cd= cd)
 	if _t!=0:
@@ -661,84 +629,49 @@ def go_prev_dir(link):    #func_code=0000E
 
 
 # leach_logger('000||0000F||~||~||~||input exit code L&infin;ping for unknown reason')
-def safe_input(msg='', i_func=input, o_func=xprint, on_error= LeachICancelError):     #func_code=0000F
-	"""gets user input and returns str
-	msg: the message to show for asking input *`empty string`
-	i_func: the function used for input *`input()`
-	o_func: the function used for msg print *`xprint()`
-	on_error: What to do when `^C` pressed *`raise LeachICancelError` or `return None`"""
-	
-	o_func(msg, end='')
+def safe_input(msg='', input_func=input):     #func_code=0000F
+	sys_write(str(msg))
 	try:
 		try:
 			try:
-				box= i_func()
+				box= input_func('')
 				return box
 			except EOFError:
-				if on_error==LeachICancelError:
-					raise LeachICancelError
-				else:
-					return on_error
+				raise LeachICancelError
 			except KeyboardInterrupt:
 				raise LeachICancelError
 			except LeachICancelError:
 				leach_logger('000||0000F||~||~||~||input exit code L&infin;ping for unknown reason')
 				exit(0)
 		except EOFError:
-			if on_error==LeachICancelError:
-				raise LeachICancelError
-			else:
-				return on_error
+			raise LeachICancelError
 		except KeyboardInterrupt:
-			if on_error==LeachICancelError:
-				raise LeachICancelError
-			else:
-				return on_error
+			raise LeachICancelError
 	except EOFError:
-		if on_error==LeachICancelError:
 			raise LeachICancelError
-		else:
-			return on_error
 	except KeyboardInterrupt:
-		if on_error==LeachICancelError:
-			raise LeachICancelError
-		else:
-			return on_error
+		raise LeachICancelError
 
-def asker(out='', default=None, True_False=(True, False), 
-		  extra_opt=tuple(), extra_return=tuple(),
-		  i_func=input, o_func=xprint, on_error= LeachICancelError, condERR= condERR, no_bool = False):      #func_code=00010
+def asker(out='', default=None, True_False=(True, False), extra_opt=tuple(), extra_return=tuple()):      #func_code=00010
 	"""asks for yes no or equivalent inputs
-	out: `xprint` text to ask tha question *`empty string`
-	default: default output for empty response *`None`
-	True_False: returning data instead of true and false *`(True, False)`
-	extra_opt: Add additional options with Yeses and Nos *must be array of single options*
-	extra_return: Returns output according to `extra_ops`
-	i_func: the function used for input *`input()`
-	o_func: the function used for msg print *`xprint()`
-	on_error: What to do when `^C` pressed *`raise LeachICancelError` or `return None`
-	no_bool: won't take yes no as input [extras required] *`False`"""
-
+	out: printing text to ask tha question *empty string
+	default: default output for empty response *None
+	True_False: returning data instead of true and false *(True, False)"""
+	xprint(out,end='')
 
 	if len(extra_opt)!=len(extra_return):
-		xprint('/r/Additional options and Additional return data don\'t have equal length/=/')
-		raise LeachKnownError
+		print('Additional options and Additional return data don\'t have equal length')
+		raise IndexError
 
-	
-	if no_bool:
-		if len(extra_opt)<1:
-			xprint('/r/With no_bool arg, you must give at least 1 extra option [extra_arg & extra_return]/=/')
-			raise LeachKnownError
-
-	Ques2 = safe_input(out, i_func, o_func, on_error).lower()
+	Ques2 = safe_input().lower()
 	if default!= None and Ques2=='':
 		return default
 	#Ques2 = Ques2
-	while Ques2 not in (tuple() if no_bool else cond) + Nsys.flatten_array(extra_opt, tuple):
-		Ques2 = safe_input(condERR, i_func, o_func, on_error).lower()
+	while Ques2 not in cond+extra_opt:
+		xprint(condERR)
+		Ques2 = safe_input().lower()
 		#Ques2 = Ques2
-
-	if not no_bool and Ques2 in cond:
+	if Ques2 in cond:
 		if Ques2 in yes:
 			return True_False[0]
 		else:
@@ -754,8 +687,6 @@ def get_file_name(directory, mode= 'dir'):      #func_code=00011
 	directory: the file directory, only absolute path to support multiple os
 	mode: url or file directory
 	"""
-
-	if isinstance(directory, bytes): directory = directory.decode()
 	if mode=='url':
 		fragment_removed = directory.split("#")[0]  # keep to left of first #
 		query_string_removed = fragment_removed.split("?")[0]
@@ -807,23 +738,7 @@ def get_dir(directory, mode= 'dir'):      #func_code=0001A
 	else:
 		raise ValueError
 
-
-def reader(direc, read_mode='r', ignore_error= False, output = None, encoding = 'utf-8', f_code= '?????'):      #func_code=00013
-	"""reads file from given directory. If NOT found, returns `None`
-
-	direc: file directory
-
-	read_mode: `r` or `rb` *`r`
-
-	ignore_error: ignores charecter encoding errors *`False`
-
-	output: output type `bin`/`str`/`None` to auto detect *`None`
-
-	encoding: read encoding charset *`utf-8`
-	
-	func_code: calling function *`?????`
-	"""
-
+def reader(direc, read_mode='r'):      #func_code=00013
 	if type(read_mode)!=str:
 		print("Invalid read type. Mode must be a string data")
 		raise TypeError
@@ -832,32 +747,10 @@ def reader(direc, read_mode='r', ignore_error= False, output = None, encoding = 
 		raise LeachKnownError
 	if 'b' in read_mode:
 		read_mode='rb'
-
 	else:
 		read_mode = 'r'
-
-	if not os_isfile(loc(direc)):
-		print(loc(direc), 'NOT found to read. Error code: 00013')
-		leach_logger('00013|'+f_code+'|'+direc)
-		return None
-
 	with open(loc(direc), read_mode) as f:
-		out=f.read()
-	if output==None:
-		if read_mode == 'r':
-			output='str'
-		else:
-			output = 'bin'
-	if ignore_error:
-		out=remove_non_uni(out, '00013', output)
-
-	else:
-		if output=='str' and read_mode=='rb':
-			out= out.decode()
-		elif output=='bin' and read_mode=='r':
-			out = out.encode(encoding)
-
-	return out
+		return f.read()
 #print(os_isdir('data/leach_projects/Sao manga rip'))
 
 	# print(io==decrypto.decrypt(encrypt(io,key),key))
@@ -874,7 +767,7 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 	try:
 		reply= asker()
 	except LeachICancelError:
-		xprint('\n/yh/Cancellation command entered. Skipping update!/=/\n')
+		print('\n\u001b[33;1mCancellation command entered. Skipping update!\u001b[0m\n')
 		leach_logger("update-prompt||f-Exit-ask")
 		return 0
 	if reply:
@@ -908,7 +801,7 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 						_dl += len(data)
 						f.write(data)
 						update_done = int(50 * _dl / update_total_length)
-						xprint("\r[/gh/%s%s/=/]" % ('=' * update_done, ' ' * (50-update_done)) , end='')
+						print("\r[\033[1;32;40m%s%s\033[0m]" % ('=' * update_done, ' ' * (50-update_done)) , end='')
 			leach_logger("203||"+str(_latest_version))
 
 
@@ -917,21 +810,22 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 			if '_latest_check_zip_hash' in globals() and _latest_check_zip_hash:
 				try:
 					_file_name = 'data/.temp/'+_latest_filename+'.zip'
-					file_ = reader(_file_name, 'rb')
-					md5_returned = hashlib_md5(file_).hexdigest()
-					del file_
-
+					with open(_file_name, 'rb') as file_to_check:
+						# read contents of the file
+						# _data = file_to_check.read()
+						# pipe contents of the file through
+						md5_returned = hashlib_md5(file_to_check.read()).hexdigest()
 					if _latest_zip_hash == md5_returned:
 						print ("ZIP verified.")
 
 					else:
-						xprint ("/rh/HASH verification failed!./=/ \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+						print ("\033[1;31;40mHASH verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
 						leach_logger('209||%s'%md5_returned+"||"+_latest_link+'||'+_latest_version+'||'+server_link)
 						remove(_latest_filename+'.zip')
 						raise LeachCorruptionError
 
 				except Exception as e:
-					xprint ("/rh/HASH verification failed!./=/ \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+					print ("\033[1;31;40mHASH verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
 					leach_logger('2FF||'+_latest_link+'||'+_latest_version+'||'+server_link+'||Hashing update ZIP||%s||%s'%(e, e.__class__.__name__))
 					remove(_latest_filename+'.zip')
 					raise LeachCorruptionError
@@ -959,11 +853,14 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 				try:
 					_file_name = _latest_filename+'.exe'
 
-					_file_name = 'data/.temp/'+_latest_filename+'.zip'
-					file_ = reader(_file_name, 'rb')
-					md5_returned = hashlib_md5(file_).hexdigest()
-					del file_
-
+					# Open,close, read file and calculate MD5 on its contents
+					with open(_file_name, 'rb') as file_to_check:
+						# read contents of the file
+						_data = file_to_check.read()
+						# pipe contents of the file through
+						md5_returned = hashlib_md5(_data).hexdigest()
+					#print(md5_returned)
+					# Finally compare original MD5 with freshly calculated
 					if _latest_hash == md5_returned:
 						print ("EXE verified. \n\nPlease use the latest file '"+_latest_filename+".exe'\n this program will break in 7 seconds\n\n")
 						leach_logger("206")
@@ -973,13 +870,13 @@ def _version_updater(_latest_version, _latest_link, _latest_hash, _latest_filena
 						time.sleep(7)
 						exit(0)
 					else:
-						xprint ("/rh/HASH verification failed!./=/ \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+						print ("\033[1;31;40mHASH verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
 						leach_logger('208||%s'%md5_returned+"||"+_latest_link+'||'+_latest_version+'||'+server_link)
 						remove('data/.temp/'+_latest_filename+'.zip')
 						remove(_latest_filename+'.exe')
 						raise LeachCorruptionError
 				except Exception as e:
-					xprint ("/rh/HASH verification failed!./=/ \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+					print ("\033[1;31;40mHASH verification failed!.\033[0m \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
 					leach_logger('2FF||'+_latest_link+'||'+_latest_version+'||'+server_link+'Hashing update EXE||%s||%s'%(e, e.__class__.__name__))
 					remove('data/.temp/'+_latest_filename+'.zip')
 					remove(_latest_filename+'.exe')
@@ -1006,7 +903,7 @@ def god_mode():      #func_code=00015
 					raise requests.exceptions.ConnectionError
 
 		except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.SSLError, urllib3.exceptions.SSLError) as e:
-			xprint("/rh/Error code: 605x3\nNo internet connection!/=/\nRunning offline mode")
+			print("\033[1;31;40mError code: 605x3\nNo internet connection!\033[0m\nRunning offline mode")
 			leach_logger("605x3||%s||%s||%s"%(hdr(current_header,'00015'),who_r_u, e.__class__.__name__), 'lock')
 			return 'offline'
 	current_header=header_()
@@ -1015,17 +912,17 @@ def god_mode():      #func_code=00015
 		file=requests.get(cloud_data_link, headers=current_header)
 		if file:
 			writer('updateL.ext','wb',file.content,'data/.temp','00015')
-			exec(decrypt(reader('data/.temp/updateL.ext'), "lock").strip(), globals())
+			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip(), globals())
 			# time.sleep(500)
 		else:
-			xprint("/rh/Error code: 605x4\nNo internet connection!/=/\nRunning offline mode in 3 seconds")
+			print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds")
 			leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, str(file.status_code)), 'lock')
 			time.sleep(3)
 			return 'offline'
 
 		#remove('data/.temp/update.ext')
 	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError) as e:
-		xprint("/rh/Error code: 605x4\nNo internet connection!/=/\nRunning offline mode in 3 seconds")
+		print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds")
 		leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, e.__class__.__name__), 'lock')
 		time.sleep(3)
 		return 'offline'
@@ -1040,21 +937,21 @@ def god_mode():      #func_code=00015
 		file=requests.get(cloud_data_link_global, headers=current_header)
 		if file:
 			writer('updateG.ext','wb',file.content,'data/.temp','00015')
-			exec(decrypt(reader('data/.temp/updateG.ext'), "lock").strip(), globals())
+			exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip(), globals())
 
 			# _server_version = server_version
 			#print(decrypt(open('data/.temp/update.ext').read().strip(), "lock").strip())
 			#AssertionErrorprint(server_version)
 			# time.sleep(500)
 		else:
-			xprint("/rh/Error code: 605x4\nNo internet connection!/=/\nRunning offline mode in 3 seconds...")
+			print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds...")
 			leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link_global, str(file.status_code)), 'lock')
 			time.sleep(3)
 			return 'offline'
 
 		#remove('data/.temp/update.ext')
 	except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError) as e:
-		xprint("/rh/Error code: 605x4\nNo internet connection!/=/\nRunning offline mode in 3 seconds...")
+		print("\033[1;31;40mError code: 605x4\nNo internet connection!\033[0m\nRunning offline mode in 3 seconds...")
 		leach_logger("605x4||%s||%s||%s"%(hdr(current_header,'00015'), cloud_data_link, e.__class__.__name__), 'lock')
 		time.sleep(3)
 		return 'offline'
@@ -1087,7 +984,7 @@ def log_in():      #func_code=00016
 			try:
 				user_name=safe_input("Enter username: ")
 			except LeachICancelError:
-				xprint("\n/yh/Cancellation command entered.\nExiting peacefully/=/")
+				print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
 				leach_logger("0x1||00016||Login exit")
 				exit(0)
 			# print(user_list)
@@ -1099,7 +996,7 @@ def log_in():      #func_code=00016
 			if br==1:
 				break
 			else:
-				xprint("/rh/User not found!/=/ \nWait a minute! WHO are YOU?!!")
+				print("\033[1;31;40mUser not found!\033[0m \nWait a minute! WHO are YOU?!!")
 				if os_name=="Windows":
 					ex=mplay4.ex_vol
 					# mplay4.set_win_vol(60)
@@ -1117,24 +1014,934 @@ def log_in():      #func_code=00016
 		g_mode='Asuna'
 	return userhash
 
-def import_make():
-	try:
-		exec(reader('make_html.py'), globals())      # f_code= 40000
-	except Exception as e:
-		print("Some error occurred while loading make_html file. \nError code: 40000x-1\nReport to the author\nExiting in 5 seconds")
-		leach_logger('40000x-1||' +str(e.__class__.__name__)+'||'+ str(e))
-		time.sleep(5)
-		exit()
 
-	try:
-		exec(reader('make_cbz.py'), globals())      # f_code= 50000
-	except Exception as e:
-		print("Some error occurred while loading make_html file. \nError code: 40000x-1\nReport to the author\nExiting in 5 seconds")
-		leach_logger('50000x-1||' +str(e.__class__.__name__)+'||'+ str(e))
-		time.sleep(5)
-		exit()
+# from leach5_31_class import *
 
-import_make()
+sub_page_template="""<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+
+<head>
+  <title></title>
+  <script>
+  const page_style = ['bd', "shortS"];
+
+  var images_loc = %s;
+  var pages_list = %s;
+  var current_page_index = %i;
+  var proj_name= '%s';
+  document.title = pages_list[current_page_index];
+
+  </script>
+  
+  <style type="text/css">
+    .container {
+      margin: 80px auto;
+      width: 400px;
+      text-align: center;
+    }
+
+    .paginationA {
+      font: bold 20px Arial;
+      text-decoration: none;
+      background-color: #8a8b8d6b;
+      color: #00b7ff;
+      padding: 2px 6px 2px 6px;
+      border-top: 1px solid #828d94;
+      box-shadow: 4px 4px #5050506b;
+      border-left: 1px solid #828D94;
+    }
+
+#lastleft{
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
+  text-decoration: none;
+  color: #06A5EE;
+}
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      position: relative;
+      min-height: 100vh;
+      background-color: #222;
+
+    }
+    #pageFormats{
+      background-color: rgba(117, 117, 119, 0.507);
+      height: 35px;
+      width: 140px;
+      color:  #3ab7ff;
+      font-size: 17px;
+      font-family: sans-serif;
+      font-weight: 700;
+    }
+
+    
+    #spacer{
+      background-color: #222;
+      color: #3094BE;
+      font-weight: 500;
+
+    }
+
+  .containerR {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.containerR input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+#LARROW:not(.disabled), #RARROW:not(.disabled){
+  cursor: pointer;
+  color: #C8C3BC;
+  background-color: #103c8b;
+}
+
+.disabled{
+  cursor: default;
+  color: #C8C3BC;
+  background-color: #999;
+}
+
+
+#LARROW:not(.disabled):hover, #RARROW:not(.disabled):hover{
+  background-color: #6495ED;
+  color: #EEE;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  background-color: #eee;
+  border-radius: 60%%;
+}
+
+/* On mouse-over, add a grey background color */
+.containerR:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.containerR input:checked ~ .checkmark {
+  background-color: #3ab7ff;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.containerR input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container .checkmark:after {
+ 	top: 9px;
+  left: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%%;
+  background: white;
+}
+
+    #myImg {
+      cursor: pointer;
+      transition: 0.3s;
+      max-width: 95vw;
+    }
+
+    /* #myImg:hover {opacity: 0.7;} */
+
+    /* The Modal (background) */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      padding-top: 100px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%%; /* Full width */
+      height: 100%%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content (image) */
+    .modal-content {
+      margin: auto;
+      display: none;
+      width: 80%%;
+    }
+
+    /* Caption of Modal Image */
+    #caption {
+      margin: auto;
+      display: block;
+      width: 80%%;
+      max-width: 700px;
+      text-align: center;
+      color: #ccc;
+      padding: 10px 0;
+      height: 150px;
+      overflow-wrap: break-word;
+    }
+
+    /* Add Animation */
+    .modal-content, #caption {
+      -webkit-animation-name: zoom;
+      -webkit-animation-duration: 0.6s;
+      animation-name: zoom;
+      animation-duration: 0.6s;
+    }
+
+    @-webkit-keyframes zoom {
+      from {-webkit-transform:scale(0)} 
+      to {-webkit-transform:scale(1)}
+    }
+
+    @keyframes zoom {
+      from {transform:scale(0)} 
+      to {transform:scale(1)}
+    }
+
+    /* The Close Button */
+    .close {
+      position: absolute;
+      top: 40px;
+      right: 40px;
+      color: #f1f1f1;
+      font-size: 40px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #bbb;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* 100%% Image Width on Smaller Screens */
+    @media only screen and (max-width: 700px){
+      .modal-content {
+        width: 100%%;
+      }
+    }
+
+    .popup .overlay {
+  position:fixed;
+  top:0px;
+  left:0px;
+  width:100vw;
+  height:100vh;
+  background:rgba(0,0,0,0.7);
+  z-index:1;
+  display:none;
+}
+
+.popup .content {
+  position:fixed;
+  top:50%%;
+  left:50%%;
+  color: #AAA;
+  transform:translate(-50%%,-50%%) scale(0);
+  background:#222;
+  width:500px;
+  height:250px;
+  z-index:2;
+  text-align:center;
+  padding:20px;
+  box-sizing:border-box;
+  font-family:"Open Sans",sans-serif;
+}
+
+.popup .close-btn {
+  cursor:pointer;
+  position:absolute;
+  right:20px;
+  top:20px;
+  width:30px;
+  height:30px;
+  background:#222;
+  color:#fff;
+  font-size:25px;
+  font-weight:600;
+  line-height:30px;
+  text-align:center;
+  border-radius:50%%;
+}
+
+.popup.active .overlay {
+  display:block;
+}
+
+.popup.active .content {
+  transition:all 300ms ease-in-out;
+  transform:translate(-50%%,-50%%) scale(1);
+}
+
+#button {
+  position:absolute;
+  top:50%%;
+  left:50%%;
+  transform:translate(-50%%,-50%%);
+  padding:15px;
+  font-size:18px;
+  border:2px solid #222;
+  color:#222;
+  text-transform:uppercase;
+  font-weight:600;
+  background:#fff;
+}
+
+#go2main{
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
+  text-decoration: none;
+  color: #06A5EE;
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%%;
+  height: 2.5rem;            /* Footer height */
+}
+  </style>
+  </head>
+  
+  <body>
+  <div id="contents">
+  <div id='customize_tools' style="margin: 4%%;">
+  <a id='go2main'>Go to Page list</a>
+  <h4 style="color: #dbdee0d5;">Customize Your Page For Your Desired Manga</h4>
+  <br>
+  <select id="pageFormats">
+  <option value="shortS" id ='spacer'>Short space</option>
+  <option value="noS" id='spacer'>No space</option>
+  </select>
+  <br><br><br><br>
+  <label class="containerR" style="color: #bbb;">Border Enabled
+    <input type="radio" name="borderSelection" value="be">
+    <span class="checkmark"></span>
+  </label>
+  <label class="containerR" style="color: #bbb;">Border Disabled
+    <input type="radio" name="borderSelection" value="bd" checked="checked">
+    <span class="checkmark"></span>
+  </label>
+  </div>
+<br>
+  <center>
+    <button id="submit" onclick="displayValue()">Submit</button> <hr><br>
+    <div class="popup" id="popup-1">
+      <div class="overlay"></div>
+      <div class="content">
+        <div class="close-btn" onclick="togglePopup(0)">&times;</div>
+        <h1>Psst..</h1>
+        <p id='last'></p>
+      </div>
+    </div>
+
+    <div id="myModal" class="modal" onkeydown="nav_n_zoom(event)">
+      <span class="close">&times;</span>
+      <img class="modal-content" id="img01">
+      <div id="caption"></div>
+    </div>
+    <div id="images" style="position: relative"></div>
+  </center>
+</div>
+
+<br>
+<br>
+
+</body>
+
+<footer id ='footer' style= "align-self: center;">
+  <pre>
+
+  <pre>
+  <p id="pagination" style="text-align: center;" ></p>
+  <pre>
+
+
+
+
+  <pre>
+</footer>
+
+<script type="text/javascript">
+
+  document.getElementById('go2main').href= '../'+proj_name+'.html';
+
+  var style_= JSON.parse(localStorage.getItem('style?'+proj_name));
+  
+  function stylish(style){
+    style_temp = style;
+    
+    localStorage.setItem('style?'+proj_name, JSON.stringify(style_temp));
+    var ele = document.getElementsByTagName('input');
+    for (i = 0; i < ele.length; i++) {
+      if (ele[i].type = "radio") {
+        if (ele[i].value==style_temp[0]){
+          ele[i].checked = true;
+        }
+        else{
+          ele[i].checked = false;
+        }
+      }
+    }
+
+    document.getElementById("pageFormats").value = style_temp[1];
+    
+    
+  }
+  
+
+  function display_imgs() {
+    for (i = 0; i < images_loc.length; i++) {
+      var imgx = document.createElement("IMG");
+      imgx.src = images_loc[i];
+      imgx.className = 'per_img';
+      imgx.alt = 'It seems image is not found ('+images_loc[i]+')';
+      imgx.style.display= 'block';
+      imgx.style.margin= 'auto';
+      imgx.id = 'myImg';
+
+      
+      var images_const = document.getElementById("images");
+      images_const.appendChild(imgx);
+      if (i < (images_loc.length)-1) {
+        images_const.appendChild(document.createElement("BR"));
+        images_const.appendChild(document.createElement("BR"));
+        images_const.appendChild(document.createElement("BR"));
+        images_const.appendChild(document.createElement("BR"));
+      }
+    }
+  }
+
+  display_imgs();
+
+  function getValue() {
+    var ele = document.getElementsByTagName('input');
+    var arr = [];
+    for (i = 0; i < ele.length; i++) {
+      if (ele[i].type = "radio") {
+        if (ele[i].checked)
+        arr.push(ele[i].value);
+      }
+    }
+    arr.push(document.getElementById("pageFormats").value);
+    return arr;
+  }
+
+  function pagination () {
+    var page_direction=document.getElementById("pagination");
+    if (page_direction==null){page_direction.innerHTML = '<span/>'}
+    
+    if (current_page_index != 0) {
+      var prev_a= document.createElement("A");
+      prev_a.href= "../"+pages_list[current_page_index-1]+"/"+pages_list[current_page_index-1]+".html";
+      prev_a.innerHTML= '<< Previous page  ';
+      prev_a.className='paginationA';
+      prev_a.onclick= function(){
+        localStorage.setItem(proj_name, current_page_index-1);
+      };
+      page_direction.appendChild(prev_a);
+      
+    }
+    
+    page_direction.innerHTML+='<span style="padding : 15%%;"></span>'
+
+    if (current_page_index != pages_list.length-1){
+      var next_a= document.createElement('A');
+      next_a.href= "../"+pages_list[current_page_index+1]+"/"+pages_list[current_page_index+1]+".html";
+      next_a.innerHTML= '  Next page >>';
+      next_a.className='paginationA';
+      next_a.onclick= function(){
+        localStorage.setItem(proj_name, current_page_index+1);
+      };
+      page_direction.appendChild(next_a);
+    } 
+
+    
+  }
+  
+  pagination();
+  function displayValue(values=false) {
+    
+    if(values==false){var values = getValue();}
+    
+    stylish(values);
+    
+    var str = "Page Status: "+values[1]+"<br>Border Status: "+ values[0];
+    var img_div1 = document.getElementById('images');
+    var eleIMG = document.getElementsByClassName('per_img');
+    var breaks = img_div1.getElementsByTagName("BR");
+    
+    if (values[0] == "be") {
+      for (i = 0; i < eleIMG.length; i++) {
+        eleIMG[i].border = "4px";
+      }
+    }
+    if (values[0] == "bd") {
+      for (i = 0; i < eleIMG.length; i++) {
+        eleIMG[i].border = "0px";
+      }
+    }
+    
+    if (values[1] == "noS") {
+      for (i = breaks.length-1; i >= 0; i--) {
+        breaks[i].style.display = 'none'
+      }
+    }
+    
+    
+    if (values[1] == "shortS") {
+      var y = img_div1.childElementCount;
+      for (i = breaks.length-1; i >= 0; i--) {
+        breaks[i].style.display = 'initial';
+      }
+    }
+  }
+
+  if(style_==null){displayValue(page_style);}
+  else{displayValue(style_);}
+
+
+  //###  modal (floating image script)    #####
+
+  // create references to the modal...
+  var modal = document.getElementById('myModal');
+  // to all images -- note I'm using a class!
+  var images = document.getElementsByClassName('per_img');
+  // the image in the modal
+  var modalImg = document.getElementById("img01");
+  // and the caption in the modal
+  var captionText = document.getElementById("caption");
+  var js_img_src = [];
+  var no_arrow= true;
+  modalImg.width =100;
+
+  var modal_img_indx= -1;
+  // Go through all of the images with our custom class
+  for (var i = 0; i < images.length; i++) {
+    var img = images[i];
+    js_img_src.push(img.src);
+    // and attach our click listener for this image.
+    img.onclick = function() {
+      modal.style.display = "initial";
+      modalImg.style.display = "initial";
+
+      modalImg.src = this.src;
+      modal_img_indx = js_img_src.indexOf(modalImg.src);
+
+      if(no_arrow){
+        const LAdiv = document.createElement("DIV");
+        LAdiv.style.display = 'inline-block';
+        var LArrow= document.createElement('SPAN');
+        LArrow.id= 'LARROW';
+        LAdiv.appendChild(LArrow);
+        captionText.appendChild(LAdiv);
+        
+        var captionText_ = document.createElement("SPAN");
+        captionText_.id = 'capt_name';
+        captionText.appendChild(captionText_);
+        
+        const RAdiv = document.createElement("DIV");
+        RAdiv.style.display = 'inline-block';
+        var RArrow= document.createElement('SPAN');
+        RArrow.id= 'RARROW';
+        RAdiv.appendChild(RArrow);
+        captionText.appendChild(RAdiv);
+        
+      
+        no_arrow=false;}
+
+
+      var LArrow = document.getElementById('LARROW');
+      
+      LArrow.style.padding='7px';
+      if (modal_img_indx == 0){LArrow.classList.add('disabled');}
+      
+      LArrow.innerText='\\u00A0\\u00A0\\u00A0< Prev\\u00A0\\u00A0\\u00A0';
+      LArrow.onclick = function(){ 
+        if (modal_img_indx != 0){
+          modal_img_indx-=1;
+          modalImg.src = js_img_src[modal_img_indx];
+          document.getElementsByClassName( 'close' )[0].scrollIntoView(); 
+          if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
+          else{RArrow.classList.remove('disabled');}
+
+          if (modal_img_indx == 0){LArrow.classList.add('disabled');}
+          else{LArrow.classList.remove('disabled');}
+
+        }
+        document.getElementById('capt_name').innerText = "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0"+ modalImg.src.replace(/^.*[\\/]/, '') + "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0";
+      }
+
+
+      
+
+      document.getElementById('capt_name').innerText= "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0"+modalImg.src.replace(/^.*[\\/]/, '') +"\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0";
+      
+
+
+      
+
+      var RArrow = document.getElementById('RARROW');
+      
+      RArrow.style.padding='7px';
+
+      if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
+      RArrow.innerText='\\u00A0\\u00A0\\u00A0Next >\\u00A0\\u00A0\\u00A0'
+      RArrow.onclick = function(){
+          if (modal_img_indx+1 != js_img_src.length){
+            modal_img_indx+=1;
+            modalImg.src = js_img_src[modal_img_indx];
+            document.getElementsByClassName( 'close' )[0].scrollIntoView(); 
+            if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
+            else{RArrow.classList.remove('disabled');}
+            if (modal_img_indx == 0){LArrow.classList.add('disabled');}
+            else{LArrow.classList.remove('disabled');}
+          }
+          document.getElementById('capt_name').innerHTML = "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0"+ modalImg.src.replace(/^.*[\\/]/, '') + "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0";}
+
+      
+      modal.onkeydown =document.addEventListener('keydown',key_control);
+}}
+
+var span = document.getElementsByClassName( 'close' )[0];
+
+  span.onclick = function() {
+    modal.style.display = "none";
+    modalImg.removeEventListener('keydown',key_control);
+  }
+
+  function key_control(event){
+
+    var RArrow = document.getElementById('RARROW');
+    var LArrow = document.getElementById('LARROW');
+
+    if(event.keyCode==40){modalImg.style.transition='width .6s, height .6s'; modalImg.style.width = modalImg.width*0.9+'px';}
+
+    if(event.keyCode==38){modalImg.style.transition='width .6s, height .6s'; modalImg.style.width = modalImg.width*1.1+'px';}
+
+    if(event.keyCode==37){ 
+      if (modal_img_indx != 0){
+        modal_img_indx-=1;
+        modalImg.src = js_img_src[modal_img_indx];
+        document.getElementsByClassName( 'close' )[0].scrollIntoView(); 
+      } 
+      if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
+          else{RArrow.classList.remove('disabled');}
+      if (modal_img_indx == 0){LArrow.classList.add('disabled');}
+          else{LArrow.classList.remove('disabled');}
+      document.getElementById('capt_name').innerText = "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0"+ modalImg.src.replace(/^.*[\\/]/, '') + "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0";
+    } 
+
+    if(event.keyCode==39){
+      if (modal_img_indx+1 != js_img_src.length){
+        modal_img_indx+=1;
+        modalImg.src = js_img_src[modal_img_indx];
+        document.getElementsByClassName( 'close' )[0].scrollIntoView();  
+      }
+      if (modal_img_indx+1 == js_img_src.length){RArrow.classList.add('disabled');}
+          else{RArrow.classList.remove('disabled');}
+      if (modal_img_indx == 0){LArrow.classList.add('disabled');}
+          else{LArrow.classList.remove('disabled');}
+      document.getElementById('capt_name').innerHTML = "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0"+ modalImg.src.replace(/^.*[\\/]/, '') + "\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0";}
+
+    if(event.keyCode==27){
+      modal.style.display = "none";
+      modalImg.removeEventListener('keydown',key_control);
+    }
+  }
+
+  
+  //################################################
+
+  //############ Pop up ###########################
+  var last_opened = localStorage.getItem(proj_name);
+  function togglePopup(on_or_off){
+    document.getElementById("popup-1").classList.toggle("active");
+    if(on_or_off==0){
+      localStorage.setItem(proj_name, current_page_index);
+    }
+
+  }
+  
+
+    if(last_opened === undefined || last_opened === null) {
+    localStorage.setItem(proj_name, current_page_index);
+    last_opened = current_page_index;
+}
+
+  if(last_opened!=current_page_index){
+        if(last_opened!=-1){
+        document.getElementById('last').innerHTML= "You left the page on <a id= 'lastleft' href='../"+ pages_list[localStorage.getItem(proj_name)]+ '/'+pages_list[localStorage.getItem(proj_name)]+".html'>"+ pages_list[localStorage.getItem(proj_name)]+ '</a><br> Click on the link to go there<hr>Close this dialog to continue from here';
+      togglePopup(1);}
+    }
+
+
+
+
+
+</script>
+
+
+"""
+
+main_page_template="""
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+
+<head>
+  <title></title>
+  <script type="text/javascript">
+  var pages_list = %s;
+  var current_page_index = -1;
+  var proj_name= "%s";
+  document.title = proj_name;
+
+</script>
+
+<style>
+  .popup .overlay {
+  position:fixed;
+  top:0px;
+  left:0px;
+  width:100vw;
+  height:100vh;
+  background:rgba(0,0,0,0.7);
+  z-index:1;
+  display:none;
+}
+
+.popup .content {
+  position:fixed;
+  top:50%%;
+  left:50%%;
+  color: #AAA;
+  transform:translate(-50%%,-50%%) scale(0);
+  background:#222;
+  width:500px;
+  height:250px;
+  z-index:2;
+  text-align:center;
+  padding:20px;
+  box-sizing:border-box;
+  font-family:"Open Sans",sans-serif;
+}
+
+.popup .close-btn {
+  cursor:pointer;
+  position:absolute;
+  right:20px;
+  top:20px;
+  width:30px;
+  height:30px;
+  background:#222;
+  color:#fff;
+  font-size:25px;
+  font-weight:600;
+  line-height:30px;
+  text-align:center;
+  border-radius:50%%;
+}
+
+.popup.active .overlay {
+  display:block;
+}
+
+.popup.active .content {
+  transition:all 300ms ease-in-out;
+  transform:translate(-50%%,-50%%) scale(1);
+}
+
+button {
+  position:absolute;
+  top:50%%;
+  left:50%%;
+  transform:translate(-50%%,-50%%);
+  padding:15px;
+  font-size:18px;
+  border:2px solid #222;
+  color:#222;
+  text-transform:uppercase;
+  font-weight:600;
+  background:#fff;
+}
+body{
+  
+  position: relative;
+  min-height: 100vh;
+}
+html, body, input, textarea, select, button {
+    border-color: #736b5e;
+    color: #e8e6e3;
+    background-color: #131516;
+}
+* {
+    scrollbar-color: #0f0f0f #454a4d;
+}
+#allA{
+  text-align: center;
+  margin-left: 5%%;
+  margin-right: 5%%;
+  width: 85%%;
+}
+
+#lastleft{
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
+  text-decoration: none;
+  color: #06A5EE;
+}
+
+#proj_title{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+.list_class{
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
+  text-decoration: none;
+  color: #06A5EE;
+  overflow-wrap: break-word;
+  padding-left: 5%%;
+  padding-right: 5%%;
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%%;
+  height: 2.5rem;            /* Footer height */
+}
+</style>
+
+</head>
+
+<body>
+  <div class="popup" id="popup-1">
+    <div class="overlay"></div>
+    <div class="content">
+      <div class="close-btn" onclick="togglePopup(0)">&times;</div>
+      <h1>Psst.. </h1>
+      <p id="last"></p>
+    </div>
+  </div>
+  <h2 style="text-align: center;" id="proj_title"></h2>
+  <hr style="width: 80%%;">
+  <center>
+  <div id='allA'></div>
+  </center>
+  <br><br>
+
+
+<footer id='footer'><br><br><hr><hr>
+<p style="color: darkgray;">Made by Ratul Hasan with Web leach</p>
+<br><br>
+</footer>
+
+</body>
+
+<script type="text/javascript">
+
+document.getElementById('proj_title').innerText=proj_name;
+
+var all_li= document.getElementById('allA');
+for (var i = 0; i < pages_list.length; i++){
+  var linkX =document.createElement('A');
+  var linkContainer = document.createElement('DIV');
+  linkContainer.className = 'sub_li_divs';
+  linkX.href = pages_list[i]+ '/'+pages_list[i]+".html";
+
+  linkX.innerHTML = pages_list[i];
+  if(i%%2==0){
+    linkContainer.style.backgroundColor = '#35393b' ;
+  }
+  else{
+    linkContainer.style.backgroundColor = '#222426' ;
+  }
+
+  linkX.className = 'list_class';
+  linkContainer.appendChild(linkX);
+  linkContainer.appendChild(document.createElement('BR'));
+  var hr_ = document.createElement('HR');
+  linkContainer.appendChild(hr_);
+  all_li.appendChild(linkContainer);
+}
+  function togglePopup(on_or_off){
+  document.getElementById("popup-1").classList.toggle("active");
+  if(on_or_off==0){
+    localStorage.setItem(proj_name, current_page_index);
+  }
+
+}
+  if(localStorage.getItem(proj_name)!=null){
+    if(localStorage.getItem(proj_name)!=current_page_index){
+    document.getElementById('last').innerHTML= "You left the page on <a id='lastleft' href='"+ pages_list[localStorage.getItem(proj_name)]+ '/'+pages_list[localStorage.getItem(proj_name)]+".html'>"+ pages_list[localStorage.getItem(proj_name)]+ '</a><br> Click on the link to go there<hr>Close this dialog to continue from here';
+  togglePopup(1);
+  }}
+
+  else{
+      localStorage.setItem(proj_name, current_page_index);
+    }
+</script>"""
+
+
+dir_path = os_dirname(os_realpath(__file__))
+
+def make_pages(all_li, dir_list, project, seq):
+	first_page=None
+	dir_len = len(dir_list)
+
+	dir_list= natsort.natsorted(dir_list)
+	first_page = dir_path+'/Download_projects/'+ project+'/'+project+'.html'
+	for i in range(dir_len):
+		temp=[]
+		for j in range(len(all_li)):
+			if all_li[j][1] == i:
+				temp.append(html_escape(html_unescape(get_file_name(all_li[j][0])).replace('/','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-')))
+
+		temp=remove_duplicate(temp)
+
+		if seq:
+			box= sub_page_template%(str(natsort.natsorted(temp)), str((dir_list)), i, project)
+		else:
+			box= sub_page_template%(str(temp), str((dir_list)), i, project)
+		
+		writer(dir_list[i]+'.html', 'w', box,'Download_projects/'+ project+'/'+dir_list[i])
+	writer(project+'.html', 'w', main_page_template%(str((dir_list)), project),'Download_projects/'+ project)
+	return first_page
+
 
 
 def check_internet(link, f_code, timeout=None):       #f_code=00017
@@ -1188,7 +1995,6 @@ class web_leach:
 		self.all_list = []	# assigning a list, but duplicates will be cancelled in process
 		self.existing_found=False	# indicates if valid existing project is found
 		self.dl_done=False	# indicates if the project scrapping was done or not
-		self.has_missing=None		# indicates if the Project has any missing files. {5.4 and above}
 		self.sequence=True	# indicates if the files will be sorted or not
 		self.update= False	# indicates if the project is getting an update or not
 		self.corruptions=[]	# list of corruptions in project data if there's any or empty
@@ -1213,9 +2019,7 @@ class web_leach:
 		'mf_sc':'^mf (.+)$',
 		'pinterest':'https://www.pinterest.com/',
 		'mf_read':'https:\/\/w[\d]+\.mangafreak\.net\/Read1_([^\?\#]+)(?:_\d+)[\?\#]?.*',
-		'mf_read_chap':'https:\/\/w[\d]+\.mangafreak\.net\/Read1_([^\?\#]+)(_\d+)[\?\#]?.*',
-		'webtoon_ep':'https\:\/\/www\.webtoons\.com\/en\/(.*?)\/(.*?)\/.*?\/viewer\?title_no\=(\d+)\&episode_no\=\d+',
-		'webtoon': 'https:\/\/www\.webtoons\.com\/en\/(.*?)\/(.*?)\/list\?title_no=(\d+)'}
+		'mf_read_chap':'https:\/\/w[\d]+\.mangafreak\.net\/Read1_([^\?\#]+)(_\d+)[\?\#]?.*'}
 
 		### download speed limit variables
 		self.tictoc=0
@@ -1259,7 +2063,7 @@ class web_leach:
 			if self.current_chunks*sp_arg_flag["chunk_size"]>sp_arg_flag['max dlim']:
 				if time.time()-self.tictoc<1:
 					_temp= 1-(time.time()-self.tictoc)
-					if _temp<1:
+					if _temp<1: 
 						self.dl_nap_time=_temp
 					self.tictoc=time.time()
 					self.current_chunks=0
@@ -1270,18 +2074,23 @@ class web_leach:
 
 	def speed_tester(self):
 		last_chunks=0
-		while (not (self.dl_done or self.break_all)) or self.total==0:
+		while not (self.dl_done or self.break_all):
 			_temp=self.dl_chunks
 			self.current_speed = filesize_size((_temp-last_chunks)*sp_arg_flag['chunk_size']*2, filesize_alt)
+			
 
-			if self.break_all or self.total==0: return 0
-			percent=floor(((self.done)/self.total)*32)
 			delete_last_line()
-			print('Downloaded ['+'\u001b[7m'+(' '*percent)+'\u001b[0m'+' '*(32-percent)+'] ['+str(self.done) + '/'+str(self.total)+']', self.current_speed+'/s')
+			if self.break_all: return 0
+			percent=floor(((self.done+1)/self.total)*32)
+
+			print('Downloaded ['+'\u001b[7m'+(' '*percent)+'\u001b[0m'+' '*(32-percent)+'] ['+str(self.done+1) + '/'+str(self.total)+']', self.current_speed+'ps')
 			time.sleep(.5)
 			last_chunks=_temp
 
 
+	# def run_server_t(self, cd = None):
+	# 	self.server_code= None
+	# 	Process(target= self.run_server, args = (cd,)).start()
 
 	def distribute(self, lists,task_id,is_error=False):      #func_code= 10002
 		"""run downloads in this function from a list of download links
@@ -1289,22 +2098,22 @@ class web_leach:
 		task_id: task id (int) to keep resume point stored
 		is_eror: if the funtion is running to retry the failed files *False"""
 		#global total,done, errors, sp_flags, sp_extension, overwrite_bool
-
+		
 		global err_hdr_list
 		task_id=str(task_id)
 		res=0
 		if self.existing_found:
 			if os_exists('data/leach_projects/'+self.Project+'/t'+task_id+'.txt'):
-				res=reader('data/leach_projects/'+self.Project+'/t'+task_id+'.txt').strip()
+				res=open('data/leach_projects/'+self.Project+'/t'+task_id+'.txt').read().strip()
 				res= eval(res) if res!='' else 0# resume point of the list (index # int)
 		self.done+=res
 
-		session = requests.session()
+		session = requests
 
 
 
 		time.sleep(1.2) # to make sure other threads started safely and the restore points are calculated correctly
-
+		
 		for j in lists:
 			if self.break_all== True: return 0
 			download=True	# switch for download it or not
@@ -1342,46 +2151,48 @@ class web_leach:
 
 
 						if file:
-
+							
 							if self.break_all:return 0
-
+							
 							if sp_arg_flag['disable dl get']!=True:
 								if self.break_all: return 0
 								try:
 									writer(get_file_name(i[0])+self.sp_extension,'wb',b'','Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]], '10002')
 									loaded_file = open('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension, 'wb')
 								except IndexError:
-
+									
 									# xprint('\n/y/Something Went wrong, Returning to main Menu/=/\n')
 									self.break_all =True
 									return 0
 
 								try:
-
+									
 									for chunk in file.iter_content(chunk_size=sp_arg_flag['chunk_size']):
 										if sp_arg_flag['max dlim']!=0:
 											time.sleep(self.dl_nap_time)
-
+										
 
 										if self.break_all:
 											loaded_file.close()
 											if os_exists('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension):
 												remove('Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension)
-
+											
 											return 0
-
+										
 										loaded_file.write(chunk)
 										self.dl_chunks+=1
 										self.current_chunks+=1
-
+									
 
 									loaded_file.close()
-
 								except (requests.exceptions.SSLError, urllib3.exceptions.SSLError):
 									loaded_file.close()
 									_temp = session.get(i[0], headers= current_header, timeout=2).content
 									writer(get_file_name(i[0])+self.sp_extension,'wb', _temp,'Download_projects/'+self.Project+'/'+self.sub_dirs[i[1]], '10002')
 									del _temp
+
+								
+
 
 
 
@@ -1392,7 +2203,7 @@ class web_leach:
 										zf.extractall(path='./Download_Projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0]))
 									if 'del dl zip' in self.sp_flags:
 										remove('./Download_Projects/'+self.Project+'/'+self.sub_dirs[i[1]]+'/'+get_file_name(i[0])+self.sp_extension)
-
+							
 							if self.break_all: return 0
 							writer('t'+task_id+'.txt', 'w',str(res),'data/leach_projects/'+self.Project,'10002')
 
@@ -1400,9 +2211,9 @@ class web_leach:
 							self.done+=1
 							if is_error:
 								self.errors-=1
-
+							
 						else:
-
+							
 							if is_error==False:
 								writer('errors.txt', 'a',str(i+[hdr(current_header,'10002')])+'\n','data/leach_projects/'+self.Project,'10002')
 								err_hdr_list += Counter([hdr(current_header,'10002')])
@@ -1412,19 +2223,15 @@ class web_leach:
 
 							else:
 								self.re_error +=1
-								if self.re_error==1: delete_last_line()
-								delete_last_line()
 								if self.re_error<4:
-									print("Failed to download from '%s'\n\n"%i[0])
+									print("Failed to download from '%s'"%i[0])
 								else:
 									if self.re_error!=4:delete_last_line()
 									print("And %i others"%(self.re_error-3))
 								writer('left_errors.txt', 'a',str(i+[hdr(current_header,'10002'),"Error dl"])+'\n','data/leach_projects/'+self.Project,'10002')
 								leach_logger('10002x1||'+self.Project+'||'+hdr(current_header,'10002')+'||'+str(i)+'||'+str(file.status_code), user_name)
-								continue
-
-							res+=1
-
+							continue
+						
 					else:
 						writer('t'+task_id+'.txt', 'w',str(res),'data/leach_projects/'+self.Project,'10002')
 
@@ -1437,7 +2244,7 @@ class web_leach:
 						self.done+=1
 						if is_error:
 							self.errors-=1
-
+					
 				except (requests.exceptions.ConnectionError,requests.exceptions.ChunkedEncodingError, requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout, requests.exceptions.SSLError, urllib3.exceptions.SSLError) as e:
 					if is_error==False:
 						writer('errors.txt', 'a',str(i+[hdr(current_header,'10002')])+'\n','data/leach_projects/'+self.Project,'10002')
@@ -1467,13 +2274,10 @@ class web_leach:
 					else:
 						self.re_error +=1
 						if self.re_error<4:
-							delete_last_line()
-							print("Failed to download from '%s'\n"%i[0])
+							print("Failed to download from '%s'"%i[0])
 						else:
-							if self.re_error!=4:
-								delete_last_line()
-								delete_last_line()
-							print("And %i others\n"%(self.re_error-3))
+							if self.re_error!=4:delete_last_line()
+							print("And %i others"%(self.re_error-3))
 						print("It seems every time it downloads a broken or unknown zip from '%s' (possible cause password protected zips, if yes extract them manually)"+i[0])
 						writer('left_errors.txt', 'a',str(tuple(i)+(hdr(current_header,'10002'),"Bad zip"))+'\n','data/leach_projects/'+self.Project,'10002')
 
@@ -1501,8 +2305,6 @@ class web_leach:
 		# global all_list, sub_dirs, indx_count
 
 		start_checker=re_compile('^'+self.file_starts)
-
-
 
 		if special!=None:
 			if special.startswith('nhentai'):
@@ -1554,8 +2356,8 @@ class web_leach:
 					self.sub_dirs[i]=self.sub_dirs[i][:-1]
 				self.sub_dirs[i]=self.sub_dirs[i].split('/')[-1]
 
-				current_header=header_()
 				try:
+					current_header=header_()
 					page = requests.get(link[i],headers= current_header)
 					if not page:
 						print('\nFailed to connect "%s"\nPlease try the update option after downloading\n\n'%link[i])
@@ -1594,7 +2396,7 @@ class web_leach:
 							if img_link.startswith('/'): img_link=temp+img_link
 							else: img_link=temp+'/'+img_link
 
-					if start_checker.search(str(img_link)) !=None and get_file_name(img_link, 'url').endswith(tuple(self.file_types)):
+					if start_checker.search(str(img_link)) !=None and get_file_name(img_link, 'url').endswith(self.file_types):
 						self.all_list.append((img_link.split("#")[0].split("?")[0],i))
 				delete_last_line()
 				print('Indexed ['+ str(self.indx_count+1) + '/'+str(dir_len)+'] '+link[i])
@@ -1657,7 +2459,7 @@ class web_leach:
 					raise requests.exceptions.ConnectionError
 			except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError):
 				delete_last_line()
-				xprint("/rh/Error code: 606x2\nLink not found, Please recheck the link and start a new project/=/")
+				print("\033[1;31;40mError code: 606x2\nLink not found, Please recheck the link and start a new project\033[0m")
 				leach_logger("606x2||%s||%s||%s"%(self.Project, link, hdr(current_header,'10005')), user_name)
 				delete_last_line()
 				print('nhentai.net server is not reachable, trying proxy server...(2)')
@@ -1671,7 +2473,7 @@ class web_leach:
 						raise requests.exceptions.ConnectionError
 				except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError):
 					# delete_last_line()
-					xprint("/rh/Error code: 606x3\nLink not found, Please recheck the link and start a new project/=/")
+					print("\033[1;31;40mError code: 606x3\nLink not found, Please recheck the link and start a new project\033[0m")
 					leach_logger("606x3||%s||%s||%s"%(self.Project, link, hdr(current_header,'10005')), user_name)
 					return False, False
 
@@ -1688,7 +2490,7 @@ class web_leach:
 			# print(self.sub_dirs)
 			return link_y, title
 		else:
-			xprint("/rh/Error code: 606x2\nLink not found, Please recheck the link and start a new project/=/")
+			print("\033[1;31;40mError code: 606x2\nLink not found, Please recheck the link and start a new project\033[0m")
 			leach_logger("606x2||%s||%s||%s"%(self.Project, link, hdr(current_header,'10005')), user_name)
 			return False, False
 
@@ -1734,13 +2536,6 @@ class web_leach:
 				return False
 		elif sp=="pinterest-pin":
 			if re_search('^'+self.special_starts['pinterest']+'pin/\d+$', link)!=None:
-				return True
-			else:
-				return False
-		elif sp=='webtoon':
-			if re_search('^'+self.special_starts['webtoon'], link)!=None:
-				return True
-			elif re_search('^'+self.special_starts['webtoon_ep'], link)!=None:
 				return True
 			else:
 				return False
@@ -1808,12 +2603,12 @@ class web_leach:
 			return ""
 
 		last_ch=-1
-		_msg = "\n/gh/**/=/Please enter the last chapter number...\n leave it empty to auto detect\n\n >>"
+		_msg = "\n\033[32;1m**\033[0mPlease enter the last chapter number...\n leave it empty to auto detect\n\n >>"
 		while True:
 			try:
 				last_ch= safe_input(_msg).strip()
 			except LeachICancelError:
-				xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
+				print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
 				leach_logger("000||10007||%s||f-Stop||is_mangafreak||did not ans Mangafreak chapter no"%self.Project)
 				return 0
 
@@ -1826,7 +2621,7 @@ class web_leach:
 				last_ch = int(last_ch)
 				break
 			except ValueError:
-				_msg= "\n/rh/**/=/Just enter the last chapter number (like 135)...\n leave it empty to auto detect\n\n >> "
+				_msg= "\n\033[31;1m**\033[0mJust enter the last chapter number (like 135)...\n leave it empty to auto detect\n\n >> "
 
 
 		self.sub_dirs = ['.']
@@ -1861,116 +2656,6 @@ class web_leach:
 
 		if self.check_sp_links(self.main_link, 'pinterest'):
 			_= input()
-
-	def webtoon_link(self):		#func_code= 
-		def get_link(i,current_link, homepage):
-			if i.startswith('#'): i= current_link
-			elif i.startswith('//'): i='https:'+i
-
-			elif i.startswith('../'):
-				_temp= current_link
-				while i.startswith('../'):
-					_temp= go_prev_dir(_temp)
-					i= i.replace('../', '', 1)
-				i= _temp+i
-				del _temp
-
-			elif i.startswith('/'):
-				i= homepage+i
-			if '//' not in i:
-				temp=homepage
-				if temp.endswith('/'):
-					if i.startswith('/'): i=temp+i[1:]
-					else: i=temp+i
-				else:
-					if i.startswith('/'): i=temp+i
-					else: i=temp+'/'+i
-
-			return i
-
-
-		_t = re_search(self.special_starts['webtoon'] ,self.main_link)
-		if _t:
-			category, title, code = _t.groups()
-		else:
-			_t = re_search(self.special_starts['webtoon'] ,self.main_link)
-			if _t:
-				datas = _t.groups()  # category, title, code
-			else:
-				xprint("/r/Invalid link/y/\n please recheck the Main link/=/")
-				return 0
-
-		session= requests.Session()
-
-		page_list = []
-		prev_lists = []
-		next_lists = []
-		sub_links = []
-		sub_dirs = []
-		all_list = []
-		homepage= 'https://www.webtoons.com'
-
-		input_link = "https://www.webtoons.com/en/%s/%s/list?title_no=%s"%(datas)
-		if not requests.head(input_link, headers = header_()):
-			xprint('/r/Webtoon Page not found. /y/Recheck the link/=/')
-			return 0
-
-		input_page = session.get(input_link)
-		input_soup = bs(input_page.content, parser)
-		_temp = input_link
-
-		paginate = input_soup.find_all("div", class_="paginate")[0]
-		paginate__ = paginate
-		paginate_ = paginate__.find_all('a', class_='pg_prev')
-		page_list+= [get_link(i.get('href'), _temp, homepage) for i in paginate__.find_all("a")]
-		while len(paginate_)!=0:
-			prev_lists.append(get_link(paginate_[0].get('href'), _temp, homepage))
-			page_list+= [get_link(i.get('href'), _temp, homepage) for i in paginate__.find_all("a")]
-			_temp = prev_lists[-1]
-			paginate__ = bs(session.get(_temp).content, parser).find_all("div", class_="paginate")[0]
-			paginate_ = paginate__.find_all('a', class_='pg_prev')
-			page_list+= [get_link(i.get('href'), _temp, homepage) for i in paginate__.find_all("a")]
-
-		_temp= input_link
-		paginate_ = paginate.find_all('a', class_='pg_next')
-		paginate__ = paginate
-		page_list+= [get_link(i.get('href'), _temp, homepage) for i in paginate__.find_all("a")]
-		while len(paginate_)!=0:
-			next_lists.append(get_link(paginate_[0].get('href'), _temp, homepage))
-			page_list+= [get_link(i.get('href'), _temp, homepage) for i in paginate__.find_all("a")]
-			_temp = next_lists[-1]
-			paginate__ = bs(session.get(_temp).content, parser).find_all("div", class_="paginate")[0]
-			paginate_ = paginate__.find_all('a', class_='pg_next')
-			page_list+= [get_link(i.get('href'), _temp, homepage) for i in paginate__.find_all("a")]
-
-		del paginate__
-
-
-		page_list= remove_duplicate(page_list)
-		print('Found %i Chapters'%len(page_list))
-
-
-		for i in page_list:
-			temp1 = bs(session.get(i).content, parser)
-			ul = temp1.find_all('ul', id= "_listUl")[0].find_all('a')
-			for ii in ul:
-				sub_links.append(get_link(ii.get('href'), _temp, homepage))
-				sub_dirs.append(ii.find('span', class_= 'subj').text)
-
-		for i in  sub_links:
-			temp1= bs(session.get(i).content, parser)
-			img_div = temp1.find('div', id='_imageList')
-
-			for ii in img_div.find_all('img'):
-				all_list.append(tuple((re_sub('\?type\=q\d*.*', '', ii.get('data-url')), sub_links.index(i))))
-
-		self.sub_dirs= sub_dirs
-		self.sub_links= sub_links
-		self.all_list = all_list
-
-		return 'all good'
-
-
 	def retry_errors(self):      #func_code= 10008
 		while sorted(self.error_triggers)!=[1,2,3,4,5,6,7,8,9, 10]:
 			if self.break_all:
@@ -1981,17 +2666,15 @@ class web_leach:
 
 		if self.errors>0:
 			if os_exists('data/leach_projects/'+self.Project+'/errors.txt'):
-				err_file = reader('data/leach_projects/'+self.Project+'/errors.txt', 'rb').split(b'\n')
-
+				with open('data/leach_projects/'+self.Project+'/errors.txt', 'rb') as f:
+					err_file=f.readlines()
 				if self.break_all:
 					return 0
 				errs =[]
 				for i in err_file:
 					if i.strip()!=b'':
-						try:
-							errs.append(eval(i.decode())[:2])
-						except TypeError:
-							print(i)
+						try: errs.append(eval(i.decode())[:2])
+						except TypeError: print(i)
 				#errs= [eval(i)[:2] for i in err_file if i!='']
 
 				self.distribute(errs,11, is_error= True)
@@ -2003,14 +2686,8 @@ class web_leach:
 
 		if self.dl_done==False:
 			writer(self.Project+'.proj','a','dl_done = True\n','data/leach_projects','10008')
-		if self.errors>0: 
-			print("\nPlease retry some time later to get higher chances to download some or all %d missing file/s"%self.errors)
-			writer(self.Project+'.proj','a','has_missing = True\n','data/leach_projects','10008')
-		else:
-			writer(self.Project+'.proj','a','has_missing = False\n','data/leach_projects','10008')
-
-		xprint('\n\nEnter /hui/ x /=/ to open the first page\n or just press Enter to continue: ')
-
+		elif self.errors>0: print("\nPlease retry some time later to get higher chances to download some or all %d missing file/s"%self.errors)
+		print('\n\nEnter \u001b[1m\u001b[4m\u001b[7m x \033[0m to open the first page\n or just press Enter to continue: ')
 		self.dl_done=True
 	def data_checkup(self, path = None, proj_name = None, offline = False):     # f_code = 11000
 		if path!=None:
@@ -2021,73 +2698,68 @@ class web_leach:
 			list_path='data/leach_projects/'+self.Project+'.list'
 		if os_exists(proj_path) and os_exists(list_path):
 			proj_good= True
-			print('db found')
-			existing_data=reader(proj_path, 'rb', True, 'str').strip().split('\n')
 			try:
-				global Project, main_link, link_startswith, file_types, file_starts, sub_dirs, sp_flags, sp_extension, overwrite_bool, dimention, dl_done, sequence, sub_links, has_missing
-				sub_links=[]
-				dl_done=False
-				Project = self.Project
-				has_missing= None
-				for i in existing_data:
-					exec(i, globals())
-				self.main_link= main_link
-				self.link_startswith= link_startswith
-
-				self.file_types = file_types
-				self.file_starts= file_starts
-				self.sub_dirs = sub_dirs
-				self.sp_flags = sp_flags
-				self.sp_extension = sp_extension
-				self.overwrite_bool = overwrite_bool
-				self.dimention = dimention
+				with open(proj_path, 'rb') as f:
+					print('db found')
+					existing_data=f.read().decode().strip().split('\n')
 				try:
-					self.dl_done = dl_done
-				except: pass
-				try:
-					self.Project = Project
-				except:
-					if path!=None:
-						self.Project=get_file_name(path)[:-5]
-				try:
-					self.sequence = sequence
-				except: self.sequence= None
-				try:
-					self.sub_links = sub_links
-				except:
-					pass
-				try:
-					self.has_missing = has_missing
-				except:
-					pass
+					global Project, main_link, link_startswith, file_types, sub_dirs, sp_flags, sp_extension, overwrite_bool, dimention, dl_done, sequence, sub_links
+					dl_done=False
+					Project = self.Project
+					for i in existing_data:
+						exec(i, globals())
+					self.main_link= main_link
+					self.link_startswith= link_startswith
+					self.file_types = file_types
+					self.file_starts= file_starts
+					self.sub_dirs = sub_dirs
+					self.sp_flags = sp_flags
+					self.sp_extension = sp_extension
+					self.overwrite_bool = overwrite_bool
+					self.dimention = dimention
+					try:
+						self.dl_done = dl_done
+					except: pass
+					try:
+						self.Project = Project
+					except:
+						if path!=None:
+							self.Project=get_file_name(path)[:-5]
+					try:
+						self.sequence = sequence
+					except: self.sequence= None
+					try:
+						self.sub_links = sub_links
+					except:
+						pass
 
 
-				del Project, main_link, link_startswith, file_types, file_starts, sub_dirs, sp_flags, sp_extension, overwrite_bool, dimention, dl_done, sequence, sub_links, has_missing
-				proj_good= True
-			except Exception as e:
-				traceback.print_exc()
+					del Project, main_link, link_startswith, file_types, sub_dirs, sp_flags, sp_extension, overwrite_bool, dimention, dl_done, sequence
+					proj_good= True
+				except Exception as e:
+					raise LeachKnownError
+			except LeachKnownError:
 				#print(existing_data)
 				try:
 					self.main_link=existing_data[0]
 				except:
 					self.corruptions+=[1]
-					xprint('/rh/Corrupted Data! Error code: 601x1/=/')
+					print('\033[1;31;40mCorrupted Data! Error code: 601x1\033[0m')
 					proj_good=False
 				if proj_good:
 					try:
 						self.link_startswith=existing_data[1]
 					except:
 						proj_good= False
-						xprint('/rh/Corrupted Data! Error code: 601x2/=/')
+						print('\033[1;31;40mCorrupted Data! Error code: 601x2\033[0m')
 						self.corruptions+=[4]
 
 				if proj_good:
 					try:
 						self.file_types=eval(existing_data[2])
 					except Exception as e:
-
 						proj_good= False
-						xprint('/rh/Corrupted Data! Error code: 601x3/=/')
+						print('\033[1;31;40mCorrupted Data! Error code: 601x3\033[0m')
 						self.corruptions+=[4]
 
 				if proj_good:
@@ -2095,7 +2767,7 @@ class web_leach:
 						self.file_starts=existing_data[3]
 					except:
 						proj_good= False
-						xprint('/rh/Corrupted Data! Error code: 601x4/=/')
+						print('\033[1;31;40mCorrupted Data! Error code: 601x4\033[0m')
 						self.corruptions+=[4]
 
 				if proj_good:
@@ -2103,7 +2775,7 @@ class web_leach:
 						self.sub_dirs=eval(existing_data[4]) #sub directory list
 					except:
 						proj_good= False
-						xprint('/rh/Corrupted Data! Error code: 601x5/=/')
+						print('\033[1;31;40mCorrupted Data! Error code: 601x5\033[0m')
 						self.corruptions+=[2]
 					try:  #added in v5.0 may not be in older files
 						self.sp_flags=eval(existing_data[5])
@@ -2118,49 +2790,39 @@ class web_leach:
 
 
 			if proj_good:
-				file= reader(list_path, 'rb', output='str')
-				if file.strip()=='':
-					list_good= False
-					xprint('/rh/Corrupted Data! Error code: 601x6/=/')
-					self.corruptions+=[3]
-				else:
-					self.all_list= eval(str(file))
-					print('list found')
-					list_good= True
+				with open(list_path, 'rb') as f:
+					try:
+						file=f.read().decode()
+
+						if file.strip()=='': raise ValueError
+						self.all_list= eval(str(file))
+						print('list found')
+						list_good= True
+					except:
+						list_good= False
+						print('\033[1;31;40mCorrupted Data! Error code: 601x6\033[0m')
+						self.corruptions+=[3]
 
 				#print(x)
 			if proj_good and list_good:
-				if os_exists('data/leach_projects/'+self.Project+'/errors.txt'):
-					self.errors=len([i for i in open('data/leach_projects/'+self.Project+'/errors.txt').readlines() if len(i.strip())==0])
-				else:
-					self.errors=0
-				if self.has_missing==None:
-					self.has_missing = self.error > 0
-
 				if path!=None:
 					self.Project=get_file_name(path)[:-5]
 				if offline: return (True, True)
 				if self.dl_done:
 					print('It seems  the old prject download was complete!!')
-					if self.has_missing:
-						xprint('/r/Also have some MISSING files/=/')
 					try:
-						temp= asker(out="""\u29bf Do you want to get updated data from the project link? %s
-\u29bf If you want make a fresh start with that project name type /hui/ fresh /=///hui/ f /=/
-\u29bf To open the project in Browser enter /hui/ b /=/
-\u29bf To Create CBZ file(s) of the project in Browser enter /hui/ cbz /=/
-/g/  >> /=/"""%(' /h/[Recommended]/=/' if self.has_missing== True else ''), extra_opt=('b','fresh', 'f', 'cbz'), extra_return=('browser','fresh', 'fresh', 'cbz'))
+						temp= asker(out='\u29bf Do you want to get updated data from the project link?\n\u29bf If you want make a fresh start with that project name type \u001b[1m\u001b[4m\u001b[7m fresh \033[0m/\u001b[1m\u001b[4m\u001b[7m f \033[0m\n\u29bf To open the project in Browser enter \u001b[1m\u001b[4m\u001b[7m x \033[0m\n\u001b[33;1m  >> \033[0m',extra_opt=('x','fresh', 'f'), extra_return=('run','fresh', 'fresh')) #Do you want make a fresh start with that project name??\n\033[1;33mWarning!\033[0m last project data will be erased\n(downloaded files will be safe, unless the program replaces the files with new ones)\n\033[32m>> \033[0m'):
 
 					except LeachICancelError:
-						xprint("\n/yh/Cancellation command entered.\nReturning to main options/=/")
+						print("\n\u001b[33;1mCancellation command entered.\nReturning to main options\u001b[0m")
 						leach_logger("000||11000||%s||f-Stop||was_done||don't want to update proj or anything"%(self.Project))
 						return 0
 
-					if temp=='browser':
-						import_make()
+					if temp=='run':
+						exec(open('make_html.py').read(), globals())
 						if 'mangafreak' in self.sp_flags:
 							if not os_exists('Download_projects/'+self.Project+'/'):
-								xprint("\n  /hui/Project folder not found./=/\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
+								print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
 								return 0
 							self.sub_dirs= natsort.natsorted([get_file_name(i[0]) for i in self.all_list if os_isdir('Download_projects/'+self.Project+'/'+get_file_name(i[0]))])
 							self.all_list=[]
@@ -2171,11 +2833,10 @@ class web_leach:
 										self.all_list.append([j,i])
 
 							self.sequence= True
-							self.sp_extension = ''
-						first_page=make_pages(self.all_list,self.sub_dirs, self.Project, self.sequence, self.sp_extension)
+						first_page=make_pages(self.all_list,self.sub_dirs, self.Project, self.sequence)
 						run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
 						return 0
-					elif temp==True:
+					if temp==True:
 						self.existing_found= False
 						self.update= True
 						self.overwrite_bool=False
@@ -2189,42 +2850,15 @@ class web_leach:
 						self.existing_found= False
 						leach_logger('11000x1||%s'%self.Project,user_name)
 
-					elif temp=='cbz':
-						import_make()
-						if 'mangafreak' in self.sp_flags:
-							if not os_exists('Download_projects/'+self.Project+'/'):
-								xprint("\n  /hui/Project folder not found./=/\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
-								return 0
-							self.sub_dirs= natsort.natsorted([get_file_name(i[0]) for i in self.all_list if os_isdir('Download_projects/'+self.Project+'/'+get_file_name(i[0]))])
-							self.all_list=[]
-							for i in range(len(self.sub_dirs)):
-								for j in os_listdir('Download_projects/'+self.Project+'/'+self.sub_dirs[i]):
-									# print(j)
-									if os_isfile('Download_projects/'+self.Project+'/'+self.sub_dirs[i]+'/'+j) and (not j.endswith('.html')):
-										self.all_list.append([j,i])
-
-							self.sequence= True
-							self.sp_extension = ''
-						first_page=make_cbz(self.all_list,self.sub_dirs, self.Project, self.sequence, self.sp_extension)
-						run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
-						return 0
-					
-
-
 					elif temp== False: return 0
 
 						#remove('data/leach_projects/'+self.Project+'/')
 					del temp
 				else:
 					try:
-						temp= asker("""\u29bf Do you want to 
-resume the Project '%s'
-yes/y to resume
-\u29bf /hui/ fresh /=///hui/ f /=/ to Start fresh
-/yh/(warning! last project data will be erased, /=/downloaded files will be safe, unless the program replaces the files with new ones)
-/gh/  >> /=/"""%self.Project, extra_opt=('f','fresh'), extra_return=('fresh','fresh'))
+						temp= asker("\u29bf Do you want to resume the Project '%s'?\nyes/y to resume\n\u29bf \u001b[1m\u001b[4m\u001b[7m fresh \033[0m/\u001b[1m\u001b[4m\u001b[7m f \033[0m to Start fresh\n (\033[1;33mwarning! last project data will be erased \033[0m(downloaded files will be safe, unless the program replaces the files with new ones)\n\u001b[33;1m  >> \033[0m"%self.Project, extra_opt=('f','fresh'), extra_return=('fresh','fresh'))
 					except LeachICancelError:
-						xprint("\n/yh/Cancellation command entered.\nReturning to main options/=/")
+						print("\n\u001b[33;1mCancellation command entered.\nReturning to main options\u001b[0m")
 						leach_logger("000||11000||%s||f-Stop||was_paused||don't want to resume proj or anything"%self.Project)
 						return 0
 					if temp==True:
@@ -2273,17 +2907,13 @@ yes/y to resume
 				if death or dying: raise LeachICancelError
 				self.Project=safe_input('\nEnter Batch download directory (Project name): ').strip()
 
-				if any(ord(i)<32 or ord(i)==127 for i in self.Project) or self.Project!=remove_non_uni(self.Project, '10009'):
-					xprint("/r/Invalid Charecter!\n/y/Please retry...\n/=/")
-					continue
-
 			except LeachICancelError:
 				dying = True
 				while dying:
 					try:
 						death_talk+=1
 						death = True
-						if death_talk<2: xprint("\n/yh/Cancellation command entered.\nExiting peacefully/=/")
+						if death_talk<2: print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
 						leach_logger("0x1||10009||User Exit-0")
 
 						while server_code == None: time.sleep(.5)
@@ -2357,7 +2987,7 @@ yes/y to resume
 
 		temp = self.Project
 		temp1= temp.replace('"','')
-		if temp1[0]=="'" and temp1[1]=="'": temp = temp[1:-1]
+		if temp1[0]=="'" and temp1[1]=="'": temp[1:-1]
 		try:
 			from_file= True
 			if temp1.endswith('.proj') and os_isfile(temp1):
@@ -2375,20 +3005,15 @@ yes/y to resume
 
 				# self.project_dir=self.Project[:].replace('/','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-')
 				leach_logger("10009x0||%s||Checking Project Database"%(self.Project),user_name)
-				if self.Project in reader('data/projects.db').split('\n'):
+				if self.Project in open('data/projects.db').read().split('\n'):
 					print('Existing Project name found!')
 					proj_good=False
 					list_good=False
 					if self.data_checkup()==0:
 						return 0
-				else: # runs a blunt scan if the file exists
-					Project = self.Project
-					if self.data_checkup()==0:
-						self.__init__()
-						self.Project = Project
 			del from_file
 		except LeachICancelError:
-			xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
+			print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
 			leach_logger("000||10009||%s||f-Stop||is_proj_file||user probably freaked out for too much Ques"%self.Project)
 
 			return 0
@@ -2407,31 +3032,18 @@ yes/y to resume
 		if self.existing_found==False:
 			if self.update:
 				if os_exists('data/leach_projects/'+self.Project): rmdir('data/leach_projects/'+self.Project)
-
-				self.all_list = []
 				self.sub_dirs=[]
-				self.sub_links = []
-				self.dl_done= False
-				sub_links= []
-				sub_dirs = []
-				sub_links2=[]
+				self.sub_links=[]
+				self.all_list=[]
+				self.dl_done=False
 
-				if not self.check_sp_links(self.main_link,['nh', 'mangafreak', 'webtoon']):
+				if not self.check_sp_links(self.main_link,['nh', 'mangafreak']):
 					page = self.dl_page()
 					if page:
 						link_true= True
 					else:
-						self.main_link=safe_input("/rh/Link Unavailable! /=/It seems the previous link is unaccessable right now.\nPlease Retry the project sometimes later with stable internet connection\n(possible cause: no internet or wrong link)\n")
+						self.main_link=safe_input("\033[1;31;40mLink Unavailable! \033[0mIt seems the previous link is unaccessable right now.\nPlease Retry the project sometimes later with stable internet connection\n(possible cause: no internet or wrong link)\n")
 						return 0
-
-				if self.check_sp_links(self.main_link,'webtoon'):
-					print("Checking for links, please wait...")
-					if self.webtoon_link()== 'all good':
-						pass
-					else:
-						xprint("/r/It seems the link is dead\n/y/please recheck the link and create a fresh Project/=/")
-						return 0
-
 
 				if self.check_sp_links(self.main_link,'mangafreak'):
 					print("Update isn't available for mangafreak")
@@ -2464,7 +3076,7 @@ yes/y to resume
 							leach_logger('10009x1||%s||is_mangafreak||%s'%(self.Project,str(self.sp_flags)),user_name)
 
 					except LeachICancelError:
-						xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
+						print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
 						leach_logger("000||10009||%s||f-Stop||is_mangafreak||user probably freaked out for too much Ques"%self.Project)
 						return 0
 
@@ -2493,7 +3105,7 @@ yes/y to resume
 					try:
 						self.sequence=asker("\n\n\u29bf Will download in sequncial order? ")
 					except LeachICancelError:
-						xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
+						print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
 
 						leach_logger("000||10009||%s||f-Stop||UI||user left while asking self.sequence "%self.Project)
 						return 0
@@ -2508,7 +3120,7 @@ yes/y to resume
 								self.dimention= -1
 							while self.dimention not in [1,2,3]:
 								try:
-									self.dimention = int(safe_input("/rh/Invalid input!/=/\nEnter 1 or 2 or 3:  "))
+									self.dimention = int(safe_input("\033[1;31;40mInvalid input!\033[0m\nEnter 1 or 2 or 3:  "))
 								except ValueError:
 									self.dimention= -1
 
@@ -2580,7 +3192,7 @@ yes/y to resume
 											exit(0)
 									i= self.homepage+i
 								except LeachICancelError:
-									xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
+									print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
 									leach_logger("000||10009||%s||f-Stop||asking4home||maybe user tired"%self.Project)
 									return 0
 							elif self.partial_do_all==1 and i.startswith('/'):
@@ -2604,7 +3216,7 @@ yes/y to resume
 
 
 					except LeachICancelError:
-						xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
+						print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
 						leach_logger("000||10009||%s||f-Stop||asking4home||user probably freaked out for too much Ques"%self.Project)
 						return 0
 
@@ -2613,7 +3225,7 @@ yes/y to resume
 			else:
 				if os_exists('data/leach_projects/'+self.Project): rmdir('data/leach_projects/'+self.Project)
 				if self.corruptions!=[] and self.corruptions != [0]:
-					leach_logger("10009x1||%s||Corruptions||%s||%s"%(self.Project,  str(self.corruptions),'<br>'.join(reader('data/leach_projects/'+self.Project+'.proj', 'rb', True, 'str').strip().split('\n'))), user_name)
+					leach_logger("10009x1||%s||Corruptions||%s||%s"%(self.Project,  str(self.corruptions),'<br>'.join(open('data/leach_projects/'+self.Project+'.proj').readlines())), user_name)
 
 				writer('errors.txt', 'a','','data/leach_projects/'+self.Project,'10009') #reset error file
 
@@ -2626,17 +3238,16 @@ yes/y to resume
 				self.file_types=set()
 				self.link_startswith=''
 				self.file_starts=''
-				sub_links = []
 				link_true=False
 				try:
 					self.main_link=safe_input("\nEnter the link: ")
 					leach_logger('10009x1||%s||m_link||%s'%(self.Project, self.main_link), user_name)
 					while link_true==False:
-						if self.check_sp_links(self.main_link,['nh', 'mangafreak', 'webtoon']):
+						if self.check_sp_links(self.main_link,['nh', 'mangafreak']):
 
 							if self.check_sp_links(self.main_link,'mangafreak'):
 								print("mangafreak link detected!!")
-								is_mangafreak=asker("\u29bf Do you want to download manga images from this links?? (/hui/ y /=///hui/ n /=/)\n>> ")
+								is_mangafreak=asker("\u29bf Do you want to download manga images from this links?? (\u001b[1m\u001b[4m\u001b[7m y \033[0m/\u001b[1m\u001b[4m\u001b[7m n \033[0m)\n>> ")
 								if is_mangafreak:
 									self.sp_flags.append('ignore_on_null_content') # do not save null files
 									self.sp_flags.append('stop_on_null_content') # stops downloading after receiving a null file
@@ -2671,22 +3282,9 @@ yes/y to resume
 									#exit(0)
 
 
-							if self.check_sp_links(self.main_link,'webtoon'):
-								xprint('/y/Webtoon link detected!/=/')
-								is_webtoon= asker('\u29bf Do you want to download the Entire Web comic?? (/hui/ y /=///hui/ n /=/)\n/gh/>>/=/  ')
-
-								if is_webtoon:
-									xprint("/y/Checking for links, please wait.../=/")
-									if self.webtoon_link()== 'all good':
-										self.link_startswith = 'https://www.webtoons.com'
-									else:
-										xprint("/r/It seems the link is dead\n/y/please recheck the links and your internet connection/=/")
-										return 0
-
-
 							if  self.check_sp_links(self.main_link,'nh'): #main_link.startswith('https://nhentai.net/g/') or main_link.startswith('https://nhentai.to/g/'):
-								xprint("/y/nhentai link detected!!/=/")
-								is_nh=asker("\u29bf Do you want to download doujin images from this links?? (/hui/ y /=///hui/ n /=/)\n/gh/>>/=/  ")
+								print("nhentai link detected!!")
+								is_nh=asker("\u29bf Do you want to download doujin images from this links?? (\u001b[1m\u001b[4m\u001b[7m y \033[0m/\u001b[1m\u001b[4m\u001b[7m n \033[0m)\n>> \n( ͡° ͜ʖ ͡°)\t")
 								####( io )
 								if is_nh:
 									if os_name=='Windows' and ara_ara:
@@ -2716,7 +3314,7 @@ yes/y to resume
 											self.dimention= -1
 										while self.dimention not in [1,2,3]:
 											try:
-												self.dimention = int(safe_input("/rh/Invalid input!/=/\nEnter 1 or 2 or 3:  "))
+												self.dimention = int(safe_input("\033[1;31;40mInvalid input!\033[0m\nEnter 1 or 2 or 3:  "))
 											except ValueError:
 												self.dimention= -1
 
@@ -2724,15 +3322,11 @@ yes/y to resume
 
 									self.link_startswith='https://www.pinterest.com'
 						if link_true==False:
-							try:
-								while True:
-									page = self.dl_page()
-									if page:
-										link_true= True
-										break
-							except LeachICancelError:
-								xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
-								return 0
+							page = self.dl_page()
+							if page:
+								link_true= True
+							else:
+								self.main_link=safe_input("\033[1;31;40mLink Unavaiable! \033[0m(possible cause: no internet or wrong link)\n\nPlease re-enter the link: ")
 
 
 					if self.link_startswith=='':
@@ -2745,7 +3339,7 @@ yes/y to resume
 							self.dimention= -1
 						while self.dimention not in [1,2,3]:
 							try:
-								self.dimention = int(safe_input("/rh/Invalid input!/=/\nEnter 1 or 2 or 3:  "))
+								self.dimention = int(safe_input("\033[1;31;40mInvalid input!\033[0m\nEnter 1 or 2 or 3:  "))
 							except ValueError:
 								self.dimention= -1
 						leach_logger('10009x1||%s||dimention||%s'%(self.Project, self.dimention), user_name)
@@ -2756,7 +3350,7 @@ yes/y to resume
 						if self.dimention==2 or self.dimention==3:
 							#page = requests.get(main_link, headers=header_())
 							#if not page:
-							#	xprint('/rh/Error code 605x\nConnection Failed, The program will break in 5 second/=/')
+							#	print('\033[1;31;40mError code 605x\nConnection Failed, The program will break in 5 second\033[0m')
 							#	time.sleep(5)
 							#	leach_logger("XXXX Program crashed opening: '"+main_link+"' Error code 605 from main function collecting current page.", ush)
 							#	exit(0)
@@ -2792,7 +3386,7 @@ yes/y to resume
 						self.overwrite_bool= asker("\u29bf Will overwrite data??\nyes to overwrite old data if found.\nno to only download the updates\n>>")
 
 				except LeachICancelError:
-					xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
+					print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
 					leach_logger("000||10009||%s||f-Stop||asking4sequence||probably user didnt get it"%self.Project)
 					return 0
 				#else: all_list=list(all_list)
@@ -2860,7 +3454,7 @@ yes/y to resume
 									exit(0)
 							i= self.homepage+i
 						except LeachICancelError:
-							xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
+							print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
 							leach_logger("000||10009||%s||f-Stop||asking4home||probablyuser tired"%self.Project)
 							return 0
 					elif self.partial_do_all==1 and i.startswith('/'):
@@ -2913,17 +3507,17 @@ yes/y to resume
 
 					except EOFError:
 						leach_logger("000||10009||%s||f-Stop||is_indexing||probably something unwanted came")
-						xprint("/yh/Project indexing cancelled by Keyboard/=/")
+						print("\u001b[33;1mProject indexing cancelled by Keyboard\u001b[0m")
 						self.break_all= True
 						return 0
 					except KeyboardInterrupt:
 						leach_logger("000||10009||%s||f-Stop||is_indexing||probably something unwanted came")
-						xprint("/yh/Project indexing cancelled by Keyboard/=/")
+						print("\u001b[33;1mProject indexing cancelled by Keyboard\u001b[0m")
 						self.break_all= True
 						return 0
 
 				except Exception as e:
-					xprint("/rh/code: Error 607\n The program will break in 5 seconds/=/")
+					print("\033[1;31;40mcode: Error 607\n The program will break in 5 seconds\033[0m")
 					leach_logger("10009x-1||%s||%s||%s"%(self.Project, e.__class__.__name__, str(e)), user_name)
 					time.sleep(5)
 					exit(0)
@@ -2961,14 +3555,20 @@ yes/y to resume
 		print('\n')
 		self.total=len(self.all_list2)
 
-		
-		self.done-=self.errors  # to remove duplicate count
+
+		if os_exists('data/leach_projects/'+self.Project+'/errors.txt'):
+			self.errors=len(open('data/leach_projects/'+self.Project+'/errors.txt').readlines())
+		else:
+			self.errors=0
+
+		#print(all_list)
 
 
 		all_list_r=list(range(self.total))
 
 		Ctitle('[Downloading] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
 
+		print('Downloaded ['+'\u001b[7m'+(' '*0)+'\u001b[0m'+' '*(32-0)+'] ['+str(0) + '/'+str(self.total)+']')
 
 		try:
 			makedirs('Download_projects/'+self.Project)
@@ -2986,6 +3586,7 @@ yes/y to resume
 		t9= Process(target=self.distribute, args=(all_list_r[8::10],9))
 		t10= Process(target=self.distribute, args=(all_list_r[9::10],10))
 		t99= Process(target=self.retry_errors)
+		##sleep(.5)
 
 		if sp_arg_flag['max dlim']!=0:
 			self.tictoc = time.time()
@@ -3037,11 +3638,11 @@ yes/y to resume
 
 		will_open = None
 
-		import_make()
+		# exec(open('make_html.py').read(), globals())
 
 		if not 'mangafreak' in self.sp_flags:
 			#print(True)
-			first_page=make_pages(self.all_list,self.sub_dirs, self.Project, self.sequence,self.sp_extension)
+			first_page=make_pages(self.all_list,self.sub_dirs, self.Project, self.sequence)
 
 		while self.break_all==False and any([t11.is_alive(),t2.is_alive(),t3.is_alive(),t4.is_alive(),t5.is_alive(),t6.is_alive(),t7.is_alive(),t8.is_alive(),t9.is_alive(),t10.is_alive(), t99.is_alive()]):
 			try:
@@ -3049,17 +3650,16 @@ yes/y to resume
 				# print([t11.is_alive(),t2.is_alive(),t3.is_alive(),t4.is_alive(),t5.is_alive(),t6.is_alive(),t7.is_alive(),t8.is_alive(),t9.is_alive(),t10.is_alive(), t99.is_alive()])
 			except LeachICancelError:
 				self.break_all= True
-
 				leach_logger("000||10009||%s||D-Break||~||~"%(self.Project))
 				break
 
 		if self.break_all:
-			xprint("/yh/Project continuation cancelled by Keyboard/=/")
+			print("\u001b[33;1mProject continuation cancelled by Keyboard\u001b[0m")
 			leach_logger("000||10009||%s||D-Stop||Downloading||%i|%i"%(self.Project, self.done, self.errors))
 		else:
 			if 'mangafreak' in self.sp_flags:
 				if not os_exists('Download_projects/'+self.Project+'/'):
-					xprint("\n  /hui/Project folder not found./=/\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
+					print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
 					return 0
 				self.sub_dirs= natsort.natsorted([get_file_name(i[0]) for i in self.all_list if os_isdir('Download_projects/'+self.Project+'/'+get_file_name(i[0]))])
 				self.all_list=[]
@@ -3068,27 +3668,27 @@ yes/y to resume
 						# print(j)
 						if os_isfile('Download_projects/'+self.Project+'/'+self.sub_dirs[i]+'/'+j) and (not j.endswith('.html')):
 							self.all_list.append([j,i])
-
 				first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
 
 			if will_open=='x':
 				run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
 
 
-	def dl_page(self):		#func_code= 1000B
+	def dl_page(self):
 		try:
 			page =requests.get(self.main_link, headers=header_(), timeout=5)
-			writer(self.Project+'.html','wb',page.content,'data/leach_projects/%s'%self.Project,'1000B')
+			writer(self.Project+'.html','wb',page.content,'data/leach_projects/%s'%self.Project,'10009')
 
 		except (requests.exceptions.ConnectionError,requests.exceptions.ConnectTimeout,requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError):
-			self.main_link=safe_input("/rh/Invalid URL!/=/ (possible cause: no internet or wrong link)\n\nPlease re-enter the link: ")
+			self.main_link=safe_input("\033[1;31;40mInvalid URL! \033[0m(possible cause: no internet or wrong link)\n\nPlease re-enter the link: ")
 			return False
+
 
 		return page
 
 
 
-	def main_offline(self):		#func_code= 1000A
+	def main_offline(self):
 		global death, sp_arg_flag, server_code, dying, death_talk, server_launcher
 		"""runs the mainloop of the projects runtime code"""
 		self.__init__()
@@ -3109,8 +3709,8 @@ yes/y to resume
 					try:
 						death_talk+=1
 						death = True
-						if death_talk<2: xprint("\n/yh/Cancellation command entered.\nExiting peacefully/=/")
-						leach_logger("0x1||1000A||User Exit-0")
+						if death_talk<2: print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
+						leach_logger("0x1||10009||User Exit-0")
 
 						while server_code == None: time.sleep(.5)
 
@@ -3121,7 +3721,7 @@ yes/y to resume
 						return 0
 					except KeyboardInterrupt:
 						return 0
-
+						
 			__command = self.Project.lower()
 			if self.Project=='':
 				print('You must enter a Project name here.')
@@ -3170,12 +3770,12 @@ yes/y to resume
 		proj_good=False
 		list_good=False
 		temp1= temp.replace('"','')
-		if temp1[0]=="'" and temp1[1]=="'": temp = temp[1:-1]
+		if temp1[0]=="'" and temp1[1]=="'": temp[1:-1]
 		try:
 			from_file= True
 			if temp1.endswith('.proj') and os_isfile(temp1):
 				if asker("Project file detected.\n\u29bf Do you want re-open project from that file?\n >> "):
-					leach_logger("1000Ax0||%s||fileOpen"%(self.Project),user_name)
+					leach_logger("10009x0||%s||fileOpen"%(self.Project),user_name)
 					_temp =self.data_checkup(path = temp1, proj_name= temp, offline = True)
 					if _temp==0:
 						return 0
@@ -3189,8 +3789,8 @@ yes/y to resume
 					return 0
 
 				# self.project_dir=self.Project[:].replace('/','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-')
-				leach_logger("1000Ax0||%s||Checking Project Database"%(self.Project),user_name)
-				if self.Project in reader('data/projects.db').split('\n'):
+				leach_logger("10009x0||%s||Checking Project Database"%(self.Project),user_name)
+				if self.Project in open('data/projects.db').read().split('\n'):
 					print('Existing Project name found!')
 					_temp= self.data_checkup(offline = True)
 					if _temp==0:
@@ -3198,8 +3798,8 @@ yes/y to resume
 					proj_good, list_good = _temp
 			del from_file
 		except LeachICancelError:
-			xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
-			leach_logger("000||1000A||%s||f-Stop||is_proj_file||user probably freaked out for too much Ques"%self.Project)
+			print('\n\u001b[33;1mCancellation command entered, returning to main menu...\u001b[0m\n\n')
+			leach_logger("000||10009||%s||f-Stop||is_proj_file||user probably freaked out for too much Ques"%self.Project)
 			return 0
 
 
@@ -3211,12 +3811,11 @@ yes/y to resume
 			return 0
 
 		if proj_good and list_good:
-			import_make()
 			Ctitle('[Analizing] Project %s [%s] [:%i]'%(self.Project, run_mod.upper(), port))
 			if 'mangafreak' in self.sp_flags:
 				if self.dl_done:
 					if not os_exists('Download_projects/'+self.Project+'/'):
-						xprint("\n  /hiu/Project folder not found./=/\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
+						print("\n  \u001b[1m\u001b[4m\u001b[7mProject folder not found.\033[0m\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
 						return 0
 					self.sub_dirs= natsort.natsorted([get_file_name(i[0]) for i in self.all_list if os_isdir('Download_projects/'+self.Project+'/'+get_file_name(i[0]))])
 					self.all_list=[]
@@ -3225,33 +3824,22 @@ yes/y to resume
 							# print(j)
 							if os_isfile('Download_projects/'+self.Project+'/'+self.sub_dirs[i]+'/'+j) and (not j.endswith('.html')):
 								self.all_list.append([j,i])
+					# print(self.all_list, self.sub_dirs)
+					first_page=make_pages(self.all_list,self.sub_dirs, self.Project, True)
+
+
+					print("Local webpage created")
+					if asker("Wanna check the page??\n leave an enter to pass\n >> ", default=False):
+						run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
 
 
 				else:
 					print("can't generate web pages offline from incomplete manga freak download")
-					return 0
-			
-			
-			output_type = asker("""Do you want to
-\u29bf View the Project in Browser? /hui/ b /=/
-\u29bf or Make CBZ files from the images? /hui/ cbz /=/
-\u29bf or Cancel /hui/ c /=/
-  /gh/>>/=/ """, extra_opt=('b', 'cbz', 'c'), extra_return=('browser', 'cbz', None), on_error= None,)
-
-			if output_type== None:
-				return 0
-
-			elif output_type=='b':
-				first_page=make_pages(self.all_list,self.sub_dirs, self.Project, self.sequence, self.sp_extension)
+			else:
+				first_page=make_pages(self.all_list,self.sub_dirs, self.Project, self.sequence)
 				print("Local webpage created")
 				if asker("Wanna check the page??\n leave an enter to pass\n >> ", default=False):
 					run_in_local_server(self.port, host_dir='%s/%s.html'%(self.Project, self.Project))
-
-			else: # cbz
-				first_page=make_pages(self.all_list,self.sub_dirs, self.Project, self.sequence, self.sp_extension)
-
-				print('CBZ Created in "%s"'%first_page)
-
 
 		else:
 			print('Sorry, it seems there\'s no previous project with this name. \nThere is a chance that the project data was Corrupted!\nRetry when online...')
@@ -3262,124 +3850,131 @@ def on_exit():
 	leach_logger('0x1||00000||Program Terminated')
 
 
-if __name__=='__main__':
-	#Update err_header.txt#######################################
-	if os_isfile('data/err_header.txt'):
-		error_hdr_file= reader('data/err_header.txt')
-		temp_ = re_sub('\,{2,}', ',', error_hdr_file)
 
-		if temp_[-1]==',': temp_= temp_[:-1]
-
-		err_hdr_list = eval(temp_)
-		#print(type(err_hdr_list))
-		if type(err_hdr_list)== tuple:
-			err_hdr_list = Counter(err_hdr_list)
-
-			writer('err_header.txt','w',str(err_hdr_list),'data/','00000')
-
-		elif type(err_hdr_list)== list:
-			_t = Counter()
-			for i, j in err_hdr_list:
-				_t[i]=j
-
-			err_hdr_list =_t
-
-			writer('err_header.txt','w',str(err_hdr_list),'data/','00000')
+#test mangafreak all files available
+'''from os.path import os_isdir
+for i in range(1,166):
+	if os_isdir('E:/Ratul Codes/C/Python/Test/web ripper/Web-leach/Projects/rent/Kanojo_Okarishimasu/Kanojo_Okarishimasu_%d'%i)==False:
+		print(i)'''
 
 
-		elif type(err_hdr_list)== dict:
-			err_hdr_list = Counter(err_hdr_list)
-	else:
-		err_hdr_list = Counter()
+#Update err_header.txt#######################################
+if os_isfile('data/err_header.txt'):
+	with open('data/err_header.txt', 'r') as error_hdr_file:
+		temp_ = re_sub('\,{2,}', ',', error_hdr_file.read())
+
+	if temp_[-1]==',': temp_= temp_[:-1]
+
+	err_hdr_list = eval(temp_)
+	#print(type(err_hdr_list))
+	if type(err_hdr_list)== tuple:
+		err_hdr_list = Counter(err_hdr_list)
+
+		writer('err_header.txt','w',str(err_hdr_list),'data/','00000')
+
+	elif type(err_hdr_list)== list:
+		_t = Counter()
+		for i, j in err_hdr_list:
+			_t[i]=j
+
+		err_hdr_list =_t
+
+		writer('err_header.txt','w',str(err_hdr_list),'data/','00000')
 
 
-	#############################################################
+	elif type(err_hdr_list)== dict:
+		err_hdr_list = Counter(err_hdr_list)
+else:
+	err_hdr_list = Counter()
 
 
+#############################################################
+
+
+
+try:
+	init_upto = 'Importing Assets'
+	print("Connecting to server...")
+	Ctitle('Connecting to server')
+	_connect_net()
+	init_upto = 'Getting IP'
+	leach_logger("001||"+_VERSION+"||"+dig_info.getSystemInfo()+"||"+user_net_ip+"||"+str(start_up_dt)+"||"+Nsys.get_tz()+"||"+str(time.time()-start_up)+'s', 'lock')
+	server_start=time.time()
+
+
+	run_mod= god_mode()
+
+	init_upto = 'God mode'
+
+	import getpass
+
+
+	if run_mod=='offline' :
+		Ctitle('Connecting to server [OFFLINE]')
+		if os_exists('data/.temp/updateG.ext') and os_exists('data/.temp/updateL.ext'):
+			exec(decrypt(open('data/.temp/updateG.ext').read(), "lock").strip())
+			exec(decrypt(open('data/.temp/updateL.ext').read(), "lock").strip())
+		else:
+			xprint("/r/Failed to startup. /y/Please connet to the internet for the first initialization/=/")
+			leach_logger('0x0')
+
+			try:
+				IloveAsuna=safe_input('Press enter to exit...', getpass.getpass)
+				backdoor=IloveAsuna
+				if hashlib_md5('RandomteXtZYIQrgYlb0sHdFLaIW'+backdoor[2]+'#testTubeAlabam@ToGBNr3SfYrIIfHQSY'+backdoor[0]+'2Jpx4Piks84XCvN8El'+backdoor[:-2:-1]+'xf4wXXygZPILxsOUAP'+backdoor[::-2]+'#testTubeAlabam@%sToGBNr3SfYrIIfHQSY'%backdoor[::-1]+backdoor[0]+'2Jpx4Piks84XCvN8El'+backdoor[1::-2]+'KgCaIWjP6X4W5h4P2G').hexdigest()=='751fa7e19763b50a399806fdcc5dee34':
+					pass
+				else:
+					exit(0)
+			except LeachICancelError:
+				print("\n\u001b[33;1mCancellation command entered.\nExiting peacefully\u001b[0m")
+				exit(0)
+
+	elif run_mod== 'online':
+		# exec(__update__G)
+		# exec(__update__L)
+		if float(_VERSION)<float(_latest_version):
+			_version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, cloud_data_link)
+
+
+	else: exit(0)
+
+	init_upto = 'Loading backend server'
+
+
+	'751fa7e19763b50a399806fdcc5dee34'
 
 	try:
-		init_upto = 'Importing Assets'
-		print("Connecting to server...")
-		Ctitle('Connecting to server')
-		_connect_net()
-		init_upto = 'Getting IP'
-		leach_logger("001||"+_VERSION+"||"+dig_info.getSystemInfo()+"||"+user_net_ip+"||"+str(start_up_dt)+"||"+Nsys.get_tz()+"||"+str(time.time()-start_up)+'s', 'lock')
-		server_start=time.time()
+		if not os_isdir("./Download_projects"): makedirs("./Download_projects")
+	except PermissionError:
+		print("Can't write in this directory, either change the write permission or move this program to somewhere with write permission.\nError code: 00000x101")
+		leach_logger("00000x101||Download_projects||1")
+		sys_exit()
+
+	init_upto = 'Dl folder making'
 
 
-		run_mod= god_mode()
+	print("Done!!")
+	time.sleep(1)
 
-		init_upto = 'God mode'
+	clear_screen()
 
-		import getpass
+	leach_logger('002||'+str(time.time()-server_start)+'s||'+server_version, 'leach')
+	Ctitle('Log in [%s]'%run_mod.upper())
+	ush = log_in()
 
+	leach_logger('003||%s||%s'%(ush, Nsys.compressed_dt()),user_name)
 
-		if run_mod=='offline' :
-			Ctitle('Connecting to server [OFFLINE]')
-			if os_exists('data/.temp/updateG.ext') and os_exists('data/.temp/updateL.ext'):
-				exec(decrypt(reader('data/.temp/updateG.ext'), "lock").strip())
-				exec(decrypt(reader('data/.temp/updateL.ext'), "lock").strip())
-			else:
-				xprint("/r/Failed to startup. /y/Please connet to the internet for the first initialization/=/")
-				leach_logger('0x0')
+	init_upto = 'user login'
 
-				try:
-					IloveAsuna=safe_input('Press enter to exit...', getpass.getpass)
-					backdoor=IloveAsuna
-					if hashlib_md5('RandomteXtZYIQrgYlb0sHdFLaIW'+backdoor[2]+'#testTubeAlabam@ToGBNr3SfYrIIfHQSY'+backdoor[0]+'2Jpx4Piks84XCvN8El'+backdoor[:-2:-1]+'xf4wXXygZPILxsOUAP'+backdoor[::-2]+'#testTubeAlabam@%sToGBNr3SfYrIIfHQSY'%backdoor[::-1]+backdoor[0]+'2Jpx4Piks84XCvN8El'+backdoor[1::-2]+'KgCaIWjP6X4W5h4P2G').hexdigest()=='751fa7e19763b50a399806fdcc5dee34':
-						pass
-					else:
-						exit(0)
-				except LeachICancelError:
-					xprint("\n/yh/Cancellation command entered.\nExiting peacefully/=/")
-					exit(0)
+except EOFError:
+	print("Hard cancel command entered! stopping")
+	leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"')
+	exit(0)
 
-		elif run_mod== 'online':
-			# exec(__update__G)
-			# exec(__update__L)
-			if float(_VERSION)<float(_latest_version):
-				_version_updater(_latest_version, _latest_link, _latest_hash, _latest_filename,_latest_size, cloud_data_link)
-
-
-		else: exit(0)
-
-		init_upto = 'Loading backend server'
-
-
-		'751fa7e19763b50a399806fdcc5dee34'
-
-		try:
-			if not os_isdir("./Download_projects"): makedirs("./Download_projects")
-		except PermissionError:
-			print("Can't write in this directory, either change the write permission or move this program to somewhere with write permission.\nError code: 00000x101")
-			leach_logger("00000x101||Download_projects||1")
-			sys_exit()
-
-		init_upto = 'Dl folder making'
-
-
-		print("Done!!")
-		time.sleep(1)
-
-		clear_screen()
-
-		leach_logger('002||'+str(time.time()-server_start)+'s||'+server_version, 'leach')
-		Ctitle('Log in [%s]'%run_mod.upper())
-		ush = log_in()
-
-		leach_logger('003||%s||%s'%(ush, Nsys.compressed_dt()),user_name)
-
-		init_upto = 'user login'
-
-	except EOFError:
-		xprint(hard_cancel)
-		leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"')
-		exit(0)
-
-	except KeyboardInterrupt:
-		xprint(hard_cancel)
-		leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"'%init_upto)
-		exit(0)
+except KeyboardInterrupt:
+	print("Hard cancel command entered! stopping")
+	leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"'%init_upto)
+	exit(0)
 
 
 
@@ -3387,23 +3982,24 @@ if __name__=='__main__':
 
 
 
-	program_class= None
-	port= (int(ush, 16) % (6000 - 4000 + 1)) + 4000
+program_class= None
+port= (int(ush, 16) % (6000 - 4000 + 1)) + 4000
 
-	server_launcher= Process(target=run_server_t, args= (port, 'Download_projects'))
+server_launcher= Process(target=run_server_t, args= (port, 'Download_projects'))
 
 
+if __name__=='__main__':
 	program_class = web_leach()
-	while True:
+while True:
+	Ctitle('Project [%s] [:%i]'%(run_mod.upper(), port))
+	if check_internet('https://www.yahoo.com/', '00000', 2) or check_internet('https://www.bing.com', '00000', 2):
+		run_mod='online'
 		Ctitle('Project [%s] [:%i]'%(run_mod.upper(), port))
-		if check_internet('https://www.yahoo.com/', '00000', 2) or check_internet('https://www.bing.com', '00000', 2):
-			run_mod='online'
-			Ctitle('Project [%s] [:%i]'%(run_mod.upper(), port))
-			program_class.main()
-		else:
-			run_mode='offline'
-			Ctitle('Project [%s] [:%i]'%(run_mod.upper(), port))
-			program_class.main_offline()
+		program_class.main()
+	else:
+		run_mode='offline'
+		Ctitle('Project [%s] [:%i]'%(run_mod.upper(), port))
+		program_class.main_offline()
 
 
 
