@@ -1,0 +1,13 @@
+main_link= "https://nhentai.net/g/324568"
+link_startswith= "https://nhentai.net/g/324568/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['[Nightmare Express -Akumu no Takuhaibin-] Yokubou Kaiki Dai 523 Shou - Shouwa Ryoukitan Nyobon Shiokijin Tetsuo 5 Shachou Reijou -Higyaku no Vacances- Kanketsuhen [Chinese]【不可视汉化】']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = False
+dimention = 0
+sequence = True
+Project = "test3"
+sub_links = []
+dl_done = True

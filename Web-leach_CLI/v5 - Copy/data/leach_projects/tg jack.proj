@@ -1,0 +1,12 @@
+main_link= "https://ww8.tokyoghoulre.com/manga/tokyo-ghoul-jack/"
+link_startswith= ""
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['anime-s=tokyo+ghoul', 'readberserk.com', 'read-manga', 'watch-anime', 'tokyo-ghoul-jack', 'tokyo-ghoul', 'tokyo-ghoulre-colored', '1AKuUj0', 'mangapill.com', 'readchainsawman.com', 'readjujutsukaisen.com', 'readkaguyasama.com', 'readsololeveling.org', 'readtowerofgod.com', 'contact-us', 'ww7.tokyoghoulre.com', 'ww8.tokyoghoulre.com', 'tokyo-ghoul-jack-chapter-001', 'tokyo-ghoul-jack-chapter-002', 'tokyo-ghoul-jack-chapter-003', 'tokyo-ghoul-jack-chapter-004', 'tokyo-ghoul-jack-chapter-005', 'tokyo-ghoul-jack-chapter-006', 'tokyo-ghoul-jack-chapter-007', 'this-gorilla-will-die-in-1-day', 'tokyo-ghoul-re-light-novels', 'tokyo-ghoul-zakki']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 2
+sequence = True
+Project = "tg jack"
+dl_done = True

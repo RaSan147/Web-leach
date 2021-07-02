@@ -1,0 +1,15 @@
+main_link= "http://google.com"
+link_startswith= ""
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['google.com', 'advanced_search-hl=bn&authuser=0', 'about.html', '-gws_rd=ssl&ec=GAZAAQ', '-tab=wm&ogbl', 'imghp-hl=bn&tab=wi&ogbl', 'products-tab=wh', 'setprefs-sig=0_ytB4qHhaXhhOtnKv6TBxi1-G4LE=&hl=en', 'setprefs-sig=0_ytB4qHhaXhhOtnKv6TBxi1-G4LE=&hl=en&source=homepage&sa=X&ved=0ahUKEwiVvrCG7YPxAhVNbn0KHb0nAMoQ2ZgBCAQ']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = False
+dimention = 3
+sequence = False
+Project = "test"
+sub_links = ['http://google.com', 'http://google.com/advanced_search?hl=bn&authuser=0', 'http://google.com/intl/bn/about.html', 'https://accounts.google.com/ServiceLogin?hl=bn&passive=true&continue=https://www.google.com/%3Fgws_rd%3Dssl&ec=GAZAAQ', 'https://mail.google.com/mail/?tab=wm&ogbl', 'https://www.google.com.bd/imghp?hl=bn&tab=wi&ogbl', 'https://www.google.com.bd/intl/bn/about/products?tab=wh', 'https://www.google.com/setprefs?sig=0_ytB4qHhaXhhOtnKv6TBxi1-G4LE%3D&hl=en', 'https://www.google.com/setprefs?sig=0_ytB4qHhaXhhOtnKv6TBxi1-G4LE%3D&hl=en&source=homepage&sa=X&ved=0ahUKEwiVvrCG7YPxAhVNbn0KHb0nAMoQ2ZgBCAQ']
+dir_sorted = False
+dl_done = True
+has_missing = True

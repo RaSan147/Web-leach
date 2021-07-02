@@ -1,0 +1,12 @@
+main_link= "https://nhentai.net/g/310189"
+link_startswith= "https://nhentai.xxx/g/310189/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['[Yolki Palki (Rororogi Mogera)] L Kyoukai to Itansha Ikka']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = False
+dimention = 0
+sequence = True
+Project = "nh nun"
+dl_done = True

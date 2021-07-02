@@ -1,0 +1,13 @@
+main_link= "https://nhentai.net/g/256486"
+link_startswith= "https://nhentai.net/g/256486/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['[URA. (Various)] Captured 10 (Various)']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = False
+dimention = 0
+sequence = True
+Project = "test1"
+sub_links = []
+dl_done = True

@@ -1,0 +1,8 @@
+['https://i.nhentai.net/galleries/142950/3.jpg', 0, '30']
+['https://i.nhentai.net/galleries/142950/23.jpg', 0, '85']
+['https://i.nhentai.net/galleries/142950/50.jpg', 0, '33']
+['https://i.nhentai.net/galleries/142950/33.jpg', 0, '39']
+['https://i.nhentai.net/galleries/142950/62.jpg', 0, '51']
+['https://i.nhentai.net/galleries/142950/78.jpg', 0, '82']
+['https://i.nhentai.net/galleries/142950/159.jpg', 0, '83']
+['https://i.nhentai.net/galleries/142950/202.jpg', 0, '43']

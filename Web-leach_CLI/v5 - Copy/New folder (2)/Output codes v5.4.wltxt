@@ -1,0 +1,569 @@
+#ignore
+<<<<<<<<<<<<<<<<<<<<  VERSION 5.5_class  <<<<<<<<<<<<<<<<<<
+Index    SP project Names                   Works
+======   =================      ================================================================
+  1    ?enable-dl-thread       `sp_arg_flag['disable dl cancel'] = True`  Disables download cancellation by adding join thread option
+  2    ?disable-dl-thread      `sp_arg_flag['disable dl cancel'] = False` Enables download cancellation by adding removing thread option [DEFAULT]
+
+  3    ?disable-dl-get         `sp_arg_flag['disable dl get'] = True`     Disabled download save by using requests.head
+  4    ?enable-dl-get          `sp_arg_flag['disable dl get'] = False`    Enabled download save by using requests.get [DEFAULT]
+
+  5    ?disable-browser         `sp_arg_flag['disable browser'] = True`   Disabled opening Downloads in browser
+  6    ?enable-browser          `sp_arg_flag['disable browser'] = False`  Enabled opening Downloads in browser [DEFAULT]
+
+  -1   ?E-dl-T                 same as 1
+  -2   ?D-dl-T                 same as 2
+  -3   ?D-dl                   same as 3
+  -4   ?E-dl                   same as 4
+  -5   ?D-br                   same as 5
+  -6   ?E-br                   same as 6
+
+  key -----------------             values
+========              =================================================================
+CON                    \|:*""><?
+
+
+  f_codes -------------              info
+=========             ==================================================================
+00000                  main code file with launch functions
+10000                  the leach_class that calls the leacher
+20000                  different number based functions I made
+30000                  a collection of headers in a array
+40000                  make_html.py file that creates webpage (.html) files based on leached data
+50000                  make_cbz.py file that creates Comic book (.cbz) files based on completed project data
+
+
+
+==================(0)==================
+0x0  >>>  NO internet (to run online mode) or no UPDATE.txt file (to run offline mode) detected
+
+0x1  >>>  user Exit codes
+            ||caller f_code||Message
+
+000  >>> User input cancellations code
+            ||caller f_code||Project name||Command||Situation||Message
+
+001  >>>  app launch
+            ||app version||Device info||user_net_ip||StartUp at (compressed)||User timezone||StartUp Latency (s)
+
+002  >>>  server connected, server latency and version info
+            ||Latency (s)||server version
+
+003  >>>  User logged in
+            ||User Name Hash||Log in time (compressed)
+
+==================(1)==================
+-----------> SysErr CODES<-------------
+
+101  >>>  Write Permission Error
+            ||Caller f_code||file or folder name||directory location
+
+
+
+==================(2)==================
+-----------> UPDATE CODES<-------------
+
+201  >>>  (updating program) (main file) connectiong to server
+            ||latest_version code||file location||current version||backend server version
+202  >>>  (Network issue) (main file) failed connect server
+            ||host link||header index||Error code or Exception_class
+203  >>>  (updating program) (main file) download complete
+            ||download time
+204  >>>  (*ZIP files issue) (main file) The zip contains files other than the main .EXE file
+            ||file link||latest version||server link||files list
+205  >>>  (updating program) (main file) Unzip complete
+206  >>>  (updating program) (main file) UPDATE complete
+207  >>>  (updating program) (main file) Zip removed
+208  >>>  (verification failed) (main file) .EXE SHA1 verification Failed, removed both ZIP & EXE for safety
+            ||FAKE EXE MD5||file link||latest version||server link
+209  >>>  (verification failed) (main file) .ZIP SHA1 verification Failed, removed ZIP for safety
+            ||FAKE ZIP MD5||file link||latest version||server link
+2FF  >>>  (Unknown Error) (main file) Unknown error occured.
+            ||file link||latest version||server link||{WHEN}||ErrorName||Error string
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+==================(6)==================
+------------> ERROR CODES<------------
+
+601x >>>  [print debug, not stored in .db file] (corrupted file) (.proj file) and (.list file)
+          ==========CORRUPT CODES=========
+          0  >>>  missing one or both .proj and .list
+          1  >>>  (.proj file)corrupted main link
+          2  >>>  (.proj file)corrupted sub link starts with
+          3  >>>  (.proj file)corrupted file types tuple
+          4  >>>  (.proj file)corrupted file_startswith link (regex)
+          5  >>>  (.proj file)have corrupted sub dir list
+          6  >>>  (.list file)have corrupted sub link (files) list
+
+605x >>>  (Network issue) (main_link)  failed to connect to the entered link
+            ||header index||link (default= None)||extra (default= None)
+          ==========CORRUPT CODES=========
+          0  >>>  failed to connect a link
+          1  >>>  (in 0000C) failed to connect with 'https://api.myip.com/' to get user net ip from _connect_net() in 'main file'
+          2  >>>  failed to do 'from pastebin import send_paste' from import_paste() called by import_paste_t thread in 'main file'
+          3  >>>  failed to download 'who_r_u.mp3' file in god_mode in 'main file'
+          4  >>>  failed to download UPDATE file from server link in god_mode in 'main file'
+
+606x >>>  [print debug, not stored in .db file] (Network issue) (sp_link) failed to reach sp_link like nh, mangafreak
+            ||Project name||NH link||header index
+          1  >>>  failed to connect nhentai.net site, possible cause wrong link or location blocked or internet issue
+          2  >>>  failed to connect nhentai.xxx site, possible cause wrong link or internet issue
+          3  >>>  failed to connect nhentai.to site, possible cause wrong link or internet issue
+
+606  >>>  [deprecated] (Network issue ) (pastebin)   failed to connect to the pastebin
+
+607  >>>  [print debug, not stored in .db file] (Indexing Error) (list_writer)error occured in the (indx threads)
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+==================(000)==================
+-----------> FUNC ERROR CODES <----------
+00000x  >>>   [main file non-functions]
+              101  >>  Failed to make Files or folders from main function due to permission error
+                          ||File or folder location|| 0 for File, 1 for Folder
+
+00003   >>>   [remove_non_ascii] Failed to remove non-ascii charecters from string.
+                ||ErrorName||error string||f_code||text string
+
+00006   >>>   [install_req] failed to intall missing lib
+                ||Lib name||check_internet(pypi.org)
+
+00008x  >>>   [writter]
+              1  >>>  Invalid file name (will replace `CON` charecters with "-"  except `"` with `'`)
+                          ||the file name
+              2  >>>  Invalid directory name (will replace `CON` charecters with "-"  except `"` with `'`)
+                          ||the dir
+              101>>>  Failed to write in the specific directory (Permission error)
+                          ||caller func_code||file name||write mode||directory||mkdir permission upto (only when fail to write folder)
+              -1 >>>  Unknown error occured while writing a file or making directory
+                          ||ErrorName||caller func_code||file name||write mode||directory||error string
+
+00009x  >>>   [hdr]
+              X  >>>  Unknown header string sent to index. header string was not found in the heared lists (raised ValueError). Returns -1 as index
+                          ||caller f_code||error string||corrupted header string
+              -1 >>>  Unknown error occured. Returns -1 as index
+                          ||caller f_code||ErrorName||error string||corrupted header
+
+0000Bx  >>>   [run_server in `main file`]
+              1  >>>  Hosting directory data type is invalid (not string)
+                          ||Data type||converted srt form of cd parameter (? if not converted)||caller f_code
+              2  >>>  Hosting directory data type is invalid (has `CON` charecters)
+                          ||cd parameter||caller f_code
+              3  >>>  Hosting directory does not exist
+                          ||cd parameter||caller f_code
+
+0000Cx  >>>   [_connect_net]
+              -1 >>>  Unknown ERROR occured
+                          ||header index||error name||error string
+
+00013   >>>   [reader] File not found
+                ||f_code||filename
+
+00017   >>>   [check_internet] No internet access
+                ||link||header index||caller f_code||Error code (not in prev version)
+
+00018x  >>>   [remove_non_uni] Failed to remove non unicode
+                ||error name||error string||f_code||return_type||text
+
+------------------------------------------------------------------------------
+
+10002x  >>>   [web_leach--distribute]
+              1  >>>  Failed to download (possible cause dead link or internet outage)
+                          ||Project name||header index||download link||Error name (new in this 5.4)
+              2  >>>  Failed to unzip downloaded file (possible cause data corruption or wrong file format)
+                          ||Project name||header index||download link
+
+10003x  >>>   1  >>>  Dead dir link while Indexing [Threads]
+                          ||Project name||header index||Dir link||Error Name(5.4)||Error Message(5.4)
+              2  >>>  [Depricated] Dead dir link while Indexing [NO Threads]
+                          ||Project name||header index||Dir link
+
+10005x  >>>   [nhentai_link](Network issue) failed to reach  nhentai
+                ||Project name||NH link||header index
+              1  >>>  failed to connect nhentai.net site, possible cause wrong link or location blocked or internet issue
+              2  >>>  [Depricated] failed to connect nhentai.to site, possible cause wrong link or internet issue
+              3  >>>  failed to connect nhentai.xxx site, possible cause wrong link or internet issue
+
+10008x  >>>   0  >>>  Started error files fixing
+                          ||Project name||Total files||Number of error files
+              1  >>>  Errors found but error file not found
+                          ||Project name
+              2  >>>  Error fixing complete
+                          ||Project name||Left errors
+
+11000x  >>>   1  >>>  RESET a complete download Project
+                          ||Project name
+              2  >>>  UPDATE an incomplete download Project
+                          ||Project name
+              3  >>>  RESUME an incomplete download Project
+                          ||Project name
+              4  >>>  RESET an incomplete download Project
+                          ||Project name
+              40001x0  >>>  webpage creating cancelled while asking to open
+                          ||Project name
+              40001x1  >>>  webpage creating cancelled in process
+                          ||Project name
+              50001x0  >>>  CBZ creating cancelled in process
+                          ||Project name
+
+
+
+10009x  >>>   0  >>>  Project progress
+                          ||Project name||Task or info
+              1  >>>  Project variables
+                          ||Project name||Var||Value
+              2  >>>  Indexing Started
+                          ||Project name||Number of sub links
+              -1 >>>  Unknown Error occured in the Indexing Threads
+                          ||Project name||ErrorName||Error string
+              50001x0  >>>  CBZ creating cancelled in process
+                          ||Project name
+
+
+
+1000Ax  >>>   40001x0  >>>  webpage creating cancelled while asking to open
+                          ||Project name
+              40001x1  >>>  webpage creating cancelled in process
+                          ||Project name
+              50001x0  >>>  CBZ creating cancelled in process
+                          ||Project name
+
+
+50001x  >>>   M  >>>  Ignoring missing files in CBZ
+              U  >>>  Ignoring Unsupported files in CBZ
+
+
+
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+==================(000)==================
+------------> FUNC DETAILS <-------------
+
+00000   >>>   [remove_duplicate]
+                  removes duplicates from a list or a tuple
+                  *also keeps the array in the same order
+                  return: (list|tuple|set|str|any) no duplicates array
+
+00001   >>>   [clear_screen]
+                  clears terminal output screen based on OS
+                  by using system CLI based commands
+                  return: void
+00002   >>>   [delete_last_line](lines=1)
+                  Use this function to delete the last line in the STDOUT
+                  *can be used to delete multiple lines.
+	                  lines: total number of lines *1
+                  return: void
+
+00003   >>>   [remove_non_ascii](text, f_code)
+                  [Deprecated] [STILL WORKS] removes ascii charecters from a string
+                  by removing all the characters above ASCII code order 128
+                    test: text to remove non ASCII
+                    f_code: The function Code called this function
+                  return: (str) non ASCII-less string
+
+00004   >>>   [header_]
+                  returns a random header from <header_list> for requests lib
+                  return: (dict) 0 = key: "User-Agent" value: a random header
+
+00005   >>>   [install](pack, alias=None)
+                  Just install package
+                  by using subprocess.call and arg uses sys.executable to use current
+                  using python version.
+                  *Unusable after compiling bt PyInstaller.
+                    pack: the name the library (beautifulsoup4, requests)
+                    alias: if the pip package name is different from lib name, then used alias (not required here) [beautifulsoup4 (pip)=> bs4 (lib name)
+                  return: void
+
+00006   >>>   [install_req](pkz)
+                  install requirement package if not installed
+                  *Unusable after compiling bt PyInstaller.
+                    pkg: package name
+                    alias: if the pip package name is different from lib name, then used alias (not required here) [beautifulsoup4 (pip)=> bs4 (lib name)
+                  return: (bool) Ture if is installed else false
+
+00007   >>>   [loc](x, _os_name='Linux')
+                  to fix dir problem based on os
+                    x: directory
+                    os_name: Os name *'Linux'
+                  return: (str) dir string converted based on os format
+
+00008   >>>   [writer](fname, mode, data, direc=None, f_code='None', encoding='utf-8')
+                  Writing on a file
+                    fname: filename
+                    mode: write mode (w,wb,a,ab)
+                    data: data to write
+                    direc: directory of the file, empty for current dir *None
+                    func_code: (str) code of the running func *empty string
+                    encoding: if encoding needs to be specified (only str, not binary data) *utf-8
+                  return: void
+
+00009   >>>   [hdr](header, f_code='')
+                  returns the index of a header
+                    header: the header dict containing the header string and possibly the ref
+                    func_code: (str) code of the running func *empty string
+                  return: the index of header if found, else -1
+0000A   >>>   [leach_logger](io, key= 'lock')
+                  saves encrypted logger data to file\n
+                  (new in 5.3_class: auto adds dt_() at the beginning of saltless data)
+                    io: the log message\n
+                    key: salt text (adds at the front)
+                  return: void
+
+0000B   >>>   [run_server](port, cd= None, f_code= 'None')
+                  Runs localhost server using python.\n
+                  the I/O is suppressed
+                    port : PORT number
+                    cd : the directory to host *None -> current directory
+                    f_code: (str) code of the running func *`"00000"`
+                  return: server handler class
+
+0000C   >>>   [_connect_net]
+                connects to the internet and returns the users global ip
+                return: void, but sets global variable `user_net_ip`
+
+0000D   >>>   [run_in_local_server](port, host_dir='')
+                opens a directory or a file in localhost server using browser
+                  port : port number
+                  host_dir : desired file or folder directory
+                return: void
+
+0000E   >>>   [go_prev_dir](link)
+                returns the previous path str of web link or directory
+                  link : directory path
+                *warning*: returns only in `linux` directory format
+                return: (str) prev directory path
+
+0000F   >>>   [safe_input](msg='', i_func=input, o_func=xprint,
+                          on_error= LeachICancelError)
+                gets user input and returns str
+                  msg: the message to show for asking input *`empty string`
+                  i_func: the function used for input *`input()`
+                  o_func: the function used for msg print *`xprint()`
+                  on_error: What to do when `^C` pressed *`raise LeachICancelError` or `return None`
+
+00010   >>>   [asker](out='', default=None, True_False=(True, False),
+                      extra_opt=tuple(), extra_return=tuple(),
+                      i_func=input, o_func=xprint, on_error= LeachICancelError,
+                      condERR= condERR, no_bool = False)
+                asks for yes or no or equivalent inputs (additional options)
+                  out: `xprint` text to ask tha question *`empty string`
+                  default: default output for empty response *`None`
+                  True_False: returning data instead of true and false *`(True, False)`
+                  extra_opt: Add additional options with Yeses and Nos *must be array of single options*
+                  extra_return: Returns output according to `extra_ops`
+                  i_func: the function used for input *`input()`
+                  o_func: the function used for msg print *`xprint()`
+                  on_error: What to do when `^C` pressed *`raise LeachICancelError` or `return None`
+                  no_bool: won't take yes no as input [extras required] *`False`
+
+00011   >>>   [get_file_name](directory, mode= 'dir')
+                takes a file directory and returns the last last part of the dir (can be file or folder)
+                  directory: the file directory, only absolute path to support multiple os
+                  mode: url or file directory
+
+00012   >>>   [get_file_ext](directory, mode='dir', no_format='noformat')
+                to get the extension of a file directory
+                  directory: file directory relative or direct\n
+		              no_format: returning format if no file extention was detected *noformat
+
+00013   >>>   [reader](direc, read_mode='r', ignore_error= False, output = None,
+                      encoding = 'utf-8', f_code= '?????', on_missing= None,
+                      ignore_missing_log = False)
+                reads file from given directory. If NOT found, returns `None`
+                  direc: file directory
+                  read_mode: `r` or `rb` *`r`
+                  ignore_error: ignores charecter encoding errors *`False`
+                  output: output type `bin`/`str`/`None` to auto detect *`None`
+                  encoding: read encoding charset *`utf-8`
+                  func_code: calling function *`?????`
+
+00014   >>>   [_version_update](_latest_version, _latest_link, _latest_hash,
+                                _latest_filename,_latest_size, server_link)
+                Downloads and installs latest version of app
+                also verifies zip and exe file
+
+00015   >>>   [god_mode]
+                Downloads and executes cloud based scrips and also
+                saves it for offline usage. Offline is only allowed if user
+                has used online mode at least once
+
+00016   >>>   [log_in]
+                Lets user log in using user credential from online data
+                also lets user run on offline mode
+
+00017   >>>   [check_internet](link, f_code, timeout=None)
+                Check if the connection is available or not
+                  link: link to check for connection status
+
+00018   >>>   [remove_non_uni](text, f_code='?????', types= 'str', encoding= 'utf-8')
+                  Converts a string or binary to unicode string or binary by removing all non unicode char
+                    text: str to work on
+                    f_code: caller func code
+                    types: output type ('str' or 'bytes')
+                    encoding: output encoding *utf-8
+
+00019   >>>   [trans_str](txt, dicts)
+                replaces all the matching charecters of a string for multuple times
+                  txt: string data
+                  dicts: dict of { find : replace }
+
+0001A   >>>   [check_server](link, f_code, timeout=None)
+                Checks if localhost server is running perfectly or the port is occupied
+                by sending a GET request to `server_link/root?response`
+                *if the response content starts with b'Web-leach' then the server is running
+                by this or another processof web_leach
+                *if an Exception occurs, means the link is dead and free to use
+                *else its being used by someone else. use a different port
+                  link: site link with port [adds /?response on request]
+                  f_code: caller id
+
+0001B   >>>   [run_server_t](server_status, cd='./')
+                server_status:  if its used by web leach or other program:
+                                  `True` -> `web_leach`
+                                  `None` -> none
+                                  `False`-> someone
+		            cd: Directory to run the server. *`current dir`
+
+
+0001C   >>>   [import_paste]
+                [TODO] will import pastebin lib here
+
+
+0001D   >>>   [get_dir](directory, mode='dir')
+                takes a file directory and returns the last last part of the dir (can be file or folder)
+                  directory: the file directory, only absolute path to support multiple os
+                  mode: url or file directory (os based)
+
+0001E   >>>   [get_link](i, current_link, homepage)
+                Gets permanent link from relative link.
+                  i : relative link
+                  current_link : the link used for getting links inside the page
+                  homepage : the homepage of the current_link
+
+0001F   >>>   [import_make]
+                reads and exec() necessary files to create different formats of
+                output [ie: html, cbz]
+
+
+
+-------------------------(10000)-----------------------------------
+
+10001   >>>   [__init__]
+                initializes variables in the class on each StartUp
+
+11001   >>>   [catch_KeyboardInterrupt](self, func, *args)
+                Runs a function in a isolated area so that Keyboard cancal
+                can be caught and processed accordingly
+                  func: The function to call inside the space
+                  *args: The args to send inside the program
+
+10002   >>>   [distribute](self, lists, task_id, is_error=False)
+                Runs downloads in this function from a list of download
+                links `self.all_links`
+                && sends 'referer' in the header to avoid download issues
+                && if `self.overwrite_bool` is False, then checks if the file
+                already exists and if yes then skips the download.
+                && checks if the down
+                && writes missing or broken links
+                in the `errors.txt` to re-download & adds the header in
+                'err_header.txt' for later security check up
+                && writes in the 'left_errors.txt' in the `$Project` folder if a link
+                failed on the 2nd try & prints smartly if it fails to download
+                && adds a trigger for the [rety_error] function for that thread
+                on completing the loop.
+
+                  lists: download links list
+                  task_id: task id (int) to keep resume point stored
+                  is_error: if the funtion is running to retry the failed files *False
+                NOTES:
+                  1) if `sp_arg_flag['disable dl get']` is True, the it will just check if link works
+                  2) if 'stop_on_null_content' is in self.flags, the function will stop the loop
+                      and return
+                  3) if 'ignore_on_null_content' is in self.flags, the function will ignore the link
+                      and continue
+                  4) if 'del dl zip' is in self.flags, the function will delete the zips after extracting
+                  5) if 'dl unzip' is in self.flags, the function will unzip the zips after Downloading
+
+10003   >>>   [list_writer](self, link, list_range,special=None, soup = None)
+                indexes the list of links or a single link and and adds 
+                && aligns files (of specified file formats) by relative folders in the `self.all_list` list
+                  link: single link or a list of links to index
+                  file_link_starts: (regex) string that will check and if the file links starts with
+                  list_range: a range objet containing the index of the links
+                  special: gives a headsup that if the link is from any special cases *None
+                  soup: a response soup object that will speed the indexing a little bit up *None
+
+10004   >>>   [play_yamatte](self, vol)
+                plays something unwanted when user goes horny 
+                && also raise MASTER VOLUME while playing and turns back normal after that 
+                  vol: MASTER VolUME
+
+10005   >>>   [nhentai_link](self, link)
+                checks if the link is nhentai link
+                  link: Main link
+                if True
+                  return: the available link, the title of the doujin
+                else
+                  return: 0
+
+10006   >>>   [check_sp_links](self, link, sp=None)
+                checks if the link has any special case and any specific special case
+                  link: link of the project
+                  sp: specifies the special case check *None
+                return: True or False
+
+10007   >>>   [mangafreak_link](self, link)
+                checks if the link is a mangafreak link and makes indexing easier.
+                link: main link
+                Note: 
+                      (1) May not find weather the link is valid or not and fail to get the actual file links.
+                      (2) user needs to manually confirm last chapter                
+              
+1000C   >>>   [webtoon_link](self)
+                checks for webtoon links and get chapterwise image links and sends
+                `all_list`, `sub_links`, `sub_dirs` to `main` function
+                return: 0 on issue or missing; else "all good"
+
+10008   >>>   [retry_errors](self)
+                retries to download the error files on `no_buffering` mode after all the `distribute` threads are done
+                and their triggers are called.
+
+11000   >>>   [data_checkup](self, path=None, proj_name=None, offline=False, blind=False)
+                checks for the project save files in the 'data/leach_data' folder 
+                && imports data from there (backwards compatible)
+                && asks for resume if incomplete
+                && asks for update if complete
+                && shows website and CBZ options if completed
+                  path: if the inputted project name is a file directory
+                  proj_name: if not path, then the project name
+                  offline: if True: update will be disabled
+                  blind: when the project name is not in the 'data/leach_data' folder, it will check blindly if the project still exists
+                          if True: no corruption will be written as the file (if found) is not written with this program
+
+10009   >>>   [main](self)
+                *If Online* runs the mainloop of the projects runtime code
+                Note: Handles all the IO operations
+
+1000A   >>>   [main_offline](self)
+                *If Offline* runs the mainloop of the projects runtime code
+                Note: 
+                      (1) Handles all the IO operations
+                      (2) Limited functions
+
+1000D   >>>   [speed_limiter](self)
+                Limits download speed by arg
+                `sp_arg_flag['max dlim']` in kbps
+
+1000E   >>>   [speed_tester](self)
+                Counts and prints download speed and
+                shows download amount in thread
+
+1000B   >>>   [dl_page](self)
+                sends a get request to the main_link
+                && writes it in the project data file
+                return: if connected, the request get function
+                        else, False
+
+

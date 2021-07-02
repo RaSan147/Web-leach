@@ -1,0 +1,13 @@
+main_link= "https://nhentai.net/g/154568"
+link_startswith= "https://nhentai.net/g/154568/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= "https://nhentai"
+sub_dirs = ['[Atelier Hachifukuan] Kaidan Shoujo Getsuyoubi (Gakkou no Kaidan)']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 0
+sequence = True
+Project = "nh test"
+sub_links = []
+dl_done = True

@@ -1,0 +1,12 @@
+main_link= "https://nhentai.net/g/297974"
+link_startswith= "https://nhentai.xxx/g/297974/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['Joshi Ksei Rich Thots']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = False
+dimention = 0
+sequence = True
+Project = "GPU"
+dl_done = True
