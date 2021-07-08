@@ -1,7 +1,0 @@
-pyinstaller-hooks-contrib==2021.2
-pypiwin32==223
-pywin32==301
-pywin32-ctypes==0.2.0
-typing-extensions==3.10.0.0
-youtube-dl==2021.6.6
-zipp==3.5.0
