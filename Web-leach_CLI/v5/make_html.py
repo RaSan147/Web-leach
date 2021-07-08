@@ -1,6 +1,6 @@
 # from basic_shared import *
 import rjsmin
-
+from re import compile as re_compile
 
 class css_minify():
 	def __init__(self):

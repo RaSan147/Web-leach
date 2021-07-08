@@ -4,9 +4,9 @@
 **/data/projects/**/t[0-9]*.txt
 **/.kivy/logs/**.txt
 **/Web-leach_GUi_old
-**/build/
+**/build
 **/dist
-.vscode/**
+**/.vscode/**
 **/__pycache__
 **/venv
-
+**/.idea

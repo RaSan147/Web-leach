@@ -23,7 +23,7 @@
 '''
 py -3.7 -m pip freeze > r.txt
 py -3.7 -m pip uninstall -r r.txt -y
-py -3.7 -m pip install pyinstaller-4.3.zip, 'requests',  'beautifulsoup4', 'natsort', 'google', 'pypiwin32', 'comtypes', 'psutil', 'lxml', 'pywin32-ctypes', rjsmin
+py -3.7 -m pip install pyinstaller-develop.zip requests  beautifulsoup4 natsort google pypiwin32 comtypes psutil lxml pywin32-ctypes rjsmin
 py -3.7 -O -m PyInstaller "leach_win_setup.py" -F -n "Web leach 0.5.5.4" --version-file vtesty.py -i "EMO Angel.ico" --add-data "7z.exe;." --upx-dir=.
 '''
 
@@ -55,7 +55,7 @@ _VERSION ="5.50004"
 #>>>>>added nhentai.to proxy after nhentai.xxx proxy (5.500001_class)
 #>>>>>added hash verification control in _version_update (5.500001_class)
 #>>>>>switched backend server code link from raw.git... to https://cdn.jsdelivr.net/ (see https://stackoverflow.com/questions/17341122/link-and-execute-external-javascript-file-hosted-on-github) (5.500002)
-#>>>>>DEPRICATING https://github.com/Ratulhasan14789/Web-Leach_pub/blob/main/Backend_servers/_global(v5.5 + ).txt
+#>>>>>DEPRICATING https://github.com/Ratulhasan14789/Web-Leach_pub/blob/main/Backend_servers/_global(v5.5+).txt
 #>>>>>NEW GLOBAL SERVER https://gitcdn.link/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global(aboveV5.5).txt
 #>>>>>NEW LOCAL SERVER https://gitcdn.xyz/repo/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20(server%20v5.500004).txt
 #>>>>>TRYING NEW LOCAL SERVER https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update (server v5.500004).txt
@@ -1364,7 +1364,6 @@ class web_leach:
 		self.homepage = ''	# just assigning the homepage variable
 		self.indx_count = 0	# counts the number of indexed links
 		self.all_list = []	# assigning a list of data links, but duplicates will be cancelled in process
-		self.FName_allIndx_dirIndx = None # [file name, all_list index, sub_dir index]
 		self.existing_found = False	# indicates if valid existing project is found
 		self.dl_done = False	# indicates if the project scrapping was done or not
 		self.has_missing = None		# indicates if the Project has any missing files. {5.4 and above}
@@ -2226,12 +2225,11 @@ class web_leach:
 		if os_exists(proj_path) and os_exists(list_path):
 			proj_good = True
 			print('db found')
-			run_FAD = False
 			existing_data = reader(proj_path, 'rb', True, 'str').strip().split('\n')
 			try:
 				global Project, main_link, link_startswith, file_types, file_starts, sub_dirs, sp_flags
 				global sp_extension, overwrite_bool, dimention, dl_done, sequence, sub_links, has_missing 
-				global dir_sorted, FName_allIndx_dirIndx
+				global dir_sorted
 
 
 				for i in existing_data:
@@ -2275,11 +2273,6 @@ class web_leach:
 					del has_missing
 				except:
 					pass
-				try:
-					self.FName_allIndx_dirIndx = FName_allIndx_dirIndx
-					del FName_allIndx_dirIndx
-				except:
-					run_gen_FAD = True
 
 
 				del main_link, link_startswith, file_types, file_starts, sub_dirs, 
@@ -2351,8 +2344,6 @@ class web_leach:
 
 				#print(x)
 			if proj_good and list_good:
-				if run_FAD:
-					self.gen_FName_allIndx_dirIndx()
 				if os_exists('data/leach_projects/' + self.Project + '/errors.txt'):
 					self.errors = len([i for i in open('data/leach_projects/' + self.Project + '/errors.txt').readlines() if len(i.strip()) == 0])
 				else:
@@ -3166,7 +3157,6 @@ yes/y to resume
 
 			writer('projects.db', 'a', self.Project + '\n', 'data', '10009')
 
-		self.gen_FName_allIndx_dirIndx()
 
 		leach_logger("10009x3||%s||%i||%i"%(self.Project, len(self.sub_dirs), len(self.all_list)), user_name)
 
@@ -3189,7 +3179,6 @@ yes/y to resume
 		writer(self.Project + '.proj', 'a', 'Project = "%s"\n'%str(self.Project), 'data/leach_projects', '10009')
 		writer(self.Project + '.proj', 'a', 'sub_links = %s\n'%str(self.sub_links), 'data/leach_projects', '10009')
 		writer(self.Project + '.proj', 'a', 'dir_sorted = %s\n'%str(self.dir_sorted), 'data/leach_projects', '10009')
-		writer(self.Project + '.proj', 'a', 'FName_allIndx_dirIndx = %s\n'%str(self.FName_allIndx_dirIndx), 'data/leach_projects', '10009')
 
 
 		print('\n')
@@ -3545,38 +3534,6 @@ yes/y to resume
 		else:
 			print('Sorry, it seems there\'s no previous project with this name. \nThere is a chance that the project data was Corrupted!\nRetry when online...')
 	
-
-
-	def gen_FName_allIndx_dirIndx(self):
-		if not isinstance(self.all_list[0], tuple):
-			return
-		if self.FName_allIndx_dirIndx is not None:
-			return
-
-		uniq_all_list = remove_duplicate([a[0] for a in self.all_list])
-		self.FName_allIndx_dirIndx = [[]*len(self.sub_dirs)]
-		length = len(self.all_list)
-		n= 0
-		while n<length:
-			# print(n)
-			i = self.all_list[n]
-			indx = uniq_all_list.index(i[0])
-			f_name_ = get_file_name(i[0])
-
-			if f_name_ not in self.FName_allIndx_dirIndx[i[1]]:
-				self.FName_allIndx_dirIndx[i[1]].append([f_name_, indx, i[1]])
-				# self.all_list[n] = i[0]
-			else:
-				count = 0
-				while True:
-					if f_name_ + f"({count})" in self.FName_allIndx_dirIndx[i[1]]:
-						count += 1
-					self.FName_allIndx_dirIndx[i[1]].append([f_name_ + f"({count})", indx, i[1]])
-					# self.all_list[n] = i[0]
-					break
-			n += 1
-
-		self.all_list = uniq_all_list
 
 @atexit.register
 def on_exit():
