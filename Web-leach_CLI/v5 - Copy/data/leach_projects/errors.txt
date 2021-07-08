@@ -1,1 +1,0 @@
-['https://live.staticflickr.com/65535/50934351928_f4fe2a58ec_o.jpg', 8, '56']
