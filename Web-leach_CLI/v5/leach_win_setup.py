@@ -23,11 +23,11 @@
 '''
 py -3.7 -m pip freeze > r.txt
 py -3.7 -m pip uninstall -r r.txt -y
-py -3.7 -m pip install pyinstaller-develop.zip requests  beautifulsoup4 natsort google pypiwin32 comtypes psutil lxml pywin32-ctypes rjsmin cffi
+py -3.7 -m pip install pyinstaller-develop.zip requests  beautifulsoup4 natsort google pypiwin32 comtypes psutil lxml pywin32-ctypes rjsmin
 py -3.7 -O -m PyInstaller "leach_win_setup.py" -F -n "Web leach 0.5.5.4" --version-file vtesty.py -i "EMO Angel.ico" --add-data "7z.exe;." --upx-dir=.
 '''
 
-requirements_all = ('requests',  'beautifulsoup4', 'natsort', 'google')
+requirements_all = ('requests',  'beautifulsoup4', 'natsort', 'google', 'rjsmin')
 requirements_win = ('pypiwin32', 'comtypes', 'psutil', 'lxml', 'pywin32-ctypes')
 _VERSION ="5.50004"
 
@@ -94,7 +94,7 @@ try:
 		try:
 			ctypes.windll.kernel32.SetConsoleTitleW(title)
 		except:
-			print('\33]0;%s\a'%title, end='', flush=True)
+			pass  #print('\33]0;%s\a'%title, end='', flush=True)
 
 	Ctitle('Loading Assets \u26ef')
 
@@ -198,7 +198,7 @@ try:
 
 	# FILE system tools###############
 	from os import makedirs, remove, rename, system as os_system, listdir as os_listdir, getcwd as os_getcwd
-	from shutil import rmtree as rmdir, copyfile
+	from shutil import rmtree as rmdir, copyfile, move
 	from os.path import exists as os_exists, isdir as os_isdir, isfile as os_isfile, basename as os_basename, dirname as os_dirname, realpath as os_realpath
 	from zipfile import ZipFile, BadZipFile
 	###################################
@@ -1054,10 +1054,10 @@ def _version_updater(_latest_version, _latest_link, _latest_hash,
 						_dl += len(data)
 						f.write(data)
 						update_done = int(50 * _dl / update_total_length)
-						xprint("\r[/gh/%s%s/=/]" % ('=' * update_done, ' ' * (50-update_done)), end='')
+						print("\r[\u001b[1;32m%s%s\u001b[0m]" % ('=' * update_done, ' ' * (50-update_done)), end='')
 			leach_logger("203||" + str(_latest_version))
 
-
+			print()
 			# Open, close, read file and calculate MD5 on its contents
 
 			if '_latest_check_zip_hash' in globals() and _latest_check_zip_hash:
@@ -1071,15 +1071,13 @@ def _version_updater(_latest_version, _latest_link, _latest_hash,
 						print ("ZIP verified.")
 
 					else:
-						xprint ("/rh/HASH verification failed!./=/ \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
 						leach_logger('209||%s'%md5_returned + "||" + _latest_link + '||' + _latest_version + '||' + server_link)
-						remove(_latest_filename + '.zip')
-						raise LeachCorruptionError
+						remove('data/.temp/' + _latest_filename + '.zip')
 
 				except Exception as e:
 					xprint ("/rh/HASH verification failed!./=/ \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
 					leach_logger('2FF||' + _latest_link + '||' + _latest_version + '||' + server_link + '||Hashing update ZIP||%s||%s'%(e, e.__class__.__name__))
-					remove(_latest_filename + '.zip')
+					remove('data/.temp/' + _latest_filename + '.zip')
 					raise LeachCorruptionError
 
 
@@ -1089,14 +1087,15 @@ def _version_updater(_latest_version, _latest_link, _latest_hash,
 				if list(zf.namelist()) != [_latest_filename + '.exe']:
 					server_fucked = True
 					fucked_list = list(zf.namelist())
+					raise LeachCorruptionError
 
 				else:
-					subprocess_call(['7z.exe', 'e', '-y', '-plock', './data/.temp/' + _latest_filename + '.zip'], stdin=open(os_devnull), start_new_session=True, stdout=subprocess_DEVNULL, stderr=subprocess_DEVNULL)
+					subprocess_call(['7z.exe', 'e', '-odata/.temp/', '-y', '-plock', './data/.temp/' + _latest_filename + '.zip'], stdin=open(os_devnull), start_new_session=True, stdout=subprocess_DEVNULL, stderr=subprocess_DEVNULL)
 
 
 			if server_fucked:
 				leach_logger("204||" + _latest_link + '||' + _latest_version + '||' + server_link + '||' + str(fucked_list))
-				remove(_latest_filename + '.zip')
+				remove('data/.temp/' + _latest_filename + '.zip')
 				raise LeachCorruptionError
 
 			leach_logger("205||" + str(_latest_version))
@@ -1105,7 +1104,7 @@ def _version_updater(_latest_version, _latest_link, _latest_hash,
 				try:
 					_file_name = _latest_filename + '.exe'
 
-					_file_name = 'data/.temp/' + _latest_filename + '.zip'
+					_file_name = 'data/.temp/' + _latest_filename + '.exe'
 					file_ = reader(_file_name, 'rb')
 					md5_returned = hashlib_md5(file_).hexdigest()
 					del file_
@@ -1113,22 +1112,22 @@ def _version_updater(_latest_version, _latest_link, _latest_hash,
 					if _latest_hash == md5_returned:
 						print ("EXE verified. \n\nPlease use the latest file '" + _latest_filename + ".exe'\n this program will break in 7 seconds\n\n")
 						leach_logger("206")
-						remove('data/.temp/' + _latest_filename + '.zip')
+						move('data/.temp/' + _latest_filename + '.exe', './' + _latest_filename + '.exe')
+
 						leach_logger('207')
 
 						time.sleep(7)
 						exit(0)
 					else:
-						xprint ("/rh/HASH verification failed!./=/ \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
 						leach_logger('208||%s'%md5_returned + "||" + _latest_link + '||' + _latest_version + '||' + server_link)
 						remove('data/.temp/' + _latest_filename + '.zip')
-						remove(_latest_filename + '.exe')
+						remove('data/.temp/' + _latest_filename + '.exe')
 						raise LeachCorruptionError
 				except Exception as e:
 					xprint ("/rh/HASH verification failed!./=/ \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
 					leach_logger('2FF||' + _latest_link + '||' + _latest_version + '||' + server_link + 'Hashing update EXE||%s||%s'%(e, e.__class__.__name__))
 					remove('data/.temp/' + _latest_filename + '.zip')
-					remove(_latest_filename + '.exe')
+					remove('data/.temp/' + _latest_filename + '.exe')
 					raise LeachCorruptionError
 		elif update_response!=False:
 			print("Failed to connect to the host server.\nPlease inform the author!!\nError code 202")
@@ -4246,9 +4245,10 @@ yes/y to resume
 
 
 		print('\n')
-		self.total = len(self.all_list)
+		self.all_list2 = remove_duplicate(self.all_list)
+		self.total = len(self.all_list2)
 
-		self.done-=self.errors  # to remove duplicate count
+		self.done -= self.errors  # to remove duplicate count
 
 
 		all_list_r = list(range(self.total))
