@@ -1,0 +1,15 @@
+main_link= "https://nhentai.net/g/236564"
+link_startswith= "https://nhentai.net/g/236564/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ["[Kuroneko Smith] Oba-san no Karada ga Kimochi Yosugiru kara ~Boku no Oba-san wa Chou Meiki Datta~ Kakioroshi - My Aunt's Body Is Irresistible ~ Her Hole Is the Best ~ (Bonus) [English] [8TB Translations]"]
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 0
+sequence = True
+Project = "nh testtt"
+sub_links = []
+dir_sorted = False
+dl_done = True
+has_missing = False

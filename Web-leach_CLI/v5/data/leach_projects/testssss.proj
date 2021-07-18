@@ -1,0 +1,14 @@
+main_link= "https://nhentai.net/g/264865"
+link_startswith= "https://nhentai.net/g/264865/"
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['(COMIC1☆9) [Cloud Palette (Akanagi Youto, Kuroyume Naoto)] Sore Ike! Bokura no Blood Taichou (God Eater 2) [Chinese] [如月響子汉化组]']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 0
+sequence = True
+Project = "testssss"
+sub_links = []
+dir_sorted = False
+FName_allIndx = None

@@ -1004,12 +1004,11 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 							_decrypto_dat[3]= "Failed to Write or Edit data due to <b>Permission Error</b>"
 						# must me elif
 
-					elif _decrypto_dat[2].startswith('00003x'):
-						if _decrypto_dat[2][6:] == '-1':
-							tempI = 'Failed to remove non-ascii charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Called from:</u></b> %s'%(_decrypto_dat[6], _decrypto_dat[5])
-							_decrypto_dat[4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4])
-							_decrypto_dat[3]= tempI
-							del tempI
+					elif _decrypto_dat[2] == ('00003'):
+						tempI = 'Failed to remove non-ascii charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Called from:</u></b> %s'%(_decrypto_dat[6], _decrypto_dat[5])
+						_decrypto_dat[4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4])
+						_decrypto_dat[3]= tempI
+						del tempI
 
 					elif _decrypto_dat[2]=='00006':
 						_decrypto_dat[4] = '<b><u>Package name: </u></b> %s<br><b><u>Pypi internet access: </u></b>%s'%(_decrypto_dat[3], _decrypto_dat[4])
@@ -1019,7 +1018,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 						if _decrypto_dat[2][6:9]=='101':
 							if len(_decrypto_dat)==7:
 								tempI = 'Failed to Write "%s" <b>in</b> "%s" due to <b><i>permission error</i></b>'%(_decrypto_dat[4], _decrypto_dat[6])
-							else: 
+							elif len(_decrypto_dat) == 8: 
 								tempI = 'Failed to create "%s" folder for writing "%s" <b><i>in</i></b> "%s" due to <b><i>permission error</i></b>'%(_decrypto_dat[7],_decrypto_dat[4], _decrypto_dat[6])
 							
 							_decrypto_dat[4] = "<b><u>Write mode:</u></b> %s <br><b><u>Called by:</u></b> %s"%(_decrypto_dat[5], _decrypto_dat[3])
@@ -1073,12 +1072,11 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 						except: pass
 
-					elif _decrypto_dat[2].startswith('00018x'):
-						if _decrypto_dat[2][6:] == '-1':
-							tempI = 'Failed to remove non-UNICODE charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Return Format:</u></b> %s<br><b><u>Called from:</u></b> %s'%(_decrypto_dat[7], _decrypto_dat[6], _decrypto_dat[5])
-							_decrypto_dat[4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4])
-							_decrypto_dat[3]= tempI
-							del tempI
+					elif _decrypto_dat[2] == '00018':
+						tempI = 'Failed to remove non-UNICODE charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Return Format:</u></b> %s<br><b><u>Called from:</u></b> %s'%(_decrypto_dat[7], _decrypto_dat[6], _decrypto_dat[5])
+						_decrypto_dat[4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4])
+						_decrypto_dat[3]= tempI
+						del tempI
 
 
 					elif _decrypto_dat[2].startswith('10002x'):

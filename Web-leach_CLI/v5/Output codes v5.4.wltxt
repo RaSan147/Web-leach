@@ -35,7 +35,7 @@ CON                    \|:*""><?
 
 
 ==================(0)==================
-0x0  >>>  NO internet (to run online mode) or no UPDATE.txt file (to run offline mode) detected
+0x0  >>>  NO internet (to run online mode) or no UPDATE.txt file (to run offline mode) detected 
 
 0x1  >>>  user Exit codes
             ||caller f_code||Message
@@ -163,7 +163,7 @@ CON                    \|:*""><?
 00017   >>>   [check_internet] No internet access
                 ||link||header index||caller f_code||Error code (not in prev version)
 
-00018x  >>>   [remove_non_uni] Failed to remove non unicode
+00018   >>>   [remove_non_uni] Failed to remove non unicode
                 ||error name||error string||f_code||return_type||text
 
 ------------------------------------------------------------------------------

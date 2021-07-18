@@ -1,0 +1,15 @@
+main_link= "https://ww7.readsnk.com/chapter/shingeki-no-kyojin-chapter-0/"
+link_startswith= ""
+file_types = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
+file_starts= ""
+sub_dirs = ['shingeki-no-kyojin-chapter-0']
+sp_flags = []
+sp_extension = ""
+overwrite_bool = True
+dimention = 1
+sequence = False
+Project = "aot demo"
+sub_links = ['https://ww7.readsnk.com/chapter/shingeki-no-kyojin-chapter-0/']
+dir_sorted = False
+dl_done = True
+has_missing = False

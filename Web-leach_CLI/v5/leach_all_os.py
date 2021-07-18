@@ -29,7 +29,7 @@ py -3.7 -O -m PyInstaller "leach_win_setup.py" -F -n "Web leach 0.5.5.4" --versi
 
 requirements_all = ('requests',  'beautifulsoup4', 'natsort', 'google', 'rjsmin')
 requirements_win = ('pypiwin32', 'comtypes', 'psutil', 'lxml', 'pywin32-ctypes')
-_VERSION ="5.50004"
+_VERSION ="5.50005"
 
 
 							#>>>>>>update>>>>>
@@ -75,9 +75,9 @@ start_up = time.time()
 from platform import system as os_name
 os_name = os_name()
 
-if os_name == 'Windows': 
+if os_name == 'Windows':
 	import console_mod
-	console_mod.enable_color() 
+	console_mod.enable_color()
 
 
 from print_text import XprintClass
@@ -172,7 +172,7 @@ try:
 	# SYS tools #######################
 	from sys import exit as sys_exit, executable as sys_executable
 	exit = sys_exit
-	
+
 	from subprocess import call as subprocess_call, Popen as subprocess_Popen, DEVNULL as subprocess_DEVNULL
 	from os import devnull as os_devnull
 	from sys import stdout as sys_stdout
@@ -290,7 +290,7 @@ class LeachCorruptionError(Exception):             #
 # ✓
 # ✘
 
-def remove_duplicate(seq, return_type = list):	#func_code= 00000  vx
+def remove_duplicate(seq, return_type = list):	#func_code= 00000  vvv
 	"""removes duplicates from a list or a tuple
 	also keeps the array in the same order
 
@@ -301,7 +301,7 @@ def remove_duplicate(seq, return_type = list):	#func_code= 00000  vx
 
 	return return_type(dict.fromkeys(seq))
 
-def trans_str(txt, dicts): #func_code= 00019 ✓
+def trans_str(txt, dicts): #func_code= 00019 vvv
 	"""replaces all the matching charecters of a string for multuple times
 
 	args:
@@ -315,7 +315,7 @@ def trans_str(txt, dicts): #func_code= 00019 ✓
 			txt = txt.replace(j, a)
 	return txt
 
-def clear_screen():    #func_code= 00001 ✓
+def clear_screen():    #func_code= 00001 vvv
 	"""clears terminal output screen"""
 
 	if os_name == "Windows":
@@ -325,7 +325,7 @@ def clear_screen():    #func_code= 00001 ✓
 
 
 
-def delete_last_line(lines=1):      #func_code=00002 ✓
+def delete_last_line(lines=1):      #func_code=00002 vvv
 	"""Use this function to delete the last line in the STDOUT
 
 	args:
@@ -340,7 +340,7 @@ def delete_last_line(lines=1):      #func_code=00002 ✓
 		sys_write('\x1b[2K')
 
 
-def remove_non_ascii(text, f_code):    #func_code=00003 vv
+def remove_non_ascii(text, f_code):    #func_code=00003 vvv
 	"""[DEPRECATED] [STILL WORKS] removes ascii charecters from a string
 
 	args:
@@ -373,7 +373,7 @@ def remove_non_uni(text, f_code='?????', types= 'str', encoding= 'utf-8'):    #f
 		return text.decode(encoding, 'ignore')
 	except Exception as e:
 		xprint("/r/Failed to remove non-Unicode charecters from string.\nError code: 00018x", f_code, '/y/\nPlease inform the author./=/')
-		leach_logger('00018x-1||' + e.__class__.__name__ + ('||%s||'%str(e)) + f_code + '||' + types + '||' + text)
+		leach_logger('00018||' + e.__class__.__name__ + ('||%s||'%str(e)) + f_code + '||' + types + '||' + text)
 		return remove_non_ascii(text, f_code)
 
 def header_():    #func_code=00004  v
@@ -1288,9 +1288,9 @@ def check_internet(link, f_code, timeout=None):       #f_code=00017  v
 		link: link to check for connection status"""
 	current_header = header_()
 	try:
-		if timeout == None: 
+		if timeout == None:
 			r = requests.head(link, headers=current_header)
-		else: 
+		else:
 			r = requests.head(link, headers=current_header, timeout= timeout)
 
 		if r:
@@ -1337,6 +1337,14 @@ def check_server(link, f_code, timeout=None):       #f_code=0001A  v
 
 def flatten2D(arr):     # f_code=00020
 	functools.reduce(operator.iconcat, arr, [])
+
+
+def remove_noscript(content): # f_code=00021
+	"""Removes <noscript> contents from html to fool my app
+
+	content: HTML content returned by requests.get().content"""
+	return re_sub(b"(?i)(?:<noscript>)(?:.|\n)*?(?:<\/noscript>)", b'', content)
+
 
 class web_leach:
 
@@ -1427,7 +1435,7 @@ class web_leach:
 				except KeyboardInterrupt:
 					raise LeachICancelError
 				except LeachICancelError:
-					leach_logger('0x0||11001||input exit code L&infin;ping for unknown reason')
+					leach_logger('0x1||11001||input exit code L&infin;ping for unknown reason')
 			except EOFError:
 				raise LeachICancelError
 			except KeyboardInterrupt:
@@ -1571,7 +1579,7 @@ class web_leach:
 
 								except (requests.exceptions.SSLError, urllib3.exceptions.SSLError) as e:
 									loaded_file.close()
-									_temp = session.get(i[0], headers= current_header, timeout=2).content
+									_temp = remove_noscript(session.get(i[0], headers= current_header, timeout=2).content)
 									writer(get_file_name(i[0]) + self.sp_extension, 'wb', _temp, 'Download_projects/' + self.Project + '/' + self.sub_dirs[i[1]], '10002')
 									del _temp
 
@@ -1756,7 +1764,7 @@ class web_leach:
 						print('\nFailed to connect "%s"\nPlease try the update option after downloading\n\n'%link[i])
 						leach_logger("10003x1||" + self.Project + '||' + hdr(current_header, '10003') + '||' + link[i] + '||' + str(page.status_code) + '||' + 'None')
 						continue
-					soup = bs(page.content, parser)
+					soup = bs(remove_noscript(page.content), parser)
 				except (requests.exceptions.ChunkedEncodingError, requests.exceptions.MissingSchema, requests.exceptions.InvalidSchema) as e:
 					print('\nFailed to connect "%s"\nPlease try the update option after downloading\n\n'%link[i])
 					leach_logger("10003x1||" + self.Project + '||' + hdr(current_header, '10003') + '||' + link[i] + '||' + e.__class__.__name__ + '||' + str(e))
@@ -1767,7 +1775,7 @@ class web_leach:
 					if img_link == None:
 						img_link = imgs.get('src')
 					img_link = img_link.strip()
-					
+
 					if img_link.startswith('//'): img_link = 'https:' + img_link
 					if img_link.startswith('/'):
 						img_link = self.homepage_searcher.search(link[i]).groups()[0] + img_link
@@ -1868,7 +1876,7 @@ class web_leach:
 
 		self.file_types = img
 		if page:
-			soup = bs(page.content, parser)
+			soup = bs(remove_noscript(page.content), parser)
 
 			title = remove_non_uni(soup.find(id='info').find('h1').get_text(), '10005')
 			print("Indexing from", title)
@@ -2048,7 +2056,7 @@ class web_leach:
 			remove_type = re_compile('\?type\=.*.*')
 			for j in  indx:
 				i = self.sub_links[j]
-				temp1 = bs(session.get(i).content, parser)
+				temp1 = bs(remove_noscript(session.get(i).content), parser)
 				img_div = temp1.find('div', id='_imageList')
 
 				for ii in img_div.find_all('img'):
@@ -2084,7 +2092,7 @@ class web_leach:
 			xprint('/r/Webtoon Page not found. /y/Recheck the link/=/')
 			return 0
 
-		input_soup = bs(input_page.content, parser)
+		input_soup = bs(remove_noscript(input_page.content), parser)
 		_temp = input_link
 
 		paginate = input_soup.find_all("div", class_="paginate")[0]
@@ -2095,7 +2103,7 @@ class web_leach:
 			prev_lists.append(get_link(paginate_[0].get('href'), _temp, homepage))
 			page_list += [get_link(i.get('href'), _temp, homepage) for i in paginate__.find_all("a")]
 			_temp = prev_lists[-1]
-			paginate__ = bs(session.get(_temp).content, parser).find_all("div", class_="paginate")[0]
+			paginate__ = bs(remove_noscript(session.get(_temp).content), parser).find_all("div", class_="paginate")[0]
 			paginate_ = paginate__.find_all('a', class_='pg_prev')
 			page_list += [get_link(i.get('href'), _temp, homepage) for i in paginate__.find_all("a")]
 
@@ -2107,7 +2115,7 @@ class web_leach:
 			next_lists.append(get_link(paginate_[0].get('href'), _temp, homepage))
 			page_list += [get_link(i.get('href'), _temp, homepage) for i in paginate__.find_all("a")]
 			_temp = next_lists[-1]
-			paginate__ = bs(session.get(_temp).content, parser).find_all("div", class_="paginate")[0]
+			paginate__ = bs(remove_noscript(session.get(_temp).content), parser).find_all("div", class_="paginate")[0]
 			paginate_ = paginate__.find_all('a', class_='pg_next')
 			page_list += [get_link(i.get('href'), _temp, homepage) for i in paginate__.find_all("a")]
 
@@ -2116,7 +2124,7 @@ class web_leach:
 		page_list = natsort.natsorted(remove_duplicate(page_list))
 
 		for i in page_list:
-			temp1 = bs(session.get(i).content, parser)
+			temp1 = bs(remove_noscript(session.get(i).content), parser)
 			ul = temp1.find_all('ul', id= "_listUl")[0].find_all('a')
 			for ii in ul:
 				sub_links.append(get_link(ii.get('href'), _temp, homepage))
@@ -2225,10 +2233,11 @@ class web_leach:
 		if os_exists(proj_path) and os_exists(list_path):
 			proj_good = True
 			print('db found')
+			run_FAD = False
 			existing_data = reader(proj_path, 'rb', True, 'str').strip().split('\n')
 			try:
 				global Project, main_link, link_startswith, file_types, file_starts, sub_dirs, sp_flags
-				global sp_extension, overwrite_bool, dimention, dl_done, sequence, sub_links, has_missing 
+				global sp_extension, overwrite_bool, dimention, dl_done, sequence, sub_links, has_missing
 				global dir_sorted
 
 
@@ -2256,7 +2265,7 @@ class web_leach:
 				try:
 					self.img_to_sort = sequence
 					del sequence
-				except: 
+				except:
 					self.img_to_sort = None
 				try:
 					self.sub_links = sub_links
@@ -2275,7 +2284,7 @@ class web_leach:
 					pass
 
 
-				del main_link, link_startswith, file_types, file_starts, sub_dirs, 
+				del main_link, link_startswith, file_types, file_starts, sub_dirs,
 				sp_flags, sp_extension, overwrite_bool, dimention
 				proj_good = True
 			except Exception as e:
@@ -2371,6 +2380,7 @@ class web_leach:
 						return 0
 
 					if temp == 'browser' or temp == 'cbz':
+
 						import_make()
 						if 'mangafreak' in self.sp_flags:
 							if not os_exists('Download_projects/' + self.Project + '/'):
@@ -2745,7 +2755,7 @@ yes/y to resume
 						if self.dimention == 1 or self.dimention == 3:
 							sub_links2 += [self.main_link]
 						if self.dimention == 2 or self.dimention == 3:
-							soup = bs(page.content, parser)
+							soup = bs(remove_noscript(page.content), parser)
 							# link_startswith = input("\n(optional but recommended to be more precise):\n1. Sub-Links Starts With : ")
 							leach_logger('10009x1||%s||l_starts||%s'%(self.Project, self.link_startswith), user_name)
 							sub_links2 += list(set([sub_link.get('href').strip() for sub_link in soup.find_all('a') if sub_link.get('href')!=None]))
@@ -2987,7 +2997,7 @@ yes/y to resume
 							#	exit(0)
 							#print(page.content)
 							#time.sleep(1000)
-							soup = bs(page.content, parser)
+							soup = bs(remove_noscript(page.content), parser)
 							self.link_startswith = safe_input("\n(optional but recommended to be more precise):\n1. Sub-Links Starts With : ")
 							leach_logger('10009x1||%s||l_starts||%s'%(self.Project, self.link_startswith), user_name)
 							sub_links2 += list(set([sub_link.get('href').strip() for sub_link in soup.find_all('a') if sub_link.get('href')!=None]))
@@ -3534,7 +3544,8 @@ yes/y to resume
 
 		else:
 			print('Sorry, it seems there\'s no previous project with this name. \nThere is a chance that the project data was Corrupted!\nRetry when online...')
-	
+
+
 
 @atexit.register
 def on_exit():
