@@ -354,7 +354,7 @@ def remove_non_ascii(text, f_code):    #func_code=00003 vvv
 		xprint("Failed to remove non-ascii charecters from string.\nError code: 00003x", f_code, '\nPlease inform the author.')
 		leach_logger('00003||' + e.__class__.__name__ + ('||%s||'%str(e)) + f_code + '||' + text)
 
-def remove_non_uni(text, f_code='?????', types= 'str', encoding= 'utf-8'):    #func_code=00018  vv
+def remove_non_uni(text, f_code='?????', types= 'str', encoding= 'utf-8'):    #func_code=00018  vvv
 	"""Converts a string or binary to unicode string or binary by removing all non unicode char
 
 	args:
@@ -400,7 +400,7 @@ import pkg_resources as pkg_r
 
 # print(pkg_resources)
 
-def install_req(pkg_name, alias=None):     #func_code=00006  vv
+def install_req(pkg_name, alias=None):     #func_code=00006  vvv
 	"""install requirement package if not installed
 
 	args:
@@ -468,7 +468,7 @@ def loc(x, _os_name='Linux'):    #func_code=00007  v
 
 
 def writer(fname, mode, data, direc=None, f_code='None',
-			encoding='utf-8'):    #func_code=00008  v
+			encoding='utf-8'):    #func_code=00008  vvv
 	"""Writing on a file
 
 	args:
@@ -801,7 +801,7 @@ def safe_input(msg='', i_func=input, o_func=xprint,
 			raise LeachICancelError
 		else:
 			return on_error
-safe_input
+
 def asker(out='', default=None, True_False=(True, False),
 		  extra_opt=tuple(), extra_return=tuple(),
 		  i_func=input, o_func=xprint, on_error= LeachICancelError,
@@ -1519,7 +1519,7 @@ class web_leach:
 
 			self.is_error = is_error
 
-			if lists.index(j)>=res:
+			if lists.index(j)>=res:N
 				current_header = header_()	# randomizes header from list on every download to at least try to fool server
 				if self.sub_links!=[]: # if sub_links are available, then use them as header referer
 					current_header['referer'] = self.sub_links[i[1]]
@@ -1856,7 +1856,7 @@ class web_leach:
 					raise requests.exceptions.ConnectionError
 			except (requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError):
 				delete_last_line()
-				xprint("/rh/Error code: 606x2\nLink not found, Please recheck the link and start a new project/=/")
+				# xprint("/rh/Error code: 606x2\nLink not found, Please recheck the link and start a new project/=/")
 				leach_logger("606x2||%s||%s||%s"%(self.Project, link, hdr(current_header, '10005')), user_name)
 				delete_last_line()
 				print('nhentai.net server is not reachable, trying proxy server...(2)')
@@ -1869,7 +1869,6 @@ class web_leach:
 					else:
 						raise requests.exceptions.ConnectionError
 				except (requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError):
-					# delete_last_line()
 					xprint("/rh/Error code: 606x3\nLink not found, Please recheck the link and start a new project/=/")
 					leach_logger("606x3||%s||%s||%s"%(self.Project, link, hdr(current_header, '10005')), user_name)
 					return False, False
@@ -3670,12 +3669,6 @@ if __name__ == '__main__':
 		xprint(hard_cancel)
 		leach_logger('0x1||00000||Hard Exit by User on Start up. Init upto - "%s"'%init_upto)
 		exit(0)
-
-
-
-
-
-
 
 	program_class = None
 

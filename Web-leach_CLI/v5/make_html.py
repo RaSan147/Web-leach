@@ -88,7 +88,24 @@ def return_sub_page(all_list, sub_dirs, page_index, title):
 			color: #00b7ff;
 		}
 
-		.paginationA {
+
+		#paginate_container {
+			justify-self: center;
+			display: grid;
+			grid-template-columns: auto auto;
+			width: min(100%, 720px);
+		}
+
+		.outlines {
+			text-shadow:
+				-1px -1px 0 #000,
+				1px -1px 0 #000,
+				-1px 1px 0 #000,
+				1px 1px 0 #000;
+
+		}
+
+		.paginators {
 			font: bold 20px Arial;
 			text-decoration: none;
 			background-color: #8a8b8d6b;
@@ -97,6 +114,7 @@ def return_sub_page(all_list, sub_dirs, page_index, title):
 			border-top: 1px solid #828d94;
 			box-shadow: 4px 4px #5050506b;
 			border-left: 1px solid #828D94;
+			text-align: center;
 		}
 
 		#lastleft {
@@ -462,7 +480,12 @@ def return_sub_page(all_list, sub_dirs, page_index, title):
 	<pre>
 
 	</pre>
-	<p id="pagination" style="text-align: center;"></p>
+	<div id='pagination' align= 'center'>
+		<div id= 'paginate_container'>
+			<div id="pagiP"></div>
+            <div id="pagiN"></div>
+		</div>
+	</div>
 
 
 	<br><br>
@@ -553,37 +576,28 @@ document.title = pages_list[current_page_index];
 	}
 
 	function pagination() {
-		var page_direction = document.getElementById("pagination");
-		if (page_direction == null) {
-			page_direction.innerHTML = '<span/>'
-		}
-
 		if (current_page_index != 0) {
 			var prev_a = document.createElement("A");
 			prev_a.href = "../" + pages_list[current_page_index - 1] + "/" + pages_list[current_page_index - 1] + ".html";
 			prev_a.innerHTML = '<< Previous page  ';
-			prev_a.className = 'paginationA';
+			prev_a.className='paginators';
 			prev_a.onclick = function () {
 				localStorage.setItem(proj_name, current_page_index - 1);
 			};
-			page_direction.appendChild(prev_a);
+			document.getElementById('pagiP').appendChild(prev_a);
 
 		}
-
-		page_direction.innerHTML += '<span style="padding : 15%%;"></span>';
-
+		
 		if (current_page_index != pages_list.length - 1) {
 			var next_a = document.createElement('A');
 			next_a.href = "../" + pages_list[current_page_index + 1] + "/" + pages_list[current_page_index + 1] + ".html";
 			next_a.innerHTML = '  Next page >>';
-			next_a.className = 'paginationA';
+			next_a.className='paginators';
 			next_a.onclick = function () {
 				localStorage.setItem(proj_name, current_page_index + 1);
 			};
-			page_direction.appendChild(next_a);
+			document.getElementById('pagiN').appendChild(next_a);
 		}
-
-
 	}
 
 	pagination();
