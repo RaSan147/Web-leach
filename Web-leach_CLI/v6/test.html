@@ -1,627 +1,174 @@
+<style>
+  .label {
+    display: block;
+    align-items: center;
+    cursor: pointer;
+    color: #394a56;
+  }
 
 
+  .toggle {
+    isolation: isolate;
+    position: relative;
+    height: 30px;
+    width: 60px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow:
+      -8px -4px 8px 0px #ffffff,
+      8px 4px 12px 0px #d1d9e6,
+      4px 4px 4px 0px #d1d9e6 inset,
+      -4px -4px 4px 0px #ffffff inset;
+  }
 
+  .toggle-state {
+    display: none;
+  }
 
+  .indicator {
+    height: 100%;
+    width: 200%;
+    background: #ecf0f3;
+    border-radius: 15px;
+    transform: translate3d(-75%, 0, 0);
+    transition: transform 0.4s cubic-bezier(0.85, 0.05, 0.18, 1.35);
+    box-shadow:
+      -8px -4px 8px 0px #ffffff,
+      8px 4px 12px 0px #d1d9e6;
+  }
 
+  .toggle-state:checked~.indicator {
+    transform: translate3d(25%, 0, 0);
+  }
+</style>
 
+<!DOCTYPE html>
+<html>
 
-
-
-
-
-
-
-
-
-<!doctype html>
-<html lang="en">
 <head>
-<title>The Princess's Jewels | WEBTOON</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      position: absolute;
+      top: 50px;
+      font-family: "Lato", sans-serif;
+      transition: top 0.3s;
+    }
 
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      background-color: #111;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
+    }
 
+    .sidebar a {
+      padding: 8px 8px 8px 32px;
+      text-decoration: none;
+      font-size: 25px;
+      color: #818181;
+      display: block;
+      transition: 0.3s;
+    }
 
+    .sidebar a:hover {
+      color: #f1f1f1;
+    }
 
+    .sidebar .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+    }
 
+    .openbtn {
+      background-color: #111;
+      font-size: 20px;
+      cursor: pointer;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+    }
 
+    .openbtn:hover {
+      background-color: #444;
+    }
 
+    #main {
+      transition: margin-left .5s;
+    }
 
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<link rel="shortcut icon" href="https://webtoons-static.pstatic.net/image/favicon/favicon.ico?dt=2017082301" type="image/x-icon">
+    .top_bar {
+      background-color: #111;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: max-content;
+      display: block;
+      transition: top 0.3s;
+      font-size: 20px;
+    }
 
+    .top_bar #app_name {
+      padding: 11px 14px;
+      float: left;
+      font-size: 20px;
+      font: sans-serif;
+    }
 
+    @media screen and (max-width: 700px) {
+      .nav-btn-text {
+        display: none;
+      }
+    }
 
+    /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+    @media screen and (max-height: 450px) {
+      .sidebar {
+        padding-top: 15px;
+      }
 
-
-	
-	
-	
-	
-	
-	
-
-
-<link rel="stylesheet" type="text/css" href="/static/bundle/linewebtoon-28c94913f6cbdf7f2295.css">
-
-
-
-<script type="text/javascript">
-	window.__headerState__ = {
-		nclkLanguageCode: "en_en",
-		languageCode: "en",
-		cssCode: "en",
-		cssCodePrefix: "",
-		gaTrackingId: "UA-57082184-1",
-		contentLanguage: "ENGLISH",
-		gakSerName: "gak.webtoons.com",
-		serviceZone: 'GLOBAL',
-		facebookAdId: "",
-		nclickServer: "cc.loginfra.com",
-		lcsServer: 'lcs.loginfra.com',
-		browserType : "SAFARI",
-		gaPageName : ""
-	}
-
-	let ccsrv = window.ccsrv = window.__headerState__.nclickServer;
-	let nsc = window.nsc = "webtoons.all";
-	let nclk_evt = window.nclk_evt = 3;
-	let lcs_SerName = window.lcs_SerName = window.__headerState__.lcsServer;
-	let sNclkLanguageCode = window.sNclkLanguageCode = window.__headerState__.nclkLanguageCode;
-</script>
-<script type="text/javascript" src="/static/bundle/header-56f956edf03433cc49da.js" charset="utf-8"></script>
-<script type="text/javascript" src="/static/bundle/common/header-a15675a2d72c52aa2eef.js" charset="utf-8"></script>
-
-<meta property="og:title" content="The Princess's Jewels" />
-<meta property="og:type" content="com-linewebtoon:webtoon" />
-<meta property="og:url" content="https://www.webtoons.com/en/fantasy/the-princesss-jewels/list?title_no=2966" />
-<meta property="og:site_name" content="www.webtoons.com" />
-<meta property="og:image" content="https://swebtoon-phinf.pstatic.net/20210708_247/1625709600547AoyLx_JPEG/1ThePrincess27sJewels_mobile_landingpage.jpg?type=crop540_540" />
-<meta property="og:description" content="Princess Ariana de Secramise knows that becoming the first-ever empress of the Arbezela Empire will be no small task. That&rsquo;s why she collects five beautiful &ldquo;jewels&rdquo; -- talented, handsome men from all across the lands -- to help her reach her goal. Can Ariana maneuver her way through court politics to become the empress, and can these jewels help her shine?" />
-<meta property="com-linewebtoon:webtoon:author" content="JYUN / Hong Cha" />
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:site" content="@LINEWebtoon"/>
-<meta name="twitter:image" content="https://swebtoon-phinf.pstatic.net/20210708_247/1625709600547AoyLx_JPEG/1ThePrincess27sJewels_mobile_landingpage.jpg?type=crop540_540"/>
-<meta name="twitter:description" content="Princess Ariana de Secramise knows that becoming the first-ever empress of the Arbezela Empire will be no small task. That&rsquo;s why she collects five beautiful &ldquo;jewels&rdquo; -- talented, handsome men from all across the lands -- to help her reach her goal. Can Ariana maneuver her way through court politics to become the empress, and can these jewels help her shine?"/>
-<meta property="al:android:url" content="linewebtoon://episodeList/webtoon?titleNo=2966"/>
-<meta property="al:android:package" content="com.naver.linewebtoon"/>
-<meta property="al:android:app_name" content="LINE WEBTOON"/>
-<meta name="twitter:app:name:googleplay" content="LINE WEBTOON"/>
-<meta name="twitter:app:id:googleplay" content="com.naver.linewebtoon"/>
-<meta name="twitter:app:url:googleplay" content="linewebtoon://episodeList/webtoon?titleNo=2966"/>
-<meta property="al:ios:url" content="linewebtoon://episodeList/webtoon?titleNo=2966" />
-<meta property="al:ios:app_store_id" content="894546091" />
-<meta property="al:ios:app_name" content="LINE WEBTOON" />
-<meta name="twitter:app:name:iphone" content="LINE WEBTOON"/>
-<meta name="twitter:app:id:iphone" content="894546091"/>
-<meta name="twitter:app:url:iphone" content="linewebtoon://episodeList/webtoon?titleNo=2966"/>
-<meta name="twitter:app:name:ipad" content="LINE WEBTOON"/>
-<meta name="twitter:app:id:ipad" content="894546091"/>
-<meta name="twitter:app:url:ipad" content="linewebtoon://episodeList/webtoon?titleNo=2966"/>
-
-<meta name="keywords" content="The Princess&#039;s Jewels, Fantasy, WEBTOON" />
-<meta name="description" content="Read The Princess&#039;s Jewels Now! Digital comics on WEBTOON, EVERY THURSDAY. Princess Ariana de Secramise knows that becoming the first-ever empress of the Arbezela Empire will be no small task. That’s why she collects five beautiful “jewels” -- talented, handsome men from all across the lands -- to help her reach her goal. Can Ariana maneuver her way through court politics to become the empress, and can these jewels help her shine?, available online for free." />
-
-
-
-
-
-
-
-
- 
-
-
-<link rel="alternate" hreflang="en" href="https://www.webtoons.com/en/fantasy/the-princesss-jewels/list?title_no=2966&page=1" />
-
-<link rel="alternate" hreflang="x-default" href="https://www.webtoons.com/en/fantasy/the-princesss-jewels/list?title_no=2966&page=1" />	
-<link rel="canonical" href="https://www.webtoons.com/en/fantasy/the-princesss-jewels/list?title_no=2966&page=1" />
-<link rel="alternate" media="only screen and (max-width: 640px)" href="https://m.webtoons.com/en/fantasy/the-princesss-jewels/list?title_no=2966&page=1" />	
+      .sidebar a {
+        font-size: 18px;
+      }
+    }
+  </style>
 </head>
-<body class="en">
 
-<div id="wrap">
-	
+<body>
 
 
+  <div id="mySidebar" class="sidebar" style="left: 0" onblur="closeNav()">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Clients</a>
+    <a href="#">Contact</a>
+  </div>
 
+  <div id="mySidebar2" class="sidebar" style='right:0;' onblur="closeNav2()" onfocus="fuck()">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav2()">×</a>
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Clients</a>
+    <a href="#">Contact</a>
+  </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- skip navigation -->
-<div id="u_skip">
-	<a href="#content" onclick="document.getElementById('content').tabIndex=-1;document.getElementById('content').focus();return false;"><span>skip content</span></a>
-</div>
-<!-- //skip navigation -->
-
-<!-- header -->
-<div id="header">
-	<div class="header_inner">
-		<p class="logo"><a href="https://www.webtoons.com/en/" class="btn_logo N=a:gnb.home,g:en_en">WEBTOON</a></p>
-	<div class="sta">
-		
-			<!-- [D] creators hub 라벨 -->
-			<span class="lk_creators on"><a href="https://www.webtoons.com/en/creators101/getstarted">Creators 101</a></span>
-		
-		
-			<a href="#" class="lk_publish N=a:gnb.publish,g:en_en" id="btnPublish">Publish</a>
-		
-		
-		<a href="#" class="lk_login" id="btnLogin">Log In</a>
-		
-		<span class="login N=a:gnb.mywebtoon,g:en_en" id="btnLoginInfo" style="display: none;"></span>	
-
-		<div class="ly_loginbox NE=a:log" id="layerMy">
-			<div class="ico_arr v3 up"></div>
-
-			<a href="#" title="Close" class="btn_clse _btnClose">Close the Login window</a>
-		</div>
-
-		<span class="bar">|</span>
-		<a href="#" class="btn_search _btnSearch N=a:gnb.search,g:en_en">Search</a>
-		
-		<div class="search_area _searchArea NE=a:sch" style="display:none">
-			<span class="input_box"><input type="text" class="input_search _txtKeyword"></span>
-			<em class="search_dsc _searchDesc">Search by Series Title or Creator</em>
-			<span class="form_area _searchForm">
-						
-						<em class="ico_search _icoSearch">Search</em>
-						
-						<a href="#" class="btn_delete _btnDelete NPI=a:del,g:en_en" style="display: none;">Delete</a>
-						<em class="bar">|</em>
-						<a href="#" class="lk_close _btnClose NPI=a:cancel,g:en_en">Close</a>
-					</span>
-			
-			<ul class="ly_autocomplete _searchLayer" style="display:none">
-			</ul>
-		</div>
-	</div>
-	<p class="blind">MENU</p>
-	
-	<ul class="lnb NE=a:gnb">
-		<li class="m01 "><a href="https://www.webtoons.com/en/dailySchedule" class="NPI=a:daily,g:en_en">ORIGINALS</a>
-		</li>
-		<li class="m02 "><a href="https://www.webtoons.com/en/genre" class="NPI=a:genre,g:en_en">GENRES</a></li>
-		<li class="m03 "><a href="https://www.webtoons.com/en/top" class="NPI=a:toprated,g:en_en">POPULAR</a></li>
-		
-			<li class="m04 ">
-				<a href="https://www.webtoons.com/en/challenge" class="NPI=a:league,g:en_en">CANVAS
-						
-				</a>
-			</li>
-		
-
-		
-	</ul>
-
-	<div id="appleid-signin" data-color="black" data-border="true" data-type="sign in" hidden></div>
-</div>
-</div>
-<!-- //header -->
-<hr>
-
-
-	<!-- container -->
-    <div id="container" class="bg">
-		<!-- content -->
-        <div id="content" class="NE=a:enw">
-        	<!-- [D] 백그라운드 이미지는 style로 이미지 경로 넣어주세요 -->
-        <div class="detail_bg" style="background:url(https://webtoon-phinf.pstatic.net/20210708_142/1625709847191jUbM6_JPEG/6ThePrincess27sJewels_desktop_landingpage_BG.jpg) repeat-x"></div>
-        	<div class="cont_box">
-        		<!-- [D] 흰색 버전:type_white / 검은색(파란색) 버전:type_black / 챌린지리그:type_white -->
-				<div class="detail_header type_black">
-					<span class="thmb"><img src="https://webtoon-phinf.pstatic.net/20210708_240/1625709633895GcuDH_PNG/6ThePrincess27sJewels_desktop_landingpage_FG.png" height="240" alt="Representative image"></span>
-					<div class="info">
-						<h2 class="genre g_fantasy">Fantasy</h2>
-						<h1 class="subj">The Princess's Jewels</h1>
-						<a href="#" class="author _btnAuthorInfo NPI=a:creator,g:en_en">
-							JYUN / Hong Cha 
-							<span class="ico_info2" title="author info">author info</span>
-						</a>
-
-					</div>
-					<span class="valign"></span>
-					<div class="spi_wrap">
-						<ul class="spi_area NE=a:enw*s">
-							<li><a href="#" class="ico_facebook NPI=a:fb,g:en_en" title="Facebook" onclick="return false;">Facebook</a></li>
-						
-							<li><a href="#" class="ico_twitter NPI=a:tw,g:en_en" title="Twitter" onclick="return false;">Twitter</a></li>
-						
-							<li><a href="#" class="ico_tumblr NPI=a:tm,g:en_en" title="Tumblr" onclick="return false;">Tumblr</a></li>
-							<li><a href="#" class="ico_reddit NPI=a:rd,g:en_en" title="Reddit" onclick="return false;">Reddit</a></li>
-						
-						<li class="relative">
-							<a href="#" class="ico_copy" title="URL COPY" onclick="return false;" style="cursor:pointer" data-click-code="enw*s.copy">URL COPY</a>
-							<div class="ly_area _copyInfo">
-								<span class="ly_cont">The URL has been copied.<br>Paste(Ctrl+V) it in the desired location.</span>
-								<span class="ico_arr dn"></span>
-							</div>
-						</li>
-						
-						<li><a href="https://www.webtoons.com/en/fantasy/the-princesss-jewels/rss?title_no=2966" class="ico_rss" title="Rss">Rss</a></li>
-						
-						<li class="relative">
-							<a href="#" class="btn_favorite _favorites" onclick="return false;"><span class="ico_plus4"></span>Subscribe</a>
-							<div class="ly_area">
-								<span class="ly_cont _addFavorite">Subscribed to your list</span>
-								<span class="ly_cont _removeFavorite" style="display:none">Unsubscribed for your list</span>
-								<span class="ly_cont _overLimitFavorite" style="display:none">You can subscribe up to 500 WEBTOON ORIGINALS.</span>
-								<span class="ico_arr dn"></span>
-							</div>
-						</li>
-						</ul>
-					</div>
-				</div>
-				<div class="detail_body banner" style="background:#fff url(https://webtoon-phinf.pstatic.net/20210708_40/1625709563037eiA9S_JPEG/2ThePrincess27sJewels_desktop_thumbnail.jpg?type=a306) no-repeat 100% 100%;background-size:306px">
-					<div class="detail_lst">
-				
-					
-						
-						
-							<div class="detail_install_app">
-								<strong>Read <em>5</em> more new episodes on the app!</strong><br>Scan the QR code to download the <em>WEBTOON</em> app on the App Store or Google Play.
-								<img src="/qr/app/episodeList/webtoon/2966?market=N" alt="QR Code" width="71" height="73" class="img_qrcode">
-							</div>
-						
-					
-
-				
-				
-					
-				
-						<ul id="_listUl">
-						
-						
-						<li id="episode_4" data-episode-no="4">
-						
-							<a href="https://www.webtoons.com/en/fantasy/the-princesss-jewels/episode-4/viewer?title_no=2966&episode_no=4" class="NPI=a:list,i=2966,r=4,g:en_en">
-								<span class="thmb">
-									<img src="https://webtoon-phinf.pstatic.net/20210710_118/1625860686529cdH9T_PNG/thumb_5The-Princess27s-Jewels---Ep-04-part2_06.png?type=q90" width="77" height="73" alt="Episode 4">
-								</span>
-								<span class="subj"><span>Episode 4</span></span>
-								<span class="manage_blank"></span>
-								<span class="date">Jul 21, 2021</span>
-								
-								
-								
-								<span class="like_area _likeitArea"><em class="ico_like _btnLike _likeMark">like</em>25,143</span>
-								<span class="tx">#4</span>
-							</a>
-						</li>
-						
-						<li id="episode_3" data-episode-no="3">
-						
-							<a href="https://www.webtoons.com/en/fantasy/the-princesss-jewels/episode-3/viewer?title_no=2966&episode_no=3" class="NPI=a:list,i=2966,r=3,g:en_en">
-								<span class="thmb">
-									<img src="https://webtoon-phinf.pstatic.net/20210710_78/1625860546109FW9ES_PNG/thumb_2The-Princess27s-Jewels---Ep-03-part3_20.png?type=q90" width="77" height="73" alt="Episode 3">
-								</span>
-								<span class="subj"><span>Episode 3</span></span>
-								<span class="manage_blank"></span>
-								<span class="date">Jul 14, 2021</span>
-								
-								
-								
-								<span class="like_area _likeitArea"><em class="ico_like _btnLike _likeMark">like</em>30,949</span>
-								<span class="tx">#3</span>
-							</a>
-						</li>
-						
-						<li id="episode_2" data-episode-no="2">
-						
-							<a href="https://www.webtoons.com/en/fantasy/the-princesss-jewels/episode-2/viewer?title_no=2966&episode_no=2" class="NPI=a:list,i=2966,r=2,g:en_en">
-								<span class="thmb">
-									<img src="https://webtoon-phinf.pstatic.net/20210710_132/1625860211563bRRjf_PNG/thumb_3The-Princess27s-Jewels---Ep-02-part2_03.png?type=q90" width="77" height="73" alt="Episode 2">
-								</span>
-								<span class="subj"><span>Episode 2</span></span>
-								<span class="manage_blank"></span>
-								<span class="date">Jul 14, 2021</span>
-								
-								
-								
-								<span class="like_area _likeitArea"><em class="ico_like _btnLike _likeMark">like</em>30,232</span>
-								<span class="tx">#2</span>
-							</a>
-						</li>
-						
-						<li id="episode_1" data-episode-no="1">
-						
-							<a href="https://www.webtoons.com/en/fantasy/the-princesss-jewels/episode-1/viewer?title_no=2966&episode_no=1" class="NPI=a:list,i=2966,r=1,g:en_en">
-								<span class="thmb">
-									<img src="https://webtoon-phinf.pstatic.net/20210610_34/1623283606752DFqOg_PNG/thumb_1623283465557296614.png?type=q90" width="77" height="73" alt="Episode 1">
-								</span>
-								<span class="subj"><span>Episode 1</span></span>
-								<span class="manage_blank"></span>
-								<span class="date">Jul 14, 2021</span>
-								
-								
-								
-								<span class="like_area _likeitArea"><em class="ico_like _btnLike _likeMark">like</em>32,575</span>
-								<span class="tx">#1</span>
-							</a>
-						</li>
-						
-						</ul>
-						<div class="paginate">
-							
-							
-            
-
-							
-        
-                <a href='#' onclick='return false;'><span class='on'>1</span></a>
-
-							
-            
-
-							
-
-						</div>
-						
-						
-						
-					</div>
-					<div class="aside detail" id="_asideDetail">
-						<ul class="grade_area">
-							<li>
-								<span class="ico_subscribe">subscribe</span>
-								<em class="cnt">222.2K</em>
-								<span class="bar"></span>
-							</li>
-							<li>
-								<span class="ico_grade5">grade</span>
-								<em class="cnt" id="_starScoreAverage">9.10</em>
-								<a href="#" id="_rateButton" class="btn_rate2 NPI=a:rate,g:en_en" onclick="return false;">RATE</a>
-								
-								<div class="ly_grade">
-
-									<strong class="grade_cnt">10<span class="blind">point</span></strong>
-									
-									<span class="star_area NPI=a:ratesel,g:en_en">
-										<a href="#" title="0">Selected points</a>
-										<a href="#" title="1" onclick="return false;" class="on _star">1 points</a>
-										<a href="#" title="2" onclick="return false;" class="st_r on _star">2 points</a>
-										<a href="#" title="3" onclick="return false;" class="on _star">3 points</a>
-										<a href="#" title="4" onclick="return false;" class="st_r on _star">4 points</a>
-										<a href="#" title="5" onclick="return false;" class="on _star">5 points</a>
-										<a href="#" title="6" onclick="return false;" class="st_r on _star">6 points</a>
-										<a href="#" title="7" onclick="return false;" class="on _star">7 points</a>
-										<a href="#" title="8" onclick="return false;" class="st_r on _star">8 points</a>
-										<a href="#" title="9" onclick="return false;" class="_star">Select 9 points</a>
-										<a href="#" title="10" onclick="return false;" class="st_r  _star">10 point</a>
-
-									</span>
-									<p class="grade_txt">[Rate] Click to rate this</p>
-									<div class="grade_btn">
-										<a href="#" title="Cancel" class="lnk_cncl NPI=a:racancel,g:en_en" onclick="return false;">Cancel</a>
-										<a href="#" title="Send" class="lnk_send NPI=a:rasend,g:en_en" onclick="return false;">Send</a>
-									</div>
-								</div>
-
-								<div class="ly_grade retry">
-	                                <p class="grade_txt">You've already rated this.<br>Would you like to rate it again?</p>
-	                                <div class="grade_btn">
-	                                    <a href="#" title="No" class="lnk_cncl">No</a>
-	                                    <a href="#" title="Yes" class="lnk_send">Yes</a>
-	                                </div>
-	                            </div>
-							</li>
-						</ul>
-					
-					
-					
-						<p class="day_info"><span class="txt_ico_up">UP</span>EVERY THURSDAY</p>
-					
-					
-						<p class="summary">Princess Ariana de Secramise knows that becoming the first-ever empress of the Arbezela Empire will be no small task. That’s why she collects five beautiful “jewels” -- talented, handsome men from all across the lands -- to help her reach her goal. Can Ariana maneuver her way through court politics to become the empress, and can these jewels help her shine?</p>
-						<div class="aside_btn">
-							<a href="#" class="btn_type7 NPI=a:cont,g:en_en" id="continueRead" style="display:none;">Continue reading<span class="ico_arr21"></span></a>
-
-							<a href="https://www.webtoons.com/en/fantasy/the-princesss-jewels/episode-1/viewer?title_no=2966&episode_no=1" class="btn_type7 NPI=a:gofirst,g:en_en" id="_btnEpisode">First episode<span class="ico_arr21"></span></a>
-						</div>
-					</div>
-				</div>
-
-			
-			
-			
-				<div class="detail_other NE=a:enw">
-					<h2>You may also like</h2>
-					<ul class="lst_type1">
-	                
-	                
-					<li>
-						<a href="https://www.webtoons.com/en/fantasy/your-throne/list?title_no=2009" class="NPI=a:relate,g:en_en">
-							<div class="pic_area"><img src="https://webtoon-phinf.pstatic.net/20200513_262/1589332176633I2AlR_JPEG/11_EC8DB8EB84A4EC9DBC_mobile.jpg?type=a92" width="92" height="98" alt="Your Throne"></div>
-							<div class="info_area">
-								<p class="subj">Your Throne</p>
-								<p class="author">SAM</p>
-								<p class="grade_area"><span class="ico_like3">like</span><em class="grade_num">Like</em></p>
-							</div>
-						</a>
-					</li>
-					
-	                
-	                
-					<li>
-						<a href="https://www.webtoons.com/en/fantasy/men-of-the-harem/list?title_no=2443" class="NPI=a:relate,g:en_en">
-							<div class="pic_area"><img src="https://webtoon-phinf.pstatic.net/20210204_251/1612407129366oO2eM_JPEG/4MenOfTheHarem_mobile_thumbnail.jpg?type=a92" width="92" height="98" alt="Men of the Harem"></div>
-							<div class="info_area">
-								<p class="subj">Men of the Harem</p>
-								<p class="author">HereLee / Alphatart</p>
-								<p class="grade_area"><span class="ico_like3">like</span><em class="grade_num">Like</em></p>
-							</div>
-						</a>
-					</li>
-					
-	                
-	                
-					<li>
-						<a href="https://www.webtoons.com/en/romance/my-gently-raised-beast/list?title_no=2606" class="NPI=a:relate,g:en_en">
-							<div class="pic_area"><img src="https://webtoon-phinf.pstatic.net/20210409_62/1617932271994AtN5Y_JPEG/9MyGentlyRaisedBeast_mobile_thumbnail.jpg?type=a92" width="92" height="98" alt="My Gently Raised Beast"></div>
-							<div class="info_area">
-								<p class="subj">My Gently Raised Beast</p>
-								<p class="author">Yeoseulki / Early Flower</p>
-								<p class="grade_area"><span class="ico_like3">like</span><em class="grade_num">Like</em></p>
-							</div>
-						</a>
-					</li>
-					
-	                
-					</ul>
-				</div>
-			
-			
-			</div>
-		</div>
-		<!-- //conent -->
+  <div id='TopBar' class='top_bar'>
+    <button class="openbtn" onclick="openNav()" style='float: left;'>☰ <span class='nav-btn-text'>Sidebar</span></button>
+    <div id="main">
+      <span style="color: #ffffff;" id='app_name'><span style='font-size: 22px; color: #AAA;'> | </span> WL Reader</span>
     </div>
-	<!-- //container -->
-
-	
-	<div class="ly_dim _dimAuthorInfoLayer">
-		<div class="bg"></div>
-	</div>
-	<!-- About the Creator -->
-	<div class="ly_wrap _authorInfoLayer NE=a:enw">
-		<div class="ly_box ly_creator">
-			<div class="ly_creator_in _authorInnerContent">
-				
-					
-					
-					<p class="by">Written by</p>
-					<h3 class="title">JYUN</h3>
-					<div class="sns_area">
-						
-					</div>
-
-					<p class="desc">There should be at least one character in this series who will suit your taste. Please enjoy.</p>
-					
-				
-					
-					
-					<p class="by">Art by</p>
-					<h3 class="title">Hong Cha</h3>
-					<div class="sns_area">
-						
-					</div>
-
-					<p class="desc">Hello, I am Hong Cha, who did the artwork of this series. I am a writer who loves armor dresses, handsome men, and sexy muscles! I appreciate beauty in any gender. I don’t do social media so I can focus on my work. If you wish to send me any fan art, please send it to me here: burim4355@gmail.com.</p>
-					
-				
-				<a href="#" class="btn_ly_close _btnAuthorInfoLayerClose NPI=a:close,g:en_en">layer close</a>
-			</div>
-			<span class="ly_alignbox"></span>
-		</div>
-	</div>
-	<!-- //About the Creator -->
-	<hr>
-	
-
-
-
-
-<!-- footer -->
-	<div id="footer" class="NE=a:fot">
-		<!-- notice -->
-		<div class="notice_area" id="noticeArea" style="display: none;"></div>
-		<!-- //notice -->
-		<div class="foot_app">
-			<div class="foot_cont">
-				<span class="ico_qrcode">WEBTOON</span>
-				<div class="foot_down_msg">
-					<p class="txt">Download WEBTOON now!</p>
-					<a href="https://play.google.com/store/apps/details?id=com.naver.linewebtoon&referrer=utm_source%3Dlinewebtoon%26utm_medium%3Dmobileweb" target="_blank" class="btn_google NPI=a:android,g:en_en">GET IT on Google Play</a>
-					<a href="https://itunes.apple.com/app/line-webtoon/id894546091?mt=8" target="_blank" class="btn_ios NPI=a:ios,g:en_en">Download on the App Store</a>
-				</div>
-			</div>
-		</div>
-	
-		<ul class="foot_sns">
-		
-			<li><a href="https://www.facebook.com/webtoonofficial/" target="_blank" class="btn_foot_facebook">facebook</a></li>
-		
-			<li><a href="https://www.instagram.com/webtoonofficial/" target="_blank" class="btn_foot_instagram">instagram</a></li>
-		
-			<li><a href="https://twitter.com/webtoonofficial" target="_blank" class="btn_foot_twitter">twitter</a></li>
-		
-			<li><a href="https://www.youtube.com/webtoonofficial" target="_blank" class="btn_foot_youtube">youtube</a></li>
-		
-		</ul>
-	
-		<ul class="foot_menu _footer">
-		
-		<li><a href="https://www.webtoons.com/en/about" class="N=a:fot.about,g:en_en">About</a></li>
-		<li class="bar">|</li>
-		
-
-		
-
-		<li><a href="https://contact-cc.line.me/serviceId/12379?continue_without_login=true" rel="nofollow" target="_blank">Feedback</a></li>
-		<li class="bar">|</li>
-		<li><a href="https://help2.line.me/LINE_WEBTOON/pc?lang=en" rel="nofollow" class="N=a:fot.help,g:en_en" target="_blank">Help</a></li>
-		<li class="bar">|</li>
-		<li><a href="https://www.webtoons.com/en/terms" class="NPI=a:tos,g:en_en">Terms</a></li>
-		<li class="bar">|</li>
-			<li><a href="https://www.webtoons.com/en/terms/privacyPolicy" class="NPI=a:privacy,g:en_en">Privacy</a></li>
-
-		
-		
-
-		
-		<li class="bar gdprFooter" style="display: none">|</li>
-		<li><a href="https://www.webtoons.com/en/consentsManagement" class="NPI=a:personaldata gdprFooter" style="display: none">Personal Data</a></li>
-		
-	
-		
-		<li class="bar">|</li>
-		<li><a href="https://www.webtoons.com/en/advertising">Advertise</a></li>
-	
-		
-		<li class="bar ccpaFooter" style="display: none">|</li>
-		<li><a href="https://www.webtoons.com/en/terms/dnsmpi" class="NPI=a:Donotsellinfo ccpaFooter" style="display: none">Do Not Sell My Personal Information</a></li>
-		
-	
-		<li class="bar">|</li>
-		<li class="language NE=a:set" id="languageArea">
-			<a href="#" class="lk_lang _selectedLanguage NPI=a:contlg,g:en_en"><span></span><span class="ico_lang_arr"></span></a>
-			<ul class="ly_lang _languageList">
-			
-			<li class="on"><a href="#" class="ver_en _en _language NPI=a:contenglish" data-content-language="en" data-locale="en">English<span class="ico_lang_arr2"></span></a></li>
-			<li ><a href="#" class="ver_tw _zh-hant _language NPI=a:tradchinese,g:en_en" data-content-language="zh-hant" data-locale="zh_TW">中文 (繁體)</a></li>
-			<li ><a href="#" class="ver_th _th _language NPI=a:contth,g:en_en" data-content-language="th" data-locale="th_TH">ภาษาไทย</a></li>
-			<li ><a href="#" class="ver_id _id _language NPI=a:contid,g:en_en" data-content-language="id" data-locale="id">Indonesia</a></li>
-			<li ><a href="#" class="ver_es _es _language NPI=a:contid,g:en_en" data-content-language="es" data-locale="es">Español</a></li>
-			<li ><a href="#" class="ver_fr _fr _language NPI=a:contid,g:en_en" data-content-language="fr" data-locale="fr">Français</a></li>
-			<li ><a href="#" class="ver_de _de _language NPI=a:contid,g:en_en" data-content-language="de" data-locale="de">Deutsch</a></li>
-			</ul>
-		</li>
-		</ul>
-		<!-- copyright -->
-		
-			
-			
-				<p class="copyright">ⓒ WEBTOON Entertainment Inc.</p>
-				<p class="foot_logo"><span class="ico_foot_logo">WEBTOON</span></p>
-			
-		
-	</div>
-	<!-- //footer -->
-
-	
-
-
-
-<script type="text/javascript" src="/static/bundle/vendor-81e21219ca26467ff531.js" charset="utf-8"></script>
+    <button class="openbtn" onclick="openNav2()" style='float: right;'><span class='nav-btn-text'>Toolbar</span>&nbsp;&#x1F6E0; </button>
+  </div> 
 
 
 
@@ -630,340 +177,85 @@
 
 
 
+  <!-- Show google logo 100 times -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
 
-<script type="text/javascript">
+  <label class="label">
+    <div class="toggle">
+      <input class="toggle-state" type="checkbox" name="check" value="check" />
+      <div class="indicator"></div>
+    </div>
+  </label>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
 
-window.defaultErrorMessage = {
-	'alert.error.no_internet_connection' : 'No Internet Connection.\nPlease check the network connection.',
-	'alert.error.invalid_input' : 'Invalid input value.',
-	'alert.error.unknown' : 'Unknown error has occurred. Please try again in a moment.'
-};
-window.__commonScriptState__ = {
-	contentLanguage : 'ENGLISH',
-	contentLanguageCode : "en",
-	browserType : "SAFARI",
-	proxyName : "",
-	isNotNoticePage : true,
-	domain : 'www.webtoons.com',
-	recentBarParam : {
-		imgDomain : 'https://webtoon-phinf.pstatic.net',
-		language : 'en',
-		title : 'Recently viewed',
-		domain : 'www.webtoons.com',
-		contentLanguage : 'en'
-	},
-	noticeParam : {
-		domain : "www.webtoons.com",
-		contentLanguageCode : "en",
-		nclkLanguageCode : "en_en",
-		messages : {
-			"menu.notice" : "Notice"
-		}
-	},
-	loginLayerParam : {
-		isEmailLoginSupport : true,
-		contentLanguageCode : "en",
-		domain : "www.webtoons.com",
-		loginType : "EMAIL",
-		serviceZone : "GLOBAL",
-		messages : {
-			'message.login.author.publish.1' : 'Sign in now to reach',
-			'message.login.author.publish.2' : 'new readers around the globe!',
-			'message.login.1' : 'Log in and enjoy special features.',
-			'message.login.2' : '',
-			'message.login.3' : '',
-			'message.login.input.email.placeholder' : 'Email Address',
-			'message.login.input.password.placeholder' : 'Password',
-			'button.signup' : 'Sign up',
-			'button.login' : 'Log In',
-			'message.login.forget_password' : 'Forgot Password?',
-			'message.login.or' : 'OR Log in with',
-			'menu.log_in' : 'Login',
-			'button.close' : 'Close',
-			'message.login.close' : 'Close the Login window',
-			'sns.FACEBOOK' : 'Facebook',
-			'sns.TWITTER' : 'Twitter',
-			'sns.LINE' : 'LINE',
-			'sns.RENREN' : 'Renren',
-			'sns.TUMBLR' : 'Tumblr',
-			'sns.GOOGLE_PLUS' : 'Google+',
-			'sns.GOOGLE' : 'Google',
-			'sns.REDDIT' : 'Reddit',
-			'sns.ETC' : 'ETC'
-		},
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
 
-		availableSnsList : (function () { var result = [];
-			
-				result.push("FACEBOOK");
-			
-				result.push("TWITTER");
-			
-				result.push("LINE");
-			
-				result.push("GOOGLE");
-			
-				result.push("APPLE");
-			
-			return result;})(),
-		nclkLanguageCode: "en_en"
-	},
-	gdprCookieBannerMessages : {
-		'gdpr.cookie_agreement_banner.desc' : 'WEBTOON uses cookies necessary for authentication and security purposes. We would also like to use optional cookies to provide personalized content and to improve our services based on how you use such services. You can accept or refuse all optional cookies by clicking on the relevant buttons below or you can manage the use of optional cookies by clicking on the \'Cookie Settings\' button. For more information on cookies, please read our \u003Ca href=\"https:\/\/www.webtoons.com\/en\/terms\/cookiePolicy\" target=\"_blank\"\u003ECookie Policy\u003C\/a\u003E.',
-		'gdpr.cookie_agreement_banner.agree' : 'I Agree.',
-		'gdpr.cookie_agreement_banner.cookie_setting' : 'Cookie Settings'
-	},
-	ccpaCookieBannerMessages : {
-		'ccpa.cookie_agreement_banner.desc' : 'I agree that WEBTOON may process my personal information in accordance with the WEBTOON \u003Ca href=\"https:\/\/www.webtoons.com\/en\/terms\/privacyPolicy\" target=\"_blank\"\u003EPrivacy Policy\u003C\/a\u003E and that my personal information may be disclosed to trusted third parties of WEBTOON for advertising and marketing purposes. I confirm that I am authorized to provide this consent. The use of data can be managed in the \u003Ca href=\"https:\/\/www.webtoons.com\/en\/cookieSetting\"\u003ECookie Settings\u003C\/a\u003E and\/or at the link below.\u003Cbr\u003E',
-		'ccpa.cookie_agreement_banner.desc.do_not_sell' : 'Do Not Sell My Personal Information',
-		'ccpa.cookie_agreement_banner.title' : 'Consent to Third Party Advertising and Marketing',
-		'ccpa.cookie_agreement_banner.confirm' : 'Confirm',
-	},
-	gdprChildProtectionPopupMessages : {
-		'gdpr.child_protection_popup.challenge.header' : 'CANVAS is unavailable to children under the age of 16 residing in Germany.',
-		'gdpr.child_protection_popup.challenge.desc' : 'In order to comply with the German Youth Protection Law, the use of CANVAS has been restricted. Please refer to our \u003Ca href=\"https:\/\/help2.line.me\/LINE_WEBTOON\/pc?contentId=50010166&lang=en\" target=\"_blank\"\u003EHelp\u003C\/a\u003E section for more information.',
-		'button.ok' : 'OK'
-	},
-	policyAgreePopupParam : {
-		domain : "www.webtoons.com",
-		contentLanguageCode : "en",
-		nclkLanguageCode : "en_en",
-		messages : {
-			'policy.popup.title' : 'Greetings from\u003Cbr\u003E WEBTOON Entertainment Inc.',
-			'policy.popup.text' : 'To fully enjoy our service, you must agree to the new and updated Terms of Use and Privacy Policy.',
-			'policy.popup.desc' : 'I agree to the {tou} and {pp} of WEBTOON.',
-			'policy.popup.desc.tou' : 'Terms of Use',
-			'policy.popup.desc.pp' : 'Privacy Policy',
-			'policy.popup.caution' : 'Check above to proceed.',
-			'policy.popup.submit' : 'Submit',
-			'policy.popup.cancel' : 'Cancel',
-			'policy.popup.cancel.continue' : 'Continue without logging in',
-			'policy.popup.text_for_gdpr' : 'To fully enjoy our service, you must agree to the new and updated Terms of Use.',
-			'policy.popup.desc_for_gdpr' : 'I agree to the {tou} of WEBTOON.',
-			'policy.popup.desc_for_gdpr_privacy' : 'Please see our new and updated {pp} to learn more about the processing of your personal data.',
-		}
-	}
-}
-</script>
-<script type="text/javascript" src="/static/bundle/common/commonScript-0d70f74d737e4eba1dd6.js" charset="utf-8"></script>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="google">
 
-	
+  <script>
+    var prevScrollpos = window.pageYOffset;
+    window.onscroll = function () {
+      var currentScrollPos = window.pageYOffset;
+      if (prevScrollpos > currentScrollPos) {
+        document.getElementById("TopBar").style.top = "0";
+        document.getElementsByTagName("body")[0].style.top = "50px";
+      } else {
+        document.getElementById("TopBar").style.top = "-50px";
+        document.getElementsByTagName("body")[0].style.top = "0";
+      }
+      prevScrollpos = currentScrollPos;
+    }
+
+    function fuck() {
+      alert("fuck");
+    }
 
 
-<script>
-	window.__gnbState__ = {
-			locale : 'en'
-			, gnbLayerId:'#header'
-			, message : {
-				logoutMessage : 'Are you sure you want to log out?'
-				, systemErrorMessage : 'Unknown error has occurred. Please try again in a moment.'
-			}
-			, searchParam : {
-				locale : 'en',
-				autoCompleteUrl : 'https://ac.webtoons.com/ac?q=%s%5E%s&q_enc=UTF-8&st=1&r_lt=0&r_format=json&r_enc=UTF-8',
-				message : {
-					'confirm.search.delete_history' : 'Are you sure you want to delete your recent search history?',
-					'message.search.clear' : 'Clear Recent Searches',
-					'message.search.autocomplete.webtoon' : 'WEBTOON',
-					'message.search.autocomplete.artist' : 'Creator',
-					'message.search.autocomplete.view_all' : 'View All',
-					'message.search.autocomplete.close' : 'Close'
-				},
-				imgDomain : 'https://webtoon-phinf.pstatic.net',
-				templateParam : {
-					nclkLanguageCode : "en_en",
-					imageDomain : "https://webtoon-phinf.pstatic.net",
-					messages : {
-						'confirm.search.delete_history' : 'Are you sure you want to delete your recent search history?',
-						'message.search.clear' : 'Clear Recent Searches',
-						'message.search.autocomplete.webtoon' : 'WEBTOON',
-						'message.search.autocomplete.artist' : 'Creator',
-						'message.search.autocomplete.view_all' : 'View All',
-						'message.search.autocomplete.close' : 'Close'
-					}
-				}
-			},
-			myLayerParam : {
-				domain : "www.webtoons.com",
-				nclkLanguageCode : "en_en",
-				contentLanguageCode : "en",
-				messages : {
-					'menu.favorite' : 'Subscribed',
-					'menu.dashboard' : 'Dashboard',
-					'menu.mycomment' : 'Comments',
-					'menu.account' : 'Account',
-					'menu.ads' : 'Ad Sharing',
-					'button.logout' : 'Log Out'
-				}
-			},
-			languageCode : 'en',
-			childProtectorParams : {
-				messages : {
-					"main" : "This feature is unavailable. Please refer to\u003Cbr\u003Ethe {childpp} for more information.",
-					"childpp" : "Children’s Privacy Policy",
-					"ok" : "Close",
-				},
-				childppLink : "https://www.webtoons.com/en/terms/childrensPrivacyPolicy"
-			},
-		
-		
-	signUpLayerParam : {
-		domain : "www.webtoons.com",
-			contentLanguageCode : "en",
-			nclkLanguageCode : "en_en",
-			messages : {
-			"message.signup.desc" : "I agree to WEBTOON\'s \u003Ca href=\"https:\/\/www.webtoons.com\/en\/terms?noLogin=true\" target=\"_blank\" class=\"N=a:log.termsofuse,g:en_en\"\u003ETerms of Use\u003C\/a\u003E and \u003Ca href=\"https:\/\/www.webtoons.com\/en\/terms\/privacyPolicy?noLogin=true\" target=\"_blank\" class=\"N=a:log.privacy,g:en_en\"\u003EPrivacy Policy\u003C\/a\u003E.",
-				'message.signup.need_agree' : 'Click the check button before submitting.',
-				'button.sign_up' : 'Submit'
-		}
-	}
-};
-</script>
-<script type="text/javascript" src="/static/bundle/common/gnb-6c60efc1cd11633e33d2.js" charset="utf-8"></script>
+    function openNav() {
+      closeNav2();
+      document.getElementById("mySidebar").style.width = "250px";
+      document.getElementById("main").style.marginLeft = "250px";
+    }
 
-	
-	
+    function closeNav() {
+      document.getElementById("mySidebar").style.width = "0";
+      document.getElementById("main").style.marginLeft = "0";
+    }
 
 
+    function openNav2() {
+      closeNav();
+      document.getElementById("mySidebar2").style.width = "250px";
+      document.getElementById("main").style.marginRight = "250px";
+    }
 
-<div class="aside_translatedby" id="_translateInfoArea" style="display:none;">
-	<h2>Translated by Fans</h2>
-	<a href="#" class="lk_more _more">More +</a>
-	<!-- [D] more오버시 아래레이어 on 클래스 추가해 주세요 -->
-	<div class="ly_area ly_translatemore" id="_translateLayer">
-		<div class="ly_cont">
-			<p>Enjoy weboons with<br><strong>official translations</strong> and <strong>fan translations!</strong></p>
-			<div class="inner">
-				<h3 class="line">Unofficially translated by <strong>FANS</strong></h3>
-				<p id="_translateLyaerFans" style="display:none;"></p>
-				<p id="_translateLayerNoFans" style="display:none;">Be the first translator of this series! <a href="#">More ></a></p>
-				<p id="_translateLayerNoSupport" style="display:none;">This series doesn't support for<br>fan translation not yet.</p>
-			</div>
-			<p class="btnbox" id="_translateLayerButtonArea"><a href="#" target="_blank" class="btn_translate _translateLink NPI=a:gotranslate,g:en_en">Go translate</a></p>
-		</div>
-		<span class="ico_arr v2 up"></span>
-	</div>
-	<p class="lst_lang">
-		<span id="_translateFans"></span>
-	</p>
-</div>
-
-<script>
-	window.__translateForEpisodeListState__ = {
-		titleNo : 2966,
-		param : {
-			url : {
-				webtoonLanguageInfo : 'https://global.apis.naver.com/lineWebtoon/ctrans/translatedWebtoonLanguageInfo_jsonp.json'
-			},
-			string: {
-				episodes : 'episodes'
-			}
-		}
-	}
-</script>
-<script type="text/javascript" src="/static/bundle/episodeList/translateForEpisodeList-99c6aec2148639431847.js" charset="utf-8"></script>
-
-	
-	<script type="text/javascript">
-		window.__episodeListState__ = {
-			languageCode : "en",
-			episodeListParam : {
-				titleNo: 2966,
-				btnEpisodeText: "Continue reading",
-				language: "en",
-				isChallenge : false,
-				episodePath: "https://www.webtoons.com/en/fantasy/the-princesss-jewels",
-				messages : {
-					registerError : "System error!",
-				}
-			},
-			title : {
-				titleNo: 2966,
-				ageGradeNotice : false,
-				unsuitableForChildren : false,
-			},
-			gdprChildProtectionPopupMessages : {
-				'gdpr.child_protection_popup.title.header' : 'The selected content is unavailable to children under the age of 16.',
-				'button.ok' : 'OK'
-			},
-			shareComponentParam : {
-				shareCopyMessage: "The URL has been copied.<br>Paste(Ctrl+V) it in the desired location.",
-				shareShortUrl: "",
-				clipboardSwf: "/swf/clipboard.swf",
-				serviceZone: "GLOBAL",
-				titleNo : 2966,
-				isChallenge : false,
-				fbRefresh : "1626915639000",
-				languageCode : "en",
-				childProtectorParams : {
-					messages : {
-						"main" : "This feature is unavailable. Please refer to\u003Cbr\u003Ethe {childpp} for more information.",
-						"childpp" : "Children’s Privacy Policy",
-						"ok" : "Close",
-					},
-					childppLink : "https://www.webtoons.com/en/terms/childrensPrivacyPolicy"
-				}
-			},
-			addFavoriteParam : {
-				titleNo: 2966,
-				isChallenge: false,
-				areaCode: "enw",
-				favoriteButtonHTML: '<em class="ico_plus4"></em>Subscribe',
-				alreadyFavoritedButtonHTML: '<em class="ico_plus4"></em>Subscribed',
-				promotionName: ''
-			},
-			shareParam : {
-				title : "The Princess\'s Jewels",
-				synopsis : "Princess Ariana de Secramise knows that becoming the first-ever empress of the Arbezela Empire will be no small task. That\u2019s why she collects five beautiful \u201Cjewels\u201D -- talented, handsome men from all across the lands -- to help her reach her goal. Can Ariana maneuver her way through court politics to become the empress, and can these jewels help her shine?",
-				shareMessage : {
-					twitterShareMessage :
-					
-					
-					
-						"Reading #{TITLE_NAME} made my day better.\n {LINK_URL} #WEBTOON"
-					
-					,
-					tumblrShareTitle :
-					
-					
-					
-						"{TITLE_NAME}"
-					
-					,
-					redditShareTitle :
-					
-					
-					
-						"{TITLE_NAME} This comic will make your day better!"
-					
-					,
-					tumblrShareDescription:
-					
-					
-					
-						"{TITLE_SYNOPSIS}\nReading this will make your day better. #{TITLE_NAME} #webcomic #WEBTOON"
-					
-					,
-					lineShareMessage :
-					
-					
-					
-						"You have to check out {TITLE_NAME} on WEBTOON!"
-					
-					
-				},
-				messages : {
-					"seo.message.default.title" : "WEBTOON"
-				}
-			},
-			likeItParam : {
-				language: 'en',
-				isChallenge: false,
-				titleNo: 2966
-			}
-		};
-	</script>
-	<script type="text/javascript" src="/static/bundle/episodeList/episodeList-86af232c430a8db907c1.js" charset="utf-8"></script>
-</div>
+    function closeNav2() {
+      document.getElementById("mySidebar2").style.width = "0";
+      document.getElementById("main").style.marginRight = "0";
+    }
+  </script>
 
 </body>
+
 </html>

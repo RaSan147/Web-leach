@@ -37,6 +37,10 @@ class XprintClass:
 
         self.custom_type_codes = ['/u/', '/a/', '/y/', '/g/', '/k/', '/b/', '/r/', '/h/', '/bu/', '/hu/', '/=/']
 
+        
+        self.no_code = False
+        self.no_colors = False
+
     def text_styling_markup(self): #not in use
         ''' for custom text stypling like html
         print(tnt_helper('/<style= col: red>/ 69'))'''
@@ -176,6 +180,7 @@ class XprintClass:
         self.wait_time=float(wait_time)
         self.end=str(end)
 
+
         self.custom_style_temp = self.custom_style[:]
 
         self.tnt_helper()
@@ -185,75 +190,103 @@ class XprintClass:
             slept= False
             has_code= False
 
-            if self.text[i]=='/' and '/' in self.text[i+2:i+5]:
-                if self.text[i+1] in ('a','r','g','y','b','p','c','w','=','u','i','h','_'):
-                    x=self.text[i+1]
-                    if x=='a': self.custom_style_temp[0]=self.ash_c
-                    elif x=='r': self.custom_style_temp[0]=self.red_c
-                    elif x=='g': self.custom_style_temp[0]=self.green_c
-                    elif x=='y': self.custom_style_temp[0]=self.yello_c
-                    elif x=='b': self.custom_style_temp[0]=self.blue_c
-                    elif x=='p': self.custom_style_temp[0]=self.pink_c
-                    elif x=='c': self.custom_style_temp[0]=self.cayan_c
-                    elif x=='w': self.custom_style_temp[0]=self.white_c
-                    elif x=='=':
-                        sys.stdout.write('\u001b[0m')
-                        sys.stdout.flush()
-                        self.custom_style_temp = self.default_style[:]
-                    elif x=='u': self.custom_style_temp[2]=self.ul_tx
-                    elif x=='i': self.custom_style_temp[2]=self.neg_tx
-                    elif x=='h': self.custom_style_temp[2]=self.bold_tx
-                    #sys.stdout.write('\u001b['+custom_style[0]+';'+custom_style[1]+';'+custom_style[2]+'m')
-                    if self.text[i+2]=='/':
-                        has_code=True
-                        i+=2
-                    elif self.text[i+2] in ('a','r','g','y','b','p','c','w','u','i','h','_'):
-                        x=self.text[i+2]
-                        if x=='a': self.custom_style_temp[1]= self.normal_b
-                        elif x=='r': self.custom_style_temp[1]=self.red_b
-                        elif x=='g': self.custom_style_temp[1]=self.green_b
-                        elif x=='y': self.custom_style_temp[1]=self.yello_b
-                        elif x=='b': self.custom_style_temp[1]=self.blue_b
-                        elif x=='p': self.custom_style_temp[1]=self.pink_b
-                        elif x=='c': self.custom_style_temp[1]=self.cayan_b
-                        elif x=='w': self.custom_style_temp[1]=self.white_b
+            if self.text[i:i+3] == '/~`':
+                self.no_code = True
+                i+=3
+                continue
+
+            if self.text[i:i+3] == '`~/':
+                self.no_code = False
+                i+=3    
+                continue
+
+            if self.text[i:i+3] == '/~~':
+                self.no_colors = True
+                i+=3
+                continue
+
+            if self.text[i:i+3] == '~~/':
+                self.no_colors = False
+                i+=3
+                continue
+
+            
+
+
+
+
+
+
+            if self.no_code==False:
+                if self.text[i]=='/' and '/' in self.text[i+2:i+5]:
+                    if self.no_colors==False and self.text[i+1] in ('a','r','g','y','b','p','c','w','=','u','i','h','_'):
+                        x=self.text[i+1]
+                        if x=='a': self.custom_style_temp[0]=self.ash_c
+                        elif x=='r': self.custom_style_temp[0]=self.red_c
+                        elif x=='g': self.custom_style_temp[0]=self.green_c
+                        elif x=='y': self.custom_style_temp[0]=self.yello_c
+                        elif x=='b': self.custom_style_temp[0]=self.blue_c
+                        elif x=='p': self.custom_style_temp[0]=self.pink_c
+                        elif x=='c': self.custom_style_temp[0]=self.cayan_c
+                        elif x=='w': self.custom_style_temp[0]=self.white_c
+                        elif x=='=':
+                            sys.stdout.write('\u001b[0m')
+                            sys.stdout.flush()
+                            self.custom_style_temp = self.default_style[:]
                         elif x=='u': self.custom_style_temp[2]=self.ul_tx
                         elif x=='i': self.custom_style_temp[2]=self.neg_tx
                         elif x=='h': self.custom_style_temp[2]=self.bold_tx
-
-                        if self.text[i+3]=='/':
+                        #sys.stdout.write('\u001b['+custom_style[0]+';'+custom_style[1]+';'+custom_style[2]+'m')
+                        if self.text[i+2]=='/':
                             has_code=True
-                            i+=3
-                        elif self.text[i+3] in ('u','i','h'):
-                            x=self.text[i+3]
-                            if x=='u': self.custom_style_temp[2]=self.ul_tx
+                            i+=2
+                        elif self.text[i+2] in ('a','r','g','y','b','p','c','w','u','i','h','_'):
+                            x=self.text[i+2]
+                            if x=='a': self.custom_style_temp[1]= self.normal_b
+                            elif x=='r': self.custom_style_temp[1]=self.red_b
+                            elif x=='g': self.custom_style_temp[1]=self.green_b
+                            elif x=='y': self.custom_style_temp[1]=self.yello_b
+                            elif x=='b': self.custom_style_temp[1]=self.blue_b
+                            elif x=='p': self.custom_style_temp[1]=self.pink_b
+                            elif x=='c': self.custom_style_temp[1]=self.cayan_b
+                            elif x=='w': self.custom_style_temp[1]=self.white_b
+                            elif x=='u': self.custom_style_temp[2]=self.ul_tx
                             elif x=='i': self.custom_style_temp[2]=self.neg_tx
                             elif x=='h': self.custom_style_temp[2]=self.bold_tx
 
-                            if self.text[i+4]=='/':
-                                has_code = True
+                            if self.text[i+3]=='/':
+                                has_code=True
+                                i+=3
+                            elif self.text[i+3] in ('u','i','h'):
+                                x=self.text[i+3]
+                                if x=='u': self.custom_style_temp[2]=self.ul_tx
+                                elif x=='i': self.custom_style_temp[2]=self.neg_tx
+                                elif x=='h': self.custom_style_temp[2]=self.bold_tx
+
+                                if self.text[i+4]=='/':
+                                    has_code = True
+                                    i+=4
+
+
+                    elif self.text[i+1]=='s':
+                        if self.text[i+3]=='/':
+                            try:
+                                sleep(float(self.text[i+2]))
+                                i+=3
+                                slept = True
+                            except: pass
+                        elif self.text[i+4]=='/':
+                            try:
+                                sleep(float(self.text[i+2:i+4]))
                                 i+=4
-
-
-                elif self.text[i+1]=='s':
-                    if self.text[i+3]=='/':
-                        try:
-                            sleep(float(self.text[i+2]))
-                            i+=3
-                            slept = True
-                        except: pass
-                    elif self.text[i+4]=='/':
-                        try:
-                            sleep(float(self.text[i+2:i+4]))
-                            i+=4
-                            slept = True
-                        except: pass
-                    elif self.text[i+5]=='/':
-                        try:
-                            sleep(float(self.text[i+2:i+5]))
-                            i+=5
-                            slept = True
-                        except: pass
+                                slept = True
+                            except: pass
+                        elif self.text[i+5]=='/':
+                            try:
+                                sleep(float(self.text[i+2:i+5]))
+                                i+=5
+                                slept = True
+                            except: pass
             if has_code==True:
                 self.custom_style = self.custom_style_temp[:]
 
@@ -263,8 +296,8 @@ class XprintClass:
                 sys.stdout.flush()
             else:
                 sys.stdout.write(self.text[i])
-                sys.stdout.flush()
                 if wait_time!=0:
+                    sys.stdout.flush()
                     sleep(self.wait_time)
             i+=1
             # print(has_code, slept)

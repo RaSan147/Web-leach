@@ -1,6 +1,9 @@
+# pylint: ignore=unused-wildcard-import
+
 # from basic_shared import *
 import rjsmin
 from re import compile as re_compile
+# from main import *
 
 class css_minify():
 	def __init__(self):
@@ -1093,27 +1096,26 @@ for (var i = 0; i < pages_list.length; i++){
 
 dir_path = os_dirname(os_realpath(__file__))
 
-def make_pages(all_li, dir_list, project, seq, ext='', dir_sorted = False):   #func_code= 40001
-	first_page=None
+# del make_pages
+def make_pages(all_li, dir_list, project, seq, ext='', dir_sorted = False):  #func_code= 40001
+
+	first_page = None
 	dir_len = len(dir_list)
 
-	if not dir_sorted: dir_list= natsort.natsorted(dir_list)
-	first_page = dir_path+'/Download_projects/'+ project+'/'+project+'.html'
+	if not dir_sorted:
+		dir_list = natsort.natsorted(dir_list)
+	
 	for i in range(dir_len):
-		temp=[]
-		for j in range(len(all_li)):
-			if all_li[j][1] == i:
-				temp.append(html_escape(trans_str(html_unescape(get_file_name(all_li[j][0])
-										), {'/\\|:*><?': '-', '"':"'"})+ext))
-
-		temp=remove_duplicate(temp)
-
+		temp = all_li.all_names[i].copy()
+		
 		if seq:
 			box= return_sub_page(str(natsort.natsorted(temp)), str(dir_list), i, project)
 		else:
 			box= return_sub_page(str(temp), str(dir_list), i, project)
-		
-		writer(dir_list[i]+'.html', 'w', box,'Download_projects/'+ project+'/'+dir_list[i], f_code= '40001')
-	writer(project+'.html', 'w', main_page_template%(str((dir_list)), project),'Download_projects/'+ project, f_code= '40001')
+		Fsys.writer(dir_list[i]+'.html', 'w', box,'Download_projects/'+ project+'/'+dir_list[i], f_code= '40001')
+	Fsys.writer(project+'.html', 'w', main_page_template%(str((dir_list)), project),'Download_projects/'+ project, f_code= '40001')
+	print('html done')
 	return first_page
+
+
 

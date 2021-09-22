@@ -41,7 +41,23 @@ check_server >> Netsys.check_server
 flatten2D >> Datasys.flatten2D
 remove_noscript >> Netsys.remove_noscript
 
-web_leach.data_checkup >> ProjectType.load_data + ProjectType.check_proj_file + ProjectType.check_list_file
+web_leach.catch_KeyboardInterrupt >> OSsys.catch_KeyboardInterrupt
+web_leach.speed_limiter >> ProjectType_.speed_limiter
+web_leach.speed_tester >> ProjectType_.speed_tester
+web_leach.distribute >> ProjectType_.downloader
+web_leach.list_writer >> ProjectType_.generic_list_writer + ProjectType_.list_writer_img
+web_leach.nhentai_link >> ProjectType_.nhentai_link
+web_leach.check_sp_links >> SupportTools.check_sp_links
+web_leach.mangafreak_link >> ProjectType_.mangafreak_link
+web_leach.webtoon_link >> ProjectType_.webtoon_link
+web_leach.retry_errors >> ProjectType_.retry_errors
+web_leach.data_checkup >> ProjectType_.load_data + ProjectType_.check_proj_file + ProjectType_.check_list_file
+web_leach.main >> main.main_loop
+web_leach.dl_page >> ProjectType_.dl_page
+web_leach.main_offline >> #: TODO
+
+
+
 
 
 

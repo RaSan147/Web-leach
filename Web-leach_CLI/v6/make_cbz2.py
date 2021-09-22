@@ -1,9 +1,9 @@
 # pylint: disable=unused-wildcard-import
 # pylint: disable=unused-import
 
-if __name__ == '__main__':
+if __file__ == "make_cbz2.py":
 	from main import *
-
+	pass
 import zipfile
 
 class MakeCbz_:
@@ -12,42 +12,36 @@ class MakeCbz_:
 		first_page=None
 		dir_len = len(dir_list)
 
-		if not dir_sorted: dir_list= natsort.natsorted(dir_list)
-		first_page = self, self.dir_path+'/Download_projects/'+ project+'/'+project+'.html'
+		# dir_bkp = dir_list[:]
+
+		# if not dir_sorted: dir_list= natsort.natsorted(dir_list)
+		first_page = self.dir_path+'/Download_projects/[CBZ]'+ project+'/'
 		has_non_cbz = False
 		missing_files = False
-		cbz_ext = ['jpg', 'jpeg', 'png', 'gif']
+		cbz_ext = ('jpg', 'jpeg', 'png', 'gif')
 		xprint('/y/Creating CBZ files\nPlease wait.../=/\n  [ 0 / %i ] done...'%dir_len)
 		for i in range(dir_len):
-			temp=[]
+			temp= all_li.all_names[i].copy()
+			for j in range(len(temp)):
+				if not temp[j].endswith(cbz_ext):
+					temp[j] = None
+					if has_non_cbz is False:
+						has_non_cbz = True
+						IOsys.delete_last_line()
+						print('Ignoring CBZ unsupported files\n')
+						leach_logger('50001xU||'+project)
 
-			for j in range(len(all_li)):
-				if all_li[j][1] == i:
-					file_name = Fsys.get_file_name(all_li[j][0]
-											).replace('/','-').replace('\\','-'
-											).replace('|','-').replace(':','-'
-											).replace('*','-').replace('"',"'"
-											).replace('>','-').replace('<','-'
-											).replace('?','-')+ext
-					if Fsys.get_file_ext(file_name).lower() not in cbz_ext:
-						if has_non_cbz is False:
-							has_non_cbz = True
-							IOsys.delete_last_line()
-							print('Ignoring CBZ unsupported files\n')
-							leach_logger('50001xU||'+project)
-					else:
-						temp.append(html_unescape(Fsys.get_file_name(all_li[j][0])).replace('/','-').replace('\\','-').replace('|','-').replace(':','-').replace('*','-').replace('"',"'").replace('>','-').replace('<','-').replace('?','-'))
-
-			temp=Datasys.remove_duplicate(temp)
 
 			if seq:
 				temp= natsort.natsorted(temp)
 
+			
 			outpath= 'Download_projects/[CBZ]'+ project+'/'+dir_list[i]+'.cbz'
 			Fsys.writer(dir_list[i]+'.cbz', 'wb', b'', 'Download_projects/[CBZ]'+ project, '50001')
 			
 			with zipfile.ZipFile(outpath, 'w') as zip:
 				for index, image in enumerate(temp):
+					if image is None: continue
 					file = Fsys.reader('Download_projects/'+ project+'/'+dir_list[i]+'/'+image, 'rb', on_missing= False, ignore_missing_log = True, f_code= '50001')
 					if file==False:
 						if missing_files==False:

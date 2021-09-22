@@ -941,6 +941,9 @@ def get_link(i, current_link, homepage):		#func_code= 0001E  v
 
 	elif i.startswith('/'):
 		i = homepage + i
+
+	i = i.split('#')[0]  # removes the fragment
+
 	if '//' not in i:
 		temp = homepage
 		if temp.endswith('/'):
@@ -1519,7 +1522,7 @@ class web_leach:
 
 			self.is_error = is_error
 
-			if lists.index(j)>=res:N
+			if lists.index(j)>=res:
 				current_header = header_()	# randomizes header from list on every download to at least try to fool server
 				if self.sub_links!=[]: # if sub_links are available, then use them as header referer
 					current_header['referer'] = self.sub_links[i[1]]
