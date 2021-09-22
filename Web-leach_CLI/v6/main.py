@@ -3172,7 +3172,7 @@ class ProjectType_:     #fc=0P00
 				datas = _t.groups()  # category, title, code
 			else:
 				xprint("/r/Invalid link/y/\n please recheck the Main link/=/")
-				leach_logger(log(['0P0WxX', self.Project, self.main_link, 'Failed to pass the regex testing']), UserData.user_name)))
+				leach_logger(log(['0P0WxX', self.Project, self.main_link, 'Failed to pass the regex testing']), UserData.user_name)
 				return 0
 
 		session = requests.Session()
