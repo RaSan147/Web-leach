@@ -54,6 +54,7 @@ def leach_logger(*args):
 	pass
 
 def log(arr):
+	
 	for i in range(len(arr)):
 		if type(arr) is str:
 			continue

@@ -305,7 +305,7 @@ for (var i = 0; i < pages_list.length; i++){
 		dir_len = len(dir_list)
 		dir_bkp = dir_list[:]
 
-		if dir_sorted: dir_list= natsort.natsorted(dir_list)
+
 		first_page = self.dir_path+'/Download_projects/'+ project+'/'+project+'.html'
 		for i in range(dir_len):
 			temp= all_li[dir_bkp.index(dir_list[i])]

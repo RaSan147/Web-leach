@@ -209,8 +209,8 @@ print(2) #x
 class AboutApp_:     #fc=A000
 	""" Contains Information about the app and verion details"""
 
-	_VERSION = '6.010'
-	_Vcode = '006010'
+	_VERSION = '6.000'
+	_Vcode = '006000'
 	_APP_NAME = 'Web-Leach'
 	_APP_DESC = 'Web-Leach is a simple python script to download files from web'
 	_APP_AUTHOR = 'Ratul Hasan'
@@ -1889,6 +1889,7 @@ class CachedData_:     #fc=0C00
 		self.__all__ = ("cached_webpages", "cached_link_facts")
 		self.cached_webpages = dict()
 		self.cached_link_facts = dict()
+		self.cached_soup = dict()
 
 		# print(self.__dict__)
 
@@ -1939,6 +1940,7 @@ class ProjectType_:     #fc=0P00
 		self.img_to_sort = False	# indicates if the images should be sorted or not
 		self.dir_sorted = True		# will sort directories by name
 		self.corruptions = []	# list of corruptions in project data if there's any or empty
+		self.sub_dirs_count = 0 # number of sub directories named in the project data
 
 		### Project creation data
 		self.first_created = False	# Nsys.cdt_() of the time when the project was first created
@@ -2039,7 +2041,7 @@ class ProjectType_:     #fc=0P00
 
 
 		list_path = proj_path[:-len(self.proj_ext[0])] + self.proj_ext[1]
-
+		print(list_path)
 		if os_exists(proj_path):
 			self.proj_good = True
 			print('db found')
@@ -2103,7 +2105,7 @@ class ProjectType_:     #fc=0P00
 				self.sub_links = loaded_data_set['sub_links']
 				
 			if 'dir_sorted' in loaded_data_set:
-				self.dir_sorted = loaded_data_set['dir_sorted']
+				self.dir_sorted = True or loaded_data_set['dir_sorted'] ## need to fix
 			
 			
 			if 'has_missing' in loaded_data_set:
@@ -2241,17 +2243,22 @@ class ProjectType_:     #fc=0P00
 
 
 	def gen_sub_links(self):     #fc=0P07
-		xprint("Getting Mainpage/s1/./s1/./s1/.")
+		"""generates the sub links for the project"""
+
+		xprint("Getting Mainpage", end= '')
 		sub_links2 = []
 		sub_links = []
 		if self.dimention == 1 or self.dimention == 3:
 			sub_links2 += [self.main_link]
 		if self.dimention == 2 or self.dimention == 3:
-			page = self.dl_page(self.main_link, cache=True)
+			page = self.dl_page(self.main_link, cache=True, do_not_cache=False)
 			if not page:
-				xprint("/r/Failed to download link/=//y/\n==Possible cause: /h/No internet/=/\n")
+				xprint("/r/Failed to download Main link/=//y/\n==Possible cause: /h/No internet/=/\n")
 				return False
+			xprint('.', end = '')
 			soup = bs(Netsys.remove_noscript(page.content), parser)
+
+			CachedData.cached_soup[self.main_link] = soup
 			# link_startswith = input("\n(optional but recommended to be more precise):\n1. Sub-Links Starts With : ")
 			# leach_logger('0M05x1||%s||l_starts||%s'%(self.Project, self.link_startswith), UserData.user_name)
 			sub_links2 += Datasys.remove_duplicate([sub_link.get('href').strip() for sub_link in soup.find_all('a') if sub_link.get('href')!=None])
@@ -2268,43 +2275,125 @@ class ProjectType_:     #fc=0P00
 			if link_startswith_re.search(i)!=None:
 				sub_links.append(i)
 
+		xprint('.')
 		del sub_links2
 
 		self.sub_links = Datasys.remove_duplicate(sub_links)
-		if self.dir_sorted:
-			self.sub_links = natsort.natsorted(self.sub_links)
-		
-		# print(self.sub_links)
-		del sub_links
 
+		self.sub_dirs = list(range(len(self.sub_links)))
 
-	def gen_sub_dirs(self):     #fc=0P08
-		"""generates sub-directories|`self.sub_dirs`"""
 		self.all_list = All_list_type(len(self.sub_links))
 
-		for j in range(len(self.sub_links)):
-			i = self.sub_links[j]
-			name = Fsys.get_dir(i, 'url')
+		del sub_links
+
+	def update_sub_dirs(self, name, index):     #fc=0P0J
+		"""Update the sub_dirs list with the new name
+		
+		name: the name of the sub_dir
+		index: the index of the sub_dir in the list `sub_dirs`
+		"""
+
+		name = Datasys.trans_str(name, {'/\\|:*><?': '-', '"':"'"})
+
+		if name == self.sub_dirs[index]:
+			return 0
+	
+		if name not in self.sub_dirs:
+			self.sub_dirs[index] = name
+
+		else:
+			n = 1
+			name_ = name
+
+			for n in range(len(self.sub_dirs)-1,0,-1):
+				if self.sub_dirs[n].startswith(name_+'(') and self.sub_dirs[n][-1]==')':
+					if self.sub_dirs[n][len(name_)+1:-1].isdigit():
+						n = int(self.sub_dirs[n][len(name_)+1:-1]) + 1
+					name = ''.join((name_, '(', str(n), ')'))
+
+					if name not in self.sub_dirs:
+						break
+				n += 1
+
+			self.sub_dirs[index] = name
 
 
-			if name not in self.sub_dirs:
-				self.sub_dirs.append(name)
 
-			else:
-				n = 1
-				name_ = name
 
-				for n in range(len(self.sub_dirs)-1,0,-1):
-					if self.sub_dirs[n].startswith(name_+'(') and self.sub_dirs[n][-1]==')':
-						if self.sub_dirs[n][len(name_)+1:-1].isdigit():
-							n = int(self.sub_dirs[n][len(name_)+1:-1]) + 1
-						name = ''.join((name_, '(', str(n), ')'))
+	def _gen_sub_dirs(self, part):     #fc=0P0K
+		"""generates directory name from page title and stores the soup in CachedDatato reuse while indexing
+		part: threading partition to speed up the process"""
+		try:
+			list_range = range(len(self.sub_links))[part::3]
 
-						if name not in self.sub_dirs:
-							break
-					n += 1
+			for j in list_range:
+				if self.break_all: return 0
+				i = self.sub_links[j]
+				page = self.dl_page(i, referer=self.main_link, cache=True, do_not_cache=False)
+				if page:
+					soup = bs(Netsys.remove_noscript(page.content), parser)
+					CachedData.cached_soup[i] = soup
+					CachedData.cached_webpages.pop(i)
+					self.update_sub_dirs(soup.title.text, j)
+				else:
+					name = Fsys.get_dir(i, 'url')
+					self.update_sub_dirs(name, j)
+				IOsys.delete_last_line()
 
-				self.sub_dirs.append(name)
+				self.sub_dirs_count += 1
+				if self.break_all: return 0
+				xprint("Getting pages [%i/%i]"%(self.sub_dirs_count, len(self.sub_links)))
+		
+		except EOFError:
+			self.break_all = True
+			raise LeachICancelError
+		except KeyboardInterrupt:
+			self.break_all = True
+			raise LeachICancelError
+
+	def gen_sub_dirs(self):     #fc=0P08
+		"""Generates sub-directories|`self.sub_dirs`"""
+
+		
+		indx1 = Process(target= self._gen_sub_dirs, args=(0,))
+		indx2 = Process(target= self._gen_sub_dirs, args=(1,))
+		indx3 = Process(target= self._gen_sub_dirs, args=(2,))
+
+		try:
+
+			indx1.start()
+			indx2.start()
+			indx3.start()
+
+			while indx1.is_alive() or indx2.is_alive() or indx3.is_alive():
+				if self.break_all == True:
+					return False
+				time.sleep(0.3)
+
+			
+			if self.dir_sorted:
+				index = natsort.index_natsorted(self.sub_dirs)
+				self.sub_dirs = natsort.order_by_index(self.sub_dirs, index)
+				self.sub_links = natsort.order_by_index(self.sub_links, index)
+
+			return True
+
+		except EOFError:
+			leach_logger(log(['000', '0P0K', self.Project, 'f-Stop', 'was generating sub_dir names', 'Indexing Stopped']))
+			xprint("/yh/Project indexing cancelled by Keyboard/=/")
+			self.break_all = True
+			return 0
+		except KeyboardInterrupt:
+			leach_logger(log(['000', '0P0K', self.Project, 'f-Stop', 'was generating sub_dir names', 'Indexing Stopped']))
+			xprint("/yh/Project indexing cancelled by Keyboard/=/")
+			self.break_all = True
+			return 0
+
+		except LeachICancelError:
+			leach_logger(log(['000', '0P0K', self.Project, 'f-Stop', 'was generating sub_dir names', 'Indexing Stopped']))
+			xprint("/yh/Project indexing cancelled by Keyboard/=/")
+			self.break_all = True
+			return 0
 
 
 
@@ -2679,43 +2768,47 @@ class ProjectType_:     #fc=0P00
 				return 0
 
 			failed = False
+			next = False
 
 			current_header = Netsys.header_(self.homepage)
-			try:
-				page = requests.get(links[i], headers= current_header)
-				if not page:
-					self.show_generic_index_error(links[i], current_header, str(page.status_code), 'Page Offline')
-					failed = True
-			except NetErrors as e:
-				self.show_generic_index_error(links[i], current_header, e.__class__.__name__ , str(e))
-				failed = True
-
-			if failed:
-				self.indx_count +=1
-				print('failed\n')
-				self.print_index_result(links[i])
+			
+			if links[i] in CachedData.cached_soup:
+				soup = CachedData.cached_soup[links[i]]
+				CachedData.cached_soup.pop(links[i])
+			
 			else:
-				soup = bs(Netsys.remove_noscript(page.content), parser)
+				try:
+					page = self.dl_page(links[i], cache = True)
+					if not page:
+						self.show_generic_index_error(links[i], current_header, str(page.status_code), 'Page Offline')
+						failed = True
+				except NetErrors as e:
+					self.show_generic_index_error(links[i], current_header, e.__class__.__name__ , str(e))
+					failed = True
 
-				# print([i in self.file_types for i in ('img', 'image', 'images', 'imgs', 'photo', 'photos')])
+				if failed:
+					self.indx_count +=1
+					print('failed\n')
+					self.print_index_result(links[i])
+					continue
+				else:
+					soup = bs(Netsys.remove_noscript(page.content), parser)
 
-				# print(self.file_types,'souped\n\n')
+			if any(i in self.file_types for i in ('img', 'image', 'images', 'imgs', 'photo', 'photos')):
+				for img_link in self.list_writer_img(soup, links[i]):
+					if self.break_all : return 0
 
-				if any(i in self.file_types for i in ('img', 'image', 'images', 'imgs', 'photo', 'photos')):
-					for img_link in self.list_writer_img(soup, links[i]):
-						if self.break_all : return 0
+					if start_checker.search(str(img_link)) !=None:
+						name = Fsys.get_file_name(img_link, 'url')
 
-						if start_checker.search(str(img_link)) !=None:
-							name = Fsys.get_file_name(img_link, 'url')
+						self.all_list.add_link(img_link, i, name)
 
-							self.all_list.add_link(img_link, i, name)
-
-						# print(img_link)
+					# print(img_link)
 
 
-				self.indx_count +=1
+			self.indx_count +=1
 
-				self.print_index_result(links[i])
+			self.print_index_result(links[i])
 
 
 
@@ -2770,7 +2863,7 @@ class ProjectType_:     #fc=0P00
 
 
 
-	def dl_page(self, link = None, referer = False, cache = False, failed = False):     #fc=0P0H
+	def dl_page(self, link = None, referer = False, header=None, cache = False, failed = False, do_not_cache = True):     #fc=0P0H
 		"""Gets a page from the internet and returns the page object
 
 		link: page link
@@ -2790,7 +2883,11 @@ class ProjectType_:     #fc=0P00
 		else:
 			referer_ = referer
 
-		current_header = Netsys.header_(referer_)
+		if header is None:
+			current_header = Netsys.header_(referer_)
+		else:
+			current_header = header
+
 		try:
 			page = requests.get(link, headers=current_header, timeout=5)
 
@@ -2798,12 +2895,13 @@ class ProjectType_:     #fc=0P00
 				raise Error404
 		except (*NetErrors, Error404) as e:
 			if not failed:
-				page = self.dl_page(link=link, referer = False if referer==False else referer, cache=cache, failed=True)
+				page = self.dl_page(link=link, referer = False if referer==False else referer, cache=cache, failed=True, do_not_cache=do_not_cache)
 			else:
 				return None
 
-		if cache:
-			CachedData.cached_webpages[link] = page
+		if cache and page:
+			if not do_not_cache:
+				CachedData.cached_webpages[link] = page
 		return page
 
 
@@ -3074,6 +3172,7 @@ class ProjectType_:     #fc=0P00
 				datas = _t.groups()  # category, title, code
 			else:
 				xprint("/r/Invalid link/y/\n please recheck the Main link/=/")
+				leach_logger(log(['0P0WxX', self.Project, self.main_link, 'Failed to pass the regex testing']), UserData.user_name)))
 				return 0
 
 		session = requests.Session()
@@ -3157,19 +3256,19 @@ class ProjectType_:     #fc=0P00
 				indx3.join()
 
 			except EOFError:
-				leach_logger(log(['000', '0P0W', self.Project, 'f-Stop', 'was indexing webtoon']))
+				leach_logger(log(['000', '0P0W', self.Project, 'f-Stop', 'was indexing Images from webtoon', 'Indexing Stopped']))
 				xprint("/yh/Project indexing cancelled by Keyboard/=/")
 				self.break_all = True
 				return 0
 			except KeyboardInterrupt:
-				leach_logger(log(['000', '0P0W', self.Project, 'f-Stop', 'was indexing webtoon']))
+				leach_logger(log(['000', '0P0W', self.Project, 'f-Stop', 'was indexing Images from webtoon', 'Indexing Stopped']))
 				xprint("/yh/Project indexing cancelled by Keyboard/=/")
 				self.break_all = True
 				return 0
 
 		except Exception as e:
 			xprint("/rh/code: Error 607\n The program will break in 5 seconds/=/")
-			leach_logger(log(['000', '0P0W', self.Project, self.main_link, e.__class__.__name__, e]))
+			leach_logger(log(['0P0Wx0', self.Project, self.main_link, e.__class__.__name__, e]))
 			time.sleep(5)
 			exit(0)
 
@@ -3312,6 +3411,7 @@ class Main():     #fc=0M00
 	def main_loop(self):     #fc=0M05
 		global Keep_main_running
 		self.boot_server()
+		CachedData.clear()
 
 		self.link_indexed = False
 
@@ -3334,9 +3434,9 @@ class Main():     #fc=0M00
 					server_code.server_close()
 					exit(0)
 				except EOFError:
-					return 0
+					exit(0)
 				except KeyboardInterrupt:
-					return 0
+					exit(0)
 			__command = self.COMM.lower()
 			if __command == '':
 				print('You must enter a Project name here.')
@@ -3683,7 +3783,13 @@ yes/y to resume
 
 						if self.P.gen_sub_links() == False:
 							return 0
-						self.P.gen_sub_dirs()
+
+						if self.P.gen_sub_dirs() != True:
+							return 0
+
+
+
+						
 
 
 					except EOFError:
@@ -3861,7 +3967,14 @@ yes/y to resume
 
 
 
-						self.P.gen_sub_links()
+						if self.P.gen_sub_links() == False:
+							return 0
+
+						
+						if self.P.gen_sub_dirs() != True:
+							return 0
+
+						
 
 
 				except LeachICancelError:
@@ -3882,9 +3995,6 @@ yes/y to resume
 
 			if self.link_indexed == False:
 				# leach_logger("0M05x2||%s||%i"%(self.Project, len(self.sub_links)), UserData.user_name)
-
-				if self.P.sub_dirs ==[]:
-					self.P.gen_sub_dirs()
 
 				len_sub_links = len(self.P.sub_links)
 
