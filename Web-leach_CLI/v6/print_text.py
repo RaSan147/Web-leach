@@ -304,4 +304,3 @@ class XprintClass:
 
         sys.stdout.write(self.end)
         sys.stdout.flush()
-

@@ -53,12 +53,17 @@ none = None
 def leach_logger(*args):
 	pass
 
-# def make_pages(*args):
-# 	"""just to suppress warnings"""
-# 	return 0
+def log(arr):
+	for i in range(len(arr)):
+		if type(arr) is str:
+			continue
+		if type(arr[i]) is bytes:
+			arr[i] = arr[i].decode('utf-8')
+		else:
+			arr[i] = str(arr[i])
 
-# def make_cbz(*args):
-# 	"""just to suppress warnings"""
-# 	return 0
+	return "||".join(map(str, arr))
 
-# print([i for i in range(10,0,-1)])
+
+
+

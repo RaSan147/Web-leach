@@ -6,9 +6,10 @@ if __file__ == "make_cbz2.py":
 	pass
 import zipfile
 
-class MakeCbz_:
+class MakeCbz_:    #fc=8000
 	dir_path = os_dirname(os_realpath(__file__))
-	def make_cbz(self, all_li, dir_list, project, seq, ext='', dir_sorted = False):   #func_code= 50001
+	def make_cbz(self, all_li, dir_list, project, seq, ext='', dir_sorted = False):   #func_code= 8001
+		leach_logger(log(['8001xI', project, seq, ext, dir_sorted]))
 		first_page=None
 		dir_len = len(dir_list)
 

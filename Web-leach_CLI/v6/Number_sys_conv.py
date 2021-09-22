@@ -13,8 +13,8 @@
 #: *****************************************************************************
 
 
-
-
+from random import randint
+from functools import partial
 
 base_li0= {'0':0,
 
@@ -152,6 +152,8 @@ base_li= "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ?!"
 def dec2base(n,base):
 
 	out=''
+	if n==0:
+		return '0'
 
 	while n!=0:
 
@@ -165,7 +167,7 @@ def dec2base(n,base):
 
 
 
-def base2dec(n, base):
+def base2dec(n, base, _type=int):
 	out=0
 	n=n[::-1]
 
@@ -173,21 +175,39 @@ def base2dec(n, base):
 
 		out+=base_li0[n[i]]*(base**(i))
 
-	return out
+	return _type(out)
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def dt_():
-	return str(datetime.now())
+	"""returns time in GMT+6 
+	"""
+	return str(datetime.utcnow()+ timedelta(hours=6))
+
+	# return str(datetime.now())
 
 # print(dt_())
 #print(int(str(dt_()).replace('-','').replace(' ','').replace('.','').replace(':','')))
 
 def compressed_dt(_dt= None):
 
-	dt_now= int((_dt if _dt!=None else dt_()).replace('-','').replace(' ','').replace('.','').replace(':',''))
+	dt_now= int((dt_() if _dt is None else _dt).replace('-','').replace(' ','').replace('.','').replace(':',''))
 
 	return dec2base(dt_now,63)
+
+def compressed_ip(ip):
+	
+	ip_now= ip.split('.')
+	new_dec2base = partial(dec2base, base=63)
+
+	junk = [randint(0,255) for i in range(4)]
+	return '~'.join(map(new_dec2base, map(int, junk[:2]+ip_now+junk[2:])))
+
+def dec_ip(ip):
+	ip_now= ip.split('~')[2:-2]
+	new_base2dec = partial(base2dec, base=63, _type=str)
+
+	return '.'.join(map(new_base2dec, ip_now))	
 
 def dec_dt(dt):
 	ddt = str(base2dec(dt, 63))

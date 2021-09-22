@@ -118,6 +118,7 @@ def _encrypt(text,C):
 
 
 def encrypt(text, key):
+	text = str(text)
 	text+=" "*((8-len(text)%8)%8)
 	text=list(text)
 	for c in key:
@@ -144,6 +145,7 @@ def _decrypt(text,C):
 	return text
 
 def decrypt(text, key):
+	text = str(text)
 	text+=" "*((8-len(text)%8)%8)
 	
 	text=list(text)

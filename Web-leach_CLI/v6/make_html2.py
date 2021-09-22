@@ -291,7 +291,7 @@ for (var i = 0; i < pages_list.length; i++){
 
 	dir_path = os_dirname(os_realpath(__file__))
 
-	def make_pages(self, all_li, dir_list, project, seq, ext='', dir_sorted = False):   #func_code= 40001
+	def make_pages(self, all_li, dir_list, project, seq, ext='', dir_sorted = False):   #func_code= 7001
 		"""all_li: all_list.all_names
 		dir_list: sub_dirs
 		project: project_name
@@ -299,11 +299,13 @@ for (var i = 0; i < pages_list.length; i++){
 		ext: extension
 		dir_sorted: if dir_sorted is true, then the dir_list is sorted
 		"""
+
+		leach_logger(log(['7001xI', project, seq, ext, dir_sorted]))
 		first_page=None
 		dir_len = len(dir_list)
 		dir_bkp = dir_list[:]
 
-		if not dir_sorted: dir_list= natsort.natsorted(dir_list)
+		if dir_sorted: dir_list= natsort.natsorted(dir_list)
 		first_page = self.dir_path+'/Download_projects/'+ project+'/'+project+'.html'
 		for i in range(dir_len):
 			temp= all_li[dir_bkp.index(dir_list[i])]

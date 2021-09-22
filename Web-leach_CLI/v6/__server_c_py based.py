@@ -1,5 +1,48 @@
 import time
 
+def read_wltxt(f_code):
+
+	try:
+		main_py_file = open('Output codes v6.wltxt', 'r').readlines()
+	except Exception as e:
+		print("NO 'Output codes v6.wltxt' file found, try Recheck if the file Exists\n\n")
+		raise e
+
+	text_ = []
+	read = False
+	vars = dict()
+	return_box = []
+	
+	for i in main_py_file:
+		if i.startswith('py:'):
+			exec(i[3:].strip(), globals(), vars)
+			# files_dict = locals()['files_dict']
+			continue
+		if read== False:
+			if i.startswith(f_code):
+				text_.append(i)
+				read = True
+		
+		else:
+			print(i)
+			if i.startswith(' ') or i.startswith('\n'):
+				text_.append(i)
+			else:
+				read = False
+
+	files_dict = vars['files_dict']
+
+	_f_code, _f_name = (i.strip() for i in text_[0].split('>>>'))
+	print('=================================\n\n', f_code, _f_code, _f_name)
+	return_box= []
+
+	return_box.append("<h3><u>File</u>: " + files_dict[_f_code[0]]+'</h3>')
+	return_box.append("<h3><u>Class</u>: " + _f_name.split('>')[0][1:]+'</h3>')
+	return_box.append("<h2><u>Method</u>: " + _f_name.split('>')[1].split(']')[0]+'</h3>')
+	return_box.append("<h2><u>Description</u>: </h2> <br><pre>" + "\n".join(text_[1:]) + "</pre>")
+
+	return return_box
+
 #from bs4 import BeautifulSoup
 
 """HTTP server classes.
@@ -43,7 +86,7 @@ XXX To do:
 # <draft-ietf-http-v10-spec-00.txt>                     H. Frystyk Nielsen
 # Expires September 8, 1995                                  March 8, 1995
 #
-# URL: http://www.ics.uci.edu/pub/ietf/http/draft-ietf-http-v10-spec-00.txt
+# URL: http: //www.ics.uci.edu/pub/ietf/http/draft-ietf-http-v10-spec-00.txt
 #
 # and
 #
@@ -52,7 +95,7 @@ XXX To do:
 # Obsoletes: 2068                                              June 1999
 # Category: Standards Track
 #
-# URL: http://www.faqs.org/rfcs/rfc2616.html
+# URL: http: //www.faqs.org/rfcs/rfc2616.html
 
 # Log files
 # ---------
@@ -61,7 +104,7 @@ XXX To do:
 #
 # | The logfile format is as follows. Each line consists of:
 # |
-# | host rfc931 authuser [DD/Mon/YYYY:hh:mm:ss] "request" ddd bbbb
+# | host rfc931 authuser [DD/Mon/YYYY: hh: mm: ss] "request" ddd bbbb
 # |
 # |        host: Either the DNS name or the IP number of the remote client
 # |        rfc931: Any information returned by identd for this person,
@@ -118,6 +161,11 @@ import webbrowser
 import RcryptxAsuna2_1_c_py_lines as RxAsuna
 import Number_sys_conv as Nsys
 import re
+
+
+enc = sys.getfilesystemencoding()
+
+
 try:
 	from bs4 import BeautifulSoup as bs
 except:
@@ -150,7 +198,7 @@ except FileNotFoundError:
 # Default error message template
 DEFAULT_ERROR_MESSAGE = """\
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+		"http: //www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
@@ -174,7 +222,7 @@ class HTTPServer(socketserver.TCPServer):
 	def server_bind(self):
 		"""Override server_bind to store the server name."""
 		socketserver.TCPServer.server_bind(self)
-		host, port = self.server_address[:2]
+		host, port = self.server_address[: 2]
 		self.server_name = socket.getfqdn(host)
 		self.server_port = port
 
@@ -190,7 +238,7 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
 	The following explanation of HTTP serves to guide you through the
 	code as well as to expose any misunderstandings I may have about
 	HTTP (so you don't need to read the code to figure out I'm wrong
-	:-).
+	: -).
 
 	HTTP (HyperText Transfer Protocol) is an extensible protocol on
 	top of a reliable stream transport (e.g. TCP/IP).  The protocol
@@ -360,7 +408,7 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
 				HTTPStatus.BAD_REQUEST,
 				"Bad request syntax (%r)" % requestline)
 			return False
-		command, path = words[:2]
+		command, path = words[: 2]
 		if len(words) == 2:
 			self.close_connection = True
 			if command != 'GET':
@@ -633,7 +681,7 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
 		"""Return the current time formatted for logging."""
 		now = time.time()
 		year, month, day, hh, mm, ss, x, y, z = time.localtime(now)
-		s = "%02d/%3s/%04d %02d:%02d:%02d" % (
+		s = "%02d/%3s/%04d %02d: %02d: %02d" % (
 				day, self.monthname[month], year, hh, mm, ss)
 		return s
 
@@ -711,7 +759,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 		self.is_get_req = False
 		content_length = int(self.headers['Content-Length'])
 		post_data = self.rfile.read(content_length) # <--- Gets the data itself
-		print("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n"%(
+		print("POST request,\nPath: %s\nHeaders: \n%s\n\nBody: \n%s\n"%(
 				str(self.path), str(self.headers), post_data.decode('utf-8')))
 
 		f = self.send_head()
@@ -730,18 +778,63 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 		"""
 
-		global decryptor_lang
+		global decryptor_lang, enc
 		path = self.translate_path(self.path)
 		print(self.path)
+		
+		enc = sys.getfilesystemencoding()
 
 		decrypto_header = open('_server001_decrypto.html').read()
 		if self.path.startswith('/search='):
-			spid, scode, scodepart, skeyword = (urllib.parse.unquote(part) for part in self.path[8:].split('+'))
-			
-		
+			spid, scode, scodepart, skeyword = (urllib.parse.unquote(part) for part in self.path[8: ].split('+'))
+
+
 		f = None
 		r=[]
-		if self.path=='/' or self.path.startswith('/search='):
+		if self.path.startswith('/fcode='):
+			_f_code = self.path[7:]
+			try:
+				func_docs = read_wltxt(_f_code)
+			except Exception as e:
+				r.append('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" '
+		'"http: //www.w3.org/TR/html4/strict.dtd">')
+				r.append('<meta http-equiv="Content-Type" '
+		'content="text/html; charset=%s">' % enc)
+				r.append("""<h1>503 Error Occred</h1>
+				<h2>Failed to execute decryption program (%s occured)</h2>
+				<h1>Failed to load Documentation file. PLease recheck the file</h1>
+				<p><b>Error message: </b> %s</p>"""%(str(e.__class__.__name__), str(e)))
+				encoded = '\n'.join(r).encode(enc, 'surrogateescape')
+
+				f = io.BytesIO()
+				f.write(encoded)
+				f.seek(0)
+				self.send_response (HTTPStatus.SERVICE_UNAVAILABLE)
+				self.send_header ("Content-type", "text/html; charset=%s" % enc)
+				self.send_header ("Content-Length", str(len(encoded)))
+				self.end_headers()
+				return f
+			
+
+			encoded = '\n'.join(func_docs)
+
+			
+			# encoded += '<pre>'+ '\n'.join(text_)+'</pre>'
+			encoded = encoded.encode(enc, 'surrogateescape')
+
+			f = io.BytesIO()
+			f.write(encoded)
+			f.seek(0)
+			self.send_response(HTTPStatus.OK)
+			self.send_header("Content-type", "text/html; charset=%s" % enc)
+			self.send_header("Content-Length", str(len(encoded)))
+			self.end_headers()
+			return f
+
+
+					
+
+		elif self.path=='/' or self.path.startswith('/search='):
 			if self.is_get_req:
 				request_time= time.time()
 				decrypto_key = "Asuna" #input("Enter password: ")
@@ -755,13 +848,13 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 					print("NO userlog.leach file found, try Recheck if the file Exists\n\n")
 					enc = sys.getfilesystemencoding()
 					r.append('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" '
-			'"http://www.w3.org/TR/html4/strict.dtd">')
+			'"http: //www.w3.org/TR/html4/strict.dtd">')
 					r.append('<meta http-equiv="Content-Type" '
 			'content="text/html; charset=%s">' % enc)
 					r.append("""<h1>503 Error Occred</h1>
 					<h2>Failed to execute decryption program (%s occured)</h2>
 					<h1>Failed to load Log file. PLease recheck the file</h1>
-					<p><b>Error message:</b> %s</p>"""%(str(e.__class__.__name__), str(e)))
+					<p><b>Error message: </b> %s</p>"""%(str(e.__class__.__name__), str(e)))
 					encoded = '\n'.join(r).encode(enc, 'surrogateescape')
 
 					f = io.BytesIO()
@@ -783,7 +876,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 						decryptor_lang =None
 
 					#decryptor_lang = 'C'
-					
+
 				if decryptor_lang ==None or decryptor_lang == 'Python':
 					try:
 						self.decrypto_dat= RxAsuna.PYdecrypt(dec_raw, decrypto_key, 'list')
@@ -792,13 +885,13 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 						print("can't execute the Decryption program, try Recheck if the file Exists\n\n")
 						enc = sys.getfilesystemencoding()
 						r.append('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" '
-				'"http://www.w3.org/TR/html4/strict.dtd">')
+				'"http: //www.w3.org/TR/html4/strict.dtd">')
 						r.append('<meta http-equiv="Content-Type" '
 				'content="text/html; charset=%s">' % enc)
 						r.append("""<h1>503 Error Occred</h1>
 						<h2>Failed to execute decryption program (%s occured)</h2>
 						<h1>Failed to decypt Log file. PLease recheck the file</h1>
-						<p><b>Error message:</b> %s</p>"""%(str(e.__class__.__name__), str(e)))
+						<p><b>Error message: </b> %s</p>"""%(str(e.__class__.__name__), str(e)))
 						encoded = '\n'.join(r).encode(enc, 'surrogateescape')
 
 						f = io.BytesIO()
@@ -810,397 +903,102 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 						self.end_headers()
 						return f
 
-				
-				
+
+
 				read_dec = time.time()-read_dec
 
 				self.current_sort= 'date_new2old'
-				
+
 				tables=[]
 				td_t = '<td>%s</td>\n'
 				table_made = time.time()
 				table_len= len(self.decrypto_dat)
 				line_index = 0
+
+				
+				Extractor = dict()
+				exec(open('log_extractor.py').read(), Extractor)
+
+
 				while self.decrypto_dat!=[]:
+					column = [[] for i in range(100)]
 					line_index+=1
 					_decrypto_dat_=self.decrypto_dat.pop()
 					if _decrypto_dat_=='':
 						table_len-=1
 						continue
-					_decrypto_dat = _decrypto_dat_[40:].split('||')[:-1]
-					# print(_decrypto_dat)
+					_Vcode = _decrypto_dat_[34:40]
+
+					_decrypto_dat = _decrypto_dat_[40: ].split('||')[: -1]
+
 					if spid!='' and spid!= _decrypto_dat[1]: continue
 					if scode!='' and scode!= _decrypto_dat[2]: continue
 					if scodepart!='' and scodepart not in _decrypto_dat[2]: continue
-					
+
 					try:
-						_decrypto_dat[0]= "%s/%s/%s &nbsp&nbsp&nbsp %s:%s:%s" %Nsys.dec_dt(_decrypto_dat[0])
+						column[0]= "%s/%s/%s &nbsp;&nbsp;&nbsp; %s: %s: %s" %Nsys.dec_dt(_decrypto_dat[0])
 					except KeyError: pass
 					except IndexError as e:
 						try:
-							if re.search('\d+/\d+/\d+ &nbsp&nbsp&nbsp \d:\d:\d.?\d*', _decrypto_dat[0]):
+							if re.search(r'\d+/\d+/\d+ &nbsp;&nbsp;&nbsp; \d: \d: \d.?\d*', _decrypto_dat[0]):
 								pass
 							else:
 								raise e
 						except: continue
-						print([_decrypto_dat_])
-					except:
-						print([_decrypto_dat_])
+					except Exception as e:
+						print([_decrypto_dat_], e)
 						continue
+
+					column[1]=_decrypto_dat[1]
+					column[2]=_decrypto_dat[2]
 
 					if _decrypto_dat[1] not in self.PIDs: self.PIDs.append(_decrypto_dat[1])
 
-					if _decrypto_dat[2]=='0x0':
-						_decrypto_dat.append('Failed to start up')
-						_decrypto_dat.append("No intenter connection (for online mode) nor Update file found (for offline mode)")
+					column = Extractor['extractor'](_Vcode, _decrypto_dat, column, _decrypto_dat_, line_index)
 
-					elif _decrypto_dat[2]=='0x1':
-						_decrypto_dat[3]= '%s (called from %s)' %(_decrypto_dat[4],_decrypto_dat[3])
-						_decrypto_dat[4]= "Exited at %s" %_decrypto_dat[0]
-						# _decrypto_dat= _decrypto_dat[:5]
-					elif _decrypto_dat[2]=='000':
-						if _decrypto_dat[5]=='f-Stop':
-							temp= " (Called from %s)"%_decrypto_dat[3]
-							temp1= "Input cancelled from \"%s\""%_decrypto_dat[4]
-							temp2= ' (<b>Situation:</b> %s)'%_decrypto_dat[6]
-							_decrypto_dat[3]= temp1+temp+temp2
-							del temp, temp1, temp2
-							_decrypto_dat[4]= _decrypto_dat[7]
+					# print("converted")
+					# print(column)
 
-						if _decrypto_dat[5]=='D-Break':
-							temp= " (Called from %s)"%_decrypto_dat[3]
-							_decrypto_dat[3] = "Thread download task cancelled"+temp
-
-						if _decrypto_dat[5]=='D-Stop':
-							temp= " (Called from %s)"%_decrypto_dat[3]
-							_decrypto_dat[3] = "Download Cancelled"
-							try:
-								temp= '<b>Downloaded:</b> %s<br><b>Error:</b> %s'%tuple(_decrypto_dat[4].split('|'))
-							except:
-								print([_decrypto_dat_], line_index)
-								continue
-							_decrypto_dat[4] = temp
-						
-
-							
-
-					elif _decrypto_dat[2]=='001':
-						temp= "<u><b>App V</u></b>"+_decrypto_dat[3]+"<br><u><b>Launched at</u></b>: "+("%s/%s/%s  %s:%s:%s" %Nsys.dec_dt(_decrypto_dat[6]))+"<br><u><b>User Ip:</u></b> "+_decrypto_dat[5]+(
-								"<br><u><b>Timezone:</u></b> %s<br><u><b>Start up latency:</u></b> %s"%(_decrypto_dat[7],_decrypto_dat[8]))
-
-						_temp = eval(_decrypto_dat[4])
-						_temp2=''
-						for key in _temp:
-							_temp2+='<tr><td><b>%s</b></td><td>%s</td></tr>\n'%(key, _temp[key])
-
-						_temp2 = '<table class= "device_info">%s</table>'%_temp2
-						_decrypto_dat[3]=temp
-						_decrypto_dat[4]= _temp2
-						del temp, _temp, _temp2
-						#_decrypto_dat=_decrypto_dat[:5]
-
-
-					elif _decrypto_dat[2]== '002':
-						_decrypto_dat[4]= "<u><b>Server version:</u></b> "+_decrypto_dat[4]+"<br><b><u>Load latency:</b></u> "+_decrypto_dat[3]
-						_decrypto_dat[3]= "Server connected successfully!"
-						
-					elif _decrypto_dat[2]== '003':
-						# print(_decrypto_dat[4])
-						_decrypto_dat[4] = "<u><b>User Hash: </u></b> "+_decrypto_dat[3]+"<br><u><b>Log in at</u></b> "+"%s/%s/%s %s:%s:%s" %Nsys.dec_dt(_decrypto_dat[4])
-						_decrypto_dat[3] = 'User logged in'
-
-					elif _decrypto_dat[2] == "201":
-						_decrypto_dat[3] = '<i>(Updating app)</i><br>Updating to <b><u>latest version:</u></b> %sb <br><u><b>From:</b></u> %s'%(_decrypto_dat[3],_decrypto_dat[4])
-						if len(_decrypto_dat) == 6:
-							_decrypto_dat[4] = '<b><u>Server version:</u></b> %s'%( _decrypto_dat[5])
-						elif len(_decrypto_dat) == 7:
-							_decrypto_dat[4] = '<b><u>Current version:</u></b> %s <br><b><u>Server version:</u></b> %s'%(_decrypto_dat[5], _decrypto_dat[6])
-
-					elif _decrypto_dat[2] == '202':
-						_decrypto_dat[4]= '<b><u>Update file link:</u></b> %s <br><b><u>Header index:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4])
-						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Network issue:</u></b> %s'%(_decrypto_dat[5])
-					
-					elif _decrypto_dat[2] == '203':
-						_decrypto_dat.append('<i>Downloaded in:</i><br> '+_decrypto_dat[3])
-						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Download Complete</u></b>'
-
-					elif _decrypto_dat[2] == '204':
-						_decrypto_dat[4]= '<b><u>Update file link:</u></b> %s <br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s<br><b><u>File list:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4], _decrypto_dat[5], _decrypto_dat[6])
-						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Corrupted zip:</u></b> The zip contains files other than the main .EXE file<br><i>Will be depricated in v0.5.500002</i>'
-
-					elif _decrypto_dat[2] == '205':
-						_decrypto_dat.append('-')
-						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Zip extracted</u></b>'
-						
-					elif _decrypto_dat[2] == '206':
-						_decrypto_dat.append('<i>(Updating app)</i><br><b><u>Update complete</u></b>')
-						_decrypto_dat.append('-')
-						
-					elif _decrypto_dat[2] == '207':
-						_decrypto_dat.append('<i>(Updating app)</i><br><b><u>Zip removed</u></b>')
-						_decrypto_dat.append('-')
-
-					elif _decrypto_dat[2] == '208':
-						_decrypto_dat[4]= '<b><u>Fake EXE MD5:</u></b> %s <br><b><u>File Link:</u></b> %s<br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4], _decrypto_dat[5], _decrypto_dat[6])
-						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Corrupted EXE:</u></b> MD5 of Downloaded EXE don\'t match with server MD5'
-
-					elif _decrypto_dat[2] == '209':
-						_decrypto_dat[4]= '<b><u>Fake ZIP MD5:</u></b> %s <br><b><u>File Link:</u></b> %s<br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4], _decrypto_dat[5], _decrypto_dat[6])
-						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Corrupted ZIP:</u></b> MD5 of Downloaded ZIP don\'t match with server MD5'
-
-					
-					elif _decrypto_dat[2] == '2FF':
-						if len(_decrypto_dat)==8:
-							_decrypto_dat = '||'.join(_decrypto_dat).replace('Hashing', '||Hashing').split('||')
-						
-						_decrypto_dat[4]= '<b><u>Error Code:</u></b> %s<br><b><u>Error String:</u></b> %s<br><b><u>File Link:</u></b> %s<br><b><u>Latest Version:</u></b> %s<br><b><u>Server link:</u></b> %s'%(_decrypto_dat[7], _decrypto_dat[8], _decrypto_dat[3], _decrypto_dat[4], _decrypto_dat[5])
-						_decrypto_dat[3]= '<i>(Updating app)</i><br><b><u>Unknown error occured</u></b><br>When <i>%s</i>'%_decrypto_dat[6]
-
-					####################################################
-					elif _decrypto_dat[2].startswith('605x'):
-						while len(_decrypto_dat) <=4: 
-							_decrypto_dat.append('')
-						#print(_decrypto_dat)
-						if _decrypto_dat[2][4] == '1':
-							_decrypto_dat[4]='<b><u>Header index:</u></b>%s<br><b><u>Error code:</u></b> %s' %(_decrypto_dat[3], _decrypto_dat[4])
-							_decrypto_dat[3]= '<i>Network issue</i> in <b>_connect_net()</b><br>Failed to connect <a href="https://ident.me" target="_blank" rel="noopener noreferrer">https://ident.me</a><br>Failed to obtain user ip<br>Running Offline mode'
-
-						if _decrypto_dat[2][4]== '2':
-							pass #will not be used
-							#depricating soon
-						
-						if _decrypto_dat[2][4]== '3':
-							_decrypto_dat[4] = '<b><u>Header index:</u></b> %s<br><b><u>File link:</u></b> %s<br><b><u>Error code:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4], _decrypto_dat[5])
-							_decrypto_dat[3]='Failed to download "Who are you" file from net'
-
-						if _decrypto_dat[2][4]== '4':
-							_decrypto_dat[4]= '<b><u>Server link:</u></b> %s<br><b><u>Header index:</u></b> %s <br><b><u>Error code:</u></b> %s'%(_decrypto_dat[4],_decrypto_dat[3], _decrypto_dat[5])
-							_decrypto_dat[3] = "Failed to load Update.txt file.<br>Loading <b>offline mode</b>"
-
-						################################################################
-					elif _decrypto_dat[2].startswith('606x'):
-						if _decrypto_dat[2][4] == '1':
-							_decrypto_dat[4]='<b><u>NH link:</u></b> %s<br><b><u>Header index:</u></b> %s' %(_decrypto_dat[4], _decrypto_dat[5])
-							_decrypto_dat[3]= '<b><u>Project:</u></b> %s<br><i>Network issue</i> while connecting <b>nhentai.net</b><br>Trying Proxy server' %_decrypto_dat[3]
-						
-						if _decrypto_dat[2][4]== '2':
-							_decrypto_dat[4]='<b><u>NH link:</u></b> %s<br><b><u>Header index:</u></b> %s' %(_decrypto_dat[4], _decrypto_dat[5])
-							_decrypto_dat[3]= '<b><u>Project:</u></b> %s<br><i>Network issue</i> while connecting <b>nhentai.xxx</b><br>Trying Proxy server(2)' %_decrypto_dat[3]
-
-						if _decrypto_dat[2][4]== '3':
-							_decrypto_dat[4]='<b><u>NH link:</u></b> %s<br><b><u>Header index:</u></b> %s' %(_decrypto_dat[4], _decrypto_dat[5])
-							_decrypto_dat[3]= '<b><u>Project:</u></b> %s<br><i>Network issue</i> while connecting <b>nhentai.to</b><br>Returning Failed Code' %_decrypto_dat[3]
-
-
-					elif _decrypto_dat[2].startswith('00000x'):
-						if _decrypto_dat[2][6:9] == '101':
-							if _decrypto_dat[4]=='0':
-								_decrypto_dat[4]="<b><u>File"
-							else:
-								_decrypto_dat[4]="<b><u>Folder"
-
-							_decrypto_dat[4] += ' location: "'+_decrypto_dat[3]+'"</u></b>'
-
-							_decrypto_dat[3]= "Failed to Write or Edit data due to <b>Permission Error</b>"
-						# must me elif
-
-					elif _decrypto_dat[2] == ('00003'):
-						tempI = 'Failed to remove non-ascii charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Called from:</u></b> %s'%(_decrypto_dat[6], _decrypto_dat[5])
-						_decrypto_dat[4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4])
-						_decrypto_dat[3]= tempI
-						del tempI
-
-					elif _decrypto_dat[2]=='00006':
-						_decrypto_dat[4] = '<b><u>Package name: </u></b> %s<br><b><u>Pypi internet access: </u></b>%s'%(_decrypto_dat[3], _decrypto_dat[4])
-						_decrypto_dat[3] = 'Failed to <i>install</i> <b>required</b> packages'
-
-					elif _decrypto_dat[2].startswith('00008x'):
-						if _decrypto_dat[2][6:9]=='101':
-							if len(_decrypto_dat)==7:
-								tempI = 'Failed to Write "%s" <b>in</b> "%s" due to <b><i>permission error</i></b>'%(_decrypto_dat[4], _decrypto_dat[6])
-							elif len(_decrypto_dat) == 8: 
-								tempI = 'Failed to create "%s" folder for writing "%s" <b><i>in</i></b> "%s" due to <b><i>permission error</i></b>'%(_decrypto_dat[7],_decrypto_dat[4], _decrypto_dat[6])
-							
-							_decrypto_dat[4] = "<b><u>Write mode:</u></b> %s <br><b><u>Called by:</u></b> %s"%(_decrypto_dat[5], _decrypto_dat[3])
-							_decrypto_dat[3]= tempI
-							del tempI
-
-						elif _decrypto_dat[2][6]=='1':
-							_decrypto_dat.append('<b><u>Provided file name:</u></b> %s'%_decrypto_dat[3])
-							_decrypto_dat[3]= 'Invalid <i>file name</i><br>Replacing <i>\\|:*<>?</i> with <i>-</i> and <i>"</i> with <i>\'</i>'
-
-						elif _decrypto_dat[2][6]=='2':
-							_decrypto_dat.append('<b><u>Provided directory:</u></b> %s'%_decrypto_dat[3])
-							_decrypto_dat[3] = 'Invalid <i>Directory</i><br>Replacing <i>\\|:*<>?</i> with <i>-</i> and <i>"</i> with <i>\'</i>'
-
-						elif _decrypto_dat[2][6:8]=='-1':
-							_t ='<b><u>Error code:</u></b> %s <br><b><u>Error string:</u></b><i> %s</i><br><b><u>Called by:</u></b> %s <br><b><u>File name:</u></b> %s <br><b><u>Write mode:</u></b> %s <br><b><u>Directory:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[8], _decrypto_dat[4], _decrypto_dat[5], _decrypto_dat[6], _decrypto_dat[7])
-							_decrypto_dat[3] = '<b>Unknown Error occured</b> while writing <i>%s</i> inside <i>%s</i>'%(_decrypto_dat[5], _decrypto_dat[7])
-
-							_decrypto_dat[4]= _t
-
-							del _t
-
-					elif _decrypto_dat[2].startswith('00009x'):
-						if _decrypto_dat[2][6:8]=='-1':
-							_decrypto_dat[4]= '<b><u>Unknown Header:</u></b> %s <b><u>Error string:</u></b> %s'%_decrypto_dat[5], _decrypto_dat[4]
-							_decrypto_dat[3]= '<b>Data CORRUPTION</b><br> <I>Invalid header request found</I><br><b><u>Called by:</u></b> %s<br><i>returning value -1</i>'%_decrypto_dat[3]
-						
-						else:
-							_temp= '<b>Unknown Error occured</b> while searching header index. <br>possible cause: <i>Data Corrupted</i><b><u>Called by:</u></b> %s'%(_decrypto_dat[4])
-							_decrypto_dat[4]= '<b><u>Error code:</u></b> %s <br><b><u>Error string:</u></b> %s <br><b><u>Corrupted Header: </u></b>%s'%(_decrypto_dat[3], _decrypto_dat[5], _decrypto_dat[6])
-							_decrypto_dat[3]
-						
-					elif _decrypto_dat[2].startswith('0000Bx'):
-						if _decrypto_dat[2][6]=='1':
-							_decrypto_dat[4]= '<b><u>arg data type:</u></b> %s <br><b><u>Arg:</u></b> "%s" <br><b><u>Called by:</u></b> %s'%(_decrypto_dat[3], '?Failed to convert to string' if _decrypto_dat[4]=='?' else _decrypto_dat[4], _decrypto_dat[5])
-							_decrypto_dat[3]= 'Failed to <i>host server</i> from <i>entered</i> directory<br><b>The directory Arg is not a string</b>'
-
-						if _decrypto_dat[2][6]=='2':
-							_decrypto_dat[2]
-
-					elif _decrypto_dat[2].startswith('0000Cx'):
-						if _decrypto_dat[2][6:8]=='-1':
-							_decrypto_dat[4]= '<b><u>Error Name:</u></b> %s <br><b><u>Error string:</u></b> %s <br><b><u>Header Index:</u></b> %s'%(_decrypto_dat[4], _decrypto_dat[5], _decrypto_dat[3])
-							_decrypto_dat[3]= "Failed to connect IP server <i>(retuens user ip)</i><br><b>Unknown Error occured</b>."
-
-					elif _decrypto_dat[2]=='00017':
-						_decrypto_dat[4] = '<b><u>Link:</u></b><a href="%s" target="_blank"> %s</a><br><b><u>Header index:</u></b> %s <br><b><u>Called by:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[3], _decrypto_dat[4], _decrypto_dat[5])
-						_decrypto_dat[3] = 'Failed to <b>connect</b> to the arg Web page'
-						try:
-							_decrypto_dat[3]+= '<br><b><u>Error code:</u></b> %s'%_decrypto_dat[6]
-
-						except: pass
-
-					elif _decrypto_dat[2] == '00018':
-						tempI = 'Failed to remove non-UNICODE charecters from string.<br><b><u>String:</u></b> "%s"<br><b><u>Return Format:</u></b> %s<br><b><u>Called from:</u></b> %s'%(_decrypto_dat[7], _decrypto_dat[6], _decrypto_dat[5])
-						_decrypto_dat[4]= '<b><u>Error:</u></b> %s <br><b><u>Err message:</u></b> %s'%(_decrypto_dat[3], _decrypto_dat[4])
-						_decrypto_dat[3]= tempI
-						del tempI
-
-
-					elif _decrypto_dat[2].startswith('10002x'):
-						if _decrypto_dat[2][6]=='1':
-							temp= eval(_decrypto_dat[5])[0]
-							_decrypto_dat[4]= '<b><u>Header index:</u></b> %s <br><b><u>Dl link:</u></b> <i><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></i>'%(_decrypto_dat[4], temp, temp)
-							_decrypto_dat[3]= '<b><u>Project:</u> "<i>%s</i>"</b><br>Failed to downlaod a file.'%_decrypto_dat[3]
-							try: _decrypto_dat[3]+= '<br><b><u>Error code:</u></b> '+ _decrypto_dat[6]
-							except: pass
-							del temp
-
-						elif _decrypto_dat[2][6]=='2':
-							_decrypto_dat[4]= '<b><u>Header index:</u></b> %s <br><b><u>Dl link:</u></b> <i><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></i>'%(_decrypto_dat[4], _decrypto_dat[5], _decrypto_dat[5])
-							_decrypto_dat[3]= '<b><u>Project:</u> "<i>%s</i>"</b><br>Failed to <b>Unzip</b> downlaoded zip file.'%_decrypto_dat[3]
-
-
-					
-					elif _decrypto_dat[2].startswith('10003x'):
-						if _decrypto_dat[2][6]=='1':
-							_decrypto_dat[4]= '<b><u>Header index:</u></b> %s <br><b><u>Dl link:</u></b> <i>%s</i>'%(_decrypto_dat[4], _decrypto_dat[5])
-							try:
-								_decrypto_dat[4]+= '<br><b><u>Error CODE:</u></b> %s <br><b><u>Error string:</u></b> %s'%(_decrypto_dat[6], _decrypto_dat[7])
-							except: pass
-							_decrypto_dat[3]= '<b><u>Project:</u> "<i>%s</i>"</b><br>Failed to <b>Connect</b> link for <i>indexing<br>Possible cause dead link or no internet</i>.'%_decrypto_dat[3]
-
-					elif _decrypto_dat[2].startswith('10005x'):
-						if _decrypto_dat[2][6]=='1':
-							_decrypto_dat[4]= '<b><u>NH link:</u></b><i><a href="%s" target="_blank" rel="noopener noreferrer"> %s </a></i><br><b><u>Header index:</u></b> %s '%(_decrypto_dat[4], _decrypto_dat[4], _decrypto_dat[5])
-							_decrypto_dat[3]= '<b><u>Project:</u></b> %s <br><b><i>is NH</i></b><br>failed to connect nhentai.net site, possible cause wrong link or location blocked or internet issue. Attempting proxy'%(_decrypto_dat[3])
-							
-						elif _decrypto_dat[2][6]== '2':
-							_decrypto_dat[4]= '<b><u>NH link:</u></b><i><a href="%s" target="_blank" rel="noopener noreferrer"> %s </a></i><br><b><u>Header index:</u></b> %s <br><i>[Depricated in 5.4]</i>'%(_decrypto_dat[4], _decrypto_dat[4], _decrypto_dat[5])
-							_decrypto_dat[3]= '<b><u>Project:</u></b> %s <br><b><i>is NH</i></b><br>failed to connect nhentai.xxx site, possible cause wrong link or internet issue'%(_decrypto_dat[3])
-
-					elif _decrypto_dat[2].startswith('10008x'):
-						if _decrypto_dat[2][6]=='0':
-							_decrypto_dat[3]= '<b><u>Project:</u> %s</b><br>Error Fixing began'%_decrypto_dat[3]
-							_decrypto_dat[4]= '<b><u>Total files:</u></b> %s <br><b><u>Error files:</u></b> %s'%(_decrypto_dat[4], _decrypto_dat[5])
-
-						elif _decrypto_dat[2][6]=='1':
-							_decrypto_dat[3]= '<b><u>CORRUPTION Detected</u></b><br><b><u>Project Name:</u></b> %s'%_decrypto_dat[3]
-							try:
-								_decrypto_dat[4]= '<b>Error file missing</b><br>Some downalod error occured in previous download however the  <b><u>error.txt</u> file is missing</b>'
-							except:
-								_decrypto_dat.append('<b>Error file missing</b><br>Some downalod error occured in previous download however the  <b><u>error.txt</u> file is missing</b>')
-
-						elif _decrypto_dat[2][6]=='2':
-							_decrypto_dat[3]= '<b><u>Project:</u></b> %s <br><b><u>Error Fixing process complete</u></b>'% _decrypto_dat[3]
-							_decrypto_dat[4]= '<b><u>Left errors:</u></b> '+_decrypto_dat[4]
-
-					elif _decrypto_dat[2].startswith('11000x'):
-						if _decrypto_dat[2][6]=='1':
-							_decrypto_dat.append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was completed</b> '%_decrypto_dat[3])
-							_decrypto_dat[3]= '<h5><b><u>Project was RESET</u></b></h5>'
-
-						elif _decrypto_dat[2][6]=='2':
-							_decrypto_dat.append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was completed</b> '%_decrypto_dat[3])
-							_decrypto_dat[3]= '<h5><b><u>Project is UPDATING</u></b></h5>'
-
-						elif _decrypto_dat[2][6]=='3':
-							_decrypto_dat.append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was Incompleted</b> '%_decrypto_dat[3])
-							_decrypto_dat[3]= '<h5><b><u>Project is RESUMED</u></b></h5>'
-						
-						elif _decrypto_dat[2][6]=='4':
-							_decrypto_dat.append( '<b><u>Project name:</u></b> %s <br><b><u>Project Status:</u> Was Incompleted</b> '%_decrypto_dat[3])
-							_decrypto_dat[3]= '<h5><b><u>Project is RESET</u></b></h5>'
-
-					elif _decrypto_dat[2].startswith("10009x"):
-						if _decrypto_dat[2][6:]=='-1':
-							_decrypto_dat[3]='<b><u>Project:</u></b> %s <br><b>UnknownError occured</b>' %_decrypto_dat[3]
-							_decrypto_dat[4]= '<b><u>Error Code:</u></b> %s <br><b><u>Error String:</u></b> %s'%(_decrypto_dat[4], _decrypto_dat[5])
-						elif _decrypto_dat[2][6]=='0':
-							_decrypto_dat[3]= '<b><u>Project:</u></b> %s <br>Name entered'%_decrypto_dat[3]
-							_decrypto_dat[4]+='<br>Asking for inputs'
-
-						elif _decrypto_dat[2][6]=='1':
-							_decrypto_dat[3]="<b><u>Project:</u></b> %s <br><b>Assinging variables</b>"%_decrypto_dat[3]
-							_decrypto_dat[4]= '<b>%s</b> = <i>%s</i>%s'%(_decrypto_dat[4], _decrypto_dat[5], '' if len(_decrypto_dat)<7 else '<i>[%s]</i>'%_decrypto_dat[6])
-
-						elif _decrypto_dat[2][6]=='2':
-							_decrypto_dat[3]= '<b><u>Project:</u></b> %s <br>Indexing Start'%_decrypto_dat[3]
-							_decrypto_dat[4]= '<b><u>Total links:</u></b> %s'%_decrypto_dat[4]
-
-						elif _decrypto_dat[2][6]=='3':
-							_decrypto_dat[3]="<b><u>Project:</u></b> %s <br><b>Indexing complete</b>"%_decrypto_dat[3]
-							_decrypto_dat[4]= '<b><u>Indexed links:</u></b> %s <br><b><u>FOund results:</u></b> %s '%(_decrypto_dat[4], _decrypto_dat[5]) 
-					else:
-						print([_decrypto_dat_], line_index)
-
-
-
-
-
-
-
-
-					_decrypto_dat = _decrypto_dat[:5] #uncomment when done
+					_decrypto_dat = _decrypto_dat[: 5] #uncomment when done
 					tr='<tr class = "p%s">'%_decrypto_dat[1]
 
 					for j in range(5):
 						try:
-							tr+=td_t%_decrypto_dat[j]
+							tr+=td_t%column[j]
 						except:
 							print(_decrypto_dat)
 					tr+='</tr>'
 					# print(bs(tr, "html.parser").text)
 
-					if skeyword!='' and skeyword.lower() not in bs(tr, features= _parser).text.lower(): continue
+					if skeyword!='':
+						
+						if skeyword.lower() not in bs(tr, features= _parser).text.lower(): 
+							continue
+						else:
+							#ignore case in regex
+							print(re.findall(r"(%s)"%re.escape(skeyword), tr, re.IGNORECASE))
+
+							tr = re.sub(r"(%s)"%re.escape(skeyword), r'<span style="background-color:red">\1</span>', tr, flags=re.IGNORECASE)
+
+							print(tr)
+							
+
+
 
 					tables.append(tr)
 
 				table_made= time.time()- table_made
 
 				#self.PIDs= [i for i in self.PIDs]
-				
-				pink= self.PIDs[0::4]
-				Lblue= self.PIDs[1::4]
-				blue= self.PIDs[2::4]
-				purple= self.PIDs[3::4]
+
+				pink= self.PIDs[0: : 4]
+				Lblue= self.PIDs[1: : 4]
+				blue= self.PIDs[2: : 4]
+				purple= self.PIDs[3: : 4]
 
 
-			enc = sys.getfilesystemencoding()
 			r.append('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" '
-				'"http://www.w3.org/TR/html4/strict.dtd">')
+				'"http: //www.w3.org/TR/html4/strict.dtd">')
 			r.append('<meta http-equiv="Content-Type" '
 				'content="text/html; charset=%s">' % enc)
 
@@ -1208,9 +1006,10 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 				__x=f'''\n<div id='stats'><p style="color: darkgray;">Made by Ratul Hasan with Web leach</p><br>\n<p>[Server] {table_len} Results Arranged in {time.time()-request_time}s</p>\n<p>[Server] Decrypted in {read_dec}s ({decryptor_lang} powered)</p>\n<p>[Server] Table made in {table_made}s ({_parser} parser)</p>\n<p id="render"></p>\n<p id="response"></p>\n</div>'''
 				r.append(decrypto_header%(str(pink), str(Lblue), str(blue), str(purple), __x, '\n'.join(tables)))
 				r.append("""\n<hr>\n</body>\n<footer id="footer"><br><br><br><br><hr><hr></footer> <script>var response_get = %s; var response_send = %s;
-				
+
 				document.getElementById('response').innerHTML="[Browser] Sent and rendered in " + ((Date.now()/1000)- response_get)+'s';
 				document.getElementById('render').innerHTML="[Browser] Rendered in "+((Date.now()/1000)- response_send)+'s';</script></html> \n"""%(str(self.response_get), str(time.time())))
+
 
 
 			# print(self.PIDs)
@@ -1225,10 +1024,10 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 			self.end_headers()
 			return f
 
-			
+
 
 		elif self.path.startswith('/sPID='):
-			web_args= self.path[1:].split('&')
+			web_args= self.path[1: ].split('&')
 
 		elif os.path.isdir(path):
 			parts = urllib.parse.urlsplit(self.path)
@@ -1270,7 +1069,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 				else:
 					if ims.tzinfo is None:
 						# obsolete format with no timezone, cf.
-						# https://tools.ietf.org/html/rfc7231#section-7.1.1.1
+						# https: //tools.ietf.org/html/rfc7231#section-7.1.1.1
 						ims = ims.replace(tzinfo=datetime.timezone.utc)
 					if ims.tzinfo is datetime.timezone.utc:
 						# compare to UTC datetime of last modification
@@ -1322,10 +1121,10 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 		enc = sys.getfilesystemencoding()
 		title = 'Inside %s' % displaypath
 		r.append('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" '
-				 '"http://www.w3.org/TR/html4/strict.dtd">')
+				 '"http: //www.w3.org/TR/html4/strict.dtd">')
 		r.append('<meta http-equiv="Content-Type" '
 				 'content="text/html; charset=%s">' % enc)
-		r.append(directory_explorer_header)
+		# r.append(directory_explorer_header)
 		r.append('<title>%s</title>\n</head>' % title)
 		r.append('<body>\n<h1>All files and folders in %s</h1>' % displaypath)
 		r.append('<hr>\n<ul>')
@@ -1358,7 +1157,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 					% (urllib.parse.quote(linkname,
 										  errors='surrogatepass'),
 					   html.escape(displayname, quote=False)))
-				
+
 		r.append('</ul>\n<hr>\n</body>\n<footer id="footer><br><br><br><br><hr><hr>\n<p style="color: darkgray;">Made by Ratul Hasan with Web leach</p>\n<br><br>\n</footer></html> \n')
 		encoded = '\n'.join(r).encode(enc, 'surrogateescape')
 		f = io.BytesIO()
@@ -1475,7 +1274,7 @@ def _url_collapse_path(path):
 	# path semantics rather than local operating system semantics.
 	path_parts = path.split('/')
 	head_parts = []
-	for part in path_parts[:-1]:
+	for part in path_parts[: -1]:
 		if part == '..':
 			head_parts.pop() # IndexError if more '..' than prior parts
 		elif part and part != '.':
@@ -1579,7 +1378,7 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 		"""
 		collapsed_path = _url_collapse_path(self.path)
 		dir_sep = collapsed_path.find('/', 1)
-		head, tail = collapsed_path[:dir_sep], collapsed_path[dir_sep+1:]
+		head, tail = collapsed_path[: dir_sep], collapsed_path[dir_sep+1: ]
 		if head in self.cgi_directories:
 			self.cgi_info = head, tail
 			return True
@@ -1603,8 +1402,8 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 		path = dir + '/' + rest
 		i = path.find('/', len(dir)+1)
 		while i >= 0:
-			nextdir = path[:i]
-			nextrest = path[i+1:]
+			nextdir = path[: i]
+			nextrest = path[i+1: ]
 
 			scriptdir = self.translate_path(nextdir)
 			if os.path.isdir(scriptdir):
@@ -1620,7 +1419,7 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 		# a possible additional path, to be stored in PATH_INFO.
 		i = rest.find('/')
 		if i >= 0:
-			script, rest = rest[:i], rest[i:]
+			script, rest = rest[: i], rest[i: ]
 		else:
 			script, rest = rest, ''
 
@@ -1644,7 +1443,7 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 					"CGI script is not executable (%r)" % scriptname)
 				return
 
-		# Reference: http://hoohoo.ncsa.uiuc.edu/cgi/env.html
+		# Reference: http: //hoohoo.ncsa.uiuc.edu/cgi/env.html
 		# XXX Much of the following could be prepared ahead of time!
 		env = copy.deepcopy(os.environ)
 		env['SERVER_SOFTWARE'] = self.version_string()
@@ -1674,7 +1473,7 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 					except (binascii.Error, UnicodeError):
 						pass
 					else:
-						authorization = authorization.split(':')
+						authorization = authorization.split(': ')
 						if len(authorization) == 2:
 							env['REMOTE_USER'] = authorization[0]
 		# XXX REMOTE_IDENT
@@ -1690,10 +1489,10 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 			env['HTTP_REFERER'] = referer
 		accept = []
 		for line in self.headers.getallmatchingheaders('accept'):
-			if line[:1] in "\t\n\r ":
+			if line[: 1] in "\t\n\r ":
 				accept.append(line.strip())
 			else:
-				accept = accept + line[7:].split(',')
+				accept = accept + line[7: ].split(',')
 		env['HTTP_ACCEPT'] = ','.join(accept)
 		ua = self.headers.get('user-agent')
 		if ua:
@@ -1753,7 +1552,7 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 				interp = sys.executable
 				if interp.lower().endswith("w.exe"):
 					# On Windows, use python.exe, not pythonw.exe
-					interp = interp[:-5] + interp[-4:]
+					interp = interp[: -5] + interp[-4: ]
 				cmdline = [interp, '-u'] + cmdline
 			if '=' not in query:
 				cmdline.append(query)
@@ -1802,7 +1601,7 @@ def test(HandlerClass=BaseHTTPRequestHandler,
 	HandlerClass.protocol_version = protocol
 	with ServerClass(server_address, HandlerClass) as httpd:
 		sa = httpd.socket.getsockname()
-		serve_message = "Serving HTTP on {host} port {port} (http://{host}:{port}/) ..."
+		serve_message = "Serving HTTP on {host} port {port} (http: //{host}: {port}/) ..."
 		print(serve_message.format(host=sa[0], port=sa[1]))
 		try:
 			httpd.serve_forever()
@@ -1821,17 +1620,17 @@ if __name__ == '__main__':
 							 '[default: all interfaces]')
 	parser.add_argument('--directory', '-d', default=os.getcwd(),
 						help='Specify alternative directory '
-						'[default:current directory]')
+						'[default: current directory]')
 	parser.add_argument('port', action='store',
 						default=8090, type=int,
 						nargs='?',
 						help='Specify alternate port [default: 8000]')
 	args = parser.parse_args()
-	# webbrowser.open('http://localhost:%i'%args.port)
+	# webbrowser.open('http: //localhost: %i'%args.port)
 	if args.cgi:
 		handler_class = CGIHTTPRequestHandler
 	else:
 		handler_class = partial(SimpleHTTPRequestHandler,
 					directory=args.directory)
-		
+
 	test(HandlerClass=handler_class, port=args.port, bind=args.bind)

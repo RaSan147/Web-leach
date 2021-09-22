@@ -35,9 +35,9 @@ platform = _get_platform()
 
 from os import system as os_sys
 if platform == "win":
-	compiled_c = 'main.exe'
+	compiled_c = 'rc_lines.exe'
 elif platform== "android" or platform=='linux':
-	compiled_c = './main.o'
+	compiled_c = './rc_lines.o'
 else: pass#print(platform)
 
 def Cencrypt(text, key):
