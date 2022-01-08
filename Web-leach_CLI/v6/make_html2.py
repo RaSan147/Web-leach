@@ -1,9 +1,6 @@
 # pylint: disable=unused-wildcard-import
 # pylint: disable=unused-import
 
-if __file__ == 'make_html2.py':
-	from main import *
-	pass
 import rjsmin
 from re import compile as re_compile
 
@@ -251,7 +248,7 @@ for (var i = 0; i < pages_list.length; i++){
 	var linkX =document.createElement('A');
 	var linkContainer = document.createElement('DIV');
 	linkContainer.className = 'sub_li_divs';
-	linkX.href = pages_list[i]+ '/'+pages_list[i]+".html";
+	linkX.href = pages_list[i];
 
 	linkX.innerHTML = pages_list[i];
 	if(i%%2==0){
@@ -277,7 +274,7 @@ for (var i = 0; i < pages_list.length; i++){
 }
 	if(localStorage.getItem(proj_name)!=null){
 	if(localStorage.getItem(proj_name)!=current_page_index){
-	document.getElementById('last').innerHTML= "You left the page on <a id='lastleft' href='"+ pages_list[localStorage.getItem(proj_name)]+ '/'+pages_list[localStorage.getItem(proj_name)]+".html'>"+ pages_list[localStorage.getItem(proj_name)]+ '</a><br> Click on the link to go there<hr>Close this dialog to continue from here';
+	document.getElementById('last').innerHTML= "You left the page on <a id='lastleft' href='"+ pages_list[localStorage.getItem(proj_name)]+ "'>"+ pages_list[localStorage.getItem(proj_name)]+ '</a><br> Click on the link to go there<hr>Close this dialog to continue from here';
 	togglePopup(1);
 	}}
 
@@ -289,7 +286,7 @@ for (var i = 0; i < pages_list.length; i++){
 		return main_page_template
 
 
-	dir_path = os_dirname(os_realpath(__file__))
+	
 
 	def make_pages(self, all_li, dir_list, project, seq, ext='', dir_sorted = False):   #func_code= 7001
 		"""all_li: all_list.all_names
@@ -300,14 +297,21 @@ for (var i = 0; i < pages_list.length; i++){
 		dir_sorted: if dir_sorted is true, then the dir_list is sorted
 		"""
 
+		dir_path = os_dirname(os_realpath(__file__))
+
 		leach_logger(log(['7001xI', project, seq, ext, dir_sorted]))
 		first_page=None
 		dir_len = len(dir_list)
 		dir_bkp = dir_list[:]
 
-
-		first_page = self.dir_path+'/Download_projects/'+ project+'/'+project+'.html'
+		if dir_sorted:
+			dir_list = natsort.natsorted(dir_list)
+			
+		first_page = dir_path+'/Download_projects/'+ project+'/'+'index.html'
 		for i in range(dir_len):
+			if '.' == dir_list[i]:
+				dir_list.extend(natsort.natsorted(all_li[dir_bkp.index('.')]))
+			
 			temp= all_li[dir_bkp.index(dir_list[i])]
 			
 			if seq:
@@ -315,8 +319,9 @@ for (var i = 0; i < pages_list.length; i++){
 			else:
 				box= self.return_sub_page(str(temp), str(dir_list), i, project)
 			
-			Fsys.writer(dir_list[i]+'.html', 'w', box,'Download_projects/'+ project+'/'+dir_list[i], f_code= '40001')
-		Fsys.writer(project+'.html', 'w', self.return_main_page(str((dir_list)), project),'Download_projects/'+ project, f_code= '40001')
+			Fsys.writer('index.html', 'w', box,'Download_projects/'+ project+'/'+dir_list[i], f_code= '40001')
+		
+		Fsys.writer('index.html', 'w', self.return_main_page(str((dir_list)), project),'Download_projects/'+ project, f_code= '40001')
 		return first_page
 
 MakeHtml = MakeHtml_()

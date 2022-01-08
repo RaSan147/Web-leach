@@ -1,5 +1,0 @@
-['https://cdn.nhentai.xxx/g/1221763/8.jpg', 0, '90']
-['https://cdn.nhentai.xxx/g/1221763/3.jpg', 0, '120']
-['https://cdn.nhentai.xxx/g/1221763/2.jpg', 0, '163']
-['https://cdn.nhentai.xxx/g/1221763/19.jpg', 0, '88']
-['https://cdn.nhentai.xxx/g/1221763/23.jpg', 0, '37']

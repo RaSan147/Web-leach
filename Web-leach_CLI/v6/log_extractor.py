@@ -20,6 +20,8 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 
 	elif _decrypto_dat[2]=='000':
 		temp= " (Called from %s)"%_decrypto_dat[3]
+		# if len(_decrypto_dat) == 5:
+		# 	pass
 		if _decrypto_dat[5]=='f-Stop':
 			temp1= "Input cancelled from \"%s\""%_decrypto_dat[4]
 			temp2= ' (<b>Situation: </b> %s)'%_decrypto_dat[6]
@@ -36,13 +38,12 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 			try:
 				temp= '<b>Downloaded: </b> %s<br><b>Error: </b> %s'%tuple(_decrypto_dat[4].split('|'))
 			except:
-				print([_decrypto_dat_], line_index)
-				return None
+				# print([_decrypto_dat_], line_index)
+				temp = "<b><u>Messages</u>:</b><br>%s"%("<br>".join(_decrypto_dat[4:]))
 			column[4] = temp
 
-		
 		else: 
-			column[3]= "<b>Unknown Error occured</b><br><b>Project:<b> "+_decrypto_dat[4]
+			column[3]= "<b>Cancelled for unknown (old) reason</b><br><b>Project:<b> "+_decrypto_dat[4]
 			column[4]= "<b><u>Messages</u>:</b><br>%s"%("<br>".join(_decrypto_dat[5:]))
 
 
@@ -66,7 +67,7 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 
 
 	elif _decrypto_dat[2]== '002':
-		column[4]= "<u><b>Server version</u>: </b> "+_decrypto_dat[4]+"<br><b><u>Load latency: </b></u> "+_decrypto_dat[3]
+		column[4]= "<u><b>Server version</u>: </b> "+_decrypto_dat[4]+"<br><b><u>Load latency</u>: </b>"+_decrypto_dat[3]
 		column[3]= "Server connected successfully!"
 
 	elif _decrypto_dat[2]== '003':
@@ -318,6 +319,13 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 
 				column[4] = '<b>Caller ID: </b>' + _decrypto_dat[3] + '<br>' + '<b>Port: </b>' + _decrypto_dat[4] + '<br>' + '<b>cd: </b>' + _decrypto_dat[5]
 
+			elif ecode == '-1':
+				column[3] = '<b><u>OSError occured</u></b>  <br>while running server [Netsys.runserver()]<br>Probably port is already in use'
+
+				try:
+					column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Port: </b>' + _decrypto_dat[4] + '<br>' + '<b>cd: </b>' + _decrypto_dat[5]
+				except: 
+					traceback.print_exc()
 
 			else: return False
 
@@ -389,6 +397,11 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 
 
 		elif fcode == '0P0B':
+			if ecode == '0':
+				column[3] = '<b><u>Unknown Error occured</u></b>  <br>while re-downloading file'
+
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + _decrypto_dat[5] + '<br>' + '<b>Header dex:</b>' + _decrypto_dat[4] + '<br><b>File name: </b>' + _decrypto_dat[6] + '<br><b>File dir: </b>' + _decrypto_dat[7]  + '<br><b>Error Code: </b>' + _decrypto_dat[8] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[9]
+
 			if ecode == '1':
 				column[3] = '<b><u>Failed to <i>re-Download</i></u></b><br>Due to server file issue'
 				

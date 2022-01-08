@@ -1,0 +1,18 @@
+6.001 [03-Oct-2021 01:43 AM]
+	1. added cache feature to save bandwidth, RAM and CPU (also some time)
+		i) Link facts are stored the the memory
+		ii) Webpages are stored in the disk (AboutApp.cache_webpages_dir)
+			used a proxy class for the requests.response object (Cached_Response class)
+			store the __repr__ in a PID + UUID file and cleaned up on every project startup
+
+	2. Added optional feature to fetch directory name from the URL HTML file (the <title> tag)
+	flag: ProjectType_.get_html_title
+
+	3. Now indexing can be cancelled mid way
+	key_command: ctrl + c
+
+	4. Moved "_server_c_py based.py" *.leach file converting module to "log_extractor.py" and added version code feature for future versions
+
+
+
+

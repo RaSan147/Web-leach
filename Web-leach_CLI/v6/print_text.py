@@ -37,6 +37,12 @@ class XprintClass:
 
         self.custom_type_codes = ['/u/', '/a/', '/y/', '/g/', '/k/', '/b/', '/r/', '/h/', '/bu/', '/hu/', '/=/']
 
+        self.re = { #regex for custom type codes
+            'markup': re.compile('/<(.*)?>/'),
+            '/u/': re.compile('==(.*?)=='),
+            '/hu/': re.compile('===(.*?)==='),
+        }
+
         
         self.no_code = False
         self.no_colors = False
@@ -46,8 +52,10 @@ class XprintClass:
         print(tnt_helper('/<style= col: red>/ 69'))'''
         if '/<' not in self.text:
             return 0
-        while re.search('/<(.*)>/', self.text):
-            a = re.search('/<(.*?)>/', self.text)
+
+        
+        while self.re['markup'].search(self.text):
+            a = self.re['markup'].search(self.text)
             if a:
                 style = a.group(1)
 
@@ -55,19 +63,22 @@ class XprintClass:
 
 
 
-    def tnt_helper(self):
+    def tnt_helper(self, highlighter):
         ''' i) custom_type_codes are used for custom commands to
         simplify the code
         ii) other text modifications are made here and passes optimized
         text for the typing and speaking engine respectively'''
 
-        while re.search('==(.*)==', self.text):
-            a = re.search('===([^(==)]*)===', self.text)
-            if a:
-                self.text = self.text.replace('==='+a.group(0)+'===', '/hu/' + a.group(1) + '/=/')
-            a = re.search('==(.*?)==', self.text)
-            if a:
-                self.text = self.text.replace('=='+a.group(0)+'==', '/u/' + a.group(1) + '/=/')
+        if highlighter:
+
+            while self.re['/hu/'].search(self.text):
+                a = self.re['/hu/'].search(self.text)
+                if a:
+                    self.text = self.text.replace('==='+a.group(0)+'===', '/hu/' + a.group(1) + '/=/')
+            while self.re['/u/'].search(self.text):
+                a = self.re['/u/'].search(self.text)
+                if a:
+                    self.text = self.text.replace('=='+a.group(0)+'==', '/u/' + a.group(1) + '/=/')
 
         self.text_styling_markup()
 
@@ -171,9 +182,16 @@ class XprintClass:
     #     sys.stdout.flush()
 
 
-    def slowtype(self, *text, sep= ' ', wait_time=wait_time, end='\n'):
+    def slowtype(self, *text, sep= ' ', wait_time=wait_time, end='\n', highlighter=False):
         """main typing engine that prints inputted text
-            slowly based on waiting time"""
+            slowly based on waiting time
+            
+            text: text to be printed
+            sep: separator between each text args
+            wait_time: time to wait between each character
+            end: end of line character
+            highlighter: if True, will highlight text using ===.*=== -> /hu/ and ==.*== -> /u/
+            """
 
         
         self.text= sep.join(map(str, text))
@@ -183,7 +201,7 @@ class XprintClass:
 
         self.custom_style_temp = self.custom_style[:]
 
-        self.tnt_helper()
+        self.tnt_helper(highlighter)
         #custom_type_codes = ['/u/', '/a/', '/y/', '/g/', '/k/', '/b/', '/r/', '/h/', '/bu/', '/hu/', '/=/']
         i=0
         while  i<len(self.text):

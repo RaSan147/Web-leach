@@ -41,37 +41,58 @@ elif platform== "android" or platform=='linux':
 else: pass#print(platform)
 
 def Cencrypt(text, key):
-    with open('i.txt','w') as f:
-        f.write(text)
-    with open('k.txt','w') as f:
-        f.write(key)
-        
-    try:remove('out.txt')
-    except:pass
-    os_sys(" ".join([compiled_c, "en"]))
-    remove('i.txt')
-    remove('k.txt')
-    with open('out.txt', 'r') as f:
-        returner= f.read()
-    remove('out.txt.534678864')
-    return returner
-        
+	with open('i.txt','w') as f:
+		f.write(text)
+	with open('k.txt','w') as f:
+		f.write(key)
+		
+	try:remove('out.txt')
+	except:pass
+	os_sys(" ".join([compiled_c, "en"]))
+	remove('i.txt')
+	remove('k.txt')
+	with open('out.txt', 'r') as f:
+		returner= f.read()
+	remove('out.txt')
+	return returner
+		
 def Cdecrypt(text, key):
-    with open('i.txt','w') as f:
-        f.write(text)
-    with open('k.txt','w') as f:
-        f.write(key)
-    try:remove('out.txt')
-    except:pass
-    os_sys(" ".join([compiled_c, "de"]))
-    remove('i.txt')
-    remove('k.txt')
-    with open('out.txt', 'r') as f:
-        returner= f.read()
-    remove('out.txt')
-    return returner
+	text = text.encode('ascii')
+	key = key.encode('ascii')
+
+	with open('i.txt','wb') as f:
+		f.write(text)
+	with open('k.txt','wb') as f:
+		f.write(key)
+	try:
+		remove('out.txt')
+	except:
+		pass
+	os_sys(" ".join([compiled_c, "de"]))
+	remove('i.txt')
+	remove('k.txt')
+	with open('out.txt', 'r') as f:
+		returner= f.read()
+	remove('out.txt')
+	return returner
 
 
+
+##########################################################################
+#                                                                        #
+#                             Cy Based                                   #
+#                                                                        #
+##########################################################################
+
+Cy_available = True
+import traceback
+try:
+	from cython_libs.rc_lines_cy.rc_lines_cy import CYdecrypt, CYencrypt
+	print("Cython module loaded successfully")
+except:
+	print("Cython module failed to load")
+	traceback.print_exc()
+	Cy_available = False
 
 
 ##########################################################################
@@ -79,10 +100,6 @@ def Cdecrypt(text, key):
 #                             Py Based                                   #
 #                                                                        #
 ##########################################################################
-
-
-from hashlib import sha1 as hashlib_sha1
-
 
 seq={
 "a": [5, 8, 1, 7, 2, 4, 3, 6],
@@ -246,35 +263,58 @@ def PYdecrypt(texts, key, typer= 'str'):
 	return '\n'.join(returner) if typer =='str' else returner
 
 
-def test(msg=False,key=False, mode = 'py'):
+def test(msg=False,key=False, mode = 'py', disable_Output=False):
+	if msg==False:
+		msg=input('Enter your message: ')
+	if key==False:
+		key=input('Enter your key: ')
+
+
 	if mode.lower()=='c':
 		encrypt = Cencrypt
 		decrypt = Cdecrypt
 	elif mode.lower() == 'py':
 		encrypt = PYencrypt
 		decrypt = PYdecrypt
+	elif mode.lower() == 'cy':
+		encrypt = CYencrypt
+		decrypt = CYdecrypt
+	elif mode.lower() == 'all':
+		test(msg,key, 'c', True)
+		test(msg,key, 'py', True)
+		test(msg,key, 'cy', True)
+
+		return 0
+
+	print("\nUSED MODE: " + mode.upper())
 
 
-	if msg==False:
-		msg=input('Enter your message: ')
-	if key==False:
-		key=input('Enter your key: ')
 	tt=time()
 	light=encrypt(msg,key)
 	en_tt=(time()-tt)
-	print('\n\n     ============\n       encrypted\n     ============')
 	
-	print('\n"'+light+'"\n\n')
+	if not disable_Output:
+		print('\n\n     ============\n       encrypted\n     ============')
+		
+		print('\n"'+light+'"\n\n')
 	
 	tt=time()
 	dark=decrypt(msg,key)
 	de_tt=(time()-tt)
-	print('\n\n     ============\n       decrypted\n     ============')
-	
-	print('\n"'+dark+'"\n\n')
+
+	if not disable_Output:
+		print('\n\n     ============\n       decrypted\n     ============')
+		
+		print('\n"'+dark+'"\n\n')
 	x=len(dark)
 	print('\n\nMsg len=', len(msg),'\n key len=', len(key),'\nEncrypted in %fs'%en_tt,'\nDecrypted in %fs'%de_tt,'\n time per key (en): ', en_tt/len(key),'\n time per key (de): ', de_tt/len(key))
-	if msg == encrypt(dark, key):
-		print("passed")
+	__test = encrypt(dark, key)
+	if msg.strip() == __test.strip():
+		print("\npassed\n\n")
+	else:
+		print("failed")
+		print([msg, '\n', __test])
+
+# test("#print(PYdecrypt(open('data/userlog.leach').read(), 'Asuna'))"*100, "Asuna"*365, 'all')
 
 #print(PYdecrypt(open('data/userlog.leach').read(), 'Asuna'))

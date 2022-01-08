@@ -1,3 +1,0 @@
-['https://i.nhentai.net/galleries/1238807/6.jpg', 0, '106']
-['https://i.nhentai.net/galleries/1238807/5.jpg', 0, '138']
-['https://i.nhentai.net/galleries/1238807/9.jpg', 0, '91']

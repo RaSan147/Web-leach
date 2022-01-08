@@ -24,7 +24,7 @@ class Constants:
 	hard_cancel = '/y/Hand Cancel Command entered.\nExiting.../=/'
 
 	special_starts = {'nh':'https://nhentai\.((net)|(to)|(xxx))/g/',
-		'mangafreak':'https://w[^\/]+\.mangafreak.net/(?:M|m)anga/([^\?\#]+)',
+		'mangafreak':'https://[^\/]+\.mangafreak.net/(?:M|m)anga/([^\?\#]+)',
 		'nh_sc':'^nh (\d+)$',
 		'mf_sc':'^mf (.+)$',
 		'pinterest':'https://www.pinterest.com/',
@@ -43,7 +43,7 @@ class Constants:
 
 	old_img = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
 
-	DEFAULT_DISABLE_LIB_CHECK = True # temporarily disabled
+	DEFAULT_DISABLE_LIB_CHECK = False # temporarily disabled
 
 true = True
 false = False
