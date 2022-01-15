@@ -1,0 +1,138 @@
+.range-input {
+	/* position: absolute; */
+	background-color: #615f5f;
+	/* width: ; */
+	height: 60px;
+	border-radius: 10px;
+	border-bottom: 1px solid #d6d6d6;
+	padding: 20px;
+	box-shadow: 3px 0 5px #929292;
+	color: #fff;
+}
+
+
+.ranger {
+	/* display: block; */
+	position: relative;
+	--radius: 20px;
+	--value: 0;
+	cursor: grab;
+	background: none;
+	width: 95%;
+	height: 30px;
+	-webkit-appearance: none;
+}
+
+.ranger:active,
+.ranger:hover {
+	--radius: 25px;
+}
+
+.ranger:active {
+	cursor: grabbing;
+}
+
+.ranger:focus {
+	outline: none;
+}
+
+
+.ranger::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	margin-top: -4px;
+	/* overflow: hidden; */
+	width: var(--radius);
+	height: var(--radius);
+	border-radius: 50%;
+	border: none;
+	background: radial-gradient(farthest-corner at 30px 5px,
+			#fff 10%, #0068f0 100%);
+	box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.6);
+
+}
+
+.ranger::-moz-range-thumb {
+	width: var(--radius);
+	height: var(--radius);
+	border-radius: 50%;
+	border: none;
+	background: radial-gradient(farthest-corner at 30px 5px,
+			#fff 10%, #0068f0 100%);
+	box-shadow: 1px 0px 3px 0px rgba(0, 0, 0, 0.6);
+}
+
+.ranger::-ms-thumb {
+	width: var(--radius);
+	height: var(--radius);
+	border-radius: 50%;
+	border: none;
+	background: radial-gradient(farthest-corner at 30px 5px,
+			#fff 10%, #0068f0 100%);
+	box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.6);
+
+}
+
+/*Chrome*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.ranger {
+		/* overflow: hidden; */
+		-webkit-appearance: none;
+		/* background-color: white; */
+	}
+
+	.ranger::-webkit-slider-runnable-track {
+		background: var(--slide-gradient);
+		height: 10px;
+		border-radius: 5px;
+	}
+
+}
+
+
+/** FF*/
+.ranger::-moz-range-progress {
+	background: none;
+	height: 10px;
+	border-radius: 5px;
+}
+
+.ranger::-moz-range-track {
+	background: var(--slide-gradient);
+	height: 10px;
+	border-radius: 5px;
+}
+
+/* IE*/
+.ranger::-ms-fill-lower {
+	background: var(--slide-gradient);
+	height: 10px;
+	border-radius: 5px;
+}
+
+.ranger::-ms-fill-upper {
+	background-color: #fff;
+	height: 10px;
+	border-radius: 5px;
+}
+
+#border-width-input{
+	--slide-gradient: linear-gradient(to right, #fff 10%, rgb(0, 74, 211) calc(1%*var(--value)), #fff calc(1%*var(--value)), #fff 100%);
+}
+
+#brightness-input{
+	--slide-gradient: linear-gradient(to right, rgb(32, 32, 32) 10%, rgb(255, 254, 254) calc(1%*var(--value)), #fff calc(1%*var(--value)), #fff 100%);
+}
+
+:root {
+	--tick-spacing: 0;
+}
+
+.slider-tick {
+	pointer-events: none;
+	margin-top: -10px;
+	padding-left: 10px;
+	font-size: 7px;
+	font-weight: 700;
+	text-align: justify;
+	letter-spacing: var(--tick-spacing);
+}

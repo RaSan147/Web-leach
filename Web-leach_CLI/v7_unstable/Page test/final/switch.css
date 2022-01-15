@@ -1,0 +1,83 @@
+.tron-switch {
+  position: relative;
+  height: 22px;
+  width: 60px;
+  background: #8b8b8b;
+  float:right;
+  cursor: pointer;
+  -moz-transform: skew(-30deg);
+  -ms-transform: skew(-30deg);
+  -webkit-transform: skew(-30deg);
+  transform: skew(-30deg);
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  /* padding-right: 10px; */
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  -webkit-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+  text-indent: 40%;
+  line-height: 24px;
+  
+  -webkit-box-shadow: 0px 0.5px 2.5px #6f6f6f;
+  box-shadow: 0px 0.5px 2.5px #6f6f6f;
+}
+.tron-switch-span {
+  font-family: 'Montserrat', sans-serif;
+  -moz-transform: skew(30deg);
+  -ms-transform: skew(30deg);
+  -webkit-transform: skew(30deg);
+  transform: skew(30deg);
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  -webkit-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+  font-size: 15px;
+  z-index: 2;
+  color: rgb(53, 50, 50);
+}
+.tron-switch:before {
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  -webkit-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 18px;
+  top: 1px;
+  left: 2.5px;
+  cursor: pointer;
+  background: #eee;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  
+  -webkit-box-shadow: 2.5px 0 5px #6f6f6f;
+  box-shadow: 2.5px 0 5px #6f6f6f;
+  z-index: 1;
+}
+.tron-switch.active {
+  -moz-transform: skew(30deg);
+  -ms-transform: skew(30deg);
+  -webkit-transform: skew(30deg);
+  transform: skew(30deg);
+  background: #1f83b6;
+}
+.tron-switch.active .tron-switch-span {
+  -moz-transform: skew(-30deg);
+  -ms-transform: skew(-30deg);
+  -webkit-transform: skew(-30deg);
+  transform: skew(-30deg);
+  text-indent: 10%;
+  color: #eee;
+}
+.tron-switch.active:before {
+  left: 41px;
+  
+  -webkit-box-shadow: -2.5px 0px 5px #6f6f6f;
+  box-shadow: -2.5px 0px 5px #6f6f6f;
+}
