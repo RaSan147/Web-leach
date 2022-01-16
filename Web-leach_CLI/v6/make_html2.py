@@ -68,7 +68,7 @@ CSSmin = css_minify()
 
 class MakeHtml_:
 	def return_sub_page(self, all_list, sub_dirs, page_index, title):
-		sub_page_template= open('wl-page-2.html').read()%(all_list, sub_dirs, page_index, title)
+		sub_page_template= open('wl-page-2.html', encoding='utf8').read()%(all_list, sub_dirs, page_index, title)
 
 		return sub_page_template
 
