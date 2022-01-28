@@ -65,6 +65,12 @@ def log(arr):
 
 	return "||".join(map(str, arr))
 
+class __Make_proxy:
+	def make_pages(self, *args):
+		pass
+	def make_cbz(self, *args):
+		pass
 
+MakeHtml = MakeCbz = None
 
 

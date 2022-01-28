@@ -132,7 +132,7 @@ XXX To do:
 # <draft-ietf-http-v10-spec-00.txt>                     H. Frystyk Nielsen
 # Expires September 8, 1995                                  March 8, 1995
 #
-# URL: http: //www.ics.uci.edu/pub/ietf/http/draft-ietf-http-v10-spec-00.txt
+# URL: http://www.ics.uci.edu/pub/ietf/http/draft-ietf-http-v10-spec-00.txt
 #
 # and
 #
@@ -141,7 +141,7 @@ XXX To do:
 # Obsoletes: 2068                                              June 1999
 # Category: Standards Track
 #
-# URL: http: //www.faqs.org/rfcs/rfc2616.html
+# URL: http://www.faqs.org/rfcs/rfc2616.html
 
 # Log files
 # ---------
@@ -150,7 +150,7 @@ XXX To do:
 #
 # | The logfile format is as follows. Each line consists of:
 # |
-# | host rfc931 authuser [DD/Mon/YYYY: hh: mm: ss] "request" ddd bbbb
+# | host rfc931 authuser [DD/Mon/YYYY:hh:mm:ss] "request" ddd bbbb
 # |
 # |        host: Either the DNS name or the IP number of the remote client
 # |        rfc931: Any information returned by identd for this person,
@@ -187,7 +187,6 @@ import html
 import http.client
 import io
 import mimetypes
-from operator import truediv
 import os
 import posixpath
 import select
@@ -197,6 +196,7 @@ import socketserver
 import sys
 import time
 import urllib.parse
+import contextlib
 import urllib
 import natsort
 from functools import partial
@@ -248,7 +248,7 @@ except FileNotFoundError:
 # Default error message template
 DEFAULT_ERROR_MESSAGE = """\
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http: //www.w3.org/TR/html4/strict.dtd">
+		"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
@@ -288,7 +288,7 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
 	The following explanation of HTTP serves to guide you through the
 	code as well as to expose any misunderstandings I may have about
 	HTTP (so you don't need to read the code to figure out I'm wrong
-	: -).
+	:-).
 
 	HTTP (HyperText Transfer Protocol) is an extensible protocol on
 	top of a reliable stream transport (e.g. TCP/IP).  The protocol
@@ -458,7 +458,7 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
 				HTTPStatus.BAD_REQUEST,
 				"Bad request syntax (%r)" % requestline)
 			return False
-		command, path = words[: 2]
+		command, path = words[:2]
 		if len(words) == 2:
 			self.close_connection = True
 			if command != 'GET':
@@ -551,7 +551,7 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
 			method = getattr(self, mname)
 			method()
 			self.wfile.flush() #actually send the response if not already done.
-		except socket.timeout as e:
+		except TimeoutError as e:
 			#a read or a write timed out.  Discard this connection
 			self.log_error("Request timed out: %r", e)
 			self.close_connection = True
@@ -731,7 +731,7 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
 		"""Return the current time formatted for logging."""
 		now = time.time()
 		year, month, day, hh, mm, ss, x, y, z = time.localtime(now)
-		s = "%02d/%3s/%04d %02d: %02d: %02d" % (
+		s = "%02d/%3s/%04d %02d:%02d:%02d" % (
 				day, self.monthname[month], year, hh, mm, ss)
 		return s
 
@@ -776,11 +776,17 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 	"""
 
 	server_version = "SimpleHTTP/" + __version__
+	extensions_map = _encodings_map_default = {
+		'.gz': 'application/gzip',
+		'.Z': 'application/octet-stream',
+		'.bz2': 'application/x-bzip2',
+		'.xz': 'application/x-xz',
+	}
 
 	def __init__(self, *args, directory=None, **kwargs):
 		if directory is None:
 			directory = os.getcwd()
-		self.directory = directory
+		self.directory = os.fspath(directory)
 		super().__init__(*args, **kwargs)
 
 	def do_GET(self):
@@ -977,12 +983,21 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 				
 				Extractor = dict()
 				exec(open('log_extractor.py').read(), Extractor)
+				# print(self.decrypto_dat)
+
+				# exit()
 
 
 				while self.decrypto_dat!=[]:
 					column = [[] for i in range(100)]
 					line_index+=1
-					_decrypto_dat_=self.decrypto_dat.pop()
+					try:
+						_decrypto_dat_=self.decrypto_dat.pop()
+					except:
+						# print(self.decrypto_dat)
+						traceback.print_exc()
+						continue
+
 					if _decrypto_dat_=='':
 						table_len-=1
 						continue
@@ -1017,12 +1032,15 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 					# print("converted")
 					# print(column)
+					if not column: continue
+
 
 					_decrypto_dat = _decrypto_dat[: 5] #uncomment when done
 					tr='<tr class = "p%s">'%_decrypto_dat[1]
 
 					for j in range(5):
 						try:
+							print(column[j])
 							tr+=td_t%column[j]
 						except:
 							traceback.print_exc()
@@ -1099,6 +1117,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 							 parts[3], parts[4])
 				new_url = urllib.parse.urlunsplit(new_parts)
 				self.send_header("Location", new_url)
+				self.send_header("Content-Length", "0")
 				self.end_headers()
 				return None
 			for index in "index.html", "index.htm":
@@ -1109,6 +1128,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 			else:
 				return self.list_directory(path)
 		ctype = self.guess_type(path)
+		# check for trailing "/" which should return 404. See Issue17324
+		# The test for this was added in test_httpserver.py
+		# However, some OS platforms accept a trailingSlash as a filename
+		# See discussion on python-dev and Issue34711 regarding
+		# parseing and rejection of filenames with a trailing slash
+		if path.endswith("/"):
+			self.send_error(HTTPStatus.NOT_FOUND, "File not found")
+			return None
 		try:
 			f = open(path, 'rb')
 		except OSError:
@@ -1130,7 +1157,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 				else:
 					if ims.tzinfo is None:
 						# obsolete format with no timezone, cf.
-						# https: //tools.ietf.org/html/rfc7231#section-7.1.1.1
+						# https://tools.ietf.org/html/rfc7231#section-7.1.1.1
 						ims = ims.replace(tzinfo=datetime.timezone.utc)
 					if ims.tzinfo is datetime.timezone.utc:
 						# compare to UTC datetime of last modification
@@ -1182,7 +1209,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 		enc = sys.getfilesystemencoding()
 		title = 'Inside %s' % displaypath
 		r.append('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" '
-				 '"http: //www.w3.org/TR/html4/strict.dtd">')
+				 '"http://www.w3.org/TR/html4/strict.dtd">')
 		r.append('<meta http-equiv="Content-Type" '
 				 'content="text/html; charset=%s">' % enc)
 		# r.append(directory_explorer_header)
@@ -1297,18 +1324,10 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 		ext = ext.lower()
 		if ext in self.extensions_map:
 			return self.extensions_map[ext]
-		else:
-			return self.extensions_map['']
-
-	if not mimetypes.inited:
-		mimetypes.init() # try to read system mime.types
-	extensions_map = mimetypes.types_map.copy()
-	extensions_map.update({
-		'': 'application/octet-stream', # Default
-		'.py': 'text/plain',
-		'.c': 'text/plain',
-		'.h': 'text/plain',
-		})
+		guess, _ = mimetypes.guess_type(path)
+		if guess:
+			return guess
+		return 'application/octet-stream'
 
 
 # Utilities for CGIHTTPRequestHandler
@@ -1335,7 +1354,7 @@ def _url_collapse_path(path):
 	# path semantics rather than local operating system semantics.
 	path_parts = path.split('/')
 	head_parts = []
-	for part in path_parts[: -1]:
+	for part in path_parts[:-1]:
 		if part == '..':
 			head_parts.pop() # IndexError if more '..' than prior parts
 		elif part and part != '.':
@@ -1439,8 +1458,10 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 		"""
 		collapsed_path = _url_collapse_path(self.path)
 		dir_sep = collapsed_path.find('/', 1)
-		head, tail = collapsed_path[: dir_sep], collapsed_path[dir_sep+1: ]
-		if head in self.cgi_directories:
+		while dir_sep > 0 and not collapsed_path[:dir_sep] in self.cgi_directories:
+			dir_sep = collapsed_path.find('/', dir_sep+1)
+		if dir_sep > 0:
+			head, tail = collapsed_path[:dir_sep], collapsed_path[dir_sep+1:]
 			self.cgi_info = head, tail
 			return True
 		return False
@@ -1463,8 +1484,8 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 		path = dir + '/' + rest
 		i = path.find('/', len(dir)+1)
 		while i >= 0:
-			nextdir = path[: i]
-			nextrest = path[i+1: ]
+			nextdir = path[:i]
+			nextrest = path[i+1:]
 
 			scriptdir = self.translate_path(nextdir)
 			if os.path.isdir(scriptdir):
@@ -1480,7 +1501,7 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 		# a possible additional path, to be stored in PATH_INFO.
 		i = rest.find('/')
 		if i >= 0:
-			script, rest = rest[: i], rest[i: ]
+			script, rest = rest[:i], rest[i:]
 		else:
 			script, rest = rest, ''
 
@@ -1504,7 +1525,7 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 					"CGI script is not executable (%r)" % scriptname)
 				return
 
-		# Reference: http: //hoohoo.ncsa.uiuc.edu/cgi/env.html
+		# Reference: http://hoohoo.ncsa.uiuc.edu/cgi/env.html
 		# XXX Much of the following could be prepared ahead of time!
 		env = copy.deepcopy(os.environ)
 		env['SERVER_SOFTWARE'] = self.version_string()
@@ -1534,7 +1555,7 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 					except (binascii.Error, UnicodeError):
 						pass
 					else:
-						authorization = authorization.split(': ')
+						authorization = authorization.split(':')
 						if len(authorization) == 2:
 							env['REMOTE_USER'] = authorization[0]
 		# XXX REMOTE_IDENT
@@ -1550,10 +1571,10 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 			env['HTTP_REFERER'] = referer
 		accept = []
 		for line in self.headers.getallmatchingheaders('accept'):
-			if line[: 1] in "\t\n\r ":
+			if line[:1] in "\t\n\r ":
 				accept.append(line.strip())
 			else:
-				accept = accept + line[7: ].split(',')
+				accept = accept + line[7:].split(',')
 		env['HTTP_ACCEPT'] = ','.join(accept)
 		ua = self.headers.get('user-agent')
 		if ua:
@@ -1613,7 +1634,7 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 				interp = sys.executable
 				if interp.lower().endswith("w.exe"):
 					# On Windows, use python.exe, not pythonw.exe
-					interp = interp[: -5] + interp[-4: ]
+					interp = interp[:-5] + interp[-4:]
 				cmdline = [interp, '-u'] + cmdline
 			if '=' not in query:
 				cmdline.append(query)
@@ -1662,7 +1683,7 @@ def test(HandlerClass=BaseHTTPRequestHandler,
 	HandlerClass.protocol_version = protocol
 	with ServerClass(server_address, HandlerClass) as httpd:
 		sa = httpd.socket.getsockname()
-		serve_message = "Serving HTTP on {host} port {port} (http: //{host}: {port}/) ..."
+		serve_message = "Serving HTTP on {host} port {port} (http://{host}:{port}/) ..."
 		print(serve_message.format(host=sa[0], port=sa[1]))
 		try:
 			httpd.serve_forever()
@@ -1687,7 +1708,7 @@ if __name__ == '__main__':
 						nargs='?',
 						help='Specify alternate port [default: 8000]')
 	args = parser.parse_args()
-	# webbrowser.open('http: //localhost: %i'%args.port)
+	# webbrowser.open('http://localhost:%i'%args.port)
 	if args.cgi:
 		handler_class = CGIHTTPRequestHandler
 	else:

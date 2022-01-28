@@ -1,6 +1,9 @@
 import Number_sys_conv as Nsys
 import html
 
+def linker(link):
+	return '<a href = "' + link +'">'  + link + '</a>'
+
 def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 	if _decrypto_dat[2]=='0x_':
 		column[3]= "<b>Failed to start up</b>"
@@ -148,37 +151,37 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 			if ecode == '0':
 				column[3] = '<b><u>Unknown Error occured</u></b>  <br>while running Appconfig~god_mode'
 
-				column[4] = '<b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3] + '<br>' + '<b>Message: </b>' + _decrypto_dat[7]
+				column[4] = '<b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3] + '<br>' + '<b>Message: </b>' + _decrypto_dat[7]
 
 			elif ecode == '1':
 				column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
 
-				column[4] = 'Failed to download "who_r_u.mp3"<hr><b>Status Code: </b>' + _decrypto_dat[5] + '<br>' +  '<b>Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+				column[4] = 'Failed to download "who_r_u.mp3"<hr><b>Status Code: </b>' + _decrypto_dat[5] + '<br>' +  '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
 
 			elif ecode == '2':
 				column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
 
-				column[4] = 'Failed to download "who_r_u.mp3"<hr><b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+				column[4] = 'Failed to download "who_r_u.mp3"<hr><b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
 
 			elif ecode == '3':
 				column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
 
-				column[4] = 'Failed to download "updateL.ext"<hr><b>Status Code: </b>' + _decrypto_dat[5] + '<br>' +  '<b>Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+				column[4] = 'Failed to download "updateL.ext"<hr><b>Status Code: </b>' + _decrypto_dat[5] + '<br>' +  '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
 
 			elif ecode == '4':
 				column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
 
-				column[4] = 'Failed to download "updateL.ext"<hr><b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+				column[4] = 'Failed to download "updateL.ext"<hr><b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
 
 			elif ecode == '5':
 				column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
 
-				column[4] = 'Failed to download "updateG.ext"<hr><b>Status Code: </b>' + _decrypto_dat[5] + '<br>' +  '<b>Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+				column[4] = 'Failed to download "updateG.ext"<hr><b>Status Code: </b>' + _decrypto_dat[5] + '<br>' +  '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
 
 			elif ecode == '6':
 				column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
 
-				column[4] = 'Failed to download "updateG.ext"<hr><b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+				column[4] = 'Failed to download "updateG.ext"<hr><b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
 
 
 			else: return False
@@ -292,12 +295,12 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 			if ecode == '1':
 				column[3] = '<b><u>Internet issue</u></b>  <br>Failed to fetch a link'
 
-				column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Header dex: </b>'+ _decrypto_dat[5]+ '<br>' + '<b>Timout: </b>' + _decrypto_dat[6] + '<br>' + '<b>Error Code: </b>' + _decrypto_dat[7] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[8]
+				column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>'+ _decrypto_dat[5]+ '<br>' + '<b>Timout: </b>' + _decrypto_dat[6] + '<br>' + '<b>Error Code: </b>' + _decrypto_dat[7] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[8]
 				
 			elif ecode == '2':
 				column[3] = '<b><u>Server issue</u></b>  <br>Failed to fetch a link'
 
-				column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Header dex: </b>'+ _decrypto_dat[5]+ '<br>' + '<b>Timout: </b>' + _decrypto_dat[6] + '<br>' + '<b>Status Code: </b>' + _decrypto_dat[7]
+				column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>'+ _decrypto_dat[5]+ '<br>' + '<b>Timout: </b>' + _decrypto_dat[6] + '<br>' + '<b>Status Code: </b>' + _decrypto_dat[7]
 
 
 			else: return False
@@ -334,23 +337,23 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 			if ecode == '0':
 				column[3] = '<b><u>Unknown Error occured</u></b>  <br>while running server [Netsys.check_server()]'
 
-				column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Timeout: </b>' + _decrypto_dat[5] + '<br><b>Error Code: </b>' + _decrypto_dat[6] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[7]
+				column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Timeout: </b>' + _decrypto_dat[5] + '<br><b>Error Code: </b>' + _decrypto_dat[6] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[7]
 
 			elif ecode == '1':
 				column[3] = '<b><u>Failed to open server link</u></b><br>Due to App or Network issue'
 
-				column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Timeout: </b>' + _decrypto_dat[5] + '<br><b>Error Code: </b>' + _decrypto_dat[6] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[7]
+				column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Timeout: </b>' + _decrypto_dat[5] + '<br><b>Error Code: </b>' + _decrypto_dat[6] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[7]
 
 			
 			elif ecode == '2':
 				column[3] = '<b><u>Failed to open server link</u></b><br>Due to server file issue <br><b>Possible cause: </b> older server running'
 
-				column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Timeout: </b>' + _decrypto_dat[5] + '<br><b>Status Code: </b>' + _decrypto_dat[6] + '<br>' + '<b>1st 20 chars: </b>' + _decrypto_dat[7]
+				column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Timeout: </b>' + _decrypto_dat[5] + '<br><b>Status Code: </b>' + _decrypto_dat[6] + '<br>' + '<b>1st 20 chars: </b>' + _decrypto_dat[7]
 
 			elif ecode == '3':
 				column[3] = '<b><u>Failed to open server link</u></b><br>Due to server file issue<br><b>Possible cause: </b> port is used by other app'
 
-				column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Timeout: </b>' + _decrypto_dat[5] + '<br><b>Status Code: </b>' + _decrypto_dat[6]
+				column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Timeout: </b>' + _decrypto_dat[5] + '<br><b>Status Code: </b>' + _decrypto_dat[6]
 
 
 			else: return False
@@ -381,12 +384,12 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 			if ecode == '1':
 				column[3] = '<b>Failed to download <u>yamatte file</u> due to server error'
 
-				column[4] = '<b>Link: </b>' + _decrypto_dat[3] + '<br>' + '<b>Status code</b>:' + _decrypto_dat[4]
+				column[4] = '<b>Link: </b>' + linker(_decrypto_dat[3]) + '<br>' + '<b>Status code</b>:' + _decrypto_dat[4]
 
 			elif ecode == '2':
 				column[3] = '<b>Failed to download <u>yamatte file</u> due to Network error'
 
-				column[4] = '<b>Link: </b>' + _decrypto_dat[3] + '<br>' + '<b>Rerror code</b>:' + _decrypto_dat[4]
+				column[4] = '<b>Link: </b>' + linker(_decrypto_dat[3]) + '<br>' + '<b>Rerror code</b>:' + _decrypto_dat[4]
 
 
 			else: return False
@@ -400,23 +403,23 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 			if ecode == '0':
 				column[3] = '<b><u>Unknown Error occured</u></b>  <br>while re-downloading file'
 
-				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + _decrypto_dat[5] + '<br>' + '<b>Header dex:</b>' + _decrypto_dat[4] + '<br><b>File name: </b>' + _decrypto_dat[6] + '<br><b>File dir: </b>' + _decrypto_dat[7]  + '<br><b>Error Code: </b>' + _decrypto_dat[8] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[9]
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[5]) + '<br> <b>Header dex:</b>' + _decrypto_dat[4] + '<br><b>File name: </b>' + _decrypto_dat[6] + '<br><b>File dir: </b>' + _decrypto_dat[7]  + '<br><b>Error Code: </b>' + _decrypto_dat[8] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[9]
 
 			if ecode == '1':
 				column[3] = '<b><u>Failed to <i>re-Download</i></u></b><br>Due to server file issue'
 				
-				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + _decrypto_dat[5] + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[4] + '<br><b>File name: </b>' + _decrypto_dat[6] + '<br><b>File dir: </b>' + _decrypto_dat[7] + '<br><b>Status Code: </b>' + _decrypto_dat[8]
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[5]) + '<br><b>Header dex: </b>' + _decrypto_dat[4] + '<br><b>File name: </b>' + _decrypto_dat[6] + '<br><b>File dir: </b>' + _decrypto_dat[7] + '<br><b>Status Code: </b>' + _decrypto_dat[8]
 
 			
 			elif ecode == '2':
 				column[3] = '<b><u>Failed to <i>re-Download</i></u></b><br>Due to Network issue'
 
-				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + _decrypto_dat[5] + '<br>' + '<b>Header dex:</b>' + _decrypto_dat[4] + '<br><b>File name: </b>' + _decrypto_dat[6] + '<br><b>File dir: </b>' + _decrypto_dat[7]  + '<br><b>Error Code: </b>' + _decrypto_dat[8] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[9]
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[5]) + '<br>' + '<b>Header dex:</b>' + _decrypto_dat[4] + '<br><b>File name: </b>' + _decrypto_dat[6] + '<br><b>File dir: </b>' + _decrypto_dat[7]  + '<br><b>Error Code: </b>' + _decrypto_dat[8] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[9]
 
 			elif ecode == '3':
 				column[3] = '<b><u>Failed to <i>extract ZIp</i></u></b>'
 				
-				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + _decrypto_dat[5] + '<br>' + '<b>Header dex:</b>' + _decrypto_dat[4] + '<br><b>File name: </b>' + _decrypto_dat[6] + '<br><b>File dir: </b>' + _decrypto_dat[7]  + '<br><b>Error Code: </b>' + _decrypto_dat[8] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[9]
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[5]) + '<br>' + '<b>Header dex:</b>' + _decrypto_dat[4] + '<br><b>File name: </b>' + _decrypto_dat[6] + '<br><b>File dir: </b>' + _decrypto_dat[7]  + '<br><b>Error Code: </b>' + _decrypto_dat[8] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[9]
 
 
 			else: return False
@@ -449,7 +452,7 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 			if ecode == '1':
 				column[3] = '<b><u>Failed to index link</u></b>'
 
-				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + _decrypto_dat[5] + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[4] + '<br><b>Status/Error Code: </b>' + _decrypto_dat[6] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[7]
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[5]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[4] + '<br><b>Status/Error Code: </b>' + _decrypto_dat[6] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[7]
 
 
 			else: return False
@@ -470,17 +473,17 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 			if ecode == '1':
 				column[3] = '<b><u>Failed to connect <a href="https://nhentai.net">nhentai.net</a></u></b><br><b>Possible cause</b>: possible cause wrong link or location blocked or internet issue'
 
-				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>NH Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[5]
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>NH Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[5]
 
 			elif ecode == '2':
 				column[3] = '<b><u>Failed to connect <a href="https://nhentai.to">nhentai.to</a></u></b>[DEPRICATED]<br><b>Possible cause</b>: possible cause wrong link or internet issue'
 
-				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>NH Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[5]
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>NH Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[5]
 
 			elif ecode == '3':
 				column[3] = '<b><u>Failed to connect <a href="https://nhentai.xxx">nhentai.xxx</a></u></b><br><b>Possible cause</b>: possible cause wrong link or location blocked or internet issue'
 
-				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>NH Link: </b>' + _decrypto_dat[4] + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[5]
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>NH Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[5]
 
 
 			else: return False
@@ -491,12 +494,12 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 			if ecode == '0':
 				column[3] = '<b><u>Unknown error occured</u><br>Failed to index links from Webtoon</u></b>'
 
-				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>Webtoon link: </b>' + _decrypto_dat[4] + '<br><b>Status/Error Code: </b>' + _decrypto_dat[6] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[7]
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>Webtoon link: </b>' + linker(_decrypto_dat[4]) + '<br><b>Status/Error Code: </b>' + _decrypto_dat[6] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[7]
 
 			elif ecode == 'X':
 				column[3] = '<b><u>Invalid link</u><br>Failed to pass link REGEX for Webtoon</u></b>'
 
-				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>Webtoon link: </b>' + _decrypto_dat[4] 
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>Webtoon link: </b>' + linker(_decrypto_dat[4]) + ''
 			else: return False
 
 			
@@ -504,12 +507,12 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 			if ecode == 'I':
 				column[3] = '<b><u>HTML creation Began</u></b>'
 
-				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>Sort files: </b>' + _decrypto_dat[4] + '<br><b>File extension: </b>' + _decrypto_dat[5] + '<br><b>Sort directories: </b>' + _decrypto_dat[6]
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>Sort files: </b>' + linker(_decrypto_dat[4]) + '<br><b>File extension: </b>' + _decrypto_dat[5] + '<br><b>Sort directories: </b>' + _decrypto_dat[6]
 
 			elif ecode == '0':
 				column[3] = '<b><u>Unknown Error occured</u> while generating web pages using make_html</b>'
 
-				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>Error Code: </b>' + _decrypto_dat[4] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[5]
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>Error Code: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[5]
 
 			elif ecode == '1':
 				column[3] = '<b><u>User cancelled HTML generation</u></b>'

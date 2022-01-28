@@ -21,10 +21,10 @@
 
 
 '''
-py -3.7 -m pip freeze > r.txt
-py -3.7 -m pip uninstall -r r.txt -y
-py -3.7 -m pip install pyinstaller-develop.zip requests  beautifulsoup4 natsort google pypiwin32 comtypes psutil lxml pywin32-ctypes rjsmin
-py -3.7 -O -m PyInstaller "leach_win_setup.py" -F -n "Web leach 0.5.5.4" --version-file vtesty.py -i "EMO Angel.ico" --add-data "7z.exe;." --upx-dir=.
+py -3.8 -m pip freeze > r.txt
+py -3.8 -m pip uninstall -r r.txt -y
+py -3.8 -m pip install pyinstaller requests  beautifulsoup4 natsort google pypiwin32 comtypes psutil lxml pywin32-ctypes rjsmin
+py -3.8 -O -m PyInstaller "leach_win_setup.py" -F -n "Web leach 0.5.5.4" --version-file vtesty.py -i "EMO Angel.ico" --add-data "7z.exe;." --upx-dir=.
 '''
 
 requirements_all = ('requests',  'beautifulsoup4', 'natsort', 'google', 'rjsmin')

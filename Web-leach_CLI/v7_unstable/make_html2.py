@@ -280,7 +280,7 @@ for (var i = 0; i < pages_list.length; i++){
 
 	else{
 		localStorage.setItem(proj_name, current_page_index);
-	}"""%(str(sub_dirs),proj_name)) + """
+	}"""%(str(sub_dirs), proj_name)) + """
 </script>"""
 
 		return main_page_template

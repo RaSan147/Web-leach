@@ -718,6 +718,7 @@ leach_logger = IOsys.leach_logger
 @atexit.register
 def on_exit():  # fc=XXXX
 	server_code.server_close()
+	server_code.shutdown()
 	server_launcher._stop()
 	pass
 
@@ -1068,7 +1069,7 @@ class OSsys_:  # fc=0700
 		except Exception as e:
 			traceback.print_exc()
 			print("Some error occurred while loading make_html file. \nError code: 0704x0\nReport to the author\nExiting in 5 seconds")
-			leach_logger('||'.join(map(str,['0704x0', f_code, 'make_html2.py', e.__class__.__name__, e])))
+			leach_logger(log('0704x0', f_code, 'make_html2.py', e.__class__.__name__, e))
 
 			time.sleep(5)
 			exit()
@@ -1077,7 +1078,7 @@ class OSsys_:  # fc=0700
 			exec(Fsys.reader('make_cbz2.py'), globals())
 		except Exception as e:
 			print("Some error occurred while loading make_html file. \nError code: 0704x0\nReport to the author\nExiting in 5 seconds")
-			leach_logger('||'.join(map(str,['0704x0', f_code, 'make_cbz2.py', e.__class__.__name__, e])))
+			leach_logger(log('0704x0', f_code, 'make_cbz2.py', e.__class__.__name__, e))
 			time.sleep(5)
 			exit()
 
@@ -1966,7 +1967,7 @@ class All_list_type:  # fc=0B00
 
 class CachedData_:  # fc=0C00
 	def __init__(self):  # fc=0C01
-		self.__all__ = ("cached_webpages", "cached_link_facts")
+		self.data_vars = ("cached_webpages", "cached_link_facts")
 		self.cached_webpages = dict()
 		self.cached_link_facts = dict()
 
@@ -1995,7 +1996,7 @@ class CachedData_:  # fc=0C00
 		return None
 
 	def clean_cached_webpages(self):
-		""" Clean the cached_webpages """
+		""" Cleans the cached_webpages from storage"""
 		for i in os_listdir(AboutApp.cached_webpages_dir):
 			if i.startswith(str(process_id) + '-'):
 				try:
@@ -2004,12 +2005,14 @@ class CachedData_:  # fc=0C00
 					pass
 
 	def clear(self):
+		"""Cleans both from memory and storage""" 
 		self.clean_cached_webpages()
-		for i in self.__all__:
+		for i in self.data_vars:
 			self.__dict__[i].clear()
 
 
 CachedData = CachedData_()
+
 
 print(11)  # x
 
@@ -2991,7 +2994,7 @@ class ProjectType_:  # fc=0P00
 				else:
 					soup = bs(Netsys.remove_noscript(page.text), parser)
 
-				if any(i in self.file_types for i in ('img', 'image', 'images', 'imgs', 'photo', 'photos')):
+				if any(j in self.file_types for j in ('img', 'image', 'images', 'imgs', 'photo', 'photos')):
 					for img_link in self.list_writer_img(soup, links[i]):
 						if self.break_all:
 							return 0
@@ -3109,28 +3112,81 @@ class ProjectType_:  # fc=0P00
 
 		home_done = False
 
+		failed_del = []
+		has_older_V = False
+		permission_issue = False
+
+		to_del = None
+
+		Ending_msg = set()
+
 		for dirpath, dirnames, filenames in os.walk(self.download_dir):
 			dp = Fsys.get_dir(dirpath)
+
 			for dirname in dirnames:
-				if dirname not in self.sub_dirs:
-					rmdir(os.path.join(dirpath, dirname))
+				try:
+					if dp == self.Project and dirname not in self.sub_dirs:
+						to_del = os.path.join(dirpath, dirname)
+						rmdir(to_del)
+						xprint('/i/[REMOVING]/=/ ', to_del)
+
+					if dp in self.sub_dirs:    # deleting folders that are inside the sub_dirs
+						to_del = os.path.join(dirpath, dirname)
+						rmdir(to_del)
+						xprint('/i/[REMOVING]/=/ ',to_del)
+
+				except PermissionError:
+					permission_issue = True
+					failed_del.append(to_del)
+
+
+
+
 			for filename in filenames:
-				if dp == self.Project:
-					if filename == 'index.html':
-						continue
+				try:
+					if dp == self.Project:
+						if filename == 'index.html':
+							continue
 
-					if self.sub_dirs[0] == '.':
-						if filename not in self.all_list.all_names[0]:
-							remove(os.path.join(dirpath, filename))
+						if self.sub_dirs[0] == '.':
+							if filename not in self.all_list.all_names[0]:
+								to_del = os.path.join(dirpath, dirname)
+								remove(to_del)
+								xprint('/i/[REMOVING]/=/ ',dp, '\t>\t', to_del)
+								
 
 
-				if filename == self.Project + '.html':
-					remove(os.path.join(dirpath, filename))
-					xprint('/y/Older version HTML file detected. Deleting and /h/please update the Project or open with browser using this app/=/\n')
-					continue
+					if filename == self.Project + '.html':
+						to_del = os.path.join(dirpath, dirname)
+						remove(to_del)
+						xprint('/i/[REMOVING]/=/ ',dp, '\t>\t', to_del)
+						has_older_V = True
 
-				if filename not in self.all_list.all_names[self.sub_dirs.index(dp)]:
-					remove(os.path.join(dirpath, filename))
+					if dp in self.sub_dirs:
+						if filename == "index.html":
+							# print(os.path.join(dirpath, filename))
+							continue
+
+						if filename not in self.all_list.all_names[self.sub_dirs.index(dp)]:
+							to_del = os.path.join(dirpath, dirname)
+							remove(to_del)
+							xprint('/i/[REMOVING]/=/ ',dp, '\t>\t', to_del)
+				except PermissionError:
+					permission_issue = True
+					failed_del.append(to_del)
+
+		if has_older_V:
+			xprint('/y/Older version HTML file detected. Deleting and /h/please update the Project or open with browser using this app/=/\n')
+						
+		
+		if permission_issue:
+			xprint("Failed to delete some files due to Permission Error.\n /i/Try deleting them manually/=/\n")
+						
+		if failed_del:
+			print(failed_del, '\n')
+
+
+
 
 	def mangafreak_link(self):  # fc=0P0M
 		"""checks if the link is a mangafreak link and makes indexing easier. but one limitation is it can't find weather the link is valid or not and cannot get the actual file links.
@@ -3923,11 +3979,11 @@ Option               Value
 							return 0
 						except KeyboardInterrupt:
 							leach_logger('7001x1||' + self.P.Project)
-							print("cancel command entered!\nReturning to main page")
+							print("Cancel command entered!\nReturning to main page")
 							return 0
 						except LeachICancelError:
 							leach_logger('7001x1||' + self.P.Project)
-							print("cancel command entered!\nReturning to main page")
+							print("Cancel command entered!\nReturning to main page")
 							return 0
 
 						return 0
@@ -3942,7 +3998,7 @@ Option               Value
 							return 0
 						except KeyboardInterrupt:
 							leach_logger('8001x1||' + self.P.Project)
-							print("cancel command entered!\nReturning to main page")
+							print("Cancel command entered!\nReturning to main page")
 							return 0
 						return 0
 
@@ -4071,7 +4127,7 @@ yes/y to resume
 						print("Cancel command entered! stopping")
 						return 0
 					except KeyboardInterrupt:
-						print("cancel command entered! stopping")
+						print("Cancel command entered! stopping")
 						return 0
 
 					if self.P.link_startswith == False or title == False:
@@ -4202,7 +4258,7 @@ yes/y to resume
 										print("Cancel command entered! stopping")
 										return 0
 									except KeyboardInterrupt:
-										print("cancel command entered! stopping")
+										print("Cancel command entered! stopping")
 										return 0
 									# sub_links = ''
 									#exit(0)
@@ -4536,7 +4592,7 @@ yes/y to resume
 					return 0
 				except KeyboardInterrupt:
 					leach_logger('8001x1||' + self.P.Project)
-					print("cancel command entered!\nReturning to main page")
+					print("Cancel command entered!\nReturning to main page")
 					return 0
 				return
 
@@ -4561,8 +4617,15 @@ if __name__ == '__main__':
 			raise SystemExit
 		except:
 			traceback.print_exc()
-			flush_ = input("want to reload?")
-			break
+			
+			server_code.server_close()
+			server_code.shutdown()
+
+			try:
+				flush_ = IOsys.safe_input("want to reload?")
+				break
+			except LeachICancelError:
+				exit()
 		if flush_ in ('y', 're', 'reload', 'yes'):
 			flush = True
 			break
