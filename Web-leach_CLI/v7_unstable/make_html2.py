@@ -1,6 +1,7 @@
 # pylint: disable=unused-wildcard-import
 # pylint: disable=unused-import
 
+
 import rjsmin
 from re import compile as re_compile
 

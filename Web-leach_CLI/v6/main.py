@@ -213,7 +213,7 @@ class Error404(Exception): 						   #
 ####################################################
 
 
-print(2) #x
+print(2) # x
 class AboutApp_:     #fc=A000
 	""" Contains Information about the app and verion details"""
 

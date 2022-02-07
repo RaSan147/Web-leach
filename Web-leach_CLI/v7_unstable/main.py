@@ -213,12 +213,12 @@ class Error404(Exception): 						   #
 ####################################################
 
 
-print(2) #x
+print(2) # x
 class AboutApp_:     #fc=A000
 	""" Contains Information about the app and verion details"""
 
-	_VERSION = '6.001'
-	_Vcode = '006001'
+	_VERSION = '7.001'
+	_Vcode = '007001'
 	_APP_NAME = 'Web-Leach'
 	_APP_DESC = 'Web-Leach is a simple python script to download files from web'
 	_APP_AUTHOR = 'Ratul Hasan'
@@ -3157,7 +3157,7 @@ class ProjectType_:  # fc=0P00
 
 
 					if filename == self.Project + '.html':
-						to_del = os.path.join(dirpath, dirname)
+						to_del = os.path.join(dirpath, filename)
 						remove(to_del)
 						xprint('/i/[REMOVING]/=/ ',dp, '\t>\t', to_del)
 						has_older_V = True
@@ -3168,7 +3168,7 @@ class ProjectType_:  # fc=0P00
 							continue
 
 						if filename not in self.all_list.all_names[self.sub_dirs.index(dp)]:
-							to_del = os.path.join(dirpath, dirname)
+							to_del = os.path.join(dirpath, filename)
 							remove(to_del)
 							xprint('/i/[REMOVING]/=/ ',dp, '\t>\t', to_del)
 				except PermissionError:

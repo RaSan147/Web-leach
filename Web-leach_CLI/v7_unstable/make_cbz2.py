@@ -1,9 +1,6 @@
 # pylint: disable=unused-wildcard-import
 # pylint: disable=unused-import
 
-if __file__ == "make_cbz2.py":
-	from main import *
-	pass
 import zipfile
 
 _File = __file__

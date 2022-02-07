@@ -46,7 +46,7 @@ def read_wltxt(f_code):
 				read = True
 		
 		else:
-			print(i)
+			# print(i)
 			if i.startswith(' ') or i.startswith('\n'):
 				text_.append(i)
 			else:
@@ -84,7 +84,7 @@ def read_wltxt(f_code):
 		return_box.append('<br><br><h2><u>Source Code</u>:</h2> <br><pre><code class="language-py"><noscript>' + inspect.getsource(eval('func_.' + where)) + "</noscript></code></pre>")
 	except:
 		traceback.print_exc()
-		print(re.search(r'\[(.*?)\]', files_dict[_f_code[0]]))
+		# print(re.search(r'\[(.*?)\]', files_dict[_f_code[0]]))
 		
 
 	return return_box
@@ -996,6 +996,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 					except:
 						# print(self.decrypto_dat)
 						traceback.print_exc()
+						exit()
 						continue
 
 					if _decrypto_dat_=='':
@@ -1040,11 +1041,11 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 					for j in range(5):
 						try:
-							print(column[j])
+							# print(column[j])
 							tr+=td_t%column[j]
 						except:
 							traceback.print_exc()
-							print([_decrypto_dat,column])
+							# print([_decrypto_dat,column])
 							continue
 					tr+='</tr>'
 					# print(bs(tr, "html.parser").text)
@@ -1055,11 +1056,11 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 							continue
 						else:
 							#ignore case in regex
-							print(re.findall(r"(%s)"%re.escape(skeyword), tr, re.IGNORECASE))
+							# print(re.findall(r"(%s)"%re.escape(skeyword), tr, re.IGNORECASE))
 
 							tr = re.sub(r"(%s)"%re.escape(skeyword), r'<span style="background-color:red">\1</span>', tr, flags=re.IGNORECASE)
 
-							print(tr)
+							# print(tr)
 							
 
 
