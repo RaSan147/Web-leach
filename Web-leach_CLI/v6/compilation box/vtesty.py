@@ -28,16 +28,16 @@ date=(0, 0)
 StringFileInfo(
   [
   StringTable(
-    u'040904B0',
-    [StringStruct(u'CompanyName', u'Chrono world'),
-    StringStruct(u'FileDescription', u'Fast Data Downloader'),
-    StringStruct(u'FileVersion', u'0.6'),
-    StringStruct(u'InternalName', u'Web Leach'),
-    StringStruct(u'LegalCopyright', u'Copyright (c) The Apache Software Foundation'),
-    StringStruct(u'OriginalFilename', u'Web Leach 0.6.exe'),
-    StringStruct(u'ProductName', u'Web Leach'),
-    StringStruct(u'ProductVersion', u'0.6')])
+    '040904B0',
+    [StringStruct('CompanyName', 'Chrono world'),
+    StringStruct('FileDescription', 'Fast Data Downloader'),
+    StringStruct('FileVersion', '0.6'),
+    StringStruct('InternalName', 'Web Leach'),
+    StringStruct('LegalCopyright', 'Copyright (c) The Apache Software Foundation'),
+    StringStruct('OriginalFilename', 'Web Leach 0.6.exe'),
+    StringStruct('ProductName', 'Web Leach'),
+    StringStruct('ProductVersion', '0.6')])
   ]), 
-VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
+VarFileInfo([VarStruct('Translation', [1033, 1200])])
   ]
 )

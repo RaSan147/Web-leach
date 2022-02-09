@@ -25,10 +25,10 @@
 # using 7za.exe (64bit) renamed 7z.exe                                         #
 # using uxp.exe (64bit)                                                        #
 """
-py -3.9 -m pip freeze > r.txt
-py -3.9 -m pip uninstall -r r.txt -y
-py -3.9 -m pip install "pyinstaller-4.8.zip" requests beautifulsoup4 natsort google pypiwin32 comtypes psutil lxml pywin32-ctypes rjsmin
-py -3.9 -O -m PyInstaller "main_static.py" -F -n "Web leach 0.6" --version-file vtesty.py -i "EMO Angel.ico" --add-data "7z.exe;." --add-data "wl-page-2.html;." --upx-dir=.
+py -3.8 -m pip freeze > r.txt
+py -3.8 -m pip uninstall -r r.txt -y
+py -3.8 -m pip install -U "pyinstaller-develop.zip" requests beautifulsoup4 natsort google pypiwin32 comtypes psutil lxml pywin32-ctypes rjsmin
+py -3.8 -O -m PyInstaller "main_static.py" -F -n "Web leach 0.6" --version-file vtesty.py -i "EMO Angel.ico" --add-data "7z.exe;." --add-data "wl-page-2.html;." --upx-dir=.
 
 
 """
@@ -272,6 +272,135 @@ class AboutApp_:     #fc=A000
 	# location to store temp data
 	cached_webpages_dir = data_dir + ".cached_webpages/"
 
+
+
+	def _version_updater(self, _latest_version, _latest_link, _latest_hash,
+						_latest_filename, _latest_size, server_link):      #func_code=A001
+		"""Downloads and installs latest version of app
+		also verifies zip and exe file"""
+		print("An update available v" + _latest_version + "(" + _latest_size + "), Do you want to update? ")
+		try:
+			reply = IOsys.asker()
+		except LeachICancelError:
+			xprint('\n/yh/Cancellation command entered. Skipping update!/=/\n')
+			leach_logger("A001x0||0")
+			return 0
+		if not reply:
+			xprint('\n/yh/Skipping update!/=/\n')
+			leach_logger("A001x0||0")
+			return 0
+
+
+		print('\nConnecting...')
+		leach_logger(log(['A001x1', _latest_version, _latest_link, _latest_hash, _latest_filename, _latest_size, server_link, self._VERSION, self.server_version]), 'lock')
+		# leach_logger("201||" + str(_latest_version) + '||' + _latest_link + '||' + _VERSION + '||' + server_version, 'lock')
+		update_x = time.time()
+
+		#update_filename = 'Web Leach v4.1'
+		#import urllib
+
+		# Copy a network object to a local file
+		#urllib.urlretrieve(_latest_link, self.temp_dir + update_filename + '.zip')
+		current_header = Netsys.header_()
+
+		try:
+			update_response = requests.get(_latest_link, stream=True, headers=current_header)
+		except Exception as e:
+			leach_logger(log(['A001x2', _latest_link, Netsys.hdr(current_header, 'A001'), e.__class__.__name__, e]), 'lock')
+			print("Failed to connect to the host server.\nPlease inform the author!!\nError code A001x2")
+			return
+
+		IOsys.delete_last_line()
+		if update_response==None:
+			leach_logger(log(['A001x2', _latest_link, Netsys.hdr(current_header, 'A001'), e.__class__.__name__, e]), 'lock')
+			print("Failed to connect to the host server.\nPlease inform the author!!\nError code A001x2")
+			return
+
+		update_total_length = update_response.headers.get('content-length')
+		with open(self.temp_dir + _latest_filename + '.zip', "wb") as f:
+			if update_total_length is None: # no content length header
+				f.write(update_response.content)
+			else:
+				_dl = 0
+				update_total_length = int(update_total_length)
+				for data in update_response.iter_content(chunk_size=4096):
+					_dl += len(data)
+					f.write(data)
+					update_done = int(50 * _dl / update_total_length)
+					print("\r[\u001b[1;32m%s%s\u001b[0m]" % ('=' * update_done, ' ' * (50-update_done)), end='')
+		leach_logger(log(["A001", _latest_version]))
+
+		print()
+		# Open, close, read file and calculate MD5 on its contents
+
+		if '_latest_check_zip_hash' in config.__dir__() and _latest_check_zip_hash:
+			try:
+				_file_name = self.temp_dir + _latest_filename + '.zip'
+				file_ = reader(_file_name, 'rb')
+				md5_returned = hashlib_md5(file_).hexdigest()
+				del file_
+
+				if _latest_zip_hash == md5_returned:
+					print ("ZIP verified.")
+
+				else:
+					leach_logger('209||%s'%md5_returned + "||" + _latest_link + '||' + _latest_version + '||' + server_link)
+					remove(self.temp_dir + _latest_filename + '.zip')
+
+			except Exception as e:
+				xprint ("/rh/HASH verification failed!./=/ \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+				leach_logger('2FF||' + _latest_link + '||' + _latest_version + '||' + server_link + '||Hashing update ZIP||%s||%s'%(e, e.__class__.__name__))
+				remove(self.temp_dir + _latest_filename + '.zip')
+				raise LeachCorruptionError
+
+
+		print("\nUnzipping...")
+		server_fucked = False
+		with ZipFile(self.temp_dir + _latest_filename + '.zip') as zf:
+			if list(zf.namelist()) != [_latest_filename + '.exe']:
+				server_fucked = True
+				fucked_list = list(zf.namelist())
+				raise LeachCorruptionError
+
+			else:
+				subprocess_call(['7z.exe', 'e', '-odata/.temp/', '-y', '-plock', './data/.temp/' + _latest_filename + '.zip'], stdin=open(os_devnull), start_new_session=True, stdout=subprocess_DEVNULL, stderr=subprocess_DEVNULL)
+
+
+		if server_fucked:
+			leach_logger("204||" + _latest_link + '||' + _latest_version + '||' + server_link + '||' + str(fucked_list))
+			remove(self.temp_dir + _latest_filename + '.zip')
+			raise LeachCorruptionError
+
+		leach_logger("205||" + str(_latest_version))
+
+		if '_latest_check_exe_hash' in globals() and _latest_check_zip_hash:
+			try:
+				_file_name = _latest_filename + '.exe'
+
+				_file_name = self.temp_dir + _latest_filename + '.exe'
+				file_ = Fsys.reader(_file_name, 'rb')
+				md5_returned = hashlib_md5(file_).hexdigest()
+				del file_
+
+				if _latest_hash == md5_returned:
+					print ("EXE verified. \n\nPlease use the latest file '" + _latest_filename + ".exe'\n this program will break in 7 seconds\n\n")
+					leach_logger('A001x4')
+					move(self.temp_dir + _latest_filename + '.exe', './' + _latest_filename + '.exe')
+
+					time.sleep(7)
+					exit(0)
+				else:
+					leach_logger(log('A001x5', md5_returned, _latest_link, _latest_version, server_link))
+					remove(self.temp_dir + _latest_filename + '.zip')
+					remove(self.temp_dir + _latest_filename + '.exe')
+					raise LeachCorruptionError
+			except Exception as e:
+				xprint ("/rh/HASH verification failed!./=/ \nPlease inform the coder- wwwqweasd147[at]gmail[dot]com")
+				leach_logger(log('A001x-1', _latest_link, _latest_version, server_link, e, e.__class__.__name__))
+				leach_logger('2FF||' + _latest_link + '||' + _latest_version + '||' + server_link + 'Hashing update EXE||%s||%s'%(e, e.__class__.__name__))
+				remove(self.temp_dir + _latest_filename + '.zip')
+				remove(self.temp_dir + _latest_filename + '.exe')
+				raise LeachCorruptionError
 
 AboutApp = AboutApp_()
 
@@ -5019,6 +5148,9 @@ if __name__ == '__main__':
 	flush = False
 	main.make_required_dirs()
 	main.get_user()
+	if float(AboutApp._VERSION)<float(config._latest_version):
+			AboutApp._version_updater(config._latest_version, config._latest_link, config._latest_hash, config._latest_filename, config._latest_size, cloud_data_link)
+
 	while Keep_main_running:
 		main.make_required_dirs()
 		try:
