@@ -50,6 +50,7 @@ from print_text import XprintClass  # fc=3000
 
 XprintEngine = XprintClass()
 xprint = XprintEngine.slowtype
+xprint('/=/', end='')
 
 try:
 	from constants import *  # fc=4000
@@ -1037,7 +1038,7 @@ class OSsys_:  # fc=0700
 				then used alias (not required here) [beautifulsoup4 (pip)=> bs4 (lib name)] """
 
 		if pkg_name not in self.get_installed():
-			xprint("/y/Installing missing libraries/=/")
+			xprint("/y/Installing missing libraries (%s)/=/"%pkg_name)
 			self.install(pkg_name, alias)
 			IOsys.delete_last_line()
 
@@ -1135,14 +1136,30 @@ class OSsys_:  # fc=0700
 						exit()  # required in mplay4
 
 		config.has_all_libs = True
+		xprint('/hu/Rebooting Program. Please wait/=/')
+		try:
+			subprocess_call(sys_executable + ' "' + os.path.realpath(__file__) + '"')
+		except KeyboardInterrupt: pass
+		except EOFError: pass
+		finally:
+			exit(0)
 
 	def import_missing_libs(self, failed=False):  # fc=0707 v
 		""" imports missing libs to global level and on missing installs and re-imports
 		
 		failed: failed once, won't retry"""
-		print(config.disable_lib_check)
+		# print(config.disable_lib_check)
 
 		if config.disable_lib_check:
+			return 0
+
+		has_all_libs = True
+		all_libs = OSsys.get_installed()
+		for i in requirements_all:
+			has_all_libs = has_all_libs and i in all_libs
+		
+		# print(has_all_libs, all_libs)
+		if has_all_libs:
 			return 0
 		global bs, parser, g_search, requests, natsort, _server001_, mplay4
 		self.install_missing_libs()
@@ -1166,11 +1183,12 @@ class OSsys_:  # fc=0700
 			if os_name == "Windows": import mplay4
 
 		except:
-			if not failed:
-				self.import_missing_libs()
-			else:
+			if failed:
+				traceback.print_exc()
 				xprint("/r/Failed to load required libraries.\n/=//yh/Possible cause 1st initialization without internet")
 
+			else:
+				self.import_missing_libs(failed=True)
 
 
 OSsys = OSsys_()
@@ -2610,8 +2628,8 @@ class ProjectType_:  # fc=0P00
 
 			if self.break_all or self.total == 0: return 0
 			percent = floor((self.done / self.total) * 32)
-			IOsys.delete_last_line(0)
-			sys_write(''.join(['Downloaded [', '\u001b[7m', (' '*percent), '\u001b[0m', ' '*(32-percent), '] [', str(self.done), '/', str(self.total), ']', self.current_speed , '/s']))
+			IOsys.delete_last_line()
+			sys_write(''.join(['Downloaded [', '\u001b[7m', (' '*percent), '\u001b[0m', ' '*(32-percent), '] [', str(self.done), '/', str(self.total), ']', self.current_speed , '/s\n']))
 			time.sleep(.5)
 			last_chunks = _temp
 
@@ -2825,14 +2843,12 @@ class ProjectType_:  # fc=0P00
 					self.re_error += 1
 					if self.re_error < 4:
 						IOsys.delete_last_line()
-						print("Failed to download from '%s'\n" % i[0])
+						print("Failed to Extract Zip from '%s'\n" % i[0])
 					else:
 						if self.re_error != 4:
 							IOsys.delete_last_line(2)
 						print("And %i others\n" % (self.re_error - 3))
-					print(
-						"It seems every time it downloads a broken or unknown zip from '%s' (possible cause password protected zips, if yes extract them manually)" +
-						i[0])
+					print("It seems every time it downloads a broken or unknown zip from '%s'\n(possible cause password protected zips, if yes extract them manually)\n"%i[0])
 					Fsys.writer('left_errors.txt', 'a',
 					            str(i + (Netsys.hdr(current_header, '0P0B', ), "Bad zip")) + '\n',
 					            AboutApp.leach_projects + self.Project, '0P0B')
@@ -2902,7 +2918,7 @@ class ProjectType_:  # fc=0P00
 			Fsys.writer(self.Project + '.wlproj', 'a', 'dl_done = True\n', AboutApp.leach_projects, '0P0C')
 			self.dl_done = True
 		if self.errors>0:
-			print("\nPlease retry some time later to get higher chances to download some or all %d missing file/s" % self.errors)
+			xprint("\n\n/h/Please retry some time later to get higher chances to download some or all %d missing file(s)/=/" % self.errors)
 			self.has_missing = True
 		else:
 			self.has_missing = False
@@ -2930,7 +2946,7 @@ class ProjectType_:  # fc=0P00
 			self.index_failed += 1
 
 		else:
-			IOsys.delete_last_line(6)
+			IOsys.delete_last_line(7)
 			xprint('\n/r/Failed to connect "%s"/y/\nSkipping(%i)...\nPlease try the update option later/=/\n\n' % (
 				link[:10] + '...' + link[-7:], self.index_failed))
 			self.index_failed += 1
@@ -2973,22 +2989,23 @@ class ProjectType_:  # fc=0P00
 				current_header = Netsys.header_(self.homepage)
 
 				try:
-					try:
-						page = self.dl_page(links[i], cache=True, session=session, do_not_cache=True)
+					page = self.dl_page(links[i], cache=True, session=session, do_not_cache=True, return_none = False, raise_error=True)
 
-						if not page:
-							self.show_generic_index_error(links[i], current_header, str(page.status_code),
-							                              'Page Offline')
-							failed = True
-					except:
-						traceback.print_exc()
+					if not page:
+						self.show_generic_index_error(links[i], current_header, str(page.status_code) ,
+														'Page Offline')
+						failed = True
 				except NetErrors as e:
 					self.show_generic_index_error(links[i], current_header, e.__class__.__name__, str(e))
 					failed = True
+					# return
+				except Exception as e:
+					xprint('/r/Something went wrong/=/')
+					# traceback.print_exc()
+					# return
 
 				if failed:
 					self.indx_count += 1
-					print('failed\n')
 					self.print_index_result(links[i])
 					continue
 				else:
@@ -3056,7 +3073,7 @@ class ProjectType_:  # fc=0P00
 		return returner
 
 	def dl_page(self, link=None, referer=False, header=None, cache=False, failed=False, do_not_cache=True,
-	            session=None):  # fc=0P0H
+	            session=None, return_none=True, raise_error=False):  # fc=0P0H
 		"""Gets a page from the internet and returns the page object
 
 		link: page link
@@ -3065,7 +3082,14 @@ class ProjectType_:  # fc=0P00
 		cache: get or store the page object from Cached_data.cached_webpages by calling Cached_data.get_webpage or Cached_data.add_webpage
 		failed: if failed in previous try
 		do_not_cache: if True, don't cache the page object to file
-		session: if requests.session is avaialbe"""
+		session: if requests.session is avaialbe
+		return_none: if True, return None if page is not found, else return the page object
+		raise_error: if True, raise an error if an Error occured while getting the page"""
+
+		def retry():
+			return self.dl_page(link=link, referer=False if referer == False else referer, cache=cache, failed=True,
+										do_not_cache=do_not_cache, session=session, return_none=return_none, raise_error=raise_error)
+
 		if link is None:
 			link = self.main_link
 
@@ -3088,18 +3112,26 @@ class ProjectType_:  # fc=0P00
 			current_header = Netsys.header_(referer_)
 		else:
 			current_header = header
-
+			
+		page = None
 		try:
 			page = session.get(link, headers=current_header, timeout=5)
-
 			if not page:
-				raise Error404
-		except (*NetErrors, Error404):
+				if not failed:
+					page = retry()
+				else:
+					if return_none:
+						return None
+					else:
+						return page
+		except NetErrors as e:
 			if not failed:
-				page = self.dl_page(link=link, referer=False if referer == False else referer, cache=cache, failed=True,
-				                    do_not_cache=do_not_cache)
+				page = retry()
 			else:
-				return None
+				if raise_error:
+					raise e
+				else:
+					return None
 
 		if cache and page:
 			if not do_not_cache:
@@ -4606,9 +4638,28 @@ main = Main()
 if __name__ == '__main__':
 	leach_logger(log(['001', AboutApp._VERSION, UserData.Device_Data, UserData.user_ip, start_up_dt, Nsys.get_tz(),
 	                  str(time.time() - start_up) + 's']))
-	flush = False
-	main.make_required_dirs()
-	main.get_user()
+	flush, flush_ = False, False
+	try:
+		main.make_required_dirs()
+		main.get_user()
+
+
+	except EOFError:
+		xprint(Constants.hard_cancel)
+		import sys
+		sys.exit(0)
+	except KeyboardInterrupt:
+		xprint(Constants.hard_cancel)
+		import sys
+		sys.exit(0)
+	except Exception as e:
+		traceback.print_exc()
+		
+		server_code.server_close()
+		server_code.shutdown()
+		
+
+
 	while Keep_main_running:
 		main.make_required_dirs()
 		try:
@@ -4633,17 +4684,3 @@ if __name__ == '__main__':
 	if flush:
 		# re-open current python file
 		exec(open(os.path.abspath(__file__)).read(), globals())
-
-"""
-Ray
-nh
-https://nhentai.to/g/301600/1/
-n
-3
-img
-
-n
-n
-
-"""
-

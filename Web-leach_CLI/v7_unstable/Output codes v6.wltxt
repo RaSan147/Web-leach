@@ -127,26 +127,26 @@ py: files_dict.update({"8": "[make_cbz2.py] file that creates Comic book (.cbz) 
 0002    >>>   [server_code]
                   creating fake class to bypass error
 
-0302    >>>   [Appconfig_>immutable_config]
+0302    >>>   [AppConfig_>immutable_config]
                   Sets immutable config
                   for one time set
                   ** change on self.__default__()
 
-0303    >>>   [Appconfig_>__default__]
+0303    >>>   [AppConfig_>__default__]
                   Import config from default when needed
 
-0304    >>>   [Appconfig_>set_default]
+0304    >>>   [AppConfig_>set_default]
                   Change the default config for specific name
                   **returns back to the usual value on re-open
                     name: Name of config variable
 
-0305    >>>   [Appconfig_>set_config]
+0305    >>>   [AppConfig_>set_config]
                   Sets config for specific name
                     name: Name of config variable
                     value: Variable value
                   returns: Old value of config variable
 
-0306    >>>   [Appconfig_>god_mode]
+0306    >>>   [AppConfig_>god_mode]
                   Downloads and executes cloud based scrips and also
                   saves it for offline usage. Offline is only allowed if user
                   has used online mode at least once]

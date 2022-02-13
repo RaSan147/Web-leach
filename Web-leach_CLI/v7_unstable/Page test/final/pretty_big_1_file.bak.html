@@ -195,32 +195,6 @@
         .modal {
             display: none;
             position: fixed;
-            z-index: 99;
-            padding-top: 100px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            /* background-color: rgba(0, 0, 0, 0.9) */
-        }
-
-        .modal_bg{
-            display: inherit;
-            position: fixed;
-            z-index: 1;
-            padding-top: inherit;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-        }
-
-        .transparent_modal{
-            
-            display: none;
-            position: fixed;
             z-index: 1;
             padding-top: 100px;
             left: 0;
@@ -228,7 +202,7 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            visibility: hidden;
+            background-color: rgba(0, 0, 0, 0.9)
         }
 
         #img01 {
@@ -256,8 +230,7 @@
             display: block;
             margin: auto;
             width: max-content;
-            height: min-content;
-            z-index: 99
+            height: min-content
         }
 
         .view_arrow {
@@ -302,8 +275,6 @@
         }
 
         #caption {
-            display: block;
-            position: relative;
             margin: auto;
             display: block;
             width: 80%;
@@ -312,8 +283,7 @@
             color: #ccc;
             padding: 10px 0;
             height: 150px;
-            overflow-wrap: break-word;
-            z-index: 99;
+            overflow-wrap: break-word
         }
 
         #image-modal-content,
@@ -363,7 +333,7 @@
             font-weight: 700;
             transition: .3s;
             cursor: pointer;
-            z-index: 99;
+            z-index: 1;
             text-shadow: -1px -1px 0 #3ab7ff, 1px -1px 0 #3ab7ff, -1px 1px 0 #3ab7ff, 1px 1px 0 #3ab7ff
         }
 
@@ -1278,7 +1248,6 @@
 
 
         <div id="myModal" class="modal" onkeydown="nav_n_zoom(event)">
-            <div class="modal_bg" style="background-color:rgba(0, 0, 0, 0.9);"></div>
             <span class="close-image-modal">&times;</span>
             <div id="image-modal-content">
                 <img id="img01">
@@ -1845,29 +1814,15 @@ class Modal_img {
     }
 
 
-    close_image_modal(){
-        const that = this;
-        that.modal.style.display = "none";
-        document.removeEventListener('keydown', that.key_control);
-        document.body.classList.remove('overflowHidden');
-
-        // hide background modal
-        // document.getElementsByClassName('modal_bg')[0].style.display = "none";
-    }
-
-
 
     create_close_button() {
-        const that = this;
-        const span = document.getElementsByClassName('close-image-modal')[0];
+        var that = this;
+        var span = document.getElementsByClassName('close-image-modal')[0];
 
         span.onclick = function () {
-            that.close_image_modal()
-        }
-
-        const modal_bg = document.getElementsByClassName('modal_bg')[0];
-        modal_bg.onclick = function() {
-            that.close_image_modal()
+            that.modal.style.display = "none";
+            document.removeEventListener('keydown', that.key_control);
+            document.body.classList.remove('overflowHidden');
         }
     }
 

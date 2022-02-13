@@ -1,8 +1,11 @@
 import Number_sys_conv as Nsys
 import html
 
-def linker(link):
-	return '<a href = "' + link +'">'  + link + '</a>'
+def linker(link, link_prefix='', link_suffix=''):
+	return '<a href = "' + link_prefix + link + link_suffix +'">'  + link + '</a>'
+
+def code_linker(code):
+	return linker(code, '/fcode=')
 
 def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 	if _decrypto_dat[2]=='0x_':
@@ -18,11 +21,11 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 		column[4]= "Waiting to be terminated"
 
 	elif _decrypto_dat[2]=='0x1':
-		column[3]= '%s (called from %s)' %(_decrypto_dat[4],_decrypto_dat[3])
+		column[3]= '%s (called from %s)' %(_decrypto_dat[4], code_linker(_decrypto_dat[3]))
 		column[4]= "Waiting to be terminated"
 
 	elif _decrypto_dat[2]=='000':
-		temp= " (Called from %s)"%_decrypto_dat[3]
+		temp= " (Called from %s)"%code_linker(_decrypto_dat[3])
 		# if len(_decrypto_dat) == 5:
 		# 	pass
 		if _decrypto_dat[5]=='f-Stop':

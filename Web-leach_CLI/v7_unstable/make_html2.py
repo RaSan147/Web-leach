@@ -249,7 +249,7 @@ for (var i = 0; i < pages_list.length; i++){
 	var linkX =document.createElement('A');
 	var linkContainer = document.createElement('DIV');
 	linkContainer.className = 'sub_li_divs';
-	linkX.href = pages_list[i];
+	linkX.href = pages_list[i]+'/index.html';
 
 	linkX.innerHTML = pages_list[i];
 	if(i%%2==0){
@@ -275,7 +275,7 @@ for (var i = 0; i < pages_list.length; i++){
 }
 	if(localStorage.getItem(proj_name)!=null){
 	if(localStorage.getItem(proj_name)!=current_page_index){
-	document.getElementById('last').innerHTML= "You left the page on <a id='lastleft' href='"+ pages_list[localStorage.getItem(proj_name)]+ "'>"+ pages_list[localStorage.getItem(proj_name)]+ '</a><br> Click on the link to go there<hr>Close this dialog to continue from here';
+	document.getElementById('last').innerHTML= 'You left the page on <a id="lastleft" href="'+ pages_list[localStorage.getItem(proj_name)]+ '/index.html">'+ pages_list[localStorage.getItem(proj_name)]+ '</a><br> Click on the link to go there<hr>Close this dialog to continue from here';
 	togglePopup(1);
 	}}
 
