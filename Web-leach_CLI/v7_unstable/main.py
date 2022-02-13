@@ -25,7 +25,7 @@
 print("LOADING ASSETS...")
 print(1)  # x
 requirements_all = ('requests', 'beautifulsoup4', 'natsort', 'google', 'rjsmin')
-requirements_win = ('pywin32-ctypes', 'comtypes', 'psutil', 'lxml', 'pypiwin32')
+requirements_win = ('pywin32-ctypes', 'comtypes', 'psutil', 'lxml', 'pywin32')
 logger = True
 
 # importing required packages

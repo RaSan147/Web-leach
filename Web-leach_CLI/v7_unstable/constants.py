@@ -43,7 +43,7 @@ class Constants:
 
 	old_img = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
 
-	DEFAULT_DISABLE_LIB_CHECK = True # temporarily disabled
+	DEFAULT_DISABLE_LIB_CHECK = False # temporarily disabled
 
 true = True
 false = False
