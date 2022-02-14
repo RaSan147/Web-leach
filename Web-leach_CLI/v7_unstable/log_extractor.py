@@ -149,46 +149,57 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 		ecode = _decrypto_dat[2].split('x')[1]
 
 		column[2] = f'<a href="fcode={fcode}">{fcode}</a>' ' x '+ ecode
-
 		if fcode == '0306':
-			if ecode == '0':
-				column[3] = '<b><u>Unknown Error occured</u></b>  <br>while running Appconfig~god_mode'
+			try:
+				if ecode == '0':
+					column[3] = '<b><u>Unknown Error occured</u></b>  <br>while running Appconfig~god_mode'
 
-				column[4] = '<b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3] + '<br>' + '<b>Message: </b>' + _decrypto_dat[7]
+					column[4] = '<b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3] + '<br>' + '<b>Message: </b>' + _decrypto_dat[7]
 
-			elif ecode == '1':
-				column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
+				elif ecode == '1':
+					column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
 
-				column[4] = 'Failed to download "who_r_u.mp3"<hr><b>Status Code: </b>' + _decrypto_dat[5] + '<br>' +  '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+					column[4] = 'Failed to download "who_r_u.mp3"<hr><b>Status Code: </b>' + _decrypto_dat[5] + '<br>' +  '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
 
-			elif ecode == '2':
-				column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
+				elif ecode == '2':
+					column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
 
-				column[4] = 'Failed to download "who_r_u.mp3"<hr><b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+					column[4] = 'Failed to download "who_r_u.mp3"<hr><b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
 
-			elif ecode == '3':
-				column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
+				elif ecode == '3':
+					column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
 
-				column[4] = 'Failed to download "updateL.ext"<hr><b>Status Code: </b>' + _decrypto_dat[5] + '<br>' +  '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+					column[4] = 'Failed to download "updateL.ext"<hr><b>Status Code: </b>' + _decrypto_dat[5] + '<br>' +  '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
 
-			elif ecode == '4':
-				column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
+				elif ecode == '4':
+					column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
 
-				column[4] = 'Failed to download "updateL.ext"<hr><b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+					column[4] = 'Failed to download "updateL.ext"<hr><b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
 
-			elif ecode == '5':
-				column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
+				elif ecode == '5':
+					column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
 
-				column[4] = 'Failed to download "updateG.ext"<hr><b>Status Code: </b>' + _decrypto_dat[5] + '<br>' +  '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+					column[4] = 'Failed to download "updateG.ext"<hr><b>Status Code: </b>' + _decrypto_dat[5] + '<br>' +  '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
 
-			elif ecode == '6':
-				column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
+				elif ecode == '6':
+					column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
 
-				column[4] = 'Failed to download "updateG.ext"<hr><b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+					column[4] = 'Failed to download "updateG.ext"<hr><b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+
+				elif ecode == '7':
+					column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
+
+					column[4] = 'Failed to download "wl-page.html"<hr><b>Status Code: </b>' + _decrypto_dat[5] + '<br>' +  '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
+
+				elif ecode == '8':
+					column[3] = '<b><u>Site Error</u>: </b>  <br>while running <b>Appconfig</b>~<b>god_mode</b>'
+
+					column[4] = 'Failed to download "wl-page.html"<hr><b>Error Code: </b>' + _decrypto_dat[5] + '<br>' + '<b>Error String: </b>' + _decrypto_dat[6] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Header dex: </b>' + _decrypto_dat[3]
 
 
-			else: return False
-
+				else: return False
+			except:
+				print(_decrypto_dat)
 		elif fcode == '0402':
 			if ecode == '0':
 				column[3] = '<b><u>Unknown Error occured</u></b>  <br>while running <b>UserData</b>~<b>get_user_ip</b>'
@@ -506,6 +517,8 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 			else: return False
 
 			
+
+			
 		elif fcode == '7001':
 			if ecode == 'I':
 				column[3] = '<b><u>HTML creation Began</u></b>'
@@ -522,10 +535,13 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 
 				column[4] = '<b>Project: </b>'+ _decrypto_dat[3]
 
-
 			else: return False
 
-		
+		elif fcode == '7002':
+			if ecode == '1':
+				column[3] = '<b>Failed to download <u>wl-page.html</u> template</b> and not found too.<br>Failed to create subpages'
+				column[4] = '<b>Project: </b>'+ _decrypto_dat[3] + '<br><b>Page link: </b>' + _decrypto_dat[4]
+				
 
 		else: return False
 

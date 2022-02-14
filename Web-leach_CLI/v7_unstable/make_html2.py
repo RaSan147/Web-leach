@@ -2,8 +2,12 @@
 # pylint: disable=unused-import
 
 
+from genericpath import isfile
 import rjsmin
 from re import compile as re_compile
+
+
+# from main import AboutApp
 
 class css_minify():
 	def __init__(self):
@@ -67,14 +71,17 @@ class css_minify():
 		return '\n'.join(box)
 CSSmin = css_minify()
 
-class MakeHtml_:
-	def return_sub_page(self, all_list, sub_dirs, page_index, title):
-		sub_page_template= open('wl-page-2.html', encoding='utf8').read()%(all_list, sub_dirs, page_index, title)
+class MakeHtml_:   #func_code= 7000
+	def return_sub_page(self, all_list, sub_dirs, page_index, title):   #func_code= 7002
+		if not isfile(AboutApp.temp_dir+'wl-page.html'):
+			if config.god_mode(2) == 'offline':
+				return False
+		sub_page_template= open(AboutApp.temp_dir+'wl-page.html', encoding='utf8').read()%(all_list, sub_dirs, page_index, title)
 
 		return sub_page_template
 
 
-	def return_main_page(self, sub_dirs, proj_name):
+	def return_main_page(self, sub_dirs, proj_name):   #func_code= 7003
 		"""
 		Return the main page of the project.
 		"""
@@ -320,6 +327,9 @@ for (var i = 0; i < pages_list.length; i++){
 			else:
 				box= self.return_sub_page(str(temp), str(dir_list), i, project)
 			
+			if not box:
+				return False
+
 			Fsys.writer('index.html', 'w', box,'Download_projects/'+ project+'/'+dir_list[i], f_code= '40001')
 		
 		Fsys.writer('index.html', 'w', self.return_main_page(str((dir_list)), project),'Download_projects/'+ project, f_code= '40001')

@@ -1,0 +1,31 @@
+Downloading Kivy-2.0.0.tar.gz (23.7 MB)
+     ━━╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/23.7 MB 84.3 kB/s eta 0:04:26
+elf.sub_dirs, self.Project, self.img_to_sort,
+  File "<string>", line 321, in make_pages
+  File "<string>", line 72, in return_sub_page
+Downloaded [━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╺] [2960/2960]0 bytes/s
+want to reload?
+
+
+Processing 
+
+Downloaded [╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━] [8/2960]736 KB/s
+
+
+ Processing 
+
+Downloaded [━╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━] [173/2960]480 KB/s
+
+Downloaded [━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╺━] [2956/2960]0 bytes/s
+Retrying failed downloads, may take a while
+
+Downloaded [━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╺━] [2956/2960]0 bytes/s
+
+g
+
+Downloaded [━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━] [613/613]0 bytes/s
+
+
+Downloaded [━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━] [613/613]0 bytes/s
+
+Downloaded [━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━] [613/613]0 bytes/s

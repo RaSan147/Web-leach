@@ -242,6 +242,8 @@ class AboutApp_:     #fc=A000
 
 	cloud_data_link_global = 'https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global_6.txt'
 	cloud_data_link = 'https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20server%20v6.00000.txt'
+	cloud_html_temp_link = 'https://raw.githack.com/RaSan147/Web-Leach_pub/main/page_template/wl-page-v1.html'
+
 
 	g_mode = None
 
@@ -386,6 +388,7 @@ class AppConfig_(DefaultConfig):     #fc=0300
 
 			missing: if a file is missing in runtime will either download or stop that action on failure
 					1: who_r_u.mp3
+					2: wl-page.html
 			
 			TODO: make offline available  *idk how works offline*"""
 
@@ -393,68 +396,64 @@ class AppConfig_(DefaultConfig):     #fc=0300
 			rename(AboutApp.data_dir + 'projects', AboutApp.leach_projects)
 		if os_isdir('./projects'):
 			rename('./projects', AboutApp.download_dir)
-		current_header = Netsys.header_()
-		message = "failed initializing f()"
-		try:
-			if missing is None or missing == 1:
-				if os_name == 'Windows':
-					message = "was DLing 'who_r_u.mp3"
-					link = Constants.who_r_u
-					try:
-						if not os_isfile(AboutApp.temp_dir + 'who_r_u.mp3'):
-							file = requests.get(link, headers=current_header)
-							if file:
-								Fsys.writer('who_r_u.mp3', 'wb', file.content, AboutApp.temp_dir, '00015')
-								if missing == 1:
-									return True
-							else:
-								leach_logger(log(["0306x1", Netsys.hdr(current_header, '0306'), link, file.status_code]), 'lock')
-								xprint("/rh/Error code: 0306x1\nNo internet connection!/=/\nRunning offline mode")
-								return 'offline'
-					except NetErrors as e:
-						xprint("/rh/Error code: 0306x2\nNo internet connection!/=/\nRunning offline mode")
-						leach_logger(log(["0306x2", Netsys.hdr(current_header, '0306'), link, e.__class__.__name__, e]), 'lock')
-						return 'offline'
 
+		def downloader(link, file_loc, filename, server_error_code, internet_error_code, overwrite):
+			"""Just to keep the code clean"""
 			current_header = Netsys.header_()
-			message = "was DLing updateL.ext"
-			link = AboutApp.cloud_data_link
 			try:
+				if not overwrite and  os_isfile(file_loc + filename):
+					return True
+
 				file = requests.get(link, headers=current_header)
 				if file:
-					Fsys.writer('updateL.ext', 'w', file.text, AboutApp.temp_dir, '0306')
-					config.__update__L = file.text
-					exec(rcrypto.decrypt(Fsys.reader(AboutApp.temp_dir + 'updateL.ext'), "lock").strip(), globals())
+					Fsys.writer(filename, 'wb', file.content, file_loc, '0306')
+					return True
 				else:
-					xprint("/rh/Error code: 0306x3\nNo internet connection!/=/\nRunning offline mode in 3 seconds")
-					leach_logger(log(["0306x3", Netsys.hdr(current_header, '0306'), link, file.status_code]), 'lock')
-					time.sleep(3)
-					return 'offline'
+					leach_logger(log([server_error_code, Netsys.hdr(current_header, '0306'), link, file.status_code]), 'lock')
+					xprint("/rh/Error code: %s\nNo internet connection!/=/\nRunning offline mode"%server_error_code)
+					return False
 			except NetErrors as e:
-				xprint("/rh/Error code: 0306x4\nNo internet connection!/=/\nRunning offline mode in 3 seconds")
-				leach_logger(log(["0306x4", Netsys.hdr(current_header, '0306'), link, e.__class__.__name__, e]), 'lock')
-				time.sleep(3)
+				xprint("/rh/Error code: %s\nNo internet connection!/=/\nRunning offline mode"%internet_error_code)
+				leach_logger(log([internet_error_code, Netsys.hdr(current_header, '0306'), link, e.__class__.__name__, e]), 'lock')
+				return False
+
+		message = "failed initializing f()"
+		try:
+			if os_name == 'Windows':
+				message = "was DLing 'who_r_u.mp3"
+				link = Constants.who_r_u
+				out = downloader(link, AboutApp.temp_dir, 'who_r_u.mp3', '0306x1', '0306x2', False)
+				if out:
+					if missing == 1:
+						return True
+				else:
+					return 'offline'
+
+			message = "was DLing 'wl-page.html"
+			link = AboutApp.cloud_html_temp_link
+			out = downloader(link, AboutApp.temp_dir, 'wl-page.html', '0306x7', '0306x8', True)
+			if out:
+				if missing == 2:
+					return True
+			else:
+				return 'offline'
+
+			message = "was DLing updateL.ext"
+			link = AboutApp.cloud_data_link
+			out = downloader(link, AboutApp.temp_dir, 'updateL.ext', '0306x3', '0306x4', True)
+			if out:
+				config.__update__L = Fsys.reader(AboutApp.temp_dir + 'updateL.ext')
+				exec(rcrypto.decrypt(config.__update__L, "lock").strip(), globals())
+			else:
 				return 'offline'
 
 			message = "was DLing updateG.ext"
 			link = AboutApp.cloud_data_link_global
-			try:
-				file = requests.get(link, headers=current_header)
-				if file:
-					Fsys.writer('updateG.ext', 'w', file.text, AboutApp.temp_dir, '0306')
-					config.__update__G = file.text
-					exec(rcrypto.decrypt(Fsys.reader(AboutApp.temp_dir + 'updateG.ext'), "lock").strip(), globals())
-
-
-				else:
-					xprint("/rh/Error code: 0306x5\nNo internet connection!/=/\nRunning offline mode in 3 seconds")
-					leach_logger(log(["0306x5", Netsys.hdr(current_header, '0306'), link, file.status_code]), 'lock')
-					time.sleep(3)
-					return 'offline'
-			except NetErrors as e:
-				xprint("/rh/Error code: 0306x6\nNo internet connection!/=/\nRunning offline mode in 3 seconds")
-				leach_logger(log(["0306x6", Netsys.hdr(current_header, '0306'), link, e.__class__.__name__, e]), 'lock')
-				time.sleep(3)
+			out = downloader(link, AboutApp.temp_dir, 'updateG.ext', '0306x5', '0306x6', True)
+			if out:
+				config.__update__G = Fsys.reader(AboutApp.temp_dir + 'updateG.ext')
+				exec(rcrypto.decrypt(config.__update__G, "lock").strip(), globals())
+			else:
 				return 'offline'
 
 			return 'online'
@@ -2627,9 +2626,9 @@ class ProjectType_:  # fc=0P00
 			self.current_speed = filesize_size((_temp - last_chunks) * config.sp_arg_flag['chunk_size'] * 2, filesize_alt)
 
 			if self.break_all or self.total == 0: return 0
-			percent = floor((self.done / self.total) * 32)
+			percent = floor((self.done / self.total) * 30)
 			IOsys.delete_last_line()
-			sys_write(''.join(['Downloaded [', '\u001b[7m', (' '*percent), '\u001b[0m', ' '*(32-percent), '] [', str(self.done), '/', str(self.total), ']', self.current_speed , '/s\n']))
+			sys_write(''.join(['Downloaded [', '\u001b[32;1m', ('━'*percent), '\u001b[30;1m╺' if percent<30 else '━', '━'*(30-percent), '\u001b[0m] [', str(self.done), '/', str(self.total), ']', self.current_speed , '/s\n']))
 			time.sleep(.5)
 			last_chunks = _temp
 
@@ -2913,6 +2912,8 @@ class ProjectType_:  # fc=0P00
 
 		leach_logger(log(["0P0Cx2", self.Project, self.total, self.total - self.errors, self.errors]),
 		             UserData.user_name)
+
+		time.sleep(1)
 
 		if not self.dl_done:
 			Fsys.writer(self.Project + '.wlproj', 'a', 'dl_done = True\n', AboutApp.leach_projects, '0P0C')
@@ -4001,6 +4002,11 @@ Option               Value
 					if temp == 'browser':
 						try:
 							first_page = self.P.make_html()
+							if not first_page:
+								xprint('Failed to generate sub-page. /y/wl-page.html not found/=/')
+								leach_logger(log(['7002x1', self.P.Project, AboutApp.cloud_html_temp_link]))
+								return 0
+							
 
 							Netsys.run_in_local_server(config.running_port, host_dir='%s/index.html' % (self.P.Project))
 

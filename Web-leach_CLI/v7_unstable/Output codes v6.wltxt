@@ -799,15 +799,34 @@ XXXX    >>>   [on_exit]@atexit.register
 
 
 
-7001    >>>   [make_html]
+7000    >>>   [make_html]
                   creates the html file for the project
 
+7001    >>>   [make_html>make_pages](self, all_li, dir_list, project, seq, ext, dir_sorted)
+                  creates the html pages for the project
+                    all_li: all_list.all_names
+                    dir_list: sub_dirs
+                    project: project_name
+                    seq: img to sort
+                    ext: extension *default: ''
+                    dir_sorted: if dir_sorted is true, then the dir_list is sorted *default: False
                   x    ||project name||msg*
                     I  >>  begin creating html file
                               msg = seq|| ext|| dir_sorted
                     0  >>  Unknown Error occured
                               msg = ErrorName||Error message
                     1  >>  user canceled to create html file
+
+
+7002    >>>   [make_html>return_sub_page](self, all_list, sub_dirs, page_index, title)
+                  returns a sub page of the html file
+                    all_list: all file list of a sub directory
+                    sub_dirs: all sub_dirs
+                    page_index: current page index
+                    title: title of the page
+                  x    ||project name||msg*
+                    1  >>  failed to download wl-page.html template from internet and the file is not found
+                              msg = AboutApp.cloud_html_temp_link
 
 
 
