@@ -30,7 +30,6 @@ logger = True
 
 # importing required packages
 
-from re import T
 import Number_sys_conv as Nsys  # fc=1000
 
 # different number based functions I made
@@ -244,7 +243,7 @@ class AboutApp_:     #fc=A000
 	cloud_data_link_global = 'https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global_6.txt'
 	cloud_data_link = 'https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20server%20v6.00000.txt'
 	cloud_html_temp_link = 'https://raw.githack.com/RaSan147/Web-Leach_pub/main/page_template/wl-page-v1.html'
-	cloud_html_temp_link_proxy = 'https://gitcdn.link/cdn/RaSan147/Web-Leach_pub/main/page_template/wl-page-v1.html'
+
 
 	g_mode = None
 
@@ -336,7 +335,7 @@ class AppConfig_(DefaultConfig):     #fc=0300
 		*won't change on self.__default__()"""
 		self.__update__G = 'pass'
 		self.__update__L = 'pass'
-		self.user_list = ['bec6113e5eca1d00da8af7027a2b1b070d85b5ea', 'eb23efbb267893b699389ae74854547979d265bd']
+		self.user_list = [] #['bec6113e5eca1d00da8af7027a2b1b070d85b5ea', 'eb23efbb267893b699389ae74854547979d265bd']
 		self.g_mode = None
 
 		self.server_version = "0.6.0.0"
@@ -405,36 +404,59 @@ class AppConfig_(DefaultConfig):     #fc=0300
 		if os_isdir('./projects'):
 			rename('./projects', AboutApp.download_dir)
 
+		def downloader(link, file_loc, filename, server_error_code, internet_error_code, overwrite, err_print=True, allow_old=True):  # fc=0306.1
+			"""Just to keep the code clean"""
+			current_header = Netsys.header_()
+			returner = True
+			try:
+				if not overwrite and  os_isfile(file_loc + filename):
+					return True
+
+				file = requests.get(link, headers=current_header)
+				if file:
+					Fsys.writer(filename, 'wb', file.content, file_loc, '0306')
+					return True
+				else:
+					leach_logger(log([server_error_code, Netsys.hdr(current_header, '0306'), link, file.status_code]), 'lock')
+					if err_print: xprint("/rh/Error code: %s\nNo internet connection!/=/\nRunning offline mode"%server_error_code)
+					returner = False
+			except NetErrors as e:
+				if err_print: xprint("/rh/Error code: %s\nNo internet connection!/=/\nRunning offline mode"%internet_error_code)
+				leach_logger(log([internet_error_code, Netsys.hdr(current_header, '0306'), link, e.__class__.__name__, e]), 'lock')
+				returner = False
+
+			if not returner and allow_old:
+				return os_isfile(file_loc + filename)
+
 		message = "failed initializing f()"
 		err_print = True
 		try:
 			if 1 in missing:
 				if os_name == 'Windows':
-					message = "was DLing 'who_r_u.mp3'"
+					message = "was DLing 'who_r_u.mp3"
 					link = Constants.who_r_u
-					out = Netsys.link_downloader(link, AboutApp.temp_dir, 'who_r_u.mp3', '0306x1', '0306x2', False, err_print=err_print)
+					out = downloader(link, AboutApp.temp_dir, 'who_r_u.mp3', '0306x1', '0306x2', False, err_print=err_print)
 					err_print = out and err_print # if out is true then it will print the message on next error since there was no print ins the previous one
 
 			if 2 in missing:
-				message = "was DLing 'wl-page.html'"
+				message = "was DLing 'wl-page.html"
 				link = AboutApp.cloud_html_temp_link
-				out = Netsys.link_downloader(link, AboutApp.temp_dir, 'wl-page.html', '0306x7', '0306x8', True, err_print=err_print, proxy=[AboutApp.cloud_html_temp_link_proxy,])
+				out = downloader(link, AboutApp.temp_dir, 'wl-page.html', '0306x7', '0306x8', True, err_print=err_print)
 				err_print = out and err_print
 
 			if 3 in missing:
-				message = "was DLing 'updateL.ext'"
+				message = "was DLing updateL.ext"
 				link = AboutApp.cloud_data_link
-				out = Netsys.link_downloader(link, AboutApp.temp_dir, 'updateL.ext', '0306x3', '0306x4', True, err_print=err_print)
+				out = downloader(link, AboutApp.temp_dir, 'updateL.ext', '0306x3', '0306x4', True, err_print=err_print)
 				if out:
 					config.__update__L = Fsys.reader(AboutApp.temp_dir + 'updateL.ext')
 					exec(rcrypto.decrypt(config.__update__L, "lock").strip(), globals())
-				
 				err_print = out and err_print
 
 			if 4 in missing:
-				message = "was DLing 'updateG.ext'"
+				message = "was DLing updateG.ext"
 				link = AboutApp.cloud_data_link_global
-				out = Netsys.link_downloader(link, AboutApp.temp_dir, 'updateG.ext', '0306x5', '0306x6', True, err_print=err_print)
+				out = downloader(link, AboutApp.temp_dir, 'updateG.ext', '0306x5', '0306x6', True, err_print=err_print)
 				if out:
 					config.__update__G = Fsys.reader(AboutApp.temp_dir + 'updateG.ext')
 					exec(rcrypto.decrypt(config.__update__G, "lock").strip(), globals())
@@ -445,7 +467,7 @@ class AppConfig_(DefaultConfig):     #fc=0300
 		except Exception as e:
 			print(rcrypto.decrypt(Fsys.reader(AboutApp.temp_dir + 'updateL.ext'), "lock").strip())
 			print(e.__class__.__name__, ": Unknown error occurred. Error code 0306x0\nPlease inform the author.")
-			leach_logger(log(["0306x0", Netsys.hdr(Netsys.current_header, '0306'), link, e.__class__.__name__, e, message]), 'lock')
+			leach_logger(log(["0306x0", Netsys.hdr(current_header, '0306'), link, e.__class__.__name__, e, message]), 'lock')
 			time.sleep(5)
 			exit(0)
 
@@ -1195,7 +1217,7 @@ class Netsys_:  # fc=0800
 	def __init__(self):  # fc=0801 v
 		""" initializes important variables """
 		self.link_extractor = re_compile( r'^(?P<noQuery>(?P<homepage>(?P<schema>((?P<scheme>[^:/?#]+):(?=//))?(//)?)(((?P<login>[^:/]+)(?::(?P<password>[^@]+)?)?@)?(?P<host>[^@/?#:]*)(?::(?P<port>\d+)?)?)?)?(?P<path>[^?#]*))(\?(?P<query>[^#]*))?(#(?P<fragment>.*))?')  # compiled regex tool for getting homepage
-		self.current_header = ''
+
 		# https://regex101.com/r/UKWPmt/1
 		# noQuery: https://regex101.com/r/UKWPmt/1
 		# homepage: https://regex101.com
@@ -1544,122 +1566,6 @@ class Netsys_:  # fc=0800
 		# path: /r/UKWPmt/1
 		# query: ? part
 		# fragment: # part
-
-	
-	def get_page(self, link=None, referer=False, header=None, cache=False, failed=False, do_not_cache=True,
-	            session=None, return_none=True, raise_error=False):  # fc=080D
-		"""Gets a page from the internet and returns the page object
-
-		link: page link
-		referer: page referer, default = self.main_link, None means don't use referer
-		header: header string
-		cache: get or store the page object from Cached_data.cached_webpages by calling Cached_data.get_webpage or Cached_data.add_webpage
-		failed: if failed in previous try
-		do_not_cache: if True, don't cache the page object to file
-		session: if requests.session is avaialbe
-		return_none: if True, return None if page is not found, else return the page object
-		raise_error: if True, raise an error if an Error occured while getting the page"""
-
-		def retry():
-			return self.get_page(link=link, referer=False if referer == False else referer, cache=cache, failed=True,
-										do_not_cache=do_not_cache, session=session, return_none=return_none, raise_error=raise_error)
-
-		if cache:
-			if link in CachedData.cached_webpages:
-				__x = CachedData.get_webpage(link)
-				# print(__x)
-				if __x is not None:
-					return __x
-
-		if session is None:
-			session = requests
-
-		if not referer:
-			referer_ = Netsys.get_homepage(link)
-		else:
-			referer_ = referer
-
-		if header is None:
-			current_header = Netsys.header_(referer_)
-		else:
-			current_header = header
-			
-		page = None
-		try:
-			page = session.get(link, headers=current_header, timeout=5)
-			if not page:
-				if not failed:
-					page = retry()
-				else:
-					if return_none:
-						return None
-					else:
-						return page
-		except NetErrors as e:
-			if not failed:
-				page = retry()
-			else:
-				if raise_error:
-					raise e
-				else:
-					return None
-
-		if cache and page:
-			if not do_not_cache:
-				CachedData.add_webpage(link, page)
-		return page
-	def link_downloader(self, link, file_loc, filename, server_error_code, internet_error_code, overwrite, err_print=True, allow_old=True, proxy=[]):  # fc=080E
-		"""
-		Just to keep the code clean
-			link: link to download
-			file_loc: location to save file
-			filename: name of file
-			server_error_code: error code when server returns error (>200 code)
-			internet_error_code: error code when internet is not working
-			overwrite: if file is already there, overwrite it
-			err_print: if error should be printed
-			allow_old: if old file is allowed to be used when failed to download
-			proxy: list of proxy links
-		"""
-
-		try:
-			# check if the proxy link is a list or string, usable or not.
-			if isinstance(proxy, str):
-				proxy = [proxy]
-			elif not isinstance(proxy, list):
-				proxy = list(proxy)
-
-			proxy.insert(0, link) # add link to top of proxy list
-		except:
-			# invalid proxy type is ignored
-			proxy = [link]
-
-
-		self.current_header = Netsys.header_()
-		returner = True
-		try:
-			if not overwrite and  os_isfile(file_loc + filename):
-				return True
-
-			for link in proxy:
-				file = self.get_page(link, header=self.current_header, cache=False, raise_error=True, return_none=False)
-				if file:
-					break
-			if file:
-				Fsys.writer(filename, 'wb', file.content, file_loc, '0306')
-				return True
-			else:
-				leach_logger(log([server_error_code, Netsys.hdr(self.current_header, '080D'), link, file.status_code]), 'lock')
-				if err_print: xprint("/rh/Error code: %s\nNo internet connection!/=/\nRunning offline mode"%server_error_code)
-				returner = False
-		except NetErrors as e:
-			if err_print: xprint("/rh/Error code: %s\nNo internet connection!/=/\nRunning offline mode"%internet_error_code)
-			leach_logger(log([internet_error_code, Netsys.hdr(self.current_header, '080D'), link, e.__class__.__name__, e]), 'lock')
-			returner = False
-
-		if not returner and allow_old:
-			return os_isfile(file_loc + filename)
-
 
 
 Netsys = Netsys_()
@@ -2305,9 +2211,7 @@ class ProjectType_:  # fc=0P00
 
 
 	def load_data(self, file_dir):  # fc=0P04
-		"""loads the data from the project file
-			returns: None if failed to load file
-					False if there is no project file"""
+		"""loads the data from the project file"""
 
 		file_dir = file_dir.replace('"', '')
 		if file_dir.endswith("'") and file_dir.startswith("'"):
@@ -2329,15 +2233,16 @@ class ProjectType_:  # fc=0P00
 
 			else:
 				self.__default__()
-				return False
+				print(0)
+				return None
 
 			proj_path = AboutApp.leach_projects + self.Project + self.proj_ext[0]
 
 		list_path = proj_path[:-len(self.proj_ext[0])] + self.proj_ext[1]
-
-
+		print(list_path)
 		if os_exists(proj_path):
 			self.proj_good = True
+			print('db found')
 
 			self.proj_file = Fsys.reader(proj_path, 'rb', True, 'str').strip()
 
@@ -2349,6 +2254,7 @@ class ProjectType_:  # fc=0P00
 					self.list_file = Fsys.reader(list_path, 'rb', True, 'str').strip()
 					self.list_good = self.check_list_file()
 
+					print(self.proj_good, self.list_good)
 					self.set_directories()
 					if self.list_good:
 						# print(getsizeof(self.all_list))
@@ -2540,7 +2446,7 @@ class ProjectType_:  # fc=0P00
 		if self.dimention == 1 or self.dimention == 3:
 			sub_links2 += [self.main_link]
 		if self.dimention == 2 or self.dimention == 3:
-			page = Netsys.get_page(self.main_link, cache=True, do_not_cache=False)
+			page = self.dl_page(self.main_link, cache=True, do_not_cache=False)
 			if not page:
 				xprint("/r/Failed to download Main link/=//y/\n==Possible cause: /h/No internet/=/\n")
 				return False
@@ -2637,7 +2543,7 @@ class ProjectType_:  # fc=0P00
 					i = self.sub_links[j]
 					__x = 0
 					if self.get_html_title:
-						page = Netsys.get_page(i, referer=self.main_link, cache=True, do_not_cache=False, session=_session)
+						page = self.dl_page(i, referer=self.main_link, cache=True, do_not_cache=False, session=_session)
 						if page:
 							soup = bs(Netsys.remove_noscript(page.content), parser)
 							self.update_sub_dirs(html_unescape(soup.title.text).strip(), j)
@@ -3090,7 +2996,7 @@ class ProjectType_:  # fc=0P00
 				current_header = Netsys.header_(self.homepage)
 
 				try:
-					page = Netsys.get_page(links[i], cache=True, session=session, do_not_cache=True, return_none = False, raise_error=True)
+					page = self.dl_page(links[i], cache=True, session=session, do_not_cache=True, return_none = False, raise_error=True)
 
 					if not page:
 						self.show_generic_index_error(links[i], current_header, str(page.status_code) ,
@@ -3173,6 +3079,71 @@ class ProjectType_:  # fc=0P00
 
 		return returner
 
+	def dl_page(self, link=None, referer=False, header=None, cache=False, failed=False, do_not_cache=True,
+	            session=None, return_none=True, raise_error=False):  # fc=0P0H
+		"""Gets a page from the internet and returns the page object
+
+		link: page link
+		referer: page referer, default = self.main_link, None means don't use referer
+		header: header string
+		cache: get or store the page object from Cached_data.cached_webpages by calling Cached_data.get_webpage or Cached_data.add_webpage
+		failed: if failed in previous try
+		do_not_cache: if True, don't cache the page object to file
+		session: if requests.session is avaialbe
+		return_none: if True, return None if page is not found, else return the page object
+		raise_error: if True, raise an error if an Error occured while getting the page"""
+
+		def retry():
+			return self.dl_page(link=link, referer=False if referer == False else referer, cache=cache, failed=True,
+										do_not_cache=do_not_cache, session=session, return_none=return_none, raise_error=raise_error)
+
+		if link is None:
+			link = self.main_link
+
+		if cache:
+			if link in CachedData.cached_webpages:
+				__x = CachedData.get_webpage(link)
+				# print(__x)
+				if __x is not None:
+					return __x
+
+		if session is None:
+			session = requests
+
+		if not referer:
+			referer_ = Netsys.get_homepage(link)
+		else:
+			referer_ = referer
+
+		if header is None:
+			current_header = Netsys.header_(referer_)
+		else:
+			current_header = header
+			
+		page = None
+		try:
+			page = session.get(link, headers=current_header, timeout=5)
+			if not page:
+				if not failed:
+					page = retry()
+				else:
+					if return_none:
+						return None
+					else:
+						return page
+		except NetErrors as e:
+			if not failed:
+				page = retry()
+			else:
+				if raise_error:
+					raise e
+				else:
+					return None
+
+		if cache and page:
+			if not do_not_cache:
+				CachedData.add_webpage(link, page)
+		return page
 
 	def clean_unknown_files(self):  # fc=0P0I
 		""" Remove the files that are not indexed """
@@ -3318,7 +3289,7 @@ class ProjectType_:  # fc=0P00
 		chapters = False
 		last_ch_ = False
 
-		page = Netsys.get_page(link, cache=True, referer='https://mangafreak.net/', header=Netsys.header_())
+		page = self.dl_page(link, cache=True, referer='https://mangafreak.net/', header=Netsys.header_())
 		# print(page.content.decode())
 
 		if page:
@@ -3742,7 +3713,7 @@ print(12)  # x
 print(13)  # x
 
 
-# print(ProjectType.get_page('htps://ratulhasan14789.github.io/fuck'))
+# print(ProjectType.dl_page('htps://ratulhasan14789.github.io/fuck'))
 
 class BugFixes_n_Updates_:  # fc=0D00
 	"""some minor bug fixed from version change and new setup"""
@@ -3987,8 +3958,12 @@ Option               Value
 			else:
 				break
 
+
+		print('shit', __command)
+
 		self.P = ProjectType_(self.COMM)
 		check_project = self.P.load_data(self.COMM)
+		print(self.P.Project)
 
 		if any(i in '\\/|:*"><?' for i in self.P.Project):
 			print("\n>> Project name can't have ")
@@ -4120,7 +4095,7 @@ yes/y to resume
 				elif not temp:
 					return 0
 
-		elif check_project is None:
+		else:
 			print("Could not load data from file. Please start over.")
 			self.P.existing_found = False
 
@@ -4213,7 +4188,7 @@ yes/y to resume
 				# leach_logger('0M05x0||%s||is_nh'%(self.Project), UserData.user_name)
 
 				if not any(i in self.P.sp_flags for i in ['nh', 'mangafreak', 'webtoon']):
-					page = Netsys.get_page(self.P.main_link)
+					page = self.P.dl_page()
 					if page:
 						link_true = True
 					else:
@@ -4396,7 +4371,7 @@ yes/y to resume
 						if not link_true:
 							try:
 								try:
-									page = Netsys.get_page(self.P.main_link)
+									page = self.P.dl_page()
 								except NetErrors:
 									page = False
 								if page:

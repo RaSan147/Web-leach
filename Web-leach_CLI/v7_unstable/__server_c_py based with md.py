@@ -22,6 +22,24 @@ Prism.languages.python={comment:{pattern:/(^|[^\\\\])#.*/,lookbehind:!0},"string
 
 # print(Source_code_style)
 
+def convert2md(text:list):
+	"""1st line should contain function name and arg"""
+	text[1] = '**' +text[1].replace('[', '\\[').replace(']', '\\]').replace('\n', ' ') + '**'
+	
+	for i in range(1, len(text)):
+		if text[i].startswith('                      '):
+			text[i] = text[i].replace('                    ', '  >>  ')
+		elif text[i].startswith('                  '):
+			text[i] = text[i].replace('                  ', '  >  ')
+		if text[i].endswith('\n'):
+			text[i] = text[i][:-1]+'  \n'
+		else:
+			text[i] = text[i]+'  \n'
+
+
+
+	return text
+
 def read_wltxt(f_code):
 
 	try:
@@ -72,8 +90,9 @@ def read_wltxt(f_code):
 
 		where = _f_name[1:-1]
 
-	return_box.append("<h2><u>Description</u>: </h2> <br><pre><code class='language-pug'><noscript>" + "\n".join(text_) + "</noscript></code></pre>")
-
+	return_box.append("<h2><u>Description</u>: </h2> <br>")
+	conver2md()
+	
 	try:
 		# import the file
 		file_name = re.search(r'\[(.*?)\]', files_dict[_f_code[0]]).group(1)

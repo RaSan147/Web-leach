@@ -63,6 +63,7 @@ py: files_dict =      {"0": "[main.py] main code file with launch functions",   
 py: files_dict.update({"4": "[constants.py] Important constants [TODO: make cython module]",                            "5": "[rcrypto.py] encryption decryption functions",                   "6": "[dig_info.py] getting user datas",               "7": "[make_html2.py] file that creates webpage (.html) files based on leached data"})
 py: files_dict.update({"8": "[make_cbz2.py] file that creates Comic book (.cbz) files based on completed project data"})
 
+vacant_code = ['0P0H']
 
 
 ==================(0)==================
@@ -159,7 +160,9 @@ py: files_dict.update({"8": "[make_cbz2.py] file that creates Comic book (.cbz) 
                     4   >>  failed to download "updateL.ext" due to internet issues
                     5   >>  failed to download "updateG.ext" due to site issues
                     6   >>  failed to download "updateG.ext" due to internet issues
-
+                    7   >>  failed to download "wl-page.html" due to site issues
+                    8   >>  failed to download "wl-page.html" due to internet issues
+                    
 0400    >>>   [UserData_]
                   Contains User data, log-in and user data collection functions
 
@@ -437,6 +440,30 @@ XXXX    >>>   [on_exit]@atexit.register
                   *also caches the result to reuse
                     link: link to be checked
 
+080D    >>>   [Netsys_>get_page](link, referer, cache, failed, do_not_cache, session, return_none, raise_error)
+                  Gets a page from the internet and returns the page object
+                    link: page link *default: `None`
+                    referer: page referer *default = self.main_link, None means don't use referer
+                    cache: get or store the page object from Cached_data.cached_webpages *default: `False`
+                    failed: if failed in previous try *default: `False`
+                    do_not_cache: if True, don't cache the page object to file *default: `True`
+                    session: if requests.session is avaialbe *default: `None`
+                    return_none: if True, return None if page is not found, else return the page object *default: `True`
+                    raise_error: if True, raise an error if an Error occured while getting the page *default: `False`
+
+080E    >>>   [Netsys_>link_downloader](link, file_loc, filename, server_error_code, internet_error_code, overwrite, err_print, allow_old, proxy)
+                  Just to keep the code clean
+                    link: link to download
+                    file_loc: location to save file
+                    filename: name of file
+                    server_error_code: error code when server returns error (>200 code)
+                    internet_error_code: error code when internet is not working
+                    overwrite: if file is already there, overwrite it
+                    err_print: if error should be printed *default: `True`
+                    allow_old: if old file is allowed to be used when failed to download *default: `True`
+                    proxy: list of proxy links *default: `[]`
+
+
 0900    >>>   [Datasys_]
                   Data types and conversion functions
 
@@ -627,7 +654,11 @@ XXXX    >>>   [on_exit]@atexit.register
                     self.threads_dir: directory where downloaded threads data are stored
 
 0P04    >>>   [ProjectType_>load_data](file_dir)
-                  Loads the data from the project file
+                  loads the data from the project file
+                  returns: 
+                  >> `None` if failed to load file
+                  >> `False` if there is no project file
+                  >> `True` if loaded successfully
                     file_dir: directory of the project file (may end with .wlproj or .proj)
 
                   returns: if the project is successfully loaded
@@ -728,12 +759,6 @@ XXXX    >>>   [on_exit]@atexit.register
                     soup: BeautifulSoup object of the page
                     source: source of the page
 
-0P0H    >>>   [ProjectType_>dl_page](link, referer, cache, failed)
-                  Gets a page from the internet and returns the page object
-                    link: page link *default: `None`
-                    referer: page referer *default = self.main_link, None means don't use referer
-                    cache: get or store the page object from Cached_data.cached_webpages *default: `False`
-                    failed: if failed in previous try *default: `False`
 
 0P0I    >>>   [ProjectType_>clean_unknown_files](fdir)
                   Remove the files that are not indexed
@@ -799,8 +824,10 @@ XXXX    >>>   [on_exit]@atexit.register
 
 
 
+
 7000    >>>   [make_html]
                   creates the html file for the project
+
 
 7001    >>>   [make_html>make_pages](self, all_li, dir_list, project, seq, ext, dir_sorted)
                   creates the html pages for the project

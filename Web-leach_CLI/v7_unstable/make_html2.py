@@ -2,7 +2,6 @@
 # pylint: disable=unused-import
 
 
-from genericpath import isfile
 import rjsmin
 from re import compile as re_compile
 
@@ -73,10 +72,10 @@ CSSmin = css_minify()
 
 class MakeHtml_:   #func_code= 7000
 	def return_sub_page(self, all_list, sub_dirs, page_index, title):   #func_code= 7002
-		if not isfile(AboutApp.temp_dir+'wl-page.html'):
+		if not os_isfile(AboutApp.temp_dir+'wl-page.html'):
 			if config.god_mode(2) == 'offline':
 				return False
-		sub_page_template= open(AboutApp.temp_dir+'wl-page.html', encoding='utf8').read()%(all_list, sub_dirs, page_index, title)
+		sub_page_template= Fsys.reader(AboutApp.temp_dir+'wl-page.html', encoding='utf8')%(all_list, sub_dirs, page_index, title)
 
 		return sub_page_template
 
