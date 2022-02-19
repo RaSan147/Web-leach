@@ -217,19 +217,6 @@
             overflow: auto;
         }
 
-        .transparent_modal{
-            
-            display: none;
-            position: fixed;
-            z-index: 1;
-            padding-top: 100px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            visibility: hidden;
-        }
 
         #img01 {
             position: relative;
@@ -372,35 +359,39 @@
             text-decoration: none
         }
 
-        .popup .overlay {
+        .popup{
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
+            z-index: 99;
+            left: 50%;
+            top: 50%;
+            width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 2;
-            display: none
+            overflow: auto;
+            transition: all 300ms ease-in-out;
+            transform: translate(-50%, -50%) scale(1)
         }
 
-        .popup .content {
+        #popup-box {
+            display: block;
             position: fixed;
             top: 50%;
             left: 50%;
             color: #AAA;
-            transform: translate(-50%, -50%) scale(0);
+            transition: all 300ms ease-in-out;
             background: #222;
             width: 95%;
             max-width: 500px;
-            height: 250px;
-            z-index: 10;
+            z-index: 1;
             text-align: center;
             padding: 20px;
             box-sizing: border-box;
-            font-family: "Open Sans", sans-serif
+            font-family: "Open Sans", sans-serif;
+            max-height: 600px;
+            height:max-content;
+            min-height: 300px;
         }
 
-        .popup .close-btn {
+        .popup-close-btn {
             cursor: pointer;
             position: absolute;
             right: 20px;
@@ -416,16 +407,17 @@
             border-radius: 50%
         }
 
-        .popup.active .overlay {
-            display: block
+        .popup:not(.active){
+            transform: translate(-50%, -50%) scale(0);
         }
+        
 
-        .popup.active .content {
-            transition: all 300ms ease-in-out;
+        .popup.active #popup-box{
             transform: translate(-50%, -50%) scale(1)
         }
 
-        #button {
+
+        /* #button {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -437,7 +429,7 @@
             text-transform: uppercase;
             font-weight: 600;
             background: #fff
-        }
+        } */
 
         #go2main {
             font-size: 20px;
@@ -1250,8 +1242,32 @@
             </div>
         </div>
     </div>
+
+
+    
+    <div class="popup", id="popup-0">
+        <div id="popup-bg" class="modal_bg" style="background-color:rgba(0, 0, 0, 0.9);" onclick="popup_msg.togglePopup()"></div>
+        <div id="popup-box">
+            <div class="popup-close-btn" onclick="popup_msg.togglePopup()">&times;</div>
+        
+            <h1 id="popup-header"></h1>
+            <hr width="95%" id="popup-hr">  <!-- if needed -->
+            
+            <div id="popup-content"></div>
+        </div>
+    </div>
+
+
     <div style="margin: 0 auto;height: 2px; width: 90vw;position: relative;background-color: #AAA;"></div>
     <center><br>
+        
+
+        <!-- <script>
+            class x{
+                
+            }
+        </script> -->
+<!-- 
         <div class="popup" id="popup-1">
             <div class="overlay"></div>
             <div class="content">
@@ -1265,20 +1281,20 @@
             <div class="overlay"></div>
             <div class="content" style="max-height: 600px;height:max-content;min-height: 300px;">
                 <div class="close-btn" onclick="popup_msg.togglePopup('2', 0)">&times;</div>
-                <h1 id=Popup-header></h1>
+                <h1 id="popup-header"></h1>
                 <hr width="95%">
-                <div id=Popup-content></div>
+                <div id="popup-content"></div>
             </div>
         </div>
 
         <div>
 
 
-        </div>
+        </div> -->
 
 
         <div id="myModal" class="modal" onkeydown="nav_n_zoom(event)">
-            <div class="modal_bg" style="background-color:rgba(0, 0, 0, 0.9);"></div>
+            <div class="modal_bg" style="background-color:rgba(0, 0, 0, 0.9);" onclick = "modal_img.close_image_modal()"></div>
             <span class="close-image-modal">&times;</span>
             <div id="image-modal-content">
                 <img id="img01">
@@ -1324,6 +1340,28 @@
 <script type="text/javascript">
     var popup_msg_open = false;
 
+
+function toggle_scroll() {
+    document.body.classList.toggle('overflowHidden');
+}
+
+
+function fuck(x = '') {
+    alert("fuck" + x);
+}
+
+function is_in(item, array) {
+    return array.indexOf(item) > -1;
+}
+
+function hasClass(element, className, partial = false) {
+    console.log(element);
+    console.log(element.className);
+    if(partial){className = ' '+ className;}
+    else{className = ' ' + className + ' ';}
+    return (' ' + element.className + ' ').indexOf(' ' + className+ ' ') > -1;
+}
+
 function helped_user(set = 0) {
     if (set != 0) {
         localStorage.setItem('?helped-user', set);
@@ -1339,9 +1377,6 @@ function helped_user(set = 0) {
 }
 
 
-function is_in(item, array) {
-    return array.indexOf(item) > -1;
-}
 var panel2disable = ['S-image-border'];
 class Datas {
     constructor() {
@@ -1777,7 +1812,7 @@ class Modal_img {
                     0];
 
                 // disable scroll on body
-                document.body.classList.add('overflowHidden');
+                toggle_scroll()
 
                 if (that.modal_img_indx == 0) {
                     that.LArrow.style.display = 'none';
@@ -1849,7 +1884,7 @@ class Modal_img {
         const that = this;
         that.modal.style.display = "none";
         document.removeEventListener('keydown', that.key_control);
-        document.body.classList.remove('overflowHidden');
+        toggle_scroll()
 
         // hide background modal
         // document.getElementsByClassName('modal_bg')[0].style.display = "none";
@@ -1862,11 +1897,6 @@ class Modal_img {
         const span = document.getElementsByClassName('close-image-modal')[0];
 
         span.onclick = function () {
-            that.close_image_modal()
-        }
-
-        const modal_bg = document.getElementsByClassName('modal_bg')[0];
-        modal_bg.onclick = function() {
             that.close_image_modal()
         }
     }
@@ -1893,7 +1923,7 @@ class Modal_img {
         if (event.keyCode == 27) {
             that.modal.style.display = "none";
             document.removeEventListener('keydown', that.key_control);
-            document.body.classList.remove('overflowHidden');
+            toggle_scroll()
         }
     }
 
@@ -1903,12 +1933,29 @@ let modal_img = new Modal_img();
 modal_img.assign_modals_in_img();
 
 class Popup_Msg {
-
-    togglePopup(indx, on_or_off = null) {
-        document.getElementById("popup-" + indx).classList.toggle("active");
+    constructor() {
+        this.popup_obj = document.getElementById('popup-0');
+        this.header = document.getElementById('popup-header');
+        this.content = document.getElementById('popup-content');
+        this.hr = document.getElementById('popup-hr');
     }
 
+    togglePopup(indx=0, on_or_off = null) {
+        this.popup_obj.classList.toggle("active");
+        toggle_scroll();
+    }
+
+    createPopup(header, content, hr=true) {
+                    this.header.innerHTML = header;
+                    this.content.innerHTML = content;
+                    if(hr){
+                        this.hr.style.display = "block";
+                    }else{
+                        this.hr.style.display = "none";
+                    }
+                }
 }
+
 
 let popup_msg = new Popup_Msg();
 
@@ -1926,13 +1973,15 @@ class Local_Data_Manager {
 
         if (this.last_opened == datas.current_page_index) {
             if (this.last_opened != -1) {
-                document.getElementById('last').innerHTML =
-                    "You left the page on <a id= 'lastleft' href='../" +
-                    datas.pages_list[
-                        localStorage.getItem(datas.proj_name)] + "/index.html'>" +
-                    datas.pages_list[localStorage.getItem(datas.proj_name)] +
-                    '</a><br> Click on the link to go there<hr>Close this dialog to continue from here';
-                popup_msg.togglePopup('1', 1);
+                let header = 'Welcome Back!';
+                let content = "You left the page on <a id= 'lastleft' href='../" +
+                            datas.pages_list[localStorage.getItem(datas.proj_name)] + "/index.html'>" +
+                            datas.pages_list[localStorage.getItem(datas.proj_name)] +
+                            '</a><br> Click on the link to go there<hr>Close this dialog to continue from here';
+                
+                popup_msg.createPopup(header, content);
+                popup_msg.togglePopup();
+                
             }
         }
     }
@@ -1958,9 +2007,7 @@ window.onscroll = function () {
     prevScrollpos = currentScrollPos;
 }
 
-function fuck(x = '') {
-    alert("fuck" + x);
-}
+
 
 class Sidebar_control {
     constructor() {
@@ -1970,7 +2017,7 @@ class Sidebar_control {
     }
 
     is_open(side) {
-        return 'mySidebar-active' in document.getElementById("mySidebar" + side).classList
+        return hasClass(document.getElementById("mySidebar" + side),'mySidebar-active', true);
     }
 
     toggle_left() {
@@ -1980,7 +2027,7 @@ class Sidebar_control {
             this.closeNavR();
             if (document.body.clientWidth < 340) {
                 this.left_bar.classList.toggle('mySidebar-active-full');
-                document.body.classList.add('overflowHidden');
+                toggle_scroll()
             } else if (document.body.clientWidth < 450) {
                 // document.getElementById('app_name').innerText = ' WL '
                 this.left_bar.classList.toggle('mySidebar-active-mid');
@@ -1999,7 +2046,7 @@ class Sidebar_control {
             this.closeNavL();
             if (document.body.clientWidth < 340) {
                 this.right_bar.classList.toggle('mySidebar-active-full');
-                document.body.classList.add('overflowHidden');
+                toggle_scroll()
             } else if (document.body.clientWidth < 450) {
                 // document.getElementById('app_name').innerText = ' WL '
                 this.right_bar.classList.toggle('mySidebar-active-mid');
@@ -2012,15 +2059,16 @@ class Sidebar_control {
 
     closeNavL() {
         this.left_bar.classList.remove('mySidebar-active', 'mySidebar-active-full', 'mySidebar-active-mid');
-        document.body.classList.remove('overflowHidden');
+        // toggle_scroll()
         document.getElementById("app_header").classList.remove('top-titleL-active');
         tools.sleep(3000);
     }
 
     closeNavR() {
         this.right_bar.classList.remove('mySidebar-active', 'mySidebar-active-full', 'mySidebar-active-mid');
+        console.log(this.right_bar.classList)
         // document.getElementById("app_header").classList.remove('top-titleR-active');
-        document.body.classList.remove('overflowHidden');
+        // toggle_scroll()
         tools.sleep(3000);
     }
 }
@@ -2113,78 +2161,51 @@ project_panel.input_.addEventListener('input', project_panel.show_search_results
 
 
 function show_credits() {
-    if (sidebar_control.is_open('R')) {
-        sidebar_control.toggle_right();
-    }
-    if (popup_msg_open) {
-        popup_msg.togglePopup('2', 0);
-        document.body.classList.remove('overflowHidden');
-        popup_msg_open = false;
-    } else {
-        document.getElementById("Popup-header").innerHTML = "Credits";
-        document.getElementById("Popup-content").innerHTML =
-            "<h3>Created by Ratul Hasan</h3><h2>Special Thanks to:<hr width='80%'></h2><h3>Inul Haque</h3><h3>Sanjida Sirat</h3>";
-        popup_msg.togglePopup('2', 1);
-        document.body.classList.add('overflowHidden');
+    let header = "Credits";
+    let content = "<h3>Created by Ratul Hasan</h3><h2>Special Thanks to:<hr width='80%'></h2><h3>Inul Haque</h3><h3>Sanjida Sirat</h3>";
+    
+    sidebar_control.closeNavL();
+    
+    popup_msg.createPopup(header, content); 
+    popup_msg.togglePopup();
 
-
-        document.getElementById("popup-2").getElementsByClassName('close-btn')[0].onclick = show_credits;
-
-        popup_msg_open = true;
-    }
+    popup_msg_open = true;
 }
 
 function show_about() {
-    if (sidebar_control.is_open('R')) {
-        sidebar_control.toggle_right();
-    }
-    if (popup_msg_open) {
-        popup_msg.togglePopup('2', 0);
-        document.body.classList.remove('overflowHidden');
-        popup_msg_open = false;
-    } else {
-        document.getElementById("Popup-header").innerHTML = "About";
-        document.getElementById("Popup-content").innerHTML = "<b>App version:</b> " + datas.app_version +
-            "<br><b>Page Version:</b> " + datas.page_version;
-        popup_msg.togglePopup('2', 1);
-        document.body.classList.add('overflowHidden');
+    sidebar_control.closeNavL();
+
+    let head = "About"
+    let content = "<b>App version:</b> " + datas.app_version +
+        "<br><b>Page Version:</b> " + datas.page_version;
+
+    popup_msg.createPopup(head, content); 
+    popup_msg.togglePopup();
 
 
-        document.getElementById("popup-2").getElementsByClassName('close-btn')[0].onclick = show_credits;
-
-        popup_msg_open = true;
-    }
+    popup_msg_open = true;
+    
 }
 
 function show_help() {
-    if (sidebar_control.is_open('R')) {
-        sidebar_control.toggle_right();
-    }
-    if (popup_msg_open) {
-        popup_msg.togglePopup('2', 0);
-        document.body.classList.remove('overflowHidden');
-        popup_msg_open = false;
-        helped_user(1);
+    sidebar_control.closeNavL();
+    
+    let header= "Help";
+    
+    let content = `1. Open focus mode by clicking on image <br>
+    2. Use <b>Sidebar</b> to quick access other pages <br>
+    3. From settings you can change or customize theme style <br>
+    4. You can also change brightness level of the page <br>
+    5. On focus mode you can use keyboard to resize and move to next or previous image <br>
+    <hr>
+    <b>Note:</b> Theme style is reused all over the Project <br>
+    *EXCEPT Brightness level, it only stays until the session ends`;
+    popup_msg.createPopup(header, content);
+    popup_msg.togglePopup();
 
-    } else {
-        document.getElementById("Popup-header").innerHTML = "Help";
-        let help = `1. Open focus mode by clicking on image <br>
-        2. Use <b>Sidebar</b> to quick access other pages <br>
-        3. From settings you can change or customize theme style <br>
-        4. You can also change brightness level of the page <br>
-        5. On focus mode you can use keyboard to resize and move to next or previous image <br>
-        <hr>
-        <b>Note:</b> Theme style is reused all over the Project <br>
-        *EXCEPT Brightness level, it only stays until the session ends`;
-        document.getElementById("Popup-content").innerHTML = help;
-        popup_msg.togglePopup('2', 1);
-        document.body.classList.add('overflowHidden');
+    helped_user(1);
 
 
-        document.getElementById("popup-2").getElementsByClassName('close-btn')[0].onclick = show_help;
-
-        popup_msg_open = true;
-    }
 }
 
 if (helped_user() == false) {
