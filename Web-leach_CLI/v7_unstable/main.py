@@ -30,7 +30,6 @@ logger = True
 
 # importing required packages
 
-from re import T
 import Number_sys_conv as Nsys  # fc=1000
 
 # different number based functions I made
@@ -57,6 +56,12 @@ try:
 	from constants import *  # fc=4000
 	import ctypes
 
+	def is_tool(name):  #fc=0000 xx
+		"""Check whether `name` is on PATH and marked as executable."""
+		from shutil import which
+		return which(name) is not None
+
+
 	def Ctitle(title):  # fc=0001
 		"""sets CLI window title
 		title: Window title"""
@@ -64,8 +69,9 @@ try:
 		try:
 			ctypes.windll.kernel32.SetConsoleTitleW(title)
 		except:
-			from os import system as os_system
-			os_system('title ' + title)
+			if is_tool("title"):
+				from os import system as os_system
+				os_system('title ' + title)
 
 
 	Ctitle('Loading Assets \u26ef')
