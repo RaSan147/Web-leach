@@ -231,7 +231,6 @@ body {
     display: inherit;
     position: fixed;
     z-index: 10;
-    /* padding-top: inherit; */
     left: 0;
     top: 0;
     width: 100%;
@@ -325,6 +324,7 @@ body {
 
 #caption {
     display: block;
+    font-size: 1.3em;
     position: relative;
     margin: auto;
     display: block;
@@ -452,25 +452,11 @@ body {
 }
 
 
-/* #button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 15px;
-    font-size: 18px;
-    border: 2px solid #222;
-    color: #222;
-    text-transform: uppercase;
-    font-weight: 600;
-    background: #fff
-} */
-
-#go2main {
-    font-size: 20px;
-    font-weight: 600;
+#go2main u{
+    font-size: 30px;
+    font-weight: 900;
     font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS,sans-serif';
-    text-decoration: none;
+    /* cursor: pointer; */
     color: #06A5EE
 }
 
@@ -1283,7 +1269,7 @@ body {
                 <h2 class="page_title" id="proj_name"><u>Project:</u>&nbsp; </h2>
                 <h2 class="page_title" id="page_title"><u>Page:</u>&nbsp;</h2>
                 <a id='go2main'>
-                    <h4><u> Go to Page list</u></h4>
+                    <u> Go to Page list</u>
                 </a>
                 <br><br><br>
             </div>
@@ -1368,14 +1354,12 @@ body {
     </pre>
     <center>
         <div class='pagination' id='pagination'>
-            <a class='paginationA' id='pagination-prev'>Prev Page</a>
-            <a class='paginationA' id='pagination-next'>Next Page</a>
+            <a id='pagination-prev'><div class='paginationA'>Prev Page</div></a>
+            <a id='pagination-next'><div class='paginationA'>Next Page</div></a>
         </div>
-    </center>
 
 
     <br><br>
-    <center>
         <hr width='95%'>
         <hr width='89%'>
     </center>
