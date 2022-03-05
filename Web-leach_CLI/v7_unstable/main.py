@@ -424,7 +424,7 @@ class AppConfig_(DefaultConfig):     #fc=0300
 			if 2 in missing:
 				message = "was DLing 'wl-page.html'"
 				link = AboutApp.cloud_html_temp_link
-				out = Netsys.link_downloader(link, AboutApp.temp_dir, 'wl-page.html', '0306x7', '0306x8', True, err_print=err_print, proxy=[AboutApp.cloud_html_temp_link_proxy,])
+				out = Netsys.link_downloader(link, AboutApp.temp_dir, 'wl-page.html', '0306x7', '0306x8', False, err_print=err_print, proxy=[AboutApp.cloud_html_temp_link_proxy,])
 				err_print = out and err_print
 
 			if 3 in missing:

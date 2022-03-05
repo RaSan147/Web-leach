@@ -14,7 +14,7 @@ sidebar: 5
 .modal_bg: 10
 .modal: 20
 #image-modal-content: 21
-.close-image-modal: 21
+.close-image-modal: 22
 #caption : 21
 .popup: 22 // pop-up may show even on focus mode
 #popup-box: 23
@@ -335,8 +335,9 @@ body {
     padding: 10px 0;
     max-height: 50px;
     overflow-wrap: break-word;
-    z-index: 21;
+    z-index: 22;
 }
+
 
 #image-modal-content,
 #caption {
@@ -385,7 +386,7 @@ body {
     font-weight: 700;
     transition: .3s;
     cursor: pointer;
-    z-index: 21;
+    z-index: 22;
     text-shadow: -1px -1px 0 #3ab7ff, 1px -1px 0 #3ab7ff, -1px 1px 0 #3ab7ff, 1px 1px 0 #3ab7ff
 }
 
@@ -1155,7 +1156,8 @@ body {
 
     <div id="mySidebarR" class="sidebar theme-tools" style='right:0;'>
         <a href="javascript:void(0)" style='right:0; text-align:right;margin-right: 20px;' class="close-sidebar"
-            onclick="sidebar_control.toggle_right()">×</a>
+            onclick="sidebar_control.toggle_right()">&times;</a> <!-- × -->
+            
         <div class="sidebar-content">
             <div class="accordion"><span>Image Border</span>
                 <div id="S-image-border" class='tron-switch'>
@@ -1171,20 +1173,20 @@ body {
                     <form>
                         <label class="rad-label">
                             <input type="radio" class="rad-input" name="border-color" value='1' checked="checked" />
-                            <div class="rad-design" style="background:black;"></div>
-                            <div class="rad-text">Black</div>
+                            <span class="rad-design" style="background:black;"></span>
+                            <span class="rad-text">Black</span>
                         </label>
 
                         <label class="rad-label">
                             <input type="radio" class="rad-input" name="border-color" value='2' />
-                            <div class="rad-design" style="background:white;"></div>
-                            <div class="rad-text">White</div>
+                            <span class="rad-design" style="background:white;"></span>
+                            <span class="rad-text">White</span>
                         </label>
 
                         <label class="rad-label">
                             <input type="radio" class="rad-input" name="border-color" value='3' />
-                            <div class="rad-design" style="background:var(--theme-color);"></div>
-                            <div class="rad-text" id="add_theme_name">Theme </div>
+                            <span class="rad-design" style="background:var(--theme-color);"></span>
+                            <span class="rad-text" id="add_theme_name">Theme </span>
                         </label></form>
 
                     <span class="accordion-panel-heading"><b>Border Width</b></span>
@@ -1338,7 +1340,8 @@ body {
                     <p>&#10095;</p>
                 </a>
             </div>
-            <p id="caption"></p>
+            <p id="caption">1</p>
+            <span id="caption-gap" style="padding: 150px 50px 50px 50px; position: absolute;"></span>
         </div>
 
         <div id="images" style="position: relative"></div>
