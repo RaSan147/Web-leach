@@ -20,6 +20,7 @@ Index    SP project Names                   Works
   7    ?clean-project               asks the project name and delete unwanted files made by user or program
   8    ?enable-download-limit (%d)  enables download limit (max dlim) with (%d) kbps
   9    ?disable-download-limit     disables download limit (sets "max dlim" to 0)
+  10   ?project-info               shows project information
 
   -1   ?E-dl-T                 same as 1
   -2   ?D-dl-T                 same as 2
@@ -30,6 +31,7 @@ Index    SP project Names                   Works
   -7   ?c-p                    same as 7
   -8   ?E-dlim                 same as 8
   -9   ?D-dlim                 same as 9
+  -10  ?i-p                    same as 10
 
   key -----------------             values
 ========              =================================================================

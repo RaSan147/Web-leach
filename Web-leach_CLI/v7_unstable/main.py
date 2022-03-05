@@ -851,11 +851,11 @@ class Fsys_:  # fc=0600
 
 		if type(read_mode) != str:
 			xprint("/rh/Invalid read type./yh/ Mode must be a string data/=/")
-			leach_logger('||'.join(map(str, ['0607x3', f_code, direc, output, encoding, ignore_error, on_missing])))
+			leach_logger(log(['0607x3', f_code, direc, output, encoding, ignore_error, on_missing]))
 			raise TypeError
 		if read_mode in ('w', 'wb', 'a', 'ab', 'x', 'xb'):
 			xprint("/r/Invaid read mode:/wh/ %s/=//y/ is not a valid read mode.\nTry using 'r' or 'rb' based on your need/=/")
-			leach_logger('||'.join(map(str, ['0607x4',f_code, direc, output, encoding, ignore_error, on_missing])))
+			leach_logger(log(['0607x4',f_code, direc, output, encoding, ignore_error, on_missing]))
 			raise LeachKnownError
 		if 'b' in read_mode:
 			read_mode = 'rb'
@@ -866,7 +866,7 @@ class Fsys_:  # fc=0600
 		if (not os_isfile(self.loc(direc))):
 			if (not ignore_missing_log):
 				print(self.loc(direc), 'NOT found to read. Error code: 0607x1')
-				leach_logger('||'.join(map(str, ['0607x1', f_code, direc, output, encoding, ignore_error, on_missing])))
+				leach_logger(log(['0607x1', f_code, direc, output, encoding, ignore_error, on_missing]))
 			return on_missing
 
 		try:
@@ -875,7 +875,7 @@ class Fsys_:  # fc=0600
 		except PermissionError:
 			if (not ignore_missing_log):
 				print(self.loc(direc), 'failed to read due to PermissionError. Error code: 0607x2')
-				leach_logger('||'.join(map(str, ['0607x2', f_code, direc, output, encoding, ignore_error, on_missing])))
+				leach_logger(log(['0607x2', f_code, direc, output, encoding, ignore_error, on_missing]))
 			return on_missing
 		if output is None:
 			if read_mode == 'r':
@@ -891,14 +891,14 @@ class Fsys_:  # fc=0600
 					out = out.decode()
 				except Exception as e:
 					xprint(f"/r/failed to decode /hui/{self.loc(direc)}/=//y/ to the specified character encoding. \nError code: 0607x5")
-					leach_logger('||'.join(map(str, ['0607x3',f_code, direc, output, encoding, ignore_error, on_missing])))
+					leach_logger(log(['0607x3',f_code, direc, output, encoding, ignore_error, on_missing]))
 					raise e
 			elif output == 'bin' and read_mode == 'r':
 				try:
 					out = out.encode(encoding)
 				except Exception as e:
 					xprint(self.loc(direc), 'failed to encode to the specified character encoding. \nError code: 0607x5')
-					leach_logger('||'.join(map(str, ['0607x4',f_code, direc, output, encoding, ignore_error, on_missing])))
+					leach_logger(log(['0607x4',f_code, direc, output, encoding, ignore_error, on_missing]))
 					raise e
 
 		return out
@@ -933,13 +933,13 @@ class Fsys_:  # fc=0600
 
 		if not isinstance(data, (str, bytes)):
 			xprint("/rh/Invalid data type./yh/ Data must be a string or binary data/=/")
-			leach_logger('||'.join(map(str, ['0608x3', f_code, direc, fname, mode, data, encoding])))
+			leach_logger(log(['0608x3', f_code, direc, fname, mode, data, encoding]))
 			raise TypeError
 		mode = mode.replace('+', '').replace('r', 'w')
 
 		if any(i in fname for i in ('/\\|:*"><?')):
 			# these characters are forbidden to use in file or folder Names
-			leach_logger('||'.join(map(str, ['0608x1', f_code, fname, direc, mode, type(data), encoding])))
+			leach_logger(log(['0608x1', f_code, fname, direc, mode, type(data), encoding]))
 			fname = Datasys.trans_str(fname, {'/\\|:*><?': '-', '"': "'"})
 
 		if direc is None or direc == '':
@@ -957,7 +957,7 @@ class Fsys_:  # fc=0600
 			else:
 				locs = self.loc(direc, 'Linux')
 				if any(i in locs for i in ('\\|:*"><?')):
-					leach_logger('||'.join(map(str, ['0608x1', f_code, fname, direc, mode, type(data), encoding])))
+					leach_logger(log(['0608x1', f_code, fname, direc, mode, type(data), encoding]))
 					locs = Datasys.trans_str(locs, {'\\|:*><?': '-', '"': "'"})
 
 				if not os_isdir(locs):
@@ -1893,8 +1893,16 @@ class All_list_type:  # fc=0B00
 		return (self.all_links[index][0], self.all_links[index][1],
 		        self.all_names[self.all_links[index][1]][self.all_links[index][2]])
 
+	def __setattr__(self, name, value):
+		if name == 'all_links':
+			self.link_len = len(value)
+		
+		self.__dict__[name] = value
+		
+
+
 	def __len__(self):  # fc=0B06
-		return self.link_len
+		return len(self.all_links)
 
 	def __iter__(self):  # fc=0B07
 		self.iter_dex = 0
@@ -2041,7 +2049,7 @@ class All_list_type:  # fc=0B00
 		else:
 			for i in range(len(all_links)):
 				self.add_link(all_links[i][0], all_links[i][1], Name[all_links[i][1]][all_links[i][2]])
-
+		print(self.link_len)
 	def clear_temp(self):  # fc=0B0F
 		""" Clear the temp list """
 		self.dir_height = [0 for _ in range(self.dir_len)]
@@ -2181,8 +2189,8 @@ class ProjectType_:  # fc=0P00
 		self.sub_dirs_count = 0  # number of sub directories named in the project data
 
 		### Project creation data
-		self.first_created = False  # Nsys.cdt_() of the time when the project was first created
-		self.last_update = False  # Nsys.cdt_() of the time when the project was last modified
+		self.first_created = '0'  # Nsys.cdt_() of the time when the project was first created
+		self.last_update = '0'  # Nsys.cdt_() of the time when the project was last modified
 		self.leacher_version = AboutApp._VERSION  # version of the scrapper
 		self.server_version = config.server_version  # version of the server while scrapping
 		self.user_ip = UserData.user_ip  # user's ip address
@@ -2208,7 +2216,7 @@ class ProjectType_:  # fc=0P00
 		self.sub_dirs = []  # list of sub directories on the project folder
 		self.sub_links = []  # needed in requests.get() reference value (fixes many issues)
 		self.all_list = All_list_type(10)  # assigning a list of data links, but duplicates will be cancelled in process
-		self.need_2_gen_names = False  # indicates if the names of files needs to be generated
+		self.need_2_gen_names = True  # indicates if the names of files needs to be generated
 
 		### directories
 		self.download_dir = None  # project directory
@@ -2258,6 +2266,14 @@ class ProjectType_:  # fc=0P00
 		Fsys.writer(self.Project + '.wllist', 'w', '', AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'w', '', AboutApp.leach_projects, '0M05')
 
+		# patch self.first_created issue
+		if self.first_created in ['0', 'False']:
+			self.first_created = Nsys.cdt_()
+
+		if self.last_update == 0:
+			self.last_update = Nsys.cdt_()
+
+
 		# write new data
 		Fsys.writer(self.Project + '.wllist', 'w', str(self.all_list.all_links), AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'w', 'main_link= "%s"\n' % self.main_link, AboutApp.leach_projects,
@@ -2294,11 +2310,11 @@ class ProjectType_:  # fc=0P00
 		            AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'a', 'first_created = "%s"\n' % str(self.first_created),
 		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', f'last_update = "{Nsys.cdt_()}"\n', 
+		Fsys.writer(self.Project + '.wlproj', 'a', f'last_update = "{self.last_update}"\n', 
 					AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'a', f'leacher_version = "{AboutApp._VERSION}"\n',
 		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', f'magic_number = "{UserData.user_ip["ip"]}"\n',
+		Fsys.writer(self.Project + '.wlproj', 'a', f'magic_number = "{Nsys.compressed_ip(UserData.user_ip["ip"])}"\n',
 		            AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'a', f'server_version = "{config.server_version}"\n',
 		            AboutApp.leach_projects, '0M05')
@@ -2414,13 +2430,11 @@ class ProjectType_:  # fc=0P00
 				if any(i for i in __all_names__):
 					self.all_list.all_names = __all_names__
 					del __all_names__
-				else:
-					self.need_2_gen_names = True
-			else:
-				self.need_2_gen_names = True
+				
+					self.need_2_gen_names = False
 
 			if 'file_formats' in loaded_data_set:
-				self.file_types = loaded_data_set['file_formats'][0]
+				self.file_types = loaded_data_set['file_formats']
 				self.file_exts = loaded_data_set['file_types']
 			else:
 				self.file_types = loaded_data_set['file_types']
@@ -2429,17 +2443,15 @@ class ProjectType_:  # fc=0P00
 				self.dl_threads = loaded_data_set['dl_threads']
 
 			if 'first_created' in loaded_data_set:
-				self.first_created = loaded_data_set['first_created']
-			else:
-				self.first_created = Nsys.cdt_()
+				_temp = loaded_data_set['first_created']
+				self.first_created = '0' if _temp in ['False', '0'] else _temp
 
 			if 'last_update' in loaded_data_set:
 				self.last_update = loaded_data_set['last_update']
-			else:
-				self.last_update = Nsys.cdt_()
 
 			if 'leacher_version' in loaded_data_set:
-				self.last_update = loaded_data_set['leacher_version']
+				self.leacer_version = loaded_data_set['leacher_version']
+			
 
 			if 'magic_number' in loaded_data_set:
 				self.last_user_ip = Nsys.dec_ip(loaded_data_set['magic_number'])
@@ -2503,7 +2515,7 @@ class ProjectType_:  # fc=0P00
 					pass
 			if proj_good:
 				self.all_list = All_list_type(len(self.sub_dirs))
-				self.need_2_gen_names = True
+				# self.need_2_gen_names = True
 
 		if self.file_types == Constants.old_img:
 			self.file_types = 'img'
@@ -2525,12 +2537,10 @@ class ProjectType_:  # fc=0P00
 		else:
 			try:
 				if self.need_2_gen_names:
-					print('gen')
+					print('/rh/Generating Names.../=/')
 					self.all_list.generate(eval(str(existing_data)))
 				else:
-					print('not gen')
 					self.all_list.all_links = eval(str(existing_data))
-				print('list found')
 				return True
 
 			except:
@@ -3088,8 +3098,7 @@ class ProjectType_:  # fc=0P00
 		with requests.Session() as session:
 
 			for i in list_range:
-				if self.break_all:
-					return 0
+				if self.break_all: return 0
 
 				failed = False
 
@@ -3098,19 +3107,27 @@ class ProjectType_:  # fc=0P00
 				try:
 					page = Netsys.get_page(links[i], cache=True, session=session, do_not_cache=True, return_none = False, raise_error=True)
 
+					
 					if not page:
 						self.show_generic_index_error(links[i], current_header, str(page.status_code) ,
 														'Page Offline')
 						failed = True
+						
+					if self.break_all: return 0
+
 				except NetErrors as e:
 					self.show_generic_index_error(links[i], current_header, e.__class__.__name__, str(e))
 					failed = True
 					# return
 				except Exception as e:
+					if self.break_all:
+						return 0
 					xprint('/r/Something went wrong/=/')
 					# traceback.print_exc()
 					# return
 
+				if self.break_all: return 0
+					
 				if failed:
 					self.indx_count += 1
 					self.print_index_result(links[i])
@@ -3120,8 +3137,8 @@ class ProjectType_:  # fc=0P00
 
 				if any(j in self.file_types for j in ('img', 'image', 'images', 'imgs', 'photo', 'photos')):
 					for img_link in self.list_writer_img(soup, links[i]):
-						if self.break_all:
-							return 0
+						
+						if self.break_all: return 0
 
 						if start_checker.search(str(img_link)) is not None:
 							name = Fsys.get_file_name(img_link, 'url')
@@ -3258,6 +3275,46 @@ class ProjectType_:  # fc=0P00
 						
 		if failed_del:
 			print(failed_del, '\n')
+
+
+
+	def print_project_info(self):  # fc=????
+		""" Print the project info """
+		align_format = "{0: <30}"
+		xprint('/ih/', align_format.format('Project name: '), '/=/', self.Project)
+		xprint('/ih/', align_format.format('Main URL: '), '/=/', self.main_link)
+		xprint('/ih/', align_format.format('Sub-link regex: '), '/=/', self.link_startswith)
+		xprint('/ih/', align_format.format('File-link regex: '), '/=/', self.file_starts)
+		xprint('/ih/', align_format.format('File format: '), '/=/', self.file_types)
+		if self.dimention==1:
+			_dimention = 'Only Main page'
+		elif self.dimention==3:
+			_dimention = 'Main page and sub-pages'
+		else:
+			_dimention = 'Only Sub-Pages'
+
+		xprint('/ih/', align_format.format('Search Dimensions: '), '/=/', f'({self.dimention})', _dimention)
+		xprint('/ih/', align_format.format('Will Overwrite: '), '/=/', self.overwrite_bool)
+		xprint('/ih/', align_format.format('Sort files A-Z: '), '/=/', self.file_to_sort)
+		xprint('/ih/', align_format.format('Sort folders A-Z: '), '/=/', self.dir_sorted, '\n')
+
+		xprint('/ih/', align_format.format('Sub-folders: '), '/=/', len(self.sub_dirs))
+		xprint('/ih/', align_format.format('Files count: '), '/=/', len(self.all_list), '/=/', '\n')
+
+		xprint('/ih/', align_format.format('Special Flags: '), '/=/', self.sp_flags)
+		xprint('/ih/', align_format.format('Special .ext: '), '/=/', self.sp_extension)
+		xprint('/ih/', align_format.format('Get HTML Tile: '), '/=/', self.get_html_title)
+		xprint('/ih/', align_format.format('First Created: '), '/=/', Nsys.dec_dt(self.first_created))
+		xprint('/ih/', align_format.format('Last Updated: '), '/=/', Nsys.dec_dt(self.last_update), '/=/', '\n')
+
+		xprint('/ih/', align_format.format('Leach Version: '), '/=/', self.leacher_version)
+		xprint('/ih/', align_format.format('Last used IP: '), '/=/', self.last_user_ip)
+		xprint('/ih/', align_format.format('Server Version: '), '/=/', self.server_version, '\n')
+
+		xprint('/ih/', align_format.format('DL done: '), '/=/', self.dl_done)
+		xprint('/ih/', align_format.format('Has Missing: '), '/=/', self.has_missing)
+
+
 
 
 
@@ -3906,6 +3963,8 @@ Index    SP project Names                   Works
 
   9    /y/?disable-download-limit/=/    disables download limit (sets "max dlim" to 0)
 
+  10   /y/?project-info/=/               shows project information
+
   -1   /g/?E-dl-T/=/                 same as 1
   -2   /g/?D-dl-T/=/                 same as 2
   -3   /g/?D-dl/=/                   same as 3
@@ -3915,7 +3974,7 @@ Index    SP project Names                   Works
   -7   /g/?c-p/=/                    same as 7
   -8   /g/?E-dlim/=/                 same as 8
   -9   /g/?D-dlim/=/                 same as 9
-
+  -10  /g/?i-p/=/                    same as 10
 ====================================================================
 
 /i/ Current settings /=/
@@ -3982,6 +4041,17 @@ Option               Value
 				P.load_data(p_name)
 				if P.list_good:
 					P.clean_unknown_files()
+				else:
+					print('Project not found')
+				return 0
+
+			
+			elif __command in ['?project-info', '?i-p']:
+				p_name = IOsys.safe_input("Enter the project name: ")
+				P = ProjectType_(p_name)
+				P.load_data(p_name)
+				if P.list_good:
+					P.print_project_info()
 				else:
 					print('Project not found')
 				return 0
@@ -4690,10 +4760,16 @@ if __name__ == '__main__':
 		xprint(Constants.hard_cancel)
 		import sys
 		sys.exit(0)
+
+		server_code.server_close()
+		server_code.shutdown()
 	except KeyboardInterrupt:
 		xprint(Constants.hard_cancel)
 		import sys
 		sys.exit(0)
+
+		server_code.server_close()
+		server_code.shutdown()
 	except Exception as e:
 		traceback.print_exc()
 		
@@ -4725,4 +4801,9 @@ if __name__ == '__main__':
 
 	if flush:
 		# re-open current python file
-		exec(open(os.path.abspath(__file__)).read(), globals())
+		
+		server_code.server_close()
+		server_code.shutdown()
+
+		exec(open(os.path.abspath(__file__), encoding='utf-8').read(), globals())
+		exit()
