@@ -24,11 +24,10 @@
 # import post_online
 print("LOADING ASSETS...")
 print(1)  # x
-requirements_all = ('requests', 'beautifulsoup4', 'natsort', 'google', 'rjsmin')
-requirements_win = ('pywin32-ctypes', 'comtypes', 'psutil', 'lxml', 'pywin32')
 
+from requirements import  requirements_all, requirements_win
 
-logger = True	# disable on publish
+logger = True
 
 # importing required packages
 
@@ -48,13 +47,15 @@ if os_name == 'Windows':
 	import console_mod     #fc=2000
 	console_mod.enable_color()
 
-from print_text import xprint  # fc=3000
+from print_text import XprintClass, xprint  # fc=3000
 
 
 xprint('/=/', end='')
 
 try:
-	from constants import *  # fc=4000
+	from assets import *
+	
+
 	import ctypes
 
 	def is_tool(name):  #fc=0000 xx
@@ -132,7 +133,7 @@ try:
 	from shutil import rmtree as rmdir, copyfile, move
 	from os.path import exists as os_exists, isdir as os_isdir, isfile as os_isfile, basename as os_basename, dirname as os_dirname, realpath as os_realpath
 	from zipfile import ZipFile, BadZipFile
-	import io	###################################
+	###################################
 
 
 
@@ -158,10 +159,10 @@ try:
 
 		if os_name == 'Windows': import mplay4
 
-		has_all_libs = True
+		config.has_all_libs = True
 
 	except:
-		has_all_libs = False
+		config.has_all_libs = False
 
 
 	from headers_file import header_list
@@ -171,10 +172,9 @@ try:
 	from collections import Counter
 	from functools import reduce as functools_reduce
 	from operator import iconcat as operator_iconcat
-	
-	import json
 
 	import dig_info  # fc=6000
+	from exceptions import * # fc=xxxx
 
 	##########################################
 except EOFError:
@@ -192,274 +192,20 @@ len = len
 range = range
 ##########################################
 
-process_id = randint(2003, 9999)
+
 # a process ID to identify use multiple windows in the same time from log
+
+
+
+
 boss = 0
 server_launcher = Process()
 
-#==================================================#
-#                ERROR CLASS                       #
-#--------------------------------------------------#
-class LeachUnknownError(Exception):                #
-	pass                                           #
-												   #
-class LeachKnownError(Exception):                  #
-	pass                                           #
-												   #
-class LeachICancelError(Exception):                #
-	pass                                           #
-												   #
-class LeachPermissionError(Exception):             #
-	pass                                           #
-												   #
-class LeachNetworkError(Exception):                #
-	pass                                           #
-												   #
-class LeachCorruptionError(Exception):             #
-	pass                                           #
-												   #
-class Error404(Exception): 						   #
-	pass                                           #
-#                                                  #
-####################################################
-
+#AboutApp # fc=0100
 
 print(2) # x
-class AboutApp_:     #fc=A000
-	""" Contains Information about the app and verion details"""
-
-	_VERSION = '7.001'
-	_Vcode = '007001'
-	_APP_NAME = 'Web-Leach'
-	_APP_DESC = 'Web-Leach is a simple python script to download files from web'
-	_APP_AUTHOR = 'Ratul Hasan'
-	_APP_AUTHOR_EMAIL = 'wwwqweasd147[at]gmail[dot]com'
-	_APP_URL = ''
-	_APP_VERSION = _VERSION
-	_APP_PATH = os_realpath(__file__)
-	_APP_ICON_PATH = 'web-leach.ico'
-	_APP_LICENSE = 'MIT'
-	_APP_LICENSE_URL = ''
-	_APP_COPYRIGHT = 'Copyright (c) 2016, Ratul Hasan'
-	_APP_COPYRIGHT_URL = ''
-	_APP_REQUIREMENTS = requirements_all
-	_APP_REQUIREMENTS_WIN = requirements_win
-	_APP_REQUIREMENTS_MAC = []
-	_APP_REQUIREMENTS_LINUX = []
-
-	running_os = os_name
-	server_version = 'UNREACHED'
-
-	cloud_data_link_global = 'https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global_6.txt'
-	cloud_data_link = 'https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20server%20v6.00000.txt'
-	cloud_html_temp_link = 'https://raw.githack.com/RaSan147/Web-Leach_pub/main/page_template/wl-page-v2.html'
-	cloud_html_temp_link_proxy = 'https://gitcdn.link/cdn/RaSan147/Web-Leach_pub/main/page_template/wl-page-v1.html'
-
-	g_mode = None
-
-	leach_projects = 'data/leach_projects/'
-	# location to store project data
-
-	download_dir = "Download_projects/"
-	# download directory
-	thread_data_dir = "data/leach_projects/"  # + project name
-	# location to store the thread data
-	data_dir = "data/"
-	# location to store app data
-	temp_dir = data_dir + ".temp/"
-	# location to store temp data
-	cached_webpages_dir = data_dir + ".cached_webpages/"
 
 
-AboutApp = AboutApp_()
-
-
-class DefaultConfig:  # fc=0200
-	""" Default configuration to load up on each start"""
-
-	disable_lib_check = Constants.DEFAULT_DISABLE_LIB_CHECK
-	# if True, the installed lib check will be skipped to speed up
-	has_all_libs = has_all_libs
-	# this is True when all libs are installed
-	ara_ara = False
-	# to control parody noise
-	no_log = False
-	# to stop logging
-	death = False
-	dying = False
-
-	dir_limit = 150
-	file_limit = 120
-
-	sp_arg_flag = {'disable dl cancel': False,
-	               'disable dl get': False,
-	               'ara ara': False if ara_ara is None else ara_ara,
-	               'no log': False if no_log is None else no_log,
-	               'no browser': False,
-	               'max dlim': 0,  # in kbps
-	               'chunk_size': 8192,  # in Bytes
-	               }
-	# to control the downloader
-
-	death_talk = 0
-
-	mode_emoji = {
-		'online': "🌐",
-		'offline': "⚠"
-	}
-	# emojis for different states
-
-	running_port = None
-	# port number of running server by app
-	server_running = False
-	# is the server running in this app
-	server_status = None
-	# is the port being used
-	# True : by this app/ another instance of this app
-	# False: by other app, port locked
-	# None : Ready to be used
-	run_mod = None
-	# is running online or offline
-
-
-
-
-
-
-class AppConfig_(DefaultConfig):     #fc=0300
-	""" Configuration to load up on each start
-	also initializes the default when needed
-
-	loads and contains update log, user_list, server info
-	"""
-
-	def __init__(self):  # fc=0301
-		""" Sets app config"""
-
-		self.immutable_config()
-		# self.__default__()
-
-	def immutable_config(self):  # fc=0302
-		""" Sets immutable config
-		for one time set
-		*won't change on self.__default__()"""
-		self.__update__G = 'pass'
-		self.__update__L = 'pass'
-		self.user_list = ['bec6113e5eca1d00da8af7027a2b1b070d85b5ea', 'eb23efbb267893b699389ae74854547979d265bd']
-		self.g_mode = None
-
-		self.server_version = "0.6.0.0"
-
-		self._latest_version = '5.5'
-		self._latest_link = 'https://rawcdn.githack.com/Ratulhasan14789/Web-Leach_pub/ee5bcde7b25e1655e1dda2803ab002fdad982170/release/CLI/Web%20leach%200.5.5.4.zip'
-
-		self._latest_hash = '97b804fb717c0ceee89d1825b79c5ade'
-		self._latest_size = "7.4mb"
-		self._latest_filename = 'Web leach 0.5.5.4'
-		self._latest_check_exe_hash = True
-		self._latest_check_zip_hash = True
-		self._latest_exe_hash = self._latest_hash
-		self._latest_zip_hash = '42bc93d2a66bf24bf40cb211bbb52bd6'
-
-	def __default__(self):  # fc=0303
-		""" Import config from default when needed"""
-
-		for i in DefaultConfig.__dict__:
-			if i[0] != '__':
-				self.__dict__[i] = DefaultConfig.__dict__[i]
-
-	def set_default(self, name):  # fc=0304
-		""" Change the default config for specific name
-		returns to the usual value on re-open
-
-		name: Name of config variable
-		"""
-		self.__dict__[name] = DefaultConfig.__dict__[name]
-
-	def set_config(self, name: str, value):  # fc=0305
-		"""Sets config for specific name
-
-		name: Name of config variable
-		value: Variable value
-
-		returns: Old value of config variable
-		"""
-
-		if hasattr(self, name):
-			old = getattr(self, name)
-		setattr(self, name, value)
-
-		return old
-
-	def god_mode(self, missing=None):  # fc=0306
-		""" Downloads and executes cloud based scrips and also
-			saves it for offline usage. Offline is only allowed if user
-			has used online mode at least once
-
-			missing: if a file is missing in runtime will either download or stop that action on failure
-					1: who_r_u.mp3
-					2: wl-page.html
-					3: updateL.ext
-					4: updateG.ext
-			
-			TODO: make offline available  *idk how works offline* figured it out ✌🏻"""
-		if missing is None:
-			missing = [1, 2, 3, 4]
-		if isinstance(missing, int):
-			missing = [missing]
-
-
-		if os_isdir(AboutApp.data_dir + 'projects'):
-			rename(AboutApp.data_dir + 'projects', AboutApp.leach_projects)
-		if os_isdir('./projects'):
-			rename('./projects', AboutApp.download_dir)
-
-		message = "failed initializing f()"
-		err_print = True
-		try:
-			if 1 in missing:
-				if os_name == 'Windows':
-					message = "was DLing 'who_r_u.mp3'"
-					link = Constants.who_r_u
-					out = Netsys.link_downloader(link, AboutApp.temp_dir, 'who_r_u.mp3', '0306x1', '0306x2', False, err_print=err_print)
-					err_print = out and err_print # if out is true then it will print the message on next error since there was no print ins the previous one
-
-			if 2 in missing:
-				message = "was DLing 'wl-page.html'"
-				link = AboutApp.cloud_html_temp_link
-				out = Netsys.link_downloader(link, AboutApp.temp_dir, 'wl-page.html', '0306x7', '0306x8', True, err_print=err_print, proxy=[AboutApp.cloud_html_temp_link_proxy,])
-				err_print = out and err_print
-
-			if 3 in missing:
-				message = "was DLing 'updateL.ext'"
-				link = AboutApp.cloud_data_link
-				out = Netsys.link_downloader(link, AboutApp.temp_dir, 'updateL.ext', '0306x3', '0306x4', True, err_print=err_print)
-				if out:
-					config.__update__L = Fsys.reader(AboutApp.temp_dir + 'updateL.ext')
-					exec(rcrypto.decrypt(config.__update__L, "lock").strip(), globals())
-				
-				err_print = out and err_print
-
-			if 4 in missing:
-				message = "was DLing 'updateG.ext'"
-				link = AboutApp.cloud_data_link_global
-				out = Netsys.link_downloader(link, AboutApp.temp_dir, 'updateG.ext', '0306x5', '0306x6', True, err_print=err_print)
-				if out:
-					config.__update__G = Fsys.reader(AboutApp.temp_dir + 'updateG.ext')
-					exec(rcrypto.decrypt(config.__update__G, "lock").strip(), globals())
-				err_print = out and err_print
-
-			return 'online' if err_print else 'offline'
-
-		except Exception as e:
-			print(rcrypto.decrypt(Fsys.reader(AboutApp.temp_dir + 'updateL.ext'), "lock").strip())
-			print(e.__class__.__name__, ": Unknown error occurred. Error code 0306x0\nPlease inform the author.")
-			leach_logger(log(["0306x0", Netsys.hdr(Netsys.current_header, '0306'), link, e.__class__.__name__, e, message]), 'lock')
-			time.sleep(5)
-			exit(0)
-
-
-config = AppConfig_()
 
 print(3)  # x
 
@@ -545,166 +291,6 @@ UserData = UserData_()
 print(4)  # x
 
 
-class IOsys_:  # fc=0500
-	""" Contains Input and Output functions """
-
-	def clear_screen(self):  # fc=0501 v
-		"""clears terminal output screen"""
-
-		if os_name == "Windows":
-			os_system('cls')
-		else:
-			os_system('clear')
-
-	def delete_last_line(self, lines=1):  # fc=0502 v
-		"""Use this function to delete the last line in the STDOUT
-
-		args:
-		-----
-			lines: total number of lines *1
-				0 to delete current line"""
-
-		# return 0
-		if lines == 0:
-			sys_write('\n')
-			self.delete_last_line()
-			return 0
-
-		for _ in range(lines):
-			# cursor up one line
-			sys_write('\x1b[1A')
-
-			# delete last line
-			sys_write('\x1b[2K')
-
-	def leach_logger(self, io, key='lock'):  # fc=0503 v
-		"""saves encrypted logger data to file\n
-		(new in 5.3_class: auto adds dt_() at the beginning)
-
-		args:
-		-----
-			io: the log message\n
-			key: salt text"""
-
-		if config.sp_arg_flag['no log']:
-			return None
-		try:
-			while True:
-				try:
-					try:
-						_key = "Asuna"
-						salt = hashlib_sha1(key.encode()).hexdigest()[:-6] + AboutApp._Vcode
-
-						Fsys.writer('userlog.leach', 'ab', rcrypto.encrypt(salt + ('%s||'%Nsys.compressed_dt()) + str(process_id) + '||' + html_escape(io) + '||', _key).encode('utf-8') + b'\n', 'data', '00008')
-						break
-					except EOFError:
-						pass
-					except KeyboardInterrupt:
-						pass
-				except EOFError:
-					pass
-				except KeyboardInterrupt:
-					pass
-
-		except EOFError:
-			self.leach_logger(io, key='lock')
-		except KeyboardInterrupt:
-			self.leach_logger(io, key='lock')
-
-	def safe_input(self, msg='', i_func=input, o_func=xprint,
-	               on_error=LeachICancelError):  # fc=0504 v
-		"""gets user input and returns str
-
-		args:
-		-----
-			msg: the message to show for asking input *`empty string`
-			i_func: the function used for input *`input()`
-			o_func: the function used for msg print *`xprint()`
-			on_error: What to do when `^C` pressed *`raise LeachICancelError` or `return None`"""
-
-		o_func(msg, end='')
-		try:
-			try:
-				try:
-					box = i_func()
-					return box
-				except EOFError:
-					if on_error == LeachICancelError:
-						raise LeachICancelError
-					else:
-						return on_error
-				except KeyboardInterrupt:
-					raise LeachICancelError
-				except LeachICancelError:
-					# leach_logger('000||0000F||~||~||~||input exit code L&infin;ping for unknown reason')
-					exit(0)
-			except EOFError:
-				if on_error == LeachICancelError:
-					raise LeachICancelError
-				else:
-					return on_error
-			except KeyboardInterrupt:
-				if on_error == LeachICancelError:
-					raise LeachICancelError
-				else:
-					return on_error
-		except EOFError:
-			if on_error == LeachICancelError:
-				raise LeachICancelError
-			else:
-				return on_error
-		except KeyboardInterrupt:
-			if on_error == LeachICancelError:
-				raise LeachICancelError
-			else:
-				return on_error
-
-	def asker(self, out='', default=None, True_False=(True, False),
-	          extra_opt=tuple(), extra_return=tuple(),
-	          i_func=input, o_func=xprint, on_error=LeachICancelError,
-	          condERR=Constants.condERR, no_bool=False):  # fc=0505 v
-		"""asks for yes no or equivalent inputs
-
-		args:
-		-----
-			out: `xprint` text to ask tha question *`empty string`
-			default: default output for empty response *`None`
-			True_False: returning data instead of True and False *`(True, False)`
-			extra_opt: Add additional options with Yeses and Nos *must be array of single options*
-			extra_return: Returns output according to `extra_ops`
-			i_func: the function used for input *`input()`
-			o_func: the function used for msg print *`xprint()`
-			on_error: What to do when `^C` pressed *`raise LeachICancelError` or `return None`
-			no_bool: won't take yes no as input [extras required] *`False`"""
-
-		if len(extra_opt) != len(extra_return):
-			xprint('/r/Additional options and Additional return data don\'t have equal length/=/')
-			raise LeachKnownError
-
-		if no_bool:
-			if len(extra_opt) < 1:
-				xprint('/r/With no_bool arg, you must give at least 1 extra option [extra_arg & extra_return]/=/')
-				raise LeachKnownError
-
-		Ques2 = self.safe_input(out, i_func, o_func, on_error).lower()
-		if default is not None and Ques2 == '':
-			return default
-		# Ques2 = Ques2
-		while Ques2 not in (tuple() if no_bool else Constants.cond) + Nsys.flatten_array(extra_opt, tuple):
-			Ques2 = self.safe_input(condERR, i_func, o_func, on_error).lower()
-		# Ques2 = Ques2
-
-		if not no_bool and Ques2 in Constants.cond:
-			if Ques2 in Constants.yes:
-				return True_False[0]
-			else:
-				return True_False[1]
-		else:
-			return extra_return[extra_opt.index(Ques2)]
-
-
-IOsys = IOsys_()
-
 leach_logger = IOsys.leach_logger
 
 
@@ -718,288 +304,6 @@ def on_exit():  # fc=XXXX
 
 print(5)  # x
 
-
-class Fsys_:  # fc=0600
-
-	def get_sep(self, path):  # fc=0601
-		"""returns the separator of the path"""
-		if '/' in path:
-			return '/'
-		elif '\\' in path:
-			return '\\'
-		else:
-			return os.sep
-
-	def loc(self, path, _os_name='Linux'):  # fc=0602 v
-		"""to fix dir problem based on os
-
-		args:
-		-----
-			x: directory
-			os_name: Os name *Linux"""
-
-		if _os_name == 'Windows':
-			return path.replace('/', '\\')
-		else:
-			return path.replace('\\', '/')
-
-	def get_file_name(self, directory, mode='dir'):  # fc=0603 v
-		"""takes a file directory and returns the last last part of the dir (can be file or folder)
-
-		args:
-		-----
-			directory: the file directory, only absolute path to support multiple os
-			mode: url or file directory
-		"""
-
-		if isinstance(directory, bytes): directory = directory.decode()
-		if mode == 'url':
-			extra_removed = Netsys.gen_link_facts(directory)["path"]
-			# print(extra_removed)
-			if extra_removed[-1] == "/":
-				extra_removed = extra_removed[:-1]
-			if extra_removed == '':
-				name = Netsys.gen_link_facts(directory)["host"]
-			name = extra_removed.rpartition("/")[2]
-
-			name = Datasys.trans_str(html_unescape(name), {'/\\|:*><?': '-',
-			                                               '"': "'",
-			                                               "\n\t\r": " "})
-			return os_basename(name)
-		elif mode == 'dir':
-			return os_basename(directory)
-		else:
-			raise ValueError
-
-	def get_file_ext(self, directory, mode='dir', no_format='noformat'):  # fc=0604 v
-		"""to get the extension of a file directory
-
-		args:
-		-----
-			directory: file directory relative or direct
-			mode: url or file directory ** need to work with url
-			no_format: returning format if no file extension was detected *noformat"""
-
-		temp = self.get_file_name(directory, mode).split('.')
-		if len(temp) == 1:
-			return no_format
-		else:
-			return temp[-1]
-
-	def get_dir(self, directory, mode='dir'):  # fc=0605 v
-		"""takes a file directory and returns the last last part of the dir (can be file or folder)
-
-		args:
-		-----
-			directory: the file directory, only absolute path to support multiple os
-			mode: url or file directory (os based)
-		"""
-
-		if mode == 'url':
-			extra_removed = Netsys.gen_link_facts(directory)['path']
-
-			dirs = extra_removed.split('/')
-			if dirs == []:
-				return Netsys.gen_link_facts(directory)['host']
-			while len(dirs) != 0 and dirs[-1] == '':
-				dirs.pop()
-
-			if dirs == []:
-				return Netsys.gen_link_facts(directory)['host']
-
-			directory = Datasys.trans_str(parse.unquote(html_unescape(dirs[-1])), {'/\\|:*><?': '-', '"': "'"})
-
-			return directory
-		elif mode == 'dir':
-			if os_basename(directory) == '':
-				return os_basename(os_dirname(directory))
-			else:
-				return os_basename(directory)
-		else:
-			raise ValueError
-
-	def go_prev_dir(self, directory, preserve_sep=False):  # fc=0606 v
-		"""returns the previous path str of web link or directory
-		warning: returns only in linux directory format
-		if preserve_sep is True, it will preserve the separator of the directory
-
-		directory: the file directory, only absolute path to support multiple os
-		preserve_sep: if True, it will preserve the separator of the directory
-		"""
-
-		if not preserve_sep:
-			directory = self.loc(directory, 'Linux')
-
-		sep = self.get_sep(directory)
-
-		if directory.endswith(sep):
-			return sep.join(directory[:-1].split(sep)[:-2]) + sep
-		else:
-			return sep.join(directory.split(sep)[:-2]) + sep
-
-	def reader(self, direc, read_mode='r', ignore_error=False, output=None,
-	           encoding='utf-8', f_code='?????', on_missing=None,
-	           ignore_missing_log=False):  # fc=0607 v
-		"""reads file from given directory. If NOT found, returns `None`
-
-		args:
-		-----
-			direc: file directory
-			read_mode: `r` or `rb` *`r`
-			ignore_error: ignores character encoding errors *`False`
-			output: output type `bin`/`str`/`None` to auto detect *`None`
-			encoding: read encoding charset *`utf-8`
-			func_code: calling function *`????`
-		"""
-
-		if type(read_mode) != str:
-			xprint("/rh/Invalid read type./yh/ Mode must be a string data/=/")
-			leach_logger(log(['0607x3', f_code, direc, output, encoding, ignore_error, on_missing]))
-			raise TypeError
-		if read_mode in ('w', 'wb', 'a', 'ab', 'x', 'xb'):
-			xprint("/r/Invaid read mode:/wh/ %s/=//y/ is not a valid read mode.\nTry using 'r' or 'rb' based on your need/=/")
-			leach_logger(log(['0607x4',f_code, direc, output, encoding, ignore_error, on_missing]))
-			raise LeachKnownError
-		if 'b' in read_mode:
-			read_mode = 'rb'
-
-		else:
-			read_mode = 'r'
-
-		if (not os_isfile(self.loc(direc))):
-			if (not ignore_missing_log):
-				print(self.loc(direc), 'NOT found to read. Error code: 0607x1')
-				leach_logger(log(['0607x1', f_code, direc, output, encoding, ignore_error, on_missing]))
-			return on_missing
-
-		try:
-			with open(self.loc(direc), read_mode, encoding=None if 'b' in read_mode else encoding) as f:
-				out = f.read()
-		except PermissionError:
-			if (not ignore_missing_log):
-				print(self.loc(direc), 'failed to read due to PermissionError. Error code: 0607x2')
-				leach_logger(log(['0607x2', f_code, direc, output, encoding, ignore_error, on_missing]))
-			return on_missing
-		if output is None:
-			if read_mode == 'r':
-				output = 'str'
-			else:
-				output = 'bin'
-		if ignore_error:
-			out = Datasys.remove_non_uni(out, '00013', output)
-
-		else:
-			if output == 'str' and read_mode == 'rb':
-				try:
-					out = out.decode()
-				except Exception as e:
-					xprint(f"/r/failed to decode /hui/{self.loc(direc)}/=//y/ to the specified character encoding. \nError code: 0607x5")
-					leach_logger(log(['0607x3',f_code, direc, output, encoding, ignore_error, on_missing]))
-					raise e
-			elif output == 'bin' and read_mode == 'r':
-				try:
-					out = out.encode(encoding)
-				except Exception as e:
-					xprint(self.loc(direc), 'failed to encode to the specified character encoding. \nError code: 0607x5')
-					leach_logger(log(['0607x4',f_code, direc, output, encoding, ignore_error, on_missing]))
-					raise e
-
-		return out
-
-	def writer(self, fname, mode, data, direc=None, f_code='????',
-	           encoding='utf-8'):  # fc=0608 v
-		"""Writing on a file
-
-		args:
-		-----
-			fname: filename
-			mode: write mode (w, wb, a, ab)
-			data: data to write
-			direc: directory of the file, empty for current dir *None
-			func_code: (str) code of the running func *empty string
-			encoding: if encoding needs to be specified (only str, not binary data) *utf-8"""
-
-		def write(location):
-			if 'b' not in mode:
-				with open(location, mode, encoding=encoding) as file:
-					file.write(data)
-			else:
-				with open(location, mode) as file:
-					file.write(data)
-
-		if type(mode) != str:
-			xprint("\n/rh/Invalid write type./yh/ Mode must be a string data/=/Error code 0608x%s\n" % f_code)
-			raise TypeError
-		if mode not in ('w', 'wb', 'a', 'ab', 'r+', 'rb+', 'w+', 'wb+', 'a+', 'ab+'):
-			xprint('\n/r/Invalid mode\nMust be a Writable Mode/=/Error code 0608x%s\n' % f_code)
-			raise LeachKnownError
-
-		if not isinstance(data, (str, bytes)):
-			xprint("/rh/Invalid data type./yh/ Data must be a string or binary data/=/")
-			leach_logger(log(['0608x3', f_code, direc, fname, mode, data, encoding]))
-			raise TypeError
-		mode = mode.replace('+', '').replace('r', 'w')
-
-		if any(i in fname for i in ('/\\|:*"><?')):
-			# these characters are forbidden to use in file or folder Names
-			leach_logger(log(['0608x1', f_code, fname, direc, mode, type(data), encoding]))
-			fname = Datasys.trans_str(fname, {'/\\|:*><?': '-', '"': "'"})
-
-		if direc is None or direc == '':
-			direc = './'
-		# directory and file names are auto stripped by OS
-		# or else shitty problems occurs
-
-		direc = direc.strip()
-		fname = fname.strip()
-
-		try:
-			if direc is None:
-				locs = './'
-				write(fname)
-			else:
-				locs = self.loc(direc, 'Linux')
-				if any(i in locs for i in ('\\|:*"><?')):
-					leach_logger(log(['0608x1', f_code, fname, direc, mode, type(data), encoding]))
-					locs = Datasys.trans_str(locs, {'\\|:*><?': '-', '"': "'"})
-
-				if not os_isdir(locs):
-					# creates the directory, then write the file
-					try:
-						makedirs(locs, exist_ok=True)
-					except FileExistsError:
-						pass
-					except Exception as e:
-						if e.__class__.__name__ == "PermissionError":
-							_temp = ''
-							_temp2 = locs.split('/')
-							_temp3 = 0
-							while True:
-								_temp += _temp2[_temp3] + '/'
-								if not os_isdir(_temp): break
-							leach_logger('||'.join(map(str,['0608x2', f_code, fname, direc, mode, type(data), encoding])))
-							del _temp, _temp2, _temp3
-						raise e
-				if locs.endswith('/'):
-					direc = self.loc(locs + fname)
-				else:
-					direc = self.loc(locs + '/' + fname)
-
-				write(direc)
-
-		except Exception as e:
-			if logger: traceback.print_exc()
-			if e.__class__.__name__ == "PermissionError":
-				xprint('/r/', e.__class__.__name__, "occurred while writing", fname, 'in', 'current directory' if direc is None else direc, '/y/\nPlease inform the author. Error code: %sx101/=/' % f_code)
-				leach_logger('||'.join(map(str,['0608xP', f_code, fname, direc, mode, type(data), encoding])))
-				raise LeachPermissionError
-			else:
-				leach_logger('||'.join(map(str,['0608x0', f_code, fname, direc, mode, type(data), encoding, e.__class__.__name__, e])))
-
-				xprint('/r/', e.__class__.__name__, "occurred while writing", fname, 'in', 'current directory' if direc is None else direc, '/y/\nPlease inform the author. Error code: 00008x' + f_code, '/=/')
-				raise e
-
-Fsys = Fsys_()
 
 print(6)  # x
 
@@ -1198,571 +502,11 @@ NetErrors = (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEnc
 print(8)  # x
 
 
-class Netsys_:  # fc=0800
-	"""Network system functions"""
-
-	def __init__(self):  # fc=0801 v
-		""" initializes important variables """
-		self.link_extractor = re_compile( r'^(?P<noQuery>(?P<homepage>(?P<schema>((?P<scheme>[^:/?#]+):(?=//))?(//)?)(((?P<login>[^:/]+)(?::(?P<password>[^@]+)?)?@)?(?P<host>[^@/?#:]*)(?::(?P<port>\d+)?)?)?)?(?P<path>[^?#]*))(\?(?P<query>[^#]*))?(#(?P<fragment>.*))?')  # compiled regex tool for getting homepage
-		self.current_header = ''
-		# https://regex101.com/r/UKWPmt/1
-		# noQuery: https://regex101.com/r/UKWPmt/1
-		# homepage: https://regex101.com
-		# schema: https://
-		# scheme: https
-		# login:
-		# password:
-		# host: regex101.com
-		# port:
-		# path: /r/UKWPmt/1
-		# query: ? part
-		# fragment: # part
-
-	def header_(self, referer=None):  # fc=0802 v
-		"""returns a random header from header_list for requests lib
-		
-		referer: if not none, adds referer to the header"""
-		header = {'User-Agent': random_choice(header_list)}
-		if referer:
-			header['Referer'] = referer
-		return header
-
-	def hdr(self, header, f_code='????'):  # fc=0803 v
-		"""returns the index of a header
-
-		args:
-		-----
-			header: header dict
-			f_code: function caller code"""
-
-		try:
-			return str(header_list.index(header['User-Agent']))
-		except ValueError:
-			xprint("/y/DATA CORRUPTION found\nError code: 00009x" + f_code, '/=/')
-
-			leach_logger(log(['0803x1', f_code, header]))
-			return str((-1, header))
-
-		except Exception as e:
-			xprint("/y/Some error occurred caused, possible cause: DATA CORRUPTION\nError code: 00009x" + f_code, '/=/')
-
-			leach_logger(log(['0803x1', f_code, header, e.__class__.__name__, e]))
-			return str((-1, header))
-
-	def get_link(self, i, current_link, homepage=None):  # fc=0804 v
-		"""Gets permanent link from relative link.
-
-		Args:
-		-----
-			i : relative link
-			current_link : the link used for getting links inside the page
-			homepage : the homepage of the current_link
-
-		Returns:
-		--------
-			str: permanent link
-		"""
-
-		if homepage is None:
-			homepage = self.get_homepage(current_link)
-
-		if i.startswith('#'): i = current_link
-		if i.startswith('//'):
-			if current_link.startswith('https'):
-				i = 'https:' + i
-			else:
-				scheme = self.gen_link_facts(homepage)['scheme']
-				if scheme:
-					i = scheme
-				else:
-					i = 'http:' + i
-
-		if i.startswith('../'):
-			_temp = current_link
-			while i.startswith('../'):
-				_temp = Fsys.go_prev_dir(_temp)
-				i = i.replace('../', '', 1)
-			i = _temp + i
-
-		if i.startswith('/'):
-			i = homepage + i
-
-		i = i.partition('#')[0]  # removes the fragment
-
-		if '//' not in i:
-			temp = homepage
-			if temp.endswith('/'):
-				if i.startswith('/'):
-					i = temp + i[1:]
-				else:
-					i = temp + i
-			else:
-				if i.startswith('/'):
-					i = temp + i
-				else:
-					i = temp + '/' + i
-
-		return i
-
-	def get_homepage(self, link):  # fc=0805
-		"""Gets the homepage of a link
-
-		Args:
-		-----
-			link : link to get homepage from
-		"""
-
-		x = self.gen_link_facts(link)
-
-		return x['homepage']
-
-	def check_internet(self, link, f_code='????', timeout=None, no_log=False):  # fc=0806
-		"""Check if the connection is available or not
-
-		args:
-		-----
-			link: link to check for connection status
-			f_code: function caller id
-			timeout: set timeout if not none
-			"""
-
-		current_header = self.header_()
-		try:
-			if timeout is None:
-				r = requests.head(link, headers=current_header)
-			else:
-				r = requests.head(link, headers=current_header, timeout=timeout)
-
-			if r:
-				return True
-			else:
-				if not no_log:
-					leach_logger('||'.join(map(str,['0806x2', f_code, link, self.hdr(current_header, '0806'), timeout, r.status_code])))
-		except NetErrors as e:
-			if not no_log:
-				leach_logger('||'.join(map(str,['0806x2', f_code, link, self.hdr(current_header, '0806'), timeout, e.__class__.__name__, e])))
-			return False
-		except EOFError:
-			return False
-		except KeyboardInterrupt:
-			return False
-
-	def check_network_available(self):
-		"""check if the computer has internet access"""
-
-		current_header = self.header_()
-
-		try:
-			r = requests.head('https://www.google.com', headers = current_header)
-			if not r:
-				time.sleep(2)
-				r - requests.head('https://www.bing.com', headers = self.header_())
-
-			return True
-
-		except NetErrors:
-			return False
-
-
-
-
-
-	def run_server(self, port, cd=None, f_code='????'):  # fc=0807 v
-		"""Runs localhost server using python.\n
-		the I/O is suppressed
-
-		args:
-		-----
-			port : PORT number\n
-			cd : the directory to host
-			f_code: caller id"""
-
-		if cd is None:
-			cd = '.'
-
-		if any(i in cd for i in '\\|:*"><?'):  # there characters are forbidden
-			xprint("\n/y/Invalid localhost directory. Please inform the author.\nError code: 0000Bx2/=/")
-			leach_logger(log(['0807x1', f_code, port, cd]))
-			time.sleep(5)
-			os_exit(1)
-
-		if not os_isdir(cd):  # invalid missing directory
-			xprint('\n/y/' + cd, "not found!\nPlease inform the author\nError code: 0000Bx3/=/")
-			leach_logger(log(['0807x2', f_code, port, cd]))
-			time.sleep(5)
-			os_exit(1)
-
-		try:
-			if config.server_status in (False, None):
-				if cd != '.':
-					return _server001_.run_server(port, cd)
-				else:
-					return _server001_.run_server(port)
-			else:
-				return 0
-		except EOFError:
-			pass
-		except KeyboardInterrupt:
-			pass
-		except OSError: #TODO: add note in files
-			traceback.printexec()
-			leach_logger(log(['0807x-1', f_code, port, cd]))
-
-	def run_server_t(self, server_status, cd='.'):  # fc=0808 v
-		"""Runs server in a thread and returns the thread to server_code
-
-		args:
-		-----
-			server_status: if its used by web leach or other program:
-				`True` -> `web_leach`
-				`None` -> none
-				`False`-> someone
-			cd: Directory to run the server. *`current dir`
-		"""
-
-		global server_code
-
-		if config.server_status:
-			return
-
-		port = config.running_port  # user specified port or proxy port
-
-		_t = self.run_server(port=port, cd=cd)
-		if _t != 0:
-			server_code = None
-			server_code = _t
-		else:
-			return 0
-		try:
-			config.server_running = True
-			server_code.serve_forever()
-
-		except OSError:
-			exit()
-		except:
-			pass
-
-	def run_in_local_server(self, port, host_dir=''):  # fc=0809
-		"""opens a directory or a file in localhost server using browser
-
-		args:
-		-----
-			port : port number
-			host_dir : desired file or folder directory"""
-
-		if config.sp_arg_flag['no browser']: return 0
-
-		webbrowser.open_new_tab('http://localhost:%i/%s' % (port, host_dir))
-
-	def check_server(self, link, f_code, timeout=None):  # fc=080A
-		"""Checks if localhost server is running perfectly or the port is occupied
-
-		link: site link with port [adds /root?response on request]
-		f_code: caller id
-		timeout: request timeout
-		"""
-
-		try:
-			response = requests.get(link + '/root?response')
-			if response:
-				if response.content.startswith(b'Web-leach'):
-					return True  # web-leach server
-				else:
-					leach_logger(log(['080Ax2', link, f_code, response.status_code, response.text[:20]]))
-					return False  # not web-leach server or older server
-
-			else:
-				leach_logger(log(['080Ax3', link, f_code, response.status_code]))
-				return False  # not web-leach server
-
-		except (requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout, requests.exceptions.SSLError,
-		        urllib3.exceptions.SSLError) as e:
-			leach_logger(log(['080Ax1', link, f_code, e.__class__.__name__, e]))
-			return 2
-
-		except requests.exceptions.ConnectionError:
-			return None  # port is open
-
-		except EOFError:
-			return 2
-		except KeyboardInterrupt:
-			return 2
-
-		except Exception as e:
-			leach_logger(log(['080Ax0', link, f_code, e.__class__.__name__, e]))
-			return 2
-
-	def remove_noscript(self, content):  # fc=080B
-		"""Removes <noscript> contents from html to fool my app
-
-		content: HTML content returned by requests.get().content or requests.get().text"""
-		if isinstance(content, bytes):
-			if b'<noscript>' in content:
-				return re_sub(b"(?i)(?:<noscript>)(?:.|\n)*?(?:<\/noscript>)", b'', content)
-		elif isinstance(content, str):
-			if '<noscript>' in content:
-				return re_sub("(?i)(?:<noscript>)(?:.|\n)*?(?:<\/noscript>)", '', content)
-
-		return content
-
-	def gen_link_facts(self, link):  # fc=080C
-		"""Generates facts for a link
-
-		link: link to be checked"""
-
-		if isinstance(link, bytes):
-			link = link.decode()
-		if link in CachedData.cached_link_facts:
-			return CachedData.cached_link_facts[link]
-		facts = dict()
-		x = self.link_extractor.search(link)
-		if x:
-			facts['is link'] = True
-			facts['scheme'] = x.group('schema')
-			facts['scheme'] = x.group('scheme')
-			facts['login'] = x.group('login')
-			facts['host'] = x.group('host')
-			facts['port'] = x.group('port')
-			facts['path'] = x.group('path')
-			facts['query'] = x.group('query')
-			facts['fragment'] = x.group('fragment')
-			facts['noQuery'] = x.group('noQuery')
-			facts['homepage'] = x.group('homepage')
-
-			facts['has homepage'] = (facts['homepage'] is not None)
-			facts['after homepage'] = link.startswith('/')
-			facts['needs scheme'] = link.startswith('//')
-			facts['is absolute'] = (facts['scheme'] is not None and facts['host'] is not None)
-
-			CachedData.cached_link_facts[link] = facts
-			return facts
-
-		else:
-			return None
-
-		# self.link_extractor = re_compile( r'^(?P<noQuery>(?P<schema>((?P<scheme>[^:/?#]+):(?=//))?(//)?)(((?P<login>[^:]+)(?::(?P<password>[^@]+)?)?@)?(?P<host>[^@/?#:]*)(?::(?P<port>\d+)?)?)?(?P<path>[^?#]*))(\?(?P<query>[^#]*))?(#(?P<fragment>.*))?')	# compiled regex tool for getting homepage
-		# https://regex101.com/r/UKWPmt/1
-		# noQuery: https://regex101.com/r/UKWPmt/1
-		# homepage: https://regex101.com
-		# schema: https://
-		# scheme: https
-		# login:
-		# password:
-		# host: regex101.com
-		# port: 80
-		# path: /r/UKWPmt/1
-		# query: ? part
-		# fragment: # part
-
-	
-	def get_page(self, link=None, referer=False, header=None, cache=False, failed=False, do_not_cache=True,
-	            session=None, return_none=True, raise_error=False):  # fc=080D
-		"""Gets a page from the internet and returns the page object
-
-		link: page link
-		referer: page referer, default = self.main_link, None means don't use referer
-		header: header string
-		cache: get or store the page object from Cached_data.cached_webpages by calling Cached_data.get_webpage or Cached_data.add_webpage
-		failed: if failed in previous try
-		do_not_cache: if True, don't cache the page object to file
-		session: if requests.session is avaialbe
-		return_none: if True, return None if page is not found, else return the page object
-		raise_error: if True, raise an error if an Error occured while getting the page"""
-
-		def retry():
-			return self.get_page(link=link, referer=False if referer == False else referer, cache=cache, failed=True,
-										do_not_cache=do_not_cache, session=session, return_none=return_none, raise_error=raise_error)
-
-		if cache:
-			if link in CachedData.cached_webpages:
-				__x = CachedData.get_webpage(link)
-				# print(__x)
-				if __x is not None:
-					return __x
-
-		if session is None:
-			session = requests
-
-		if not referer:
-			referer_ = Netsys.get_homepage(link)
-		else:
-			referer_ = referer
-
-		if header is None:
-			current_header = Netsys.header_(referer_)
-		else:
-			current_header = header
-			
-		page = None
-		try:
-			page = session.get(link, headers=current_header, timeout=5)
-			if not page:
-				if not failed:
-					page = retry()
-				else:
-					if return_none:
-						return None
-					else:
-						return page
-		except NetErrors as e:
-			if not failed:
-				page = retry()
-			else:
-				if raise_error:
-					raise e
-				else:
-					return None
-
-		if cache and page:
-			if not do_not_cache:
-				CachedData.add_webpage(link, page)
-		return page
-	def link_downloader(self, link, file_loc, filename, server_error_code, internet_error_code, overwrite, err_print=True, allow_old=True, proxy=[]):  # fc=080E
-		"""
-		Just to keep the code clean
-			link: link to download
-			file_loc: location to save file
-			filename: name of file
-			server_error_code: error code when server returns error (>200 code)
-			internet_error_code: error code when internet is not working
-			overwrite: if file is already there, overwrite it
-			err_print: if error should be printed
-			allow_old: if old file is allowed to be used when failed to download
-			proxy: list of proxy links
-		"""
-
-		try:
-			# check if the proxy link is a list or string, usable or not.
-			if isinstance(proxy, str):
-				proxy = [proxy]
-			elif not isinstance(proxy, list):
-				proxy = list(proxy)
-
-			proxy.insert(0, link) # add link to top of proxy list
-		except:
-			# invalid proxy type is ignored
-			proxy = [link]
-
-
-		self.current_header = Netsys.header_()
-		returner = True
-		try:
-			if not overwrite and  os_isfile(file_loc + filename):
-				return True
-
-			for link in proxy:
-				file = self.get_page(link, header=self.current_header, cache=False, raise_error=True, return_none=False)
-				if file:
-					break
-			if file:
-				Fsys.writer(filename, 'wb', file.content, file_loc, '0306')
-				return True
-			else:
-				leach_logger(log([server_error_code, Netsys.hdr(self.current_header, '080D'), link, file.status_code]), 'lock')
-				if err_print: xprint("/rh/Error code: %s\nNo internet connection!/=/\nRunning offline mode"%server_error_code)
-				returner = False
-		except NetErrors as e:
-			if err_print: xprint("/rh/Error code: %s\nNo internet connection!/=/\nRunning offline mode"%internet_error_code)
-			leach_logger(log([internet_error_code, Netsys.hdr(self.current_header, '080D'), link, e.__class__.__name__, e]), 'lock')
-			returner = False
-
-		if not returner and allow_old:
-			return os_isfile(file_loc + filename)
-
 
 
 Netsys = Netsys_()
 
 print(9)  # x
-
-
-class Datasys_:  # fc=0900
-	"""Data types and conversion functions"""
-
-	def remove_duplicate(self, seq, return_type=list):  # fc=0901 v
-		"""removes duplicates from a list or a tuple
-		also keeps the array in the same order
-
-		args:
-		-----
-			seq: `tuple`|`list` to remove dups
-			return_type: type of array to return"""
-
-		return return_type(dict.fromkeys(seq))
-
-	def remove_non_ascii(self, text, f_code='????'):  # fc=0902 v
-		"""[DEPRECATED] [STILL WORKS] removes ascii characters from a string
-
-		args:
-		-----
-			test: text to remove non ASCII
-			f_code: The function Code called this function"""
-
-		try:
-			return ''.join([i if ord(i) < 128 else '' for i in text])
-		except Exception as e:
-			xprint("Failed to remove non-ascii characters from string.\nError code: 00003x", f_code, '\nPlease inform the author.')
-			leach_logger(log(['0902x0', text, e.__class__.__name__, e]))
-
-	def remove_non_uni(self, text, f_code='????', types='str', encoding='utf-8'):  # fc=0903 v
-		"""Converts a string or binary to unicode string or binary by removing all non unicode char
-
-		args:
-		-----
-			text: str to work on
-			f_code: caller func code
-			types: output type ('str' or 'bytes')
-			encoding: output encoding *utf-8"""
-
-		try:
-			if type(text) == str:
-				text = text.encode(encoding, 'ignore')
-				if types == 'bin':
-					return text
-				return text.decode(encoding)
-			if types == 'bin':
-				return text.decode(encoding, 'ignore').encode(encoding)
-			return text.decode(encoding, 'ignore')
-		except Exception as e:
-			xprint("/r/Failed to remove non-Unicode characters from string.\nError code: 00018x", f_code, '/y/\nPlease inform the author./=/')
-			leach_logger(log(['0903x0', text, types, encoding,  e.__class__.__name__, e]))
-			return self.remove_non_ascii(text, f_code)
-
-	def trans_str(self, txt, dicts):  # fc=0904 v
-		"""replaces all the matching characters of a string for multiple times
-
-		args:
-		-----
-			txt: string data
-			dicts: dict of { find : replace }"""
-
-		for i in dicts.keys():
-			a = dicts[i]
-			for j in i:
-				txt = txt.replace(j, a)
-		return txt
-
-	def flatten2D(self, arr):  # fc=0905
-		functools_reduce(operator_iconcat, arr, [])
-
-	def is_json(self, data=None, raise_=False): # fc=xxxx
-		if isinstance(data, (io.TextIOBase,
-		io.BufferedIOBase,
-		io.RawIOBase,
-		io.IOBase)):
-			func = json.load
-		elif isinstance(data, (str, bytes)): 
-			func = json.loads
-		else:
-			return False
-		try:
-			func(data)
-			return True
-		except Exception as e:
-			# if logger: traceback.print_exc()
-			if raise_: raise e
-			return False
-	
 
 
 Datasys = Datasys_()
@@ -2119,50 +863,6 @@ class All_list_type:  # fc=0B00
 		del self.dir_height
 
 
-class CachedData_:  # fc=0C00
-	def __init__(self):  # fc=0C01
-		self.data_vars = ("cached_webpages", "cached_link_facts")
-		self.cached_webpages = dict()
-		self.cached_link_facts = dict()
-
-	def add_webpage(self, url, response):
-		""" Add a webpage to the cache
-		url: url of the webpage 
-		response: response object"""
-
-		__x = Cached_Response(status_code=response.status_code, headers=response.headers, content=response.content,
-		                      encoding=response.encoding, url=response.url)
-		file_id = str(process_id) + '-' + uuid.random()
-		with open(AboutApp.cached_webpages_dir + file_id, 'w') as f:
-			f.write(repr(__x))
-		self.cached_webpages[url] = file_id
-
-	def get_webpage(self, url):
-		""" Get a webpage from the cache
-		url: url of the webpage """
-
-		if url in self.cached_webpages:
-			if os_isfile(AboutApp.cached_webpages_dir + self.cached_webpages[url]):
-				with open(AboutApp.cached_webpages_dir + self.cached_webpages[url], 'r') as f:
-					__x = eval(f.read())
-				return __x
-
-		return None
-
-	def clean_cached_webpages(self):
-		""" Cleans the cached_webpages from storage"""
-		for i in os_listdir(AboutApp.cached_webpages_dir):
-			if i.startswith(str(process_id) + '-'):
-				try:
-					remove(AboutApp.cached_webpages_dir + i)
-				except:
-					pass
-
-	def clear(self):
-		"""Cleans both from memory and storage""" 
-		self.clean_cached_webpages()
-		for i in self.data_vars:
-			self.__dict__[i].clear()
 
 
 CachedData = CachedData_()
@@ -2206,7 +906,7 @@ class ProjectType_:  # fc=0P00
 		self.index_done = False  # indicates if the indexing was done or not
 		self.has_missing = None  # indicates if the Project has any missing files. {5.4 and above}
 		# * this won't ask input * so add it in GUI
-		self.file_to_sort = False  # indicates if the images should be sorted or not
+		self.img_to_sort = False  # indicates if the images should be sorted or not
 		self.dir_sorted = True  # will sort directories by name
 		self.corruptions = []  # list of corruptions in project data if there's any or empty
 		self.sub_dirs_count = 0  # number of sub directories named in the project data
@@ -2227,10 +927,11 @@ class ProjectType_:  # fc=0P00
 		2: scrap from only the sublinks of the main link
 		3: scrap from both main link and and the sublinks"""
 		self.link_startswith = ''  # (str) each sublink must start with
-		self.file_types = []  # file types to be downloaded, list
+		self.file_types = None  # file types to be downloaded
 		self.file_starts = ''  # (str) each files must start with (used regex)
-		self.file_exts = []  # (list) (list of file extensions) each files must end with
+		self.file_exts = []  # (str) (set of file extensions) each files must end with
 		self.check_links = False  # if True, the list_writer_img checks the <a> for images
+		self.file_to_sort = False  # indicates if the files will be sorted or not
 		self.update = False  # indicates if the project is getting an update or not
 
 
@@ -2281,66 +982,8 @@ class ProjectType_:  # fc=0P00
 		self.download_dir = AboutApp.download_dir + self.Project + '/'
 		self.data_dir = AboutApp.leach_projects + self.Project + '.wlproj'
 		self.threads_dir = AboutApp.thread_data_dir + self.Project + '/'
-		
-	def store_current_data(self): #fc=????
-		# patch self.first_created issue
-		if self.first_created in ('0', 'False'):
-			self.first_created = Nsys.cdt_()
 
-		if self.last_update in (0, "0", "False", False):
-			self.last_update = Nsys.cdt_()
-		
-
-		# patch
-		if self.file_exts == Constants.all_image_types:
-			self.file_exts = []
-
-		class SetEncoder(json.JSONEncoder):
-			def default(self, obj):
-				if isinstance(obj, set):
-					return list(obj)
-				return json.JSONEncoder.default(self, obj)
-
-		dataset= {"Project": self.Project,
-		'main_link': self.main_link,
-		 'link_startswith': self.link_startswith, 
-		 'file_starts': self.file_starts,
-		 'sp_flags': self.sp_flags,
-		 'sp_extension': self.sp_extension,
-		 'overwrite_bool': self.overwrite_bool,
-		 'dimention': self.dimention,
-		 'file_to_sort':self.file_to_sort,
-		 'dir_sorted': self.dir_sorted,
-		 'file_types': self.file_types,
-		 'dl_threads': self.dl_threads,
-		 'first_created': self.first_created, 
-		 'last_update': Nsys.cdt_(),
-		 'leacher_version': AboutApp._VERSION,
-		 'magic_number': Nsys.compressed_ip(UserData.user_ip["ip"]),
-		 'server_version': config.server_version,
-		 'get_html_title': self.get_html_title,
-		 'dl_done': self.dl_done,
-		 'has_missing': self.has_missing,
-		 'file_exts': self.file_exts,
-		 'sub_links': self.sub_links,
-		 'sub_dirs': self.sub_dirs,
-		 'all_names': self.all_list.all_names
-		}
-		
-		json_proj = json.dumps(dataset, cls=SetEncoder, indent=4)
-		json_list = json.dumps({"all_list": self.all_list.all_links}, cls=SetEncoder, indent=4)
-		
-		# clean the files if exist
-		Fsys.writer(self.Project + '.wllist', 'w', '', AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'w', '', AboutApp.leach_projects, '0M05')
-
-		# write new data
-		Fsys.writer(self.Project + '.wllist', 'w', json_list, AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'w', json_proj, AboutApp.leach_projects, '0M05')
-		del json_proj, json_list
-		
-
-	def store_current_data_old(self): # fc=????
+	def store_current_data(self): # fc=????
 		
 		# clean the files if exist
 		Fsys.writer(self.Project + '.wllist', 'w', '', AboutApp.leach_projects, '0M05')
@@ -2374,7 +1017,7 @@ class ProjectType_:  # fc=0P00
 		            AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'a', 'dimention = %s\n' % str(self.dimention),
 		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'sequence = %s\n' % str(self.file_to_sort),
+		Fsys.writer(self.Project + '.wlproj', 'a', 'sequence = %s\n' % str(self.img_to_sort),
 		            AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'a', 'Project = "%s"\n' % str(self.Project), AboutApp.leach_projects,
 		            '0M05')
@@ -2390,7 +1033,7 @@ class ProjectType_:  # fc=0P00
 		            AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'a', 'first_created = "%s"\n' % str(self.first_created),
 		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', f'last_update = "{Nsys.cdt_()}"\n', 
+		Fsys.writer(self.Project + '.wlproj', 'a', f'last_update = "{self.last_update}"\n', 
 					AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'a', f'leacher_version = "{AboutApp._VERSION}"\n',
 		            AboutApp.leach_projects, '0M05')
@@ -2404,138 +1047,9 @@ class ProjectType_:  # fc=0P00
 					AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'a', f'has_missing = {self.has_missing}\n',
 					AboutApp.leach_projects, '0M05')
-					
-					
-	def load_data(self, file_dir):
-		new = True
-		file_dir = file_dir.replace('"', '')
-		if file_dir.endswith("'") and file_dir.startswith("'"):
-			file_dir = file_dir[1:-1]
-
-		if file_dir.endswith('.proj'):
-			new=False				
-
-		if new and not self.from_file:
-			if os.path.isfile(AboutApp.leach_projects + self.Project + '.wlproj'):
-				pass
-			elif os.path.isfile(AboutApp.leach_projects + self.Project + '.proj'):
-				new = False
-
-			else:
-				self.__default__()
-				return False
-
-		else:
-			return self.load_old_data(file_dir)
-			
-
-		proj_path = AboutApp.leach_projects + self.Project + self.proj_ext[0]
-
-		list_path = proj_path[:-len(self.proj_ext[0])] + self.proj_ext[1]
 
 
-		if os_exists(proj_path):
-			self.proj_good = True
-			self.proj_file = Fsys.reader(proj_path, 'r', True).strip()
-
-			if not new or not Datasys.is_json(self.proj_file):
-				return self.load_old_data(file_dir)
-		else:
-			return False
-		try:
-			loaded_data_set = json.loads(self.proj_file)
-			
-			for keys in loaded_data_set.keys():
-				self.__setattr__(keys, loaded_data_set[keys])
-
-			self.sp_flags = set(self.sp_flags)
-
-			
-			self.all_list = All_list_type(len(self.sub_dirs))
-
-			
-			if any(self.all_names):
-				self.all_list.all_names = self.all_names
-				self.all_names = [False]
-				self.need_2_gen_names = False
-
-			self.last_user_ip = Nsys.dec_ip(self.magic_number)
-
-			# self.main_link = loaded_data_set['main_link']
-			# self.link_startswith = loaded_data_set['link_startswith']
-			# self.file_starts = loaded_data_set['file_starts']
-			# self.sub_dirs = loaded_data_set['sub_dirs']
-			# self.sp_flags = set(loaded_data_set['sp_flags'])
-			# self.sp_extension = loaded_data_set['sp_extension']
-			# self.overwrite_bool = loaded_data_set['overwrite_bool']
-			# self.dimention = loaded_data_set['dimention']
-
-			# self.dl_done = loaded_data_set['dl_done']
-
-			# self.Project = loaded_data_set['Project']
-			# self.file_to_sort = loaded_data_set['sequence']
-
-			# self.sub_links = loaded_data_set['sub_links']
-
-			self.dir_sorted = True  # loaded_data_set['dir_sorted'] ## need to fix
-			self.has_missing = loaded_data_set['has_missing']
-
-			# self.all_list = All_list_type(len(self.sub_dirs))
-
-			# __all_names__ = loaded_data_set['all_names']
-			# if any(i for i in __all_names__):
-			# 	self.all_list.all_names = __all_names__
-			# del __all_names__
-				
-			# self.file_types = loaded_data_set['file_formats']
-			# self.file_exts = loaded_data_set['file_types']
-			
-			# self.dl_threads = loaded_data_set['dl_threads']
-
-			_temp = loaded_data_set['first_created']
-			self.first_created = '0' if _temp in ['False', '0'] else _temp
-			
-			del _temp
-
-			# self.last_update = loaded_data_set['last_update']
-
-			# self.leacer_version = loaded_data_set['leacher_version']
-			
-
-			# self.last_user_ip = Nsys.dec_ip(loaded_data_set['magic_number'])
-
-			# self.get_html_title = loaded_data_set['get_html_title']
-
-			
-			proj_good = True
-
-		except:
-			if logger: traceback.print_exc()
-			
-			self.corruptions += ["J"]
-			xprint('/rh/Corrupted Data! Error code: 601xJ/=/') # fc = xxxx 601xJ json issue
-			return False
-		try:
-			self.list_file = Fsys.reader(list_path, 'rb', True, 'str')
-			_list_json = json.loads(self.list_file)["all_list"]
-			if self.need_2_gen_names:
-				xprint('/uh/Generating Names.../=/')
-				self.all_list.generate(_list_json)
-			else:
-				self.all_list.all_links = _list_json
-			del _list_json
-			self.list_file=True
-			self.proj_file=True
-			self.list_good = True
-
-			return True
-		except:
-			if logger: traceback.print_exc()
-			
-			return False
-			
-			
-	def load_old_data(self, file_dir):  # fc=0P04
+	def load_data(self, file_dir):  # fc=0P04
 		"""loads the data from the project file
 			returns: None if failed to load file
 					False if there is no project file"""
@@ -2550,7 +1064,7 @@ class ProjectType_:  # fc=0P00
 
 			if file_dir.endswith('.proj'):
 				self.proj_ext = ('.proj', '.list')
-				
+				leach_logger
 
 		if not self.from_file:
 			if os.path.isfile(AboutApp.leach_projects + self.Project + '.wlproj'):
@@ -2572,24 +1086,23 @@ class ProjectType_:  # fc=0P00
 
 			self.proj_file = Fsys.reader(proj_path, 'rb', True, 'str').strip()
 
-			self.proj_good = self.check_old_proj_file()
+			self.proj_good = self.check_proj_file()
 
 			if self.proj_good:
 
 				if os_exists(list_path):
 					self.list_file = Fsys.reader(list_path, 'rb', True, 'str').strip()
-					self.list_good = self.check_old_list_file()
+					self.list_good = self.check_list_file()
 
 					self.set_directories()
 					if self.list_good:
 						# print(getsizeof(self.all_list))
-						self.store_current_data()
 						return self.list_good
 
 		self.__default__()
 		return None
 
-	def check_old_proj_file(self):  # fc=0P05
+	def check_proj_file(self):  # fc=0P05
 		"""checks if the project file is valid
 		and if valid assigns the data to Class"""
 
@@ -2621,7 +1134,7 @@ class ProjectType_:  # fc=0P00
 			else:
 				if self.from_file:
 					self.Project = Fsys.get_file_name(self.Project)[:0 - (len(self.proj_ext[0]))]
-			if 'sequence' in loaded_data_set:
+			if 'file_to_sort' in loaded_data_set:
 				self.file_to_sort = loaded_data_set['sequence']
 
 			if 'sub_links' in loaded_data_set:
@@ -2728,12 +1241,12 @@ class ProjectType_:  # fc=0P00
 				
 
 		if self.file_types == Constants.old_img:
-			self.file_types = ['img']
-			# self.file_exts = Constants.all_image_types
+			self.file_types = 'img'
+			self.file_exts = Constants.all_image_types
 
 		return proj_good
 
-	def check_old_list_file(self):  # fc=0P06
+	def check_list_file(self):  # fc=0P06
 		"""checks if the list file is valid
 		and if valid assigns the data to Class"""
 
@@ -2954,7 +1467,7 @@ class ProjectType_:  # fc=0P00
 			if self.break_all or self.total == 0: return 0
 			percent = floor((self.done / self.total) * 30)
 			IOsys.delete_last_line()
-			sys_write(''.join(['Download [', '\u001b[32;1m', ('━'*percent), '\u001b[30;1m╺' if percent<30 else '━', '━'*(30-percent), '\u001b[0m][', str(self.done), '/', str(self.total), ']', self.current_speed , '/s\n']))
+			sys_write(''.join(['Downloaded [', '\u001b[32;1m', ('━'*percent), '\u001b[30;1m╺' if percent<30 else '━', '━'*(30-percent), '\u001b[0m] [', str(self.done), '/', str(self.total), ']', self.current_speed , '/s\n']))
 			time.sleep(.5)
 			last_chunks = _temp
 
@@ -2968,7 +1481,7 @@ class ProjectType_:  # fc=0P00
 		if self.existing_found:
 			if os_exists(AboutApp.thread_data_dir + self.Project + '/t' + task_id + '.txt'):
 				res = Fsys.reader(AboutApp.thread_data_dir + self.Project + '/t' + task_id + '.txt').strip()
-				res = int(res) if res.isdigit() else 0  # resume point of the list (index # int)
+				res = eval(res) if res != '' else 0  # resume point of the list (index # int)
 		self.done += res
 
 		session = requests.session()
@@ -3959,7 +2472,7 @@ class ProjectType_:  # fc=0P00
 
 		self.dir_sorted = True
 		self.overwrite_bool = False
-		self.file_to_sort = False
+		self.img_to_sort = False
 		return 'all good'
 
 	def manga_freak_patch(self):  # fc=0P0MP
@@ -3982,7 +2495,7 @@ class ProjectType_:  # fc=0P00
 						if os_isfile(AboutApp.download_dir + self.Project + '/' + self.sub_dirs[i] + '/' + j) and (not j.endswith('.html')):
 							self.all_list.add_name(j, i)
 
-				self.file_to_sort = True
+				self.img_to_sort = True
 				self.sp_extension = ''
 
 			self.sp_flags.add('mangafreak-patched')
@@ -3994,7 +2507,7 @@ class ProjectType_:  # fc=0P00
 		OSsys.import_make()
 		self.manga_freak_patch()
 
-		return MakeHtml.make_pages(self.all_list.all_names, self.sub_dirs, self.Project, self.file_to_sort,
+		return MakeHtml.make_pages(self.all_list.all_names, self.sub_dirs, self.Project, self.img_to_sort,
 		                           self.sp_extension, self.dir_sorted)
 
 	def make_cbz(self):  # fc=0P0P
@@ -4002,7 +2515,7 @@ class ProjectType_:  # fc=0P00
 		OSsys.import_make()
 		self.manga_freak_patch()
 
-		return MakeCbz.make_cbz(self.all_list, self.sub_dirs, self.Project, self.file_to_sort, self.sp_extension)
+		return MakeCbz.make_cbz(self.all_list, self.sub_dirs, self.Project, self.img_to_sort, self.sp_extension)
 
 	def post_online(self):
 		"""Sends project images to online 
@@ -4261,7 +2774,6 @@ Option               Value
 				p_name = IOsys.safe_input("Enter the project name: ")
 				P = ProjectType_(p_name)
 				P.load_data(p_name)
-				P.print_project_info()
 				if P.list_good:
 					P.print_project_info()
 				else:
@@ -4286,7 +2798,6 @@ Option               Value
 		Ctitle(f'Project {self.P.Project} [{config.mode_emoji[config.run_mod]}] [:{config.running_port}]')
 
 		if check_project:
-			self.P.store_current_data()
 			if self.P.dl_done:
 				xprint('/h/It seems  the old project download was complete!!/=/')
 				if self.P.has_missing:
@@ -4426,7 +2937,7 @@ yes/y to resume
 				self.P.dl_done = False
 
 				if 'webtoon' in self.P.sp_flags or (
-						self.P.file_types == [] and self.P.link_startswith == "https://www.webtoons.com"):
+						self.P.file_types == set() and self.P.link_startswith == "https://www.webtoons.com"):
 					print("Checking for links, please wait...")
 					if self.P.webtoon_link() == 'all good':
 						self.link_indexed = True
@@ -4512,12 +3023,12 @@ yes/y to resume
 
 
 					try:
-						self.P.file_to_sort = IOsys.asker("\n\n\u29bf Will download in sequncial order? ")
+						self.P.img_to_sort = IOsys.asker("\n\n\u29bf Will download in sequncial order? ")
 					except LeachICancelError:
 						xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
 
 						pass
-						#todo: leach_logger("000||0M05||%s||f-Stop||UI||user left while asking self.P.file_to_sort "%self.P.Project)
+						#todo: leach_logger("000||0M05||%s||f-Stop||UI||user left while asking self.P.img_to_sort "%self.P.Project)
 						return 0
 
 
@@ -4718,20 +3229,14 @@ yes/y to resume
 								"\n(optional but recommended to be more precise):\n1. Sub-Links Starts With : ")
 
 						file_types_i = IOsys.safe_input(
-							"\nEnter file formats (separate multiple by commas)\n *for extensions add . (ie: .png, .jpg, .mp3) or just write the category (ie: image, music, video): ")
-						f_t =[]
-						f_e=[]
-						for i in file_types_i.split(","):
-							_f = i.strip()
-							if _f.startswith("."): f_e.append(_f)
-							else: f_t.append(_f[1:])
-							
-						self.P.file_types = f_t
-						self.P.file_exts = f_e
-						
-						del _f,f_t,f_e,file_types_i
-							
-
+							"\nEnter file formats (separate multiple by commas) *no need to add . in formats (ie: png, jpg, mp3) or just write the category (ie: image, music, video): ")
+						if file_types_i in ('img', 'image', 'images', 'imgs', 'photo', 'photos'):
+							self.P.file_exts = Constants.all_image_types
+							self.P.file_types = file_types_i
+						else:
+							self.P.file_types = file_types_i
+							self.P.file_exts = tuple(
+								i.strip(i) for i in file_types_i.replace(' ', '').split(',') + file_types_i.split(' '))
 						# leach_logger('0M05x1||%s||f_types||%s'%(self.Project, str(self.file_types)), UserData.user_name)
 
 						self.P.file_starts = IOsys.safe_input(
@@ -4740,7 +3245,7 @@ yes/y to resume
 
 						print('\n')
 
-						self.P.file_to_sort = IOsys.asker("\n\n\u29bf Will download in sequential order? ")
+						self.P.img_to_sort = IOsys.asker("\n\n\u29bf Will download in sequential order? ")
 						self.P.overwrite_bool = IOsys.asker(
 							"\u29bf Will overwrite data??\nyes to overwrite old data if found.\nno to only download the updates\n>>")
 
@@ -4813,7 +3318,7 @@ yes/y to resume
 					time.sleep(5)
 					exit(0)
 
-			if self.P.file_to_sort: self.P.all_list.all_links = natsort.natsorted(self.P.all_list.all_links,
+			if self.P.img_to_sort: self.P.all_list.all_links = natsort.natsorted(self.P.all_list.all_links,
 			                                                                     key=lambda x: x[0].lower())
 
 			Fsys.writer('projects.db', 'a', self.P.Project + '\n', 'data', '0M05')
@@ -4983,7 +3488,7 @@ if __name__ == '__main__':
 		xprint(Constants.hard_cancel)
 		import sys
 		sys.exit(0)
-	except:
+	except Exception as e:
 		traceback.print_exc()
 		
 		server_code.server_close()

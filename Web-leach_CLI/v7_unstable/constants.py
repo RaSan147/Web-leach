@@ -1,7 +1,9 @@
 # pylint: disable=anomalous-backslash-in-string
 import mimetypes
+
 # for testing
 Project = main_link = link_startswith = file_types = file_starts = sub_dirs = sp_flags= sp_extension = overwrite_bool = dimention = dl_done = sequence = sub_links = has_missing = dir_sorted = 0
+
 
 class Constants:
 	"""Stores most commonly used constants
@@ -72,5 +74,4 @@ class __Make_proxy:
 		pass
 
 MakeHtml = MakeCbz = None
-
 
