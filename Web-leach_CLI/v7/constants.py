@@ -1,11 +1,12 @@
 # pylint: disable=anomalous-backslash-in-string
 import mimetypes
+from urllib import parse, request  # used to parse values  # used to make requests into the url
 
 # for testing
 Project = main_link = link_startswith = file_types = file_starts = sub_dirs = sp_flags= sp_extension = overwrite_bool = dimention = dl_done = sequence = sub_links = has_missing = dir_sorted = 0
 
 
-class Constants:
+class constants:
 	"""Stores most commonly used constants
 	"""
 
@@ -46,6 +47,28 @@ class Constants:
 	old_img = ('jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp', 'tif')
 
 	DEFAULT_DISABLE_LIB_CHECK = False # temporarily disabled
+	
+	def check_internet(self,host='google', timeout=3):
+		"""returns True or False based on internet availability"""
+		if host == 'fast':
+			return self.check_internet('http://1.1.1.1/', timeout=timeout)
+
+		elif host == 'pypi':  #pypi.org
+			return self.check_internet('https://pypi.org', timeout=timeout)
+
+		elif host == 'google':   #www.google.com
+			return self.check_internet('https://8.8.8.8', timeout=timeout)
+
+		else:
+			try:
+				request.urlopen(host, timeout=timeout)
+				return True
+			except request.URLError:
+				return False
+			#except socket.timeout:
+				#return False
+
+Constants = constants()
 
 true = True
 false = False
@@ -75,3 +98,5 @@ class __Make_proxy:
 
 MakeHtml = MakeCbz = None
 
+
+#print(Constants.check_internet())

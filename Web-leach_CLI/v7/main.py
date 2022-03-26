@@ -28,7 +28,7 @@ requirements_all = ('requests', 'beautifulsoup4', 'natsort', 'google', 'rjsmin')
 requirements_win = ('pywin32-ctypes', 'comtypes', 'psutil', 'lxml', 'pywin32')
 
 
-logger = True	# disable on publish
+logger = True	# disable on publish 
 
 # importing required packages
 
@@ -46,9 +46,9 @@ os_name = os_name()
 
 if os_name == 'Windows':
 	import console_mod     #fc=2000
-	console_mod.enable_color()
+	console_mod.enable_color2() # to test
 
-from print_text import xprint  # fc=3000
+from print_text2 import xprint  # fc=3000
 
 
 xprint('/=/', end='')
@@ -1030,6 +1030,10 @@ class OSsys_:  # fc=0700
 				then used alias (not required here) [beautifulsoup4 (pip)=> bs4 (lib name)] """
 
 		if pkg_name not in self.get_installed():
+			if not Constants.check_internet():
+				xprint("/rh/No internet! Failed to install requirements/=/\n/ruh/Closing in 5 seconds/=/")
+				return False
+				
 			xprint("/y/Installing missing libraries (%s)/=/"%pkg_name)
 			self.install(pkg_name, alias)
 			IOsys.delete_last_line()
@@ -1058,11 +1062,11 @@ class OSsys_:  # fc=0700
 			f_code: caller function id
 		"""
 		try:
-			exec(Fsys.reader('make_html2.py'), globals())
+			exec(Fsys.reader('make_html3.py'), globals())
 		except Exception as e:
 			traceback.print_exc()
 			print("Some error occurred while loading make_html file. \nError code: 0704x0\nReport to the author\nExiting in 5 seconds")
-			leach_logger(log('0704x0', f_code, 'make_html2.py', e.__class__.__name__, e))
+			leach_logger(log(['0704x0', f_code, 'make_html3.py', e.__class__.__name__, e]))
 
 			time.sleep(5)
 			exit()
@@ -1071,7 +1075,7 @@ class OSsys_:  # fc=0700
 			exec(Fsys.reader('make_cbz2.py'), globals())
 		except Exception as e:
 			print("Some error occurred while loading make_html file. \nError code: 0704x0\nReport to the author\nExiting in 5 seconds")
-			leach_logger(log('0704x0', f_code, 'make_cbz2.py', e.__class__.__name__, e))
+			leach_logger(log(['0704x0', f_code, 'make_cbz2.py', e.__class__.__name__, e]))
 			time.sleep(5)
 			exit()
 
@@ -1145,10 +1149,9 @@ class OSsys_:  # fc=0700
 		if config.disable_lib_check:
 			return 0
 
-		has_all_libs = True
 		all_libs = OSsys.get_installed()
-		for i in requirements_all:
-			has_all_libs = has_all_libs and i in all_libs
+		
+		has_all_libs = all(i in all_libs for i in requirements_all)
 		
 		# print(has_all_libs, all_libs)
 		if has_all_libs:
@@ -1356,7 +1359,7 @@ class Netsys_:  # fc=0800
 			r = requests.head('https://www.google.com', headers = current_header)
 			if not r:
 				time.sleep(2)
-				r - requests.head('https://www.bing.com', headers = self.header_())
+				_ = requests.head('https://www.bing.com', headers = self.header_())
 
 			return True
 
@@ -1405,7 +1408,7 @@ class Netsys_:  # fc=0800
 		except KeyboardInterrupt:
 			pass
 		except OSError: #TODO: add note in files
-			traceback.printexec()
+			if logger: traceback.print_exc()
 			leach_logger(log(['0807x-1', f_code, port, cd]))
 
 	def run_server_t(self, server_status, cd='.'):  # fc=0808 v
@@ -1828,7 +1831,7 @@ class SupportTools_:  # fc=0A00
 					return True
 			return False
 		else:
-			print("INvalid arg!\n    pLEaSe REcHECK\n=======> %s <=======\n WITH\n-------> %s <-------"%(link, str(sp)))
+			xprint("/u/INvalid arg!/=/\n    pLEaSe REcHECK\n=======> %s <=======\n WITH\n-------> %s <-------"%(link, str(sp)))
 			raise ValueError
 
 	def play_yamatte(self, vol=80):  # fc=0A02
@@ -2217,6 +2220,8 @@ class ProjectType_:  # fc=0P00
 		self.leacher_version = AboutApp._VERSION  # version of the scrapper
 		self.server_version = config.server_version  # version of the server while scrapping
 		self.user_ip = UserData.user_ip  # user's ip address
+		self.all_names = [] #To load data
+		self.magic_number = 0
 
 		### Need input
 		self.main_link = None  # the main link
@@ -2456,55 +2461,18 @@ class ProjectType_:  # fc=0P00
 			
 			if any(self.all_names):
 				self.all_list.all_names = self.all_names
-				self.all_names = [False]
+				self.all_names = [] # reset coz there's no further use of it
 				self.need_2_gen_names = False
 
 			self.last_user_ip = Nsys.dec_ip(self.magic_number)
 
-			# self.main_link = loaded_data_set['main_link']
-			# self.link_startswith = loaded_data_set['link_startswith']
-			# self.file_starts = loaded_data_set['file_starts']
-			# self.sub_dirs = loaded_data_set['sub_dirs']
-			# self.sp_flags = set(loaded_data_set['sp_flags'])
-			# self.sp_extension = loaded_data_set['sp_extension']
-			# self.overwrite_bool = loaded_data_set['overwrite_bool']
-			# self.dimention = loaded_data_set['dimention']
-
-			# self.dl_done = loaded_data_set['dl_done']
-
-			# self.Project = loaded_data_set['Project']
-			# self.file_to_sort = loaded_data_set['sequence']
-
-			# self.sub_links = loaded_data_set['sub_links']
-
 			self.dir_sorted = True  # loaded_data_set['dir_sorted'] ## need to fix
 			self.has_missing = loaded_data_set['has_missing']
-
-			# self.all_list = All_list_type(len(self.sub_dirs))
-
-			# __all_names__ = loaded_data_set['all_names']
-			# if any(i for i in __all_names__):
-			# 	self.all_list.all_names = __all_names__
-			# del __all_names__
-				
-			# self.file_types = loaded_data_set['file_formats']
-			# self.file_exts = loaded_data_set['file_types']
-			
-			# self.dl_threads = loaded_data_set['dl_threads']
 
 			_temp = loaded_data_set['first_created']
 			self.first_created = '0' if _temp in ['False', '0'] else _temp
 			
 			del _temp
-
-			# self.last_update = loaded_data_set['last_update']
-
-			# self.leacer_version = loaded_data_set['leacher_version']
-			
-
-			# self.last_user_ip = Nsys.dec_ip(loaded_data_set['magic_number'])
-
-			# self.get_html_title = loaded_data_set['get_html_title']
 
 			
 			proj_good = True
@@ -4261,7 +4229,6 @@ Option               Value
 				p_name = IOsys.safe_input("Enter the project name: ")
 				P = ProjectType_(p_name)
 				P.load_data(p_name)
-				P.print_project_info()
 				if P.list_good:
 					P.print_project_info()
 				else:
@@ -4941,9 +4908,7 @@ yes/y to resume
 
 
 			if will_open == 'b':
-				print(0)
 				Netsys.run_in_local_server(config.running_port, host_dir='%s/index.html' % (self.P.Project))
-				print(1)
 				return 0
 
 			elif will_open == 'cbz':  # cbz
