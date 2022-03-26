@@ -2496,6 +2496,9 @@ class ProjectType_:  # fc=0P00
 			self.proj_file=True
 			self.list_good = True
 
+			
+			self.set_directories()
+
 			return True
 		except:
 			if logger: traceback.print_exc()
@@ -2982,7 +2985,7 @@ class ProjectType_:  # fc=0P00
 			try:
 				if not self.overwrite_bool:
 					if os_isfile(
-						AboutApp.download_dir + self.Project + '/' + fdir + '/' + fname + self.sp_extension):
+						self.download_dir + fdir + '/' + fname + self.sp_extension):
 							download = False
 				if download:
 
@@ -3003,8 +3006,8 @@ class ProjectType_:  # fc=0P00
 						if not config.sp_arg_flag['disable dl get']:
 							if self.break_all: return 0
 							try:
-								Fsys.writer(fname + self.sp_extension, 'wb', b'', AboutApp.download_dir + self.Project + '/' + fdir, '0P0B')
-								loaded_file = open(AboutApp.download_dir + self.Project + '/' + fdir + '/' + fname + self.sp_extension, 'wb')
+								Fsys.writer(fname + self.sp_extension, 'wb', b'', self.download_dir + fdir, '0P0B')
+								loaded_file = open(self.download_dir + fdir + '/' + fname + self.sp_extension, 'wb')
 							except IndexError:
 								# TODO: something breaks the code here most of the time. FIX it.
 								# NOTE: well not anymore, idk how
@@ -3021,8 +3024,8 @@ class ProjectType_:  # fc=0P00
 
 									if self.break_all:
 										loaded_file.close()
-										if os_exists(AboutApp.download_dir + self.Project + '/' + fdir + '/' + fname + self.sp_extension):
-											remove(AboutApp.download_dir + self.Project + '/' + fdir + '/' + fname + self.sp_extension)
+										if os_exists(self.download_dir + fdir + '/' + fname + self.sp_extension):
+											remove(self.download_dir + fdir + '/' + fname + self.sp_extension)
 
 										return 0
 
@@ -3037,20 +3040,20 @@ class ProjectType_:  # fc=0P00
 								_temp = session.get(i[0], headers=current_header, timeout=timeout)
 								if _temp: _temp = _temp.content
 								else: raise requests.exceptions.ConnectionError
-								Fsys.writer(fname + self.sp_extension, 'wb', _temp, AboutApp.download_dir + self.Project + '/' + fdir, '0P0B')
+								Fsys.writer(fname + self.sp_extension, 'wb', _temp, self.download_dir + fdir, '0P0B')
 								del _temp
 
 							if 'dl unzip' in self.sp_flags:
-								if not os_isdir(AboutApp.download_dir + self.Project + '/' + fdir + '/' + fname + '/'):
-									makedirs(AboutApp.download_dir + self.Project + '/' + fdir + '/' + fname + '/')
+								if not os_isdir(self.download_dir + fdir + '/' + fname + '/'):
+									makedirs(self.download_dir + fdir + '/' + fname + '/')
 								try:
-									with ZipFile(AboutApp.download_dir + self.Project + '/' + fdir + '/' + fname + self.sp_extension) as zf:
-										zf.extractall(path=AboutApp.download_dir + self.Project + '/' + fdir + '/' + os.path.splitext(fname)[0])
+									with ZipFile(self.download_dir + fdir + '/' + fname + self.sp_extension) as zf:
+										zf.extractall(path=self.download_dir + fdir + '/' + os.path.splitext(fname)[0])
 								except Exception as e:
 									leach_logger(log(['0P0Bx3', self.Project, Netsys.hdr(current_header, '0P0B'), flink, fname, fdir, e.__class__.__name__, e]), UserData.user_name)
 
 								if 'del dl zip' in self.sp_flags:
-									remove(AboutApp.download_dir + self.Project + '/' + fdir + '/' + fname + self.sp_extension)
+									remove(self.download_dir + fdir + '/' + fname + self.sp_extension)
 
 
 						if self.break_all: return 0
@@ -3124,8 +3127,8 @@ class ProjectType_:  # fc=0P00
 					            str(i + (Netsys.hdr(current_header, '0P0B'), "Error dl")) + '\n',
 					            AboutApp.leach_projects + self.Project, '0P0B')
 			except BadZipFile as e:
-				if os_isfile(AboutApp.download_dir + self.Project + '/' + fdir + '/' + fname + self.sp_extension):
-					remove(AboutApp.download_dir + self.Project + '/' + fdir + '/' + fname + self.sp_extension)
+				if os_isfile(self.download_dir + fdir + '/' + fname + self.sp_extension):
+					remove(self.download_dir + fdir + '/' + fname + self.sp_extension)
 
 				if not is_error:
 					Fsys.writer('errors.wlerr', 'a',
@@ -3388,6 +3391,7 @@ class ProjectType_:  # fc=0P00
 		to_del = None
 
 		Ending_msg = set()
+		print(self.download_dir)
 
 		for dirpath, dirnames, filenames in os.walk(self.download_dir):
 			dp = Fsys.get_dir(dirpath)
@@ -3938,16 +3942,16 @@ class ProjectType_:  # fc=0P00
 				if 'del dl zip' in self.sp_flags:
 					self.sub_dirs = []
 
-				if not os_exists(AboutApp.download_dir + self.Project + '/'):
+				if not os_exists(self.download_dir):
 					xprint("\n  /hui/Project folder not found./=/\nPlease recheck or update the download project\n*its required for Manga Freak Projects")
 					return 0
 				self.sub_dirs += natsort.natsorted(
-					[os.path.splitext(i)[0] for i in self.all_list.all_names[0] if os_isdir(AboutApp.download_dir + self.Project + '/' + os.path.splitext(i)[0])])
+					[os.path.splitext(i)[0] for i in self.all_list.all_names[0] if os_isdir(self.download_dir + os.path.splitext(i)[0])])
 				self.all_list = All_list_type(len(self.sub_dirs))
 				for i in range(len(self.sub_dirs)):
-					for j in os_listdir(AboutApp.download_dir + self.Project + '/' + self.sub_dirs[i]):
+					for j in os_listdir(self.download_dir + self.sub_dirs[i]):
 
-						if os_isfile(AboutApp.download_dir + self.Project + '/' + self.sub_dirs[i] + '/' + j) and (not j.endswith('.html')):
+						if os_isfile(self.download_dir + self.sub_dirs[i] + '/' + j) and (not j.endswith('.html')):
 							self.all_list.add_name(j, i)
 
 				self.file_to_sort = True
