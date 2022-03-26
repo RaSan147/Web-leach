@@ -12,3 +12,4 @@ TODO on V8:
   * add ids to each images & #10
   * #14
   * #15
+  * Selectable folder download & update
