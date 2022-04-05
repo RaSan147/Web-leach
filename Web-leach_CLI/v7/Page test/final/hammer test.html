@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Pinch Zoom</title>
+</head>
+
+<body>
+
+  <div>
+
+    <div style="height:150px;background-color:#eeeeee">
+      Ignore this area. Space is needed to test on the iPhone simulator as pinch simulation on the
+      iPhone simulator requires the target to be near the middle of the screen and we only respect
+      touch events in the image area. This space is not needed in production.
+    </div>
+
+    <style>
+
+      .pinch-zoom-container {
+        overflow: hidden;
+        height: 300px;
+      }
+
+      .pinch-zoom-image {
+        width: 100%;
+      }
+
+    </style>
+
+    <script src="https://hammerjs.github.io/dist/hammer.js"></script>
+
+<script src="on-hammer.js" type="text/javascript" charset="utf-8"></script>
+
+    <button onclick="zoomIn()">Zoom In</button>
+    <button onclick="zoomOut()">Zoom Out</button>
+
+    <div class="pinch-zoom-container">
+      <img id="pinch-zoom-image-id" class="pinch-zoom-image" onload="onLoad(this.id)"
+           src="https://hammerjs.github.io/assets/img/pano-1.jpg">
+    </div>
+
+
+  </div>
+
+</body>
+</html>

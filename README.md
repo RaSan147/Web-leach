@@ -13,3 +13,4 @@ TODO on V8:
   * #14
   * #15
   * Selectable folder download & update
+  * NH search engine and multiple links downloader (check `Special tools/NH search engine`)

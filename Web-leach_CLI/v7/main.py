@@ -253,7 +253,7 @@ class AboutApp_:     #fc=A000
 	cloud_data_link_global = 'https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global_6.txt'
 	cloud_data_link = 'https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20server%20v6.00000.txt'
 	cloud_html_temp_link = 'https://raw.githack.com/RaSan147/Web-Leach_pub/main/page_template/wl-page-v2.html'
-	cloud_html_temp_link_proxy = 'https://gitcdn.link/cdn/RaSan147/Web-Leach_pub/main/page_template/wl-page-v1.html'
+	cloud_html_temp_link_proxy = 'https://gitcdn.link/cdn/RaSan147/Web-Leach_pub/main/page_template/wl-page-v2.html'
 
 	g_mode = None
 
@@ -4612,7 +4612,7 @@ yes/y to resume
 							                               'nh'):  # main_link.startswith('https://nhentai.net/g/') or main_link.startswith('https://nhentai.to/g/'):
 								xprint("/y/nhentai link detected!!/=/")
 								is_nh = IOsys.asker(
-									"\u29bf Do you want to download doujin images from this links?? (/hui/ y /=///hui/ n /=/)\n/gh/>>/=/  ")
+									"\u29bf Do you want to download doujin images from this links?? /hui/ y /=///hui/ n /=/\n /gh/>>/=/  ")
 
 								if is_nh:
 									if os_name == 'Windows' and config.sp_arg_flag['ara ara']:
