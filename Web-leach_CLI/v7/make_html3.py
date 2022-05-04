@@ -86,7 +86,8 @@ class MakeHtml_:   #func_code= 7000
 		"""
 		main_page_template="""
 <!DOCTYPE html>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+
 <meta charset="UTF-8">
 
 <head>

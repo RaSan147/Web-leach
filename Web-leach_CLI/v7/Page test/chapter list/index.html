@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+
+
+<title></title>
+<style>.popup{
+  
+  position: fixed;
+  
+  z-index: 22;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  transition: all 300ms ease-in-out;
+  transform: translate(-50%, -50%) scale(1)
+}
+
+.modal_bg{
+
+    display: inherit;
+
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden ! important;
+}
+
+
+
+#popup-box {
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  color: #AAA;
+  transition: all 300ms ease-in-out;
+  background: #222;
+  width: 95%;
+  max-width: 500px;
+  z-index: 23;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+  max-height: 600px;
+  height:max-content;
+  min-height: 300px;
+}
+
+.popup-close-btn {
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 30px;
+  height: 30px;
+  background: #222;
+  color: #fff;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 50%
+}
+
+.popup:not(.active){
+  transform: translate(-50%, -50%) scale(0);
+}
+
+
+.popup.active #popup-box{
+  transform: translate(-50%, -50%) scale(1)
+}
+
+
+button {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  padding:15px;
+  font-size:18px;
+  border:2px solid #222;
+  color:#222;
+  text-transform:uppercase;
+  font-weight:600;
+  background:#fff;
+}
+
+
+body{
+  min-height:100vh; 
+  margin:0; 
+  display: flex;
+  flex-direction: column;
+}
+
+html, body, input, textarea, select, button {
+  border-color: #736b5e;
+  color: #e8e6e3;
+  background-color: #131516;
+}
+* {
+  scrollbar-color: #0f0f0f #454a4d;
+}
+#allA{
+  text-align: center;
+  margin-left: 5%;
+  margin-right: 5%;
+  width: 85%;
+}
+
+#lastleft{
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
+  text-decoration: none;
+  color: #06A5EE;
+}
+
+#proj_title{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+
+.list_class{
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif';
+  text-decoration: none;
+  color: #06A5EE;
+  overflow-wrap: break-word;
+  padding-left: 6%;
+  padding-right: 5%;
+}
+
+.overflowHidden {
+
+    overflow: hidden !important;
+}
+
+#footer {
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="popup", id="popup-0">
+
+  <div id="popup-bg" class="modal_bg overflowHidden" style="background-color:rgba(0, 0, 0, 0.9);" onclick="popup_msg.togglePopup()"></div>
+  <div id="popup-box">
+    <div class="popup-close-btn" onclick="popup_msg.togglePopup()">&times;</div>
+
+    <h1 id="popup-header"></h1>
+    <hr width="95%" id="popup-hr">  <!-- if needed -->
+
+    <div id="popup-content"></div>
+  </div>
+</div>
+<h2 style="text-align: center;" id="proj_title"></h2>
+<hr style="width: 80%;">
+<center>
+<div id='allA'></div>
+</center>
+<br><br>
+
+</body>
+
+<footer id='footer'>
+<br><br><center><hr width='95%'><hr width='89%'></center>
+<p style="color: darkgray;">Made by Ratul Hasan with Web leach</p>
+<br><br>
+</footer>
+
+
+<script type="text/javascript">
+				
+const new_pages = [3,5,8]; // index of new pages
+const pages_list=['read-touch-on-chapter-1','read-touch-on-chapter-2','read-touch-on-chapter-3','read-touch-on-chapter-4','read-touch-on-chapter-5','read-touch-on-chapter-6','read-touch-on-chapter-7','read-touch-on-chapter-8','read-touch-on-chapter-9','read-touch-on-chapter-10','read-touch-on-chapter-11','read-touch-on-chapter-12','read-touch-on-chapter-13','read-touch-on-chapter-14','read-touch-on-chapter-15','read-touch-on-chapter-16','read-touch-on-chapter-17','read-touch-on-chapter-18','read-touch-on-chapter-19','read-touch-on-chapter-20','read-touch-on-chapter-21','read-touch-on-chapter-22','read-touch-on-chapter-23','read-touch-on-chapter-24','read-touch-on-chapter-25','read-touch-on-chapter-26','read-touch-on-chapter-27','read-touch-on-chapter-28','read-touch-on-chapter-29','read-touch-on-chapter-30','read-touch-on-chapter-31','read-touch-on-chapter-32','read-touch-on-chapter-33','read-touch-on-chapter-34','read-touch-on-chapter-35','read-touch-on-chapter-36','read-touch-on-chapter-37','read-touch-on-chapter-38','read-touch-on-chapter-39','read-touch-on-chapter-40','read-touch-on-chapter-41','read-touch-on-chapter-42','read-touch-on-chapter-43','read-touch-on-chapter-44','read-touch-on-chapter-45','read-touch-on-chapter-46','read-touch-on-chapter-47','read-touch-on-chapter-48','read-touch-on-chapter-49','read-touch-on-chapter-50','read-touch-on-chapter-51','read-touch-on-chapter-52','read-touch-on-chapter-53','read-touch-on-chapter-54','read-touch-on-chapter-55','read-touch-on-chapter-56','read-touch-on-chapter-57','read-touch-on-chapter-58','read-touch-on-chapter-59','read-touch-on-chapter-60','read-touch-on-chapter-61','read-touch-on-chapter-62','read-touch-on-chapter-63','read-touch-on-chapter-64','read-touch-on-chapter-65','read-touch-on-chapter-66','read-touch-on-chapter-67','read-touch-on-chapter-68','read-touch-on-chapter-69','read-touch-on-chapter-70','read-touch-on-chapter-71','read-touch-on-chapter-72','read-touch-on-chapter-73','read-touch-on-chapter-74','read-touch-on-chapter-75','read-touch-on-chapter-76','read-touch-on-chapter-77','read-touch-on-chapter-78','read-touch-on-chapter-79','read-touch-on-chapter-80','read-touch-on-chapter-81','read-touch-on-chapter-82','read-touch-on-chapter-83','read-touch-on-chapter-84','read-touch-on-chapter-85','read-touch-on-chapter-86','read-touch-on-chapter-87','read-touch-on-chapter-88','read-touch-on-chapter-89','read-touch-on-chapter-90','read-touch-on-chapter-91','read-touch-on-chapter-92','read-touch-on-chapter-93','read-touch-on-chapter-94','read-touch-on-chapter-95','read-touch-on-chapter-96','read-touch-on-chapter-97','read-touch-on-chapter-98','read-touch-on-chapter-99','read-touch-on-chapter-100','read-touch-on-chapter-101','read-touch-on-chapter-102','read-touch-on-chapter-103','read-touch-on-chapter-104','read-touch-on-chapter-105','read-touch-on-chapter-106','read-touch-on-chapter-107','read-touch-on-chapter-108','read-touch-on-chapter-108.1','read-touch-on-chapter-108.2','read-touch-on-chapter-108.3','read-touch-on-chapter-108.4','read-touch-on-chapter-109.1'];
+
+const current_page_index=-1;
+const proj_name="touch";
+document.title = proj_name;
+
+function is_in(item, array) {
+    return array.indexOf(item) > -1;
+}
+
+document.getElementById('proj_title').innerText=proj_name;
+
+var all_li= document.getElementById('allA');
+for (let i = 0; i < pages_list.length; i++){
+  var linkX = document.createElement('A');
+  var linkContainer = document.createElement('DIV');
+  linkContainer.className = 'sub_li_divs';
+  linkX.href = pages_list[i]+'/index.html';
+  
+  linkX.innnerHTML = ""
+  
+  if(is_in(i, new_pages)){
+  				linkX.innerHTML = ' <span style="background-color: red; color: white; font-size: 5px; padding: 0  3px; border-radius: 3px; margin-left: -4%;">New</span> '
+  }
+  
+  linkX.innerHTML = linkX.innerHTML + pages_list[i];
+  if(i%2==0){
+    linkContainer.style.backgroundColor = '#35393b' ;
+  }
+  else{
+    linkContainer.style.backgroundColor = '#222426' ;
+  }
+  
+  linkX.className = 'list_class';
+  linkContainer.appendChild(linkX);
+  linkContainer.appendChild(document.createElement('BR'));
+  var hr_ = document.createElement('HR');
+  linkContainer.appendChild(hr_);
+  all_li.appendChild(linkContainer);
+}
+
+
+
+function toggle_scroll() {
+
+    document.body.classList.toggle('overflowHidden');
+
+}
+
+
+class Popup_Msg {
+
+    constructor() {
+
+      this._on_close=function(){return}
+      this.on_close=this._on_close;
+      
+        this.popup_obj = document.getElementById('popup-0');
+        this.header = document.getElementById('popup-header');
+        this.content = document.getElementById('popup-content');
+        this.hr = document.getElementById('popup-hr');
+        this.on_close = function(){
+          return
+        }
+    }
+
+    togglePopup(indx=0, on_or_off = null) {
+        this.popup_obj.classList.toggle("active");
+        
+        if(!(this.popup_obj.classList.contains("active"))){
+          this.on_close();
+        }
+        toggle_scroll();
+    }
+    
+
+    createPopup(header, content,{hr=true,on_close=this._on_close}={}){
+      this.on_close = on_close;
+      this.header.innerHTML = header;
+      this.content.innerHTML = content;
+      if(hr){
+        this.hr.style.display = "block";
+       }else{
+         this.hr.style.display = "none";
+        }
+     }
+}
+
+
+let popup_msg = new Popup_Msg();
+
+function reset_last_open(){
+    localStorage.setItem(proj_name, current_page_index);
+  
+}
+if(localStorage.getItem(proj_name)!=null){
+  if(localStorage.getItem(proj_name)!=current_page_index){
+    popup_msg.createPopup('You left the page on <a id="lastleft" href="'+ pages_list[localStorage.getItem(proj_name)]+ '/index.html">'+ pages_list[localStorage.getItem(proj_name)]+ '</a>', 'Click on the link to go there<hr>Close this dialog to continue from here',{on_close:reset_last_open});
+    popup_msg.togglePopup();
+  }}
+  
+  else{
+    reset_last_open()
+  }
+  
+    </script>

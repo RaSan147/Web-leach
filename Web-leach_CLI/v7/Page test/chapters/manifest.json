@@ -1,0 +1,19 @@
+{
+  "name": "Web Leach",
+  "short_name": "Wl Reader",
+  "start_url": "[FINAL] pretty_big_1_file with hammer.html",
+  "display": "standalone",
+  "background_color": "#454646",
+  "theme_color": "#b7effd",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.ico",
+      "type": "image/x-icon", "sizes": "192x192"
+    },
+    {
+      "src": "icon.ico",
+      "type": "image/x-icon", "sizes": "512x512"
+    }
+  ]
+}

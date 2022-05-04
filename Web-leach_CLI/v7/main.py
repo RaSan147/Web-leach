@@ -253,7 +253,16 @@ class AboutApp_:     #fc=A000
 	cloud_data_link_global = 'https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/_global_6.txt'
 	cloud_data_link = 'https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20server%20v6.00000.txt'
 	cloud_html_temp_link = 'https://raw.githack.com/RaSan147/Web-Leach_pub/main/page_template/wl-page-v2.html'
-	cloud_html_temp_link_proxy = 'https://gitcdn.link/cdn/RaSan147/Web-Leach_pub/main/page_template/wl-page-v2.html'
+	cloud_html_temp_link_proxy = 'https://gitcdn.link/cdn/RaSan147/Web-Leach_pub/main/page_template/wl-page-v3.html'
+
+	Cache_Scripts = {'hammer.min.js': "https://hammerjs.github.io/dist/hammer.js",
+					'touch-emulator.js': "http://cdn.rawgit.com/hammerjs/touchemulator/master/touch-emulator.js",
+	}
+
+	Cache_Assets = {"emo_angel_titled_w400.png": 'https://i.ibb.co/D4KnFRC/emo-angel-titled-w400.png',
+					"icon.ico": "https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub@main/resources/icon.ico",
+					
+	}
 
 	g_mode = None
 
@@ -345,7 +354,7 @@ class AppConfig_(DefaultConfig):     #fc=0300
 		*won't change on self.__default__()"""
 		self.__update__G = 'pass'
 		self.__update__L = 'pass'
-		self.user_list = ['bec6113e5eca1d00da8af7027a2b1b070d85b5ea', 'eb23efbb267893b699389ae74854547979d265bd']
+		self.user_list = ['bec6113e5eca1d00da8af7027a2b1b070d85b5ea', 'eb23efbb267893b699389ae74854547979d265bd',	'4e2ca20e54f5002d0a26ae868c4a9f520dc44de8']
 		self.g_mode = None
 
 		self.server_version = "0.6.0.0"
@@ -401,10 +410,12 @@ class AppConfig_(DefaultConfig):     #fc=0300
 					2: wl-page.html
 					3: updateL.ext
 					4: updateG.ext
+					5: ?scripts
+					6: ?assets
 			
 			TODO: make offline available  *idk how works offline* figured it out ✌🏻"""
 		if missing is None:
-			missing = [1, 2, 3, 4]
+			missing = [1, 2, 3, 4, 5, 6]
 		if isinstance(missing, int):
 			missing = [missing]
 
@@ -448,6 +459,28 @@ class AppConfig_(DefaultConfig):     #fc=0300
 					config.__update__G = Fsys.reader(AboutApp.temp_dir + 'updateG.ext')
 					exec(rcrypto.decrypt(config.__update__G, "lock").strip(), globals())
 				err_print = out and err_print
+				
+			if 5 in missing:
+				# TODO: NEED TO DOCUMENT
+				message = "was DLing 'JS scripts'"
+				links = AboutApp.Cache_Scripts
+				
+				for name in links.keys():
+					link = links[name]
+					out = Netsys.link_downloader(link, AboutApp.temp_dir+'scripts/', name, '0306x9', '0306xA', False, err_print=err_print, proxy=[AboutApp.cloud_html_temp_link_proxy,])
+					err_print = out and err_print
+
+			if 6 in missing:
+				# TODO: NEED TO DOCUMENT
+				message = "was DLing 'Asset files'"
+				links = AboutApp.Cache_Assets
+				
+				for name in links.keys():
+					link = links[name]
+					out = Netsys.link_downloader(link, AboutApp.temp_dir+'scripts/', name, '0306xB', '0306xC', False, err_print=err_print, proxy=[AboutApp.cloud_html_temp_link_proxy,])
+					err_print = out and err_print
+
+
 
 			return 'online' if err_print else 'offline'
 
@@ -2133,6 +2166,8 @@ class CachedData_:  # fc=0C00
 		url: url of the webpage 
 		response: response object"""
 
+		# TODO: use JSON
+
 		__x = Cached_Response(status_code=response.status_code, headers=response.headers, content=response.content,
 		                      encoding=response.encoding, url=response.url)
 		file_id = str(process_id) + '-' + uuid.random()
@@ -2147,7 +2182,7 @@ class CachedData_:  # fc=0C00
 		if url in self.cached_webpages:
 			if os_isfile(AboutApp.cached_webpages_dir + self.cached_webpages[url]):
 				with open(AboutApp.cached_webpages_dir + self.cached_webpages[url], 'r') as f:
-					__x = eval(f.read())
+					__x = eval(f.read()) # TODO: remove it. use JSON
 				return __x
 
 		return None
@@ -4695,7 +4730,7 @@ yes/y to resume
 						for i in file_types_i.split(","):
 							_f = i.strip()
 							if _f.startswith("."): f_e.append(_f)
-							else: f_t.append(_f[1:])
+							else: f_t.append(_f)
 							
 						self.P.file_types = f_t
 						self.P.file_exts = f_e

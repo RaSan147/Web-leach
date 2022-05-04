@@ -700,11 +700,13 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 		'.xz': 'application/x-xz',
 	}
 
-	def __init__(self, *args, directory=None, **kwargs):
+	def __init__(self, *args, directory=None, data_dir="", **kwargs):
 		if directory is None:
 			directory = os.getcwd()
 		self.directory = os.fspath(directory)
+		self.data_dir = data_dir
 		super().__init__(*args, **kwargs)
+		
 
 	def do_GET(self):
 		"""Serve a GET request."""
@@ -735,6 +737,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 		path = self.translate_path(self.path)
 		f = None
 
+			
+
+		if self.path.startswith("/?"):
+			path= self.data_dir+self.path[2:]
+			#print("\t", path)
+		
+		#print("a)\t", path, "\nb)\t", self.path)
+			
 		if self.path == '/root?response':
 			outp='Web-leach v6 is up and running'
 			encoded = outp.encode('utf-8', 'surrogateescape')
@@ -1351,9 +1361,9 @@ class DualStackServer(ThreadingHTTPServer):
 		return super().server_bind()
 
 
-def run_server(port = 8000, cd = os.getcwd()):
+def run_server(port = 8000, cd = os.getcwd(), data_dir=""):
 	handler_class = partial(SimpleHTTPRequestHandler,
-				directory=cd)
+				directory=cd, data_dir=data_dir)
 	
 	return test(HandlerClass=handler_class,
 		ServerClass=DualStackServer, port=port, bind=None)
