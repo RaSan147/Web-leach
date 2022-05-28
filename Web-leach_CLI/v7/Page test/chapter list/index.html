@@ -1,107 +1,109 @@
-
 <!DOCTYPE html>
+
+<html lang="en">
+
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<link rel="manifest" href="/manifest.json">
 
 
 <title></title>
-<style>.popup{
-  
-  position: fixed;
-  
-  z-index: 22;
-  left: 50%;
-  top: 50%;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  transition: all 300ms ease-in-out;
-  transform: translate(-50%, -50%) scale(1)
+<style>
+
+
+
+.popup {
+
+	position: fixed;
+	z-index: 22;
+	left: 50%;
+	top: 50%;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	transition: all .5s ease-in-out;
+	transform: translate(-50%, -50%) scale(1)
 }
-
-.modal_bg{
-
-    display: inherit;
-
-    position: fixed;
-    z-index: 10;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden ! important;
-}
-
-
 
 #popup-box {
-  display: block;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  color: #AAA;
-  transition: all 300ms ease-in-out;
-  background: #222;
-  width: 95%;
-  max-width: 500px;
-  z-index: 23;
-  text-align: center;
-  padding: 20px;
-  box-sizing: border-box;
-  font-family: "Open Sans", sans-serif;
-  max-height: 600px;
-  height:max-content;
-  min-height: 300px;
+	display: block;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	color: #AAA;
+	transition: all 400ms ease-in-out;
+	background: #222;
+	width: 95%;
+	max-width: 500px;
+	z-index: 23;
+	text-align: center;
+	padding: 20px;
+	box-sizing: border-box;
+	font-family: "Open Sans", sans-serif;
+	max-height: 600px;
+	height: max-content;
+	min-height: 300px;
 }
 
 .popup-close-btn {
-  cursor: pointer;
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  width: 30px;
-  height: 30px;
-  background: #222;
-  color: #fff;
-  font-size: 25px;
-  font-weight: 600;
-  line-height: 30px;
-  text-align: center;
-  border-radius: 50%
+	cursor: pointer;
+	position: absolute;
+	right: 20px;
+	top: 20px;
+	width: 30px;
+	height: 30px;
+	background: #222;
+	color: #fff;
+	font-size: 25px;
+	font-weight: 600;
+	line-height: 30px;
+	text-align: center;
+	border-radius: 50%
 }
 
-.popup:not(.active){
-  transform: translate(-50%, -50%) scale(0);
-}
-
-
-.popup.active #popup-box{
-  transform: translate(-50%, -50%) scale(1)
+.popup:not(.active) {
+	transform: translate(-50%, -50%) scale(0);
+	opacity: 0;
 }
 
 
-button {
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  padding:15px;
-  font-size:18px;
-  border:2px solid #222;
-  color:#222;
-  text-transform:uppercase;
-  font-weight:600;
-  background:#fff;
+.popup.active #popup-box {
+	transform: translate(-50%, -50%) scale(1);
+	opacity: 1;
+}
+
+.modal_bg {
+
+	display: inherit;
+
+	position: fixed;
+	z-index: 10;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	/*overflow: auto;*/
 }
 
 
-body{
-  min-height:100vh; 
-  margin:0; 
-  display: flex;
-  flex-direction: column;
+body {
+	touch-action: pan-x pan-y;
+	overflow-x: hidden;
+	font-family: Arial, Helvetica, sans-serif;
+	min-height: 100vh;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	background-color: var(--theme-background);
+	transition: top .3s;
+	position: relative;
+	top: 50px
 }
+
 
 html, body, input, textarea, select, button {
   border-color: #736b5e;

@@ -147,7 +147,8 @@ class IAudioEndpointVolume(comtypes.IUnknown):
 
 #def play_audio(func,file,vol):
 ev = IAudioEndpointVolume.get_default()
-ex_vol = ev.GetMasterVolumeLevelScalar()*100
+def ex_vol():
+	return int(ev.GetMasterVolumeLevelScalar()*100)
 def set_win_vol(lvl):
     ev.SetMasterVolumeLevelScalar(lvl/100)
 #func(file,block=True).play()
@@ -172,12 +173,13 @@ if os_name == 'nt':
 									'\n		' + command.decode() +
 									'\n	' + errorBuffer.value.decode())
 				raise PlaysoundException(exceptionMessage)
+
 			return buf.value
 
 		def __init__(self, filename):
 			#filename = filename.replace('/', '\\')
 			self.filename = filename
-			self._alias = 'yui_' + str(random.random())
+			self._alias = 'mplay_' + str(random.random())
 
 			self.directsend('open "'+filename+'" alias ' +self._alias )
 			self.directsend('set %s time format milliseconds' % self._alias)
@@ -191,18 +193,26 @@ if os_name == 'nt':
 			self.directsend('setaudio %s volume to %d' %
 					(self._alias, level * 10) )
 
+		def isvolume(self):
+			return self.directsend('status %s volume' % self._alias) 
+
 		def play(self, start_ms=None, end_ms=None):
 			start_ms = 0 if not start_ms else start_ms
+
 			end_ms = self._length_ms if not end_ms else end_ms
-			buf=self.directsend('play %s from %d to %d'
+
+			return self.directsend('play %s from %d to %d'
 					% (self._alias, start_ms, end_ms) )
 		def _mode(self):
 			# returns binary
 			#print(self.directsend('status %s mode' % self._alias))
 			return self.directsend('status %s mode' % self._alias) 
-		
-		def isplaying(self):
+				
+		def isrunning(self):
 			return self._mode() == b'playing' or self._mode() == b'paused'
+
+		def isplaying(self):
+			return self._mode() == b'playing'
 
 
 		def pause(self):
@@ -218,12 +228,19 @@ if os_name == 'nt':
 			self.directsend('stop %s' % self._alias)
 			self.directsend('seek %s to start' % self._alias)
 
+		def replay(self):
+			self.directsend('stop %s' % self._alias)
+			self.play()
+
 		# TODO: this closes the file even if we're still playing.
 		# no good.  detect isplaying(), and don't die till then!
-		'''def __del__(self):
-			self.directsend('close %s' % self._alias)'''
+		def close(self):
+			self.directsend('close %s' % self._alias)
+		# def __del__(self):
+		# 	self.close()
+
 else:
-	raise Exception("mp3play can't run on your operating system.")
+	raise Exception("mplay4 can't run on your operating system.")
 
 
 class AudioClip(object):
@@ -232,7 +249,7 @@ class AudioClip(object):
 	def __init__(self, filename):
 		"""Create an AudioClip for the given filename."""
 		self._clip = _PlatformSpecificAudioClip(filename)
-		#self.block=block
+
 
 	def play(self, start_ms=None, end_ms=None):
 		"""
@@ -246,8 +263,6 @@ class AudioClip(object):
 			return
 		else:
 			return self._clip.play(start_ms, end_ms)
-		#if block=True:
-			#sleep(self.seconds())
 
 	def volume(self, level):
 		"""Sets the volume between 0 and 100."""
@@ -268,6 +283,12 @@ class AudioClip(object):
 		"""Unpause the clip if it is currently paused."""
 		return self._clip.resume()
 
+	def replay(self):
+		return self._clip.replay()
+
+	def isrunning(self):
+		return self._clip.isrunning()
+
 	def ispaused(self):
 		"""Returns True if the clip is currently paused."""
 		return self._clip.ispaused()
@@ -275,6 +296,9 @@ class AudioClip(object):
 	def stop(self):
 		"""Stop the audio clip if it is playing."""
 		return self._clip.stop()
+
+	def close(self):
+		self._clip.close()
 
 	def seconds(self):
 		"""
@@ -285,7 +309,15 @@ class AudioClip(object):
 
 	def milliseconds(self):
 		"""Returns the length in milliseconds of the audio clip."""
-		return self._clip.milliseconds()
+		return self._clip._length_ms
+
+	def duration(self):
+		return self.seconds()
+
+	def is_volume(self):
+		return self._clip.isvolume()
+
+	
 def load(filename):
 	"""Return an AudioClip for the given filename."""
 	return AudioClip(filename)

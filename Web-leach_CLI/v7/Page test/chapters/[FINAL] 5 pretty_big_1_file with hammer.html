@@ -63,12 +63,13 @@ sidebar: 5
 
 #image-modal-content {
 
-	/*display: flex !important;*/
+	display: flex !important;
 	/*justify-content: flex-start;*/
 	/*align-items: center;*/
-	height: 100vh !important;
+	/*height: 100vh !important;*/
 	flex-direction: column;
 	pointer-events: none;
+	text-align: center;
 	;
 }
 
@@ -295,9 +296,10 @@ user-select: none; /* Non-prefixed version, currently */
 
 #modal-img {
 	position: relative;
-	left: 0;
+	text-align: center;
+	/*left: 0;*/
 	width: 80%;
-	margin: auto;
+	/*margin: auto;*/
 	max-width: 900px;
 	z-index: 21;
 	transition: width .6s, height .6s, opacity .4s, transform .1s ease-out;
@@ -309,7 +311,7 @@ user-select: none; /* Non-prefixed version, currently */
 	animation-duration: .1s;
 	-webkit-animation-name: zoom;
 	-webkit-animation-duration: .15s;
-	flex: none;
+	/*flex: none;*/
 	pointer-events: auto;
 	overflow: auto;
 }
@@ -386,7 +388,7 @@ user-select: none; /* Non-prefixed version, currently */
 #image-modal-content {
 	position: relative;
 	display: block;
-	margin: auto;
+	/*margin: auto;*/
 	width: max-content;
 	height: min-content;
 	max-width: 100%;
@@ -1534,13 +1536,14 @@ user-select: none; /* Non-prefixed version, currently */
 		<div class="modal_bg" style="background-color:rgba(0, 0, 0, 0.9);" onclick="modal_img.close_image_modal()">
 		</div>
 		<span class="close-image-modal">&times;</span>
+		<center>
 		<div id="image-modal-content">
 			<img id="modal-img">
 
 
 			<span id="modal-modal-caption-gap" style="padding: 200px 1px 1px 0; position: relative; margin: 50px;" onclick="modal_img.close_image_modal()"></span>
 
-		</div>
+		</div></center>
 		<div id="modal-caption-box">
 			<div id="modal-caption">1</div>
 		</div>

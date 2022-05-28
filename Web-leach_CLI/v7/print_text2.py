@@ -3,7 +3,8 @@ import re
 import sys
 
 wait_time = 0
-
+def null(*a):
+	return a[0]
 class XprintClass:
 	def __init__(self) -> None:
 		self.normal_tx="0"
@@ -92,7 +93,7 @@ class XprintClass:
 
 		self.text_styling_markup()
 
-	def slowtype(self, *text, sep= ' ', wait_time=wait_time, end='\n', highlighter=False, auto_resetting=True):
+	def slowtype(self, *text, sep= ' ', wait_time=wait_time, end='\n', highlighter=False, auto_resetting=True, run_at_start=null):
 		"""main typing engine that prints inputted text
 			slowly based on waiting time
 			
@@ -106,6 +107,7 @@ class XprintClass:
 		self.custom_style = self.default_style.copy()
 		
 		self.text= sep.join(map(str, text))
+		self.text= run_at_start(self.text)
 		self.wait_time=float(wait_time)
 		self.end=str(end)
 
@@ -259,10 +261,13 @@ class XprintClass:
 	def reset(self):
 		self.no_colors = self.no_code = False
 
-
+	def remove_style(self,text):
+		text = re.sub("/s\d*[.]?\d*/", "", text)
+		return re.sub("/[argybpcw \=uih_]+/","", text)
 
 XprintEngine = XprintClass()
 xprint = XprintEngine.slowtype
+remove_style = XprintEngine.remove_style
 
 if __name__ == '__main__':
 	xprint("/rhu/hello/=/ q to quit")

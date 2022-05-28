@@ -558,7 +558,7 @@ class UserData_:  # fc=0400
 				else:
 					xprint("/rh/User not found!/=/ \nWait a minute! WHO are YOU?!!")
 					if os_name == "Windows":
-						ex = mplay4.ex_vol
+						ex = mplay4.ex_vol()
 						if not os_isfile(AboutApp.temp_dir + 'who_r_u.mp3'):
 							if config.god_mode(1) == 'offline':
 								continue
@@ -1189,6 +1189,8 @@ class OSsys_:  # fc=0700
 		all_libs = OSsys.get_installed()
 		
 		has_all_libs = all(i in all_libs for i in requirements_all)
+		if os_name=="Windows":
+			has_all_libs = has_all_libs and all(i in all_libs for i in requirements_win)
 		
 		# print(has_all_libs, all_libs)
 		if has_all_libs:
@@ -3405,6 +3407,8 @@ class ProjectType_:  # fc=0P00
 				if img_link is None:
 					img_link = tag.get('data-img-src')
 				if img_link is None:
+					img_link = tag.get('data-lazy-src')
+				if img_link is None:
 					img_link = tag.get('src')
 				if img_link is None:
 					continue
@@ -5013,6 +5017,7 @@ if __name__ == '__main__':
 		
 		server_code.server_close()
 		server_code.shutdown()
+		exit(0)
 		
 
 	while Keep_main_running:
