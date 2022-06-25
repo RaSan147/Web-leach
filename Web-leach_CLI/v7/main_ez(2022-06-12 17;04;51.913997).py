@@ -1,3 +1,5 @@
+"RUNNING FROM -- /storage/emulated/0/C_coding/Python/Web Leach/Web-leach/Web-leach_CLI/v7/main_ez.py"
+
 #pylint:disable=W0201
 #: *****************************************************************************
 #:                The code in this file was created by Ratul Hasan             *
@@ -44,15 +46,13 @@ start_up = time.time()
 from platform import system as os_name
 os_name = os_name()
 
-from shutil import get_terminal_size
-
 if os_name == 'Windows':
 	import console_mod     #fc=2000
 	console_mod.enable_color2() # to test
 
-from print_text2 import xprint, oneLine  # fc=3000
+from print_text2 import xprint  # fc=3000
 
-oneline = oneLine()
+
 xprint('/=/', end='')
 
 try:
@@ -610,9 +610,6 @@ class IOsys_ :  # fc=0500
 			return 0
 
 		for _ in range(lines):
-			# delete current line
-			sys_write('\x1b[2K')
-			
 			# cursor up one line
 			sys_write('\x1b[1A')
 
@@ -1455,7 +1452,7 @@ class Netsys_ :  # fc=0800
 			if logger: traceback.print_exc()
 			leach_logger(log(['0807x-1', f_code, port, cd]))
 
-	def run_server_t(self, cd='.'):  # fc=0808 v
+	def run_server_t(self, server_status, cd='.'):  # fc=0808 v
 		"""Runs server in a thread and returns the thread to server_code
 
 		args:
@@ -1468,37 +1465,13 @@ class Netsys_ :  # fc=0800
 		"""
 
 		global server_code
-		
-		server_status = Netsys.check_server("http://localhost:%i" % UserData.user_primary_port, '0M04', timeout=5)
 
 		if config.server_status:
 			return
-			
-		if server_status:
-			config.server_running = True
-			return
 
-		elif server_status in (False, None):
-			config.running_port = UserData.user_primary_port
+		port = config.running_port  # user specified port or proxy port
 
-			port = config.running_port  # user specified port or proxy port
-			try:
-				_t = self.run_server(port=port, cd=cd)
-			except OSError:
-				try:
-					config.running_port = UserData.user_secondary_port
-
-					port = config.running_port 
-					 
-					_t = self.run_server(port=port, cd=cd)
-				except OSError:
-					xprint("/rhi/Failed to run local server/=/")
-					return
-					
-		else:
-			exit()
-
-		xprint("\n/i/ Running port /=/ :", config.running_port)
+		_t = self.run_server(port=port, cd=cd)
 		if _t != 0:
 			server_code = None
 			server_code = _t
@@ -2954,10 +2927,11 @@ class ProjectType_ :  # fc=0P00
 					if __x == 0:
 						name = Fsys.get_dir(i, 'url')
 						self.update_sub_dirs(name, j)
-		
+					IOsys.delete_last_line()
+
 					self.sub_dirs_count += 1
 					if self.break_all: return 0
-					oneline.update("Getting pages [%i/%i]" % (self.sub_dirs_count, len(self.sub_links)))
+					xprint("Getting pages [%i/%i]" % (self.sub_dirs_count, len(self.sub_links)))
 
 		except EOFError:
 			self.break_all = True
@@ -2968,8 +2942,6 @@ class ProjectType_ :  # fc=0P00
 
 	def gen_sub_dirs(self):  # fc=0P08
 		"""Generates sub-directories|`self.sub_dirs`"""
-		oneline.new()
-		oneline.update("Getting pages [0/%i]"%len(self.sub_links))
 
 		index_thread_list = [Process(target=self._gen_sub_dirs, args=(i,)) for i in range(self.index_threads)]
 
@@ -3028,27 +3000,16 @@ class ProjectType_ :  # fc=0P00
 	def speed_tester(self):  # fc=0P0A
 		"""Counts and prints download speed and
 		shows download amount in thread"""
-		from math import ceil
+
 		last_chunks = 0
-		last_done = 0
-		percent =0
-		old_len = len("".join(map(str, ['Downloaded [', ('━'*percent), '╺' if percent<30 else '━', '━'*(30-percent), '][', last_done, '/', self.total, ']', self.current_speed , '/s'])))
 		while (not (self.dl_done or self.break_all)) or self.total == 0:
 			_temp = self.dl_chunks
 			self.current_speed = filesize_size((_temp - last_chunks) * config.sp_arg_flag['chunk_size'] * 2, filesize_alt)
 
 			if self.break_all or self.total == 0: return 0
 			percent = floor((self.done / self.total) * 30)
-			#IOsys.delete_last_line()
-			size = int(get_terminal_size()[0])
-			IOsys.delete_last_line(int(ceil(old_len/size)))
-			#print("\n"*2,int(ceil(old_len/size)),"\n"*2)
-			last_done = self.done
-
-			sys_write(''.join(['Downloaded [', '\u001b[32;1m', ('━'*percent), '\u001b[30;1m╺' if percent<30 else '━', '━'*(30-percent), '\u001b[0m][', str(last_done), '/', str(self.total), ']', self.current_speed , '/s\n']))
-			
-			
-			old_len = len("".join(map(str, ['Downloaded [', ('━'*percent), '╺' if percent<30 else '━', '━'*(30-percent), '][', last_done, '/', self.total, ']', self.current_speed , '/s'])))
+			IOsys.delete_last_line()
+			sys_write(''.join(['Download [', '\u001b[32;1m', ('━'*percent), '\u001b[30;1m╺' if percent<30 else '━', '━'*(30-percent), '\u001b[0m][', str(self.done), '/', str(self.total), ']', self.current_speed , '/s\n']))
 			time.sleep(.5)
 			last_chunks = _temp
 
@@ -3135,7 +3096,7 @@ class ProjectType_ :  # fc=0P00
 								# TODO: something breaks the code here most of the time. FIX it.
 								# NOTE: well not anymore, idk how
 
-								xprint('\n\n/y/Something Went wrong, Returning to main Menu/=/\n\n')
+								xprint('\n/y/Something Went wrong, Returning to main Menu/=/\n')
 								self.break_all = True
 								return 0
 
@@ -3199,10 +3160,10 @@ class ProjectType_ :  # fc=0P00
 							if self.re_error == 1: IOsys.delete_last_line()
 							IOsys.delete_last_line()
 							if self.re_error < 4:
-								print("\n\nFailed to download from '%s'\n\n" % i[0])
+								print("Failed to download from '%s'\n\n" % i[0])
 							else:
 								if self.re_error != 4: IOsys.delete_last_line()
-								print("Failed %i others links" % (self.re_error - 3))
+								print("And %i others" % (self.re_error - 3))
 							Fsys.writer('left_errors.txt', 'a',
 							            str(i + (Netsys.hdr(current_header, '0P0B'), "Error dl")) + '\n',
 							            AboutApp.leach_projects + self.Project, '0P0B')
@@ -3242,7 +3203,7 @@ class ProjectType_ :  # fc=0P00
 				else:
 					self.re_error += 1
 					if self.re_error < 4:
-						print("Failed to download from '%s'\n\n" % i[0])
+						print("Failed to download from '%s'" % i[0])
 					else:
 						if self.re_error != 4: IOsys.delete_last_line()
 						print("And %i others" % (self.re_error - 3))
@@ -3375,7 +3336,8 @@ class ProjectType_ :  # fc=0P00
 		             UserData.user_name)
 
 	def print_index_result(self, link):  # fc=0P0E
-		oneline.update('Indexed [' + str(self.indx_count) + '/' + str(len(self.sub_links)) + '] /~`' + link + '`~/')
+		IOsys.delete_last_line()
+		xprint('Indexed [' + str(self.indx_count) + '/' + str(len(self.sub_links)) + '] /~`' + link + '`~/')
 
 	def generic_list_writer(self, partitions, part=0, link=None):  # fc=0P0F
 		"""indexes the list of links or a single link and and adds & aligns files (of specified file formats) by relative folders in the all_list list
@@ -3803,7 +3765,7 @@ class ProjectType_ :  # fc=0P00
 		if re_search(Constants.special_starts['nh_sc'], link):
 			self.main_link = 'https://nhentai.net/g/' + str(re_search(Constants.special_starts['nh_sc'], link).group(1))
 		link = self.main_link
-		code = re_search('https://nhentai.[^/]*?/g/((\d)*)', link)
+		code = re_search('https://nhentai.[^/]*/g/((\d)*)', link)
 
 		if code is None:
 			return False, False
@@ -3896,7 +3858,7 @@ class ProjectType_ :  # fc=0P00
 						self.all_list.add_link(img_link, 0)
 
 			elif site == ".net":
-				net_search = re_compile("https://i\d*.nhentai.net/galleries/\d*/")
+				net_search = re_compile("https://i.nhentai.net/galleries/\d*/")
 				for imgs in soup.find_all('img'):
 					img_link = imgs.get('data-src')
 					if img_link is None:
@@ -3906,7 +3868,7 @@ class ProjectType_ :  # fc=0P00
 						continue
 
 					if 'cover' not in img_link:
-						img_link = img_link.replace('s://t', 's://i')[::-1].replace('t', '', 1)[::-1]
+						img_link = img_link.replace('s://t.', 's://i.')[::-1].replace('t', '', 1)[::-1]
 					if net_search.search(img_link) is not None:
 						self.all_list.add_link(img_link, 0)
 			self.all_list.remove_duplicates()
@@ -4190,13 +4152,24 @@ class Main :  # fc=0M00
 	def boot_server(self):  # fc=0M04
 		global server_launcher
 		UserData.user_primary_port = (int(UserData.userhash, 16) % (60000 - 49200 + 1)) + 49200
-		
-		UserData.user_secondary_port = (int(UserData.userhash, 16) % (64000 - 60001 + 1)) + 60001
-		#
-		
-		server_launcher = Process(target=Netsys.run_server_t, args=(AboutApp.download_dir,))
-		server_launcher.start()
+		xprint("/i/ Running port /=/ :",UserData.user_primary_port)
 
+		server_status = Netsys.check_server("http://localhost:%i" % UserData.user_primary_port, '0M04', timeout=5)
+		
+
+		if server_status is False:
+			UserData.user_secondary_port = (int(UserData.userhash, 16) % (64000 - 60001 + 1)) + 60001
+
+		config.running_port = UserData.user_secondary_port if UserData.user_secondary_port else UserData.user_primary_port
+
+		if server_status:
+			config.server_running = True
+			pass
+		elif server_status in (False, None):
+			server_launcher = Process(target=Netsys.run_server_t, args=(server_status, AboutApp.download_dir))
+			server_launcher.start()
+		else:
+			exit()
 
 	def main_loop(self):  # fc=0M05
 		global Keep_main_running
@@ -4269,7 +4242,6 @@ Index    SP project Names                   Works
   9    /y/?disable-download-limit/=/    disables download limit (sets "max dlim" to 0)
 
   10   /y/?project-info/=/               shows project information
-  11   /y/?online-page/=/               make online version of the site using original image links as src
 
   -1   /g/?E-dl-T/=/                 same as 1
   -2   /g/?D-dl-T/=/                 same as 2
@@ -4281,7 +4253,6 @@ Index    SP project Names                   Works
   -8   /g/?E-dlim/=/                 same as 8
   -9   /g/?D-dlim/=/                 same as 9
   -10  /g/?i-p/=/                    same as 10
-  -11  /g/?o/=/                      same as 11
 ====================================================================
 
 /i/ Current settings /=/
@@ -4365,7 +4336,7 @@ Option               Value
 					print('Project not found')
 				return 0
 				
-			elif __command in ["?online-page", "?o"]:
+			elif __command in ["?html", "?o"]:
 				proj = IOsys.safe_input("Enter Project name: ")
 				
 				self.P = ProjectType_(proj)
@@ -4912,8 +4883,8 @@ yes/y to resume
 
 
 
-				oneline.new()
-				oneline.update('Indexed [0 / ' + str(len_sub_links) + ']')
+
+				xprint('Indexed [0 / ' + str(len_sub_links) + ']')
 
 				try:
 
@@ -4980,9 +4951,6 @@ yes/y to resume
 			self.P.Project, config.mode_emoji[config.run_mod], config.run_mod.upper(), config.running_port))
 
 		self.dl_threads = []
-		
-		xprint('Downloaded [/gh/', ('━'*0), '/=h/╺' if 0<30 else '━', '━'*(30-0), '/=/][', self.P.done, '/', self.P.total, ']', self.P.current_speed , '/s', sep="")
-
 		for i in range(self.P.dl_threads):
 			self.dl_threads.append(Process(target=self.P.downloader, args=[i]))
 			self.dl_threads[i].start()

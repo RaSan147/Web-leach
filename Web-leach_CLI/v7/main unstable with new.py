@@ -44,15 +44,13 @@ start_up = time.time()
 from platform import system as os_name
 os_name = os_name()
 
-from shutil import get_terminal_size
-
 if os_name == 'Windows':
 	import console_mod     #fc=2000
 	console_mod.enable_color2() # to test
 
-from print_text2 import xprint, oneLine  # fc=3000
+from print_text2 import xprint  # fc=3000
 
-oneline = oneLine()
+
 xprint('/=/', end='')
 
 try:
@@ -610,9 +608,6 @@ class IOsys_ :  # fc=0500
 			return 0
 
 		for _ in range(lines):
-			# delete current line
-			sys_write('\x1b[2K')
-			
 			# cursor up one line
 			sys_write('\x1b[1A')
 
@@ -1455,7 +1450,7 @@ class Netsys_ :  # fc=0800
 			if logger: traceback.print_exc()
 			leach_logger(log(['0807x-1', f_code, port, cd]))
 
-	def run_server_t(self, cd='.'):  # fc=0808 v
+	def run_server_t(self, server_status, cd='.'):  # fc=0808 v
 		"""Runs server in a thread and returns the thread to server_code
 
 		args:
@@ -1468,37 +1463,13 @@ class Netsys_ :  # fc=0800
 		"""
 
 		global server_code
-		
-		server_status = Netsys.check_server("http://localhost:%i" % UserData.user_primary_port, '0M04', timeout=5)
 
 		if config.server_status:
 			return
-			
-		if server_status:
-			config.server_running = True
-			return
 
-		elif server_status in (False, None):
-			config.running_port = UserData.user_primary_port
+		port = config.running_port  # user specified port or proxy port
 
-			port = config.running_port  # user specified port or proxy port
-			try:
-				_t = self.run_server(port=port, cd=cd)
-			except OSError:
-				try:
-					config.running_port = UserData.user_secondary_port
-
-					port = config.running_port 
-					 
-					_t = self.run_server(port=port, cd=cd)
-				except OSError:
-					xprint("/rhi/Failed to run local server/=/")
-					return
-					
-		else:
-			exit()
-
-		xprint("\n/i/ Running port /=/ :", config.running_port)
+		_t = self.run_server(port=port, cd=cd)
 		if _t != 0:
 			server_code = None
 			server_code = _t
@@ -1964,6 +1935,7 @@ class All_list_type :  # fc=0B00
 		
 	def update_values(self):
 		self.dir_height = [len(self.all_names[i]) for i in range(self.dir_len)]
+		self.link_len = len(self.all_links)
 
 	def _2to3(self, all_links):  # fc=0B02
 		""" convert old < v6 all_list [[link, dir_index]] based to new
@@ -2013,8 +1985,13 @@ class All_list_type :  # fc=0B00
 			# print(1,self.all_links[key][0],)
 			# print(2,self.all_links[key][1],)
 			# print(3, [self.all_links[key][1]], [self.all_links[key][2]])
-			return (self.all_links[key][0], self.all_links[key][1],
+			try:
+				return (self.all_links[key][0], self.all_links[key][1],
 			        self.all_names[self.all_links[key][1]][self.all_links[key][2]])
+			except:
+			 	#print(self.all_names[self.all_links[key][1]])
+			 	print([self.all_links[key][2],])
+			 	exit()
 		raise StopIteration
 
 	def __sizeof__(self):  # fc=0B0S
@@ -2102,7 +2079,15 @@ class All_list_type :  # fc=0B00
 		""" Get the name of the link index
 		index: index of the link
 		"""
-		return self.all_names[self.all_links[index][1]][self.all_links[index][2]]
+		print(len(self.all_names))
+		print(len(self.all_names[self.all_links[index][1]]))
+		print(self.all_links[index][2])
+		print(self.all_links[index][1])
+		print()
+		try:
+			return self.all_names[self.all_links[index][1]][self.all_links[index][2]]
+		except:
+			return "xxxx.xxx"
 
 	def update_name(self, name, dir_indx, name_indx, ext=None):  # fc=0B0D
 		""" Update the name of a link
@@ -2347,7 +2332,15 @@ class ProjectType_ :  # fc=0P00
 		### after list writer
 		self.sub_dirs = []  # list of sub directories on the project folder
 		self.sub_links = []  # needed in requests.get() reference value (fixes many issues)
-		self.all_list = All_list_type(10)  # assigning a list of data links, but duplicates will be cancelled in process
+		self.new_sub_dirs = [] # new sub dir indexes
+		self.download_new_dirs = False
+		self.backup_sub_links = [] # stores a copy of previous sub_links
+		self.backup_sub_dirs = []
+		self.backup_all_links = All_list_type(1)
+	
+		
+			
+		self.all_list = All_list_type(1)  # assigning a list of data links, but duplicates will be cancelled in process
 		self.need_2_gen_names = True  # indicates if the names of files needs to be generated
 
 		### directories
@@ -2434,7 +2427,8 @@ class ProjectType_ :  # fc=0P00
 		 'file_exts': self.file_exts,
 		 'sub_links': self.sub_links,
 		 'sub_dirs': self.sub_dirs,
-		 'all_names': self.all_list.all_names
+		 'all_names': self.all_list.all_names,
+		 'new_sub_dirs': self.new_sub_dirs
 		}
 		
 		json_proj = json.dumps(dataset, cls=SetEncoder, indent=4)
@@ -2819,8 +2813,7 @@ class ProjectType_ :  # fc=0P00
 		"""checks if the list file is valid
 		and if valid assigns the data to Class"""
 
-		existing_data = self.list_file.replace('\n', '')
-		existing_data = existing_data.replace('\r', '')
+		existing_data = self.list_file.replace('\n', '').replace('\r', '')
 
 		if existing_data.strip() == '':
 			xprint('/rh/Corrupted Data! Error code: 601x6/=/')
@@ -2844,7 +2837,6 @@ class ProjectType_ :  # fc=0P00
 
 		xprint("Getting Mainpage", end='')
 		sub_links2 = []
-		sub_links = []
 		if self.dimention == 1 or self.dimention == 3:
 			sub_links2 += [self.main_link]
 		if self.dimention == 2 or self.dimention == 3:
@@ -2858,29 +2850,36 @@ class ProjectType_ :  # fc=0P00
 			# link_startswith = input("\n(optional but recommended to be more precise):\n1. Sub-Links Starts With : ")
 			# leach_logger('0M05x1||%s||l_starts||%s'%(self.Project, self.link_startswith), UserData.user_name)
 			sub_links2 += Datasys.remove_duplicate([sub_link.get('href').strip() for sub_link in soup.find_all('a') if sub_link.get('href') is not None])
+			
+		
 		#todo: add leach logger
 		Ctitle('[Indexing] Project %s [%s%s] [:%i]'%(self.Project, config.mode_emoji[config.run_mod], config.run_mod.upper(), config.running_port))
 
 		link_startswith_re = re_compile('^' + self.link_startswith)
 
 		self.homepage = Netsys.get_homepage(self.main_link)
+		
+		self.sub_links = []
 
 		for i in sub_links2:
 			i = Netsys.get_link(i, self.main_link, self.homepage)
 
 			if link_startswith_re.search(i) is not None:
-				sub_links.append(i)
+				self.sub_links.append(i)
 
 		xprint('.')
 		del sub_links2
+		
+		sub_len = len(self.sub_links)
 
-		self.sub_links = Datasys.remove_duplicate(sub_links)
+		#self.sub_links = sub_links
 
-		self.sub_dirs = list('' for i in range(len(self.sub_links)))
 
-		self.all_list = All_list_type(len(self.sub_links))
+		self.sub_dirs = list('' for i in range(sub_len))
+		
+		self.all_list = All_list_type(sub_len)
 
-		del sub_links
+		
 		
 		return True
 
@@ -2926,7 +2925,7 @@ class ProjectType_ :  # fc=0P00
 
 						if name not in self.sub_dirs:
 							break
-				except Exception:
+				except:
 					traceback.print_exc()
 				n += 1
 
@@ -2936,13 +2935,19 @@ class ProjectType_ :  # fc=0P00
 		"""generates directory name from page title and stores the soup in CachedDatato reuse while indexing
 		part: threading partition to speed up the process"""
 		try:
-			list_range = range(len(self.sub_links))[part::3]
+			list_range = range(len(self.sub_links))[part::self.index_threads]
 
 			with requests.Session() as _session:
 
 				for j in list_range:
 					if self.break_all: return 0
 					i = self.sub_links[j]
+					if self.download_new_dirs and (j not in self.new_sub_dirs):
+						self.sub_dirs_count += 1
+						continue
+					
+					
+					
 					__x = 0
 					if self.get_html_title:
 						page = Netsys.get_page(i, referer=self.main_link, cache=True, do_not_cache=False, session=_session)
@@ -2954,10 +2959,11 @@ class ProjectType_ :  # fc=0P00
 					if __x == 0:
 						name = Fsys.get_dir(i, 'url')
 						self.update_sub_dirs(name, j)
-		
+					IOsys.delete_last_line()
+
 					self.sub_dirs_count += 1
 					if self.break_all: return 0
-					oneline.update("Getting pages [%i/%i]" % (self.sub_dirs_count, len(self.sub_links)))
+					xprint("Getting pages [%i/%i]" % (self.sub_dirs_count, len(self.sub_links)))
 
 		except EOFError:
 			self.break_all = True
@@ -2968,8 +2974,34 @@ class ProjectType_ :  # fc=0P00
 
 	def gen_sub_dirs(self):  # fc=0P08
 		"""Generates sub-directories|`self.sub_dirs`"""
-		oneline.new()
-		oneline.update("Getting pages [0/%i]"%len(self.sub_links))
+		
+		print(self.sub_links[:2])
+		
+		if self.download_new_dirs:
+			for i in range(len(self.backup_sub_links)):
+				insert = False
+				try:
+					idx = self.sub_links.index(self.backup_sub_links[i])
+					self.sub_dirs[idx] = self.backup_sub_dirs[i]
+					print(self.backup_sub_dirs[i])
+					print(idx, self.sub_dirs[idx])
+				except:
+					continue
+					j = self.backup_sub_links[i]
+					self.sub_links.insert(i, j)
+					k = self.backup_sub_dirs[i]
+					self.sub_dirs.insert(i, k)
+				
+				
+
+		print(self.sub_dirs[:2])
+		
+		
+		#print(self.new_sub_dirs)
+			
+		
+		self.new_sub_dirs = [i for i in range(len(self.sub_links)) if self.sub_links[i] not in self.backup_sub_links] #temporary
+		print("\n\n", 10000, self.new_sub_dirs, "\n\n")
 
 		index_thread_list = [Process(target=self._gen_sub_dirs, args=(i,)) for i in range(self.index_threads)]
 
@@ -2981,12 +3013,18 @@ class ProjectType_ :  # fc=0P00
 			while any([i.is_alive() for i in index_thread_list]):
 				if self.break_all:
 					return False
-				time.sleep(0.3)
-
+				time.sleep(.7)
+				
 			if self.dir_sorted:
+				print(9999, "\n\n")
 				index = natsort.index_natsorted(self.sub_dirs)
 				self.sub_dirs = natsort.order_by_index(self.sub_dirs, index)
 				self.sub_links = natsort.order_by_index(self.sub_links, index)
+			
+			print(self.sub_dirs[:2])
+			print()
+				
+			self.new_sub_dirs = [i for i in range(len(self.sub_links)) if self.sub_links[i] not in self.backup_sub_links]
 
 			return True
 
@@ -3028,27 +3066,16 @@ class ProjectType_ :  # fc=0P00
 	def speed_tester(self):  # fc=0P0A
 		"""Counts and prints download speed and
 		shows download amount in thread"""
-		from math import ceil
+
 		last_chunks = 0
-		last_done = 0
-		percent =0
-		old_len = len("".join(map(str, ['Downloaded [', ('━'*percent), '╺' if percent<30 else '━', '━'*(30-percent), '][', last_done, '/', self.total, ']', self.current_speed , '/s'])))
 		while (not (self.dl_done or self.break_all)) or self.total == 0:
 			_temp = self.dl_chunks
 			self.current_speed = filesize_size((_temp - last_chunks) * config.sp_arg_flag['chunk_size'] * 2, filesize_alt)
 
 			if self.break_all or self.total == 0: return 0
 			percent = floor((self.done / self.total) * 30)
-			#IOsys.delete_last_line()
-			size = int(get_terminal_size()[0])
-			IOsys.delete_last_line(int(ceil(old_len/size)))
-			#print("\n"*2,int(ceil(old_len/size)),"\n"*2)
-			last_done = self.done
-
-			sys_write(''.join(['Downloaded [', '\u001b[32;1m', ('━'*percent), '\u001b[30;1m╺' if percent<30 else '━', '━'*(30-percent), '\u001b[0m][', str(last_done), '/', str(self.total), ']', self.current_speed , '/s\n']))
-			
-			
-			old_len = len("".join(map(str, ['Downloaded [', ('━'*percent), '╺' if percent<30 else '━', '━'*(30-percent), '][', last_done, '/', self.total, ']', self.current_speed , '/s'])))
+			IOsys.delete_last_line()
+			sys_write(''.join(['Download [', '\u001b[32;1m', ('━'*percent), '\u001b[30;1m╺' if percent<30 else '━', '━'*(30-percent), '\u001b[0m][', str(self.done), '/', str(self.total), ']', self.current_speed , '/s\n']))
 			time.sleep(.5)
 			last_chunks = _temp
 
@@ -3077,10 +3104,11 @@ class ProjectType_ :  # fc=0P00
 		time.sleep(1.2)  # to make sure other threads started safely and the restore points are calculated correctly
 
 		for j in lists:
-
 			if self.break_all: return 0
 
 			if lists.index(j) < res: continue
+			if self.download_new_dirs and j not in self.new_sub_dirs:
+				continue
 			download = True  # switch for download it or not
 			streaming = not is_error
 			if 'ignore_on_null_content' in self.sp_flags or 'stop_on_null_content' in self.sp_flags:
@@ -3135,7 +3163,7 @@ class ProjectType_ :  # fc=0P00
 								# TODO: something breaks the code here most of the time. FIX it.
 								# NOTE: well not anymore, idk how
 
-								xprint('\n\n/y/Something Went wrong, Returning to main Menu/=/\n\n')
+								xprint('\n/y/Something Went wrong, Returning to main Menu/=/\n')
 								self.break_all = True
 								return 0
 
@@ -3199,10 +3227,10 @@ class ProjectType_ :  # fc=0P00
 							if self.re_error == 1: IOsys.delete_last_line()
 							IOsys.delete_last_line()
 							if self.re_error < 4:
-								print("\n\nFailed to download from '%s'\n\n" % i[0])
+								print("Failed to download from '%s'\n\n" % i[0])
 							else:
 								if self.re_error != 4: IOsys.delete_last_line()
-								print("Failed %i others links" % (self.re_error - 3))
+								print("And %i others" % (self.re_error - 3))
 							Fsys.writer('left_errors.txt', 'a',
 							            str(i + (Netsys.hdr(current_header, '0P0B'), "Error dl")) + '\n',
 							            AboutApp.leach_projects + self.Project, '0P0B')
@@ -3242,7 +3270,7 @@ class ProjectType_ :  # fc=0P00
 				else:
 					self.re_error += 1
 					if self.re_error < 4:
-						print("Failed to download from '%s'\n\n" % i[0])
+						print("Failed to download from '%s'" % i[0])
 					else:
 						if self.re_error != 4: IOsys.delete_last_line()
 						print("And %i others" % (self.re_error - 3))
@@ -3358,6 +3386,38 @@ class ProjectType_ :  # fc=0P00
 \u29bf or Make CBZ files from the images? /hui/ cbz /=/
 \u29bf otherwise just leave an Enter
   /gh/>>/=/ """, end='')
+  
+	def backup_for_new(self):
+		import copy
+		self.backup_sub_links = self.sub_links.copy()
+		self.backup_all_links = copy.deepcopy(self.all_list)
+		self.backup_sub_dirs = self.sub_dirs.copy()
+  
+	def make_new_changes(self):
+		""" must call self.backup_for_new() first"""
+		cache = {}
+		
+
+		for i in range(len(self.backup_sub_links)):
+			cache[i] = self.sub_links.index(self.backup_sub_links[i])
+			
+			self.all_list.all_names[cache[i]] = self.backup_all_links.all_names[i]
+		
+		for link, dir_id, name_id in self.backup_all_links.all_links:
+			
+			if dir_id not in cache:
+				continue
+			
+			dir_id = cache[dir_id]
+			
+			self.all_list.all_links.append([link, dir_id, name_id])
+			
+		self.all_list.update_values()
+				
+
+			
+			
+		
 
 	def show_generic_index_error(self, link, current_header, error_name, error_message):  # fc=0P0D
 		if not self.index_failed:
@@ -3375,7 +3435,8 @@ class ProjectType_ :  # fc=0P00
 		             UserData.user_name)
 
 	def print_index_result(self, link):  # fc=0P0E
-		oneline.update('Indexed [' + str(self.indx_count) + '/' + str(len(self.sub_links)) + '] /~`' + link + '`~/')
+		IOsys.delete_last_line()
+		xprint('Indexed [' + str(self.indx_count) + '/' + str(len(self.sub_links)) + '] /~`' + link + '`~/')
 
 	def generic_list_writer(self, partitions, part=0, link=None):  # fc=0P0F
 		"""indexes the list of links or a single link and and adds & aligns files (of specified file formats) by relative folders in the all_list list
@@ -3402,6 +3463,11 @@ class ProjectType_ :  # fc=0P00
 
 			for i in list_range:
 				if self.break_all: return 0
+				
+				if self.download_new_dirs and (i not in self.new_sub_dirs):
+					self.indx_count += 1
+					self.print_index_result(links[i])
+					continue
 
 				failed = False
 
@@ -3803,7 +3869,7 @@ class ProjectType_ :  # fc=0P00
 		if re_search(Constants.special_starts['nh_sc'], link):
 			self.main_link = 'https://nhentai.net/g/' + str(re_search(Constants.special_starts['nh_sc'], link).group(1))
 		link = self.main_link
-		code = re_search('https://nhentai.[^/]*?/g/((\d)*)', link)
+		code = re_search('https://nhentai.[^/]*/g/((\d)*)', link)
 
 		if code is None:
 			return False, False
@@ -3896,7 +3962,7 @@ class ProjectType_ :  # fc=0P00
 						self.all_list.add_link(img_link, 0)
 
 			elif site == ".net":
-				net_search = re_compile("https://i\d*.nhentai.net/galleries/\d*/")
+				net_search = re_compile("https://i.nhentai.net/galleries/\d*/")
 				for imgs in soup.find_all('img'):
 					img_link = imgs.get('data-src')
 					if img_link is None:
@@ -3906,7 +3972,7 @@ class ProjectType_ :  # fc=0P00
 						continue
 
 					if 'cover' not in img_link:
-						img_link = img_link.replace('s://t', 's://i')[::-1].replace('t', '', 1)[::-1]
+						img_link = img_link.replace('s://t.', 's://i.')[::-1].replace('t', '', 1)[::-1]
 					if net_search.search(img_link) is not None:
 						self.all_list.add_link(img_link, 0)
 			self.all_list.remove_duplicates()
@@ -4190,13 +4256,24 @@ class Main :  # fc=0M00
 	def boot_server(self):  # fc=0M04
 		global server_launcher
 		UserData.user_primary_port = (int(UserData.userhash, 16) % (60000 - 49200 + 1)) + 49200
-		
-		UserData.user_secondary_port = (int(UserData.userhash, 16) % (64000 - 60001 + 1)) + 60001
-		#
-		
-		server_launcher = Process(target=Netsys.run_server_t, args=(AboutApp.download_dir,))
-		server_launcher.start()
+		xprint("/i/ Running port /=/ :",UserData.user_primary_port)
 
+		server_status = Netsys.check_server("http://localhost:%i" % UserData.user_primary_port, '0M04', timeout=5)
+		
+
+		if server_status is False:
+			UserData.user_secondary_port = (int(UserData.userhash, 16) % (64000 - 60001 + 1)) + 60001
+
+		config.running_port = UserData.user_secondary_port if UserData.user_secondary_port else UserData.user_primary_port
+
+		if server_status:
+			config.server_running = True
+			pass
+		elif server_status in (False, None):
+			server_launcher = Process(target=Netsys.run_server_t, args=(server_status, AboutApp.download_dir))
+			server_launcher.start()
+		else:
+			exit()
 
 	def main_loop(self):  # fc=0M05
 		global Keep_main_running
@@ -4269,7 +4346,6 @@ Index    SP project Names                   Works
   9    /y/?disable-download-limit/=/    disables download limit (sets "max dlim" to 0)
 
   10   /y/?project-info/=/               shows project information
-  11   /y/?online-page/=/               make online version of the site using original image links as src
 
   -1   /g/?E-dl-T/=/                 same as 1
   -2   /g/?D-dl-T/=/                 same as 2
@@ -4281,7 +4357,6 @@ Index    SP project Names                   Works
   -8   /g/?E-dlim/=/                 same as 8
   -9   /g/?D-dlim/=/                 same as 9
   -10  /g/?i-p/=/                    same as 10
-  -11  /g/?o/=/                      same as 11
 ====================================================================
 
 /i/ Current settings /=/
@@ -4365,7 +4440,7 @@ Option               Value
 					print('Project not found')
 				return 0
 				
-			elif __command in ["?online-page", "?o"]:
+			elif __command in ["?html", "?o"]:
 				proj = IOsys.safe_input("Enter Project name: ")
 				
 				self.P = ProjectType_(proj)
@@ -4423,8 +4498,8 @@ Option               Value
 \u29bf To open the project in Browser enter /hui/ b /=/
 \u29bf To Create CBZ file(s) of the project in Browser enter /hui/ cbz /=/
 
-/g/  >> /=/""" % (' /h/[Recommended]/=/' if self.P.has_missing == True else ''), extra_opt=('b', 'fresh', 'f', 'cbz'),
-					                   extra_return=('browser', 'fresh', 'fresh', 'cbz'))
+/g/  >> /=/""" % (' /h/[Recommended]/=/' if self.P.has_missing == True else ''), extra_opt=('b', 'fresh', 'f', 'cbz', 'new'),
+					                   extra_return=('browser', 'fresh', 'fresh', 'cbz', "new"))
 
 				except LeachICancelError:
 					xprint("\n/yh/Cancellation command entered.\nReturning to main options/=/")
@@ -4477,23 +4552,30 @@ Option               Value
 							return 0
 						return 0
 
-				elif temp == 'fresh':
+				if temp == 'fresh':
 					#TODO: Need logging
 
 					Project = self.P.Project
 					self.P = ProjectType_(Project)
 					self.P.existing_found = False
 				# leach_logger('11000x1||%s'%self.P.Project, UserData.user_name)
+				
+				if temp == "new":
+					self.P.download_new_dirs = True
+					self.P.backup_for_new()
+					temp = True
 
-				elif temp is True:
+				if temp is True:
 					#TODO: Need logging
+					self.P.backup_links = self.P.sub_links.copy()
+					
 					self.P.existing_found = False
 					self.P.update = True
 					self.P.overwrite_bool = False
 				# leach_logger('11000x2||%s'%self.P.Project, UserData.user_name)
 
 
-				elif not temp:
+				if not temp:
 					return 0
 
 
@@ -4669,9 +4751,13 @@ yes/y to resume
 
 						if not self.P.gen_sub_links():
 							return 0
+							
 
 						if not self.P.gen_sub_dirs():
 							return 0
+							
+						if self.P.download_new_dirs:
+							self.P.make_new_changes()
 
 
 
@@ -4906,14 +4992,12 @@ yes/y to resume
 			if not self.link_indexed:
 				# leach_logger("0M05x2||%s||%i"%(self.Project, len(self.sub_links)), UserData.user_name)
 
-				len_sub_links = len(self.P.sub_links)
-
-				self.P.all_list = All_list_type(len_sub_links)
+				
 
 
 
-				oneline.new()
-				oneline.update('Indexed [0 / ' + str(len_sub_links) + ']')
+
+				xprint('Indexed [0 / ' + str(len(self.P.sub_links)) + ']')
 
 				try:
 
@@ -4980,9 +5064,6 @@ yes/y to resume
 			self.P.Project, config.mode_emoji[config.run_mod], config.run_mod.upper(), config.running_port))
 
 		self.dl_threads = []
-		
-		xprint('Downloaded [/gh/', ('━'*0), '/=h/╺' if 0<30 else '━', '━'*(30-0), '/=/][', self.P.done, '/', self.P.total, ']', self.P.current_speed , '/s', sep="")
-
 		for i in range(self.P.dl_threads):
 			self.dl_threads.append(Process(target=self.P.downloader, args=[i]))
 			self.dl_threads[i].start()
