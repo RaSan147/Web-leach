@@ -29,6 +29,7 @@ requirements_win = ('pywin32-ctypes', 'comtypes', 'psutil', 'lxml', 'pywin32')
 
 
 logger = True	# disable on publish 
+OPEN_SERVER = True # disable on exit
 
 # importing required packages
 
@@ -102,7 +103,7 @@ try:
 	# SYS tools #######################
 	from sys import exit as sys_exit, executable as sys_executable, getsizeof
 
-	exit = sys_exit
+	sys_exit
 	# sys_exit = exit
 
 	from subprocess import call as subprocess_call, Popen as subprocess_Popen, DEVNULL as subprocess_DEVNULL
@@ -179,19 +180,22 @@ try:
 	import dig_info  # fc=6000
 
 	##########################################
-except EOFError:
+except (KeyboardInterrupt, EOFError):
 	xprint(Constants.hard_cancel)
 	import sys
 	sys.exit(0)
-except KeyboardInterrupt:
-	xprint(Constants.hard_cancel)
-	import sys
-	sys.exit(0)
+
+
 
 
 # Re Define to speed up###################
 len = len
 range = range
+
+def exit(*args):
+	global OPEN_SERVER
+	OPEN_SERVER = False
+	sys_exit(*args)
 ##########################################
 
 process_id = randint(2003, 9999)
@@ -259,7 +263,9 @@ class AboutApp_ :     #fc=A000
 	
 	
 	Cache_Scripts = {'hammer.min.js': "https://hammerjs.github.io/dist/hammer.js",
-					'touch-emulator.js': "http://cdn.rawgit.com/hammerjs/touchemulator/master/touch-emulator.js",
+						'main.js': "https://raw.githack.com/WebLeach/WebLeach.github.io/main/assets/script/main.js",
+						'main.css': "https://raw.githack.com/WebLeach/WebLeach.github.io/main/assets/style/main.css",
+						'chapter_list': "https://raw.githack.com/WebLeach/WebLeach.github.io/main/assets/style/chapter_list.css"
 	}
 
 	Cache_Assets = {"emo_angel_titled_w400.png": 'https://i.ibb.co/D4KnFRC/emo-angel-titled-w400.png',
@@ -322,7 +328,7 @@ class DefaultConfig :  # fc=0200
 	}
 	# emojis for different states
 
-	running_port = None
+	running_port = 0
 	# port number of running server by app
 	server_running = False
 	# is the server running in this app
@@ -542,6 +548,7 @@ class UserData_ :  # fc=0400
 
 	def log_in(self):  # fc=0403
 		""" logs in the user and returns the users hash """
+		Ctitle("User Log In")
 		if boss != 1:
 			userhash = 0
 			while self.userhash == '0':
@@ -639,20 +646,19 @@ class IOsys_ :  # fc=0500
 
 						Fsys.writer('userlog.leach', 'ab', rcrypto.encrypt(salt + ('%s||'%Nsys.compressed_dt()) + str(process_id) + '||' + html_escape(io) + '||', _key).encode('utf-8') + b'\n', 'data', '00008')
 						break
-					except EOFError:
+					except (KeyboardInterrupt, EOFError):
 						pass
-					except KeyboardInterrupt:
-						pass
-				except EOFError:
+					
+					
+				except (KeyboardInterrupt, EOFError):
 					pass
-				except KeyboardInterrupt:
-					pass
+				
+				
 
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			self.leach_logger(io, key='lock')
-		except KeyboardInterrupt:
-			self.leach_logger(io, key='lock')
-
+		
+		
 	def safe_input(self, msg='', i_func=input, o_func=xprint,
 	               on_error=LeachICancelError):  # fc=0504 v
 		"""gets user input and returns str
@@ -670,36 +676,29 @@ class IOsys_ :  # fc=0500
 				try:
 					box = i_func()
 					return box
-				except EOFError:
+				except (KeyboardInterrupt, EOFError):
 					if on_error == LeachICancelError:
 						raise LeachICancelError
 					else:
 						return on_error
-				except KeyboardInterrupt:
-					raise LeachICancelError
+				
 				except LeachICancelError:
 					# leach_logger('000||0000F||~||~||~||input exit code L&infin;ping for unknown reason')
 					exit(0)
-			except EOFError:
+			except (KeyboardInterrupt, EOFError):
 				if on_error == LeachICancelError:
 					raise LeachICancelError
 				else:
 					return on_error
-			except KeyboardInterrupt:
-				if on_error == LeachICancelError:
-					raise LeachICancelError
-				else:
-					return on_error
-		except EOFError:
+			
+			
+		except (KeyboardInterrupt, EOFError):
 			if on_error == LeachICancelError:
 				raise LeachICancelError
 			else:
 				return on_error
-		except KeyboardInterrupt:
-			if on_error == LeachICancelError:
-				raise LeachICancelError
-			else:
-				return on_error
+		
+		
 
 	def asker(self, out='', default=None, True_False=(True, False),
 	          extra_opt=tuple(), extra_return=tuple(),
@@ -752,6 +751,8 @@ leach_logger = IOsys.leach_logger
 
 @atexit.register
 def on_exit():  # fc=XXXX
+	global OPEN_SERVER
+	OPEN_SERVER = False
 	server_code.server_close()
 	server_code.shutdown()
 	server_launcher._stop()
@@ -795,6 +796,8 @@ class Fsys_ :  # fc=0600
 		"""
 
 		if isinstance(directory, bytes): directory = directory.decode()
+		if directory.startswith("https://img.spoilerhat.com/img/?url="): # mangafox patch
+			mode="dir"
 		if mode == 'url':
 			extra_removed = Netsys.gen_link_facts(directory)["path"]
 			# print(extra_removed)
@@ -808,7 +811,7 @@ class Fsys_ :  # fc=0600
 			                                               '"': "'",
 			                                               "\n\t\r": " "})
 			return os_basename(name)
-		elif mode == 'dir':
+		if mode == 'dir':
 			return os_basename(directory)
 		else:
 			raise ValueError
@@ -1135,21 +1138,18 @@ class OSsys_ :  # fc=0700
 				try:
 					box = func(*args)
 					return box
-				except EOFError:
+				except (KeyboardInterrupt, EOFError):
 					raise LeachICancelError
-				except KeyboardInterrupt:
-					raise LeachICancelError
+				
 				except LeachICancelError:
 					leach_logger(log(['0705x0',f_code, func.__name__, 'input exit code L&infin;ping for unknown reason']))
-			except EOFError:
+			except (KeyboardInterrupt, EOFError):
 				raise LeachICancelError
-			except KeyboardInterrupt:
-				raise LeachICancelError
-		except EOFError:
+			
+		except (KeyboardInterrupt, EOFError):
 			raise LeachICancelError
-		except KeyboardInterrupt:
-			raise LeachICancelError
-
+		
+		
 	def install_missing_libs(self):  # fc=0706 v
 		""" installs missing libraries from the requirements variable"""
 
@@ -1177,8 +1177,8 @@ class OSsys_ :  # fc=0700
 		xprint('/hu/Rebooting Program. Please wait/=/')
 		try:
 			subprocess_call(sys_executable + ' "' + os.path.realpath(__file__) + '"')
-		except KeyboardInterrupt: pass
-		except EOFError: pass
+		
+		except (KeyboardInterrupt, EOFError): pass
 		finally:
 			exit(0)
 
@@ -1389,10 +1389,9 @@ class Netsys_ :  # fc=0800
 			if not no_log:
 				leach_logger('||'.join(map(str,['0806x2', f_code, link, self.hdr(current_header, '0806'), timeout, e.__class__.__name__, e])))
 			return False
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			return False
-		except KeyboardInterrupt:
-			return False
+		
 
 	def check_network_available(self):
 		"""check if the computer has internet access"""
@@ -1447,10 +1446,10 @@ class Netsys_ :  # fc=0800
 					return _server001_.run_server(port, data_dir=AboutApp.temp_dir)
 			else:
 				return 0
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			pass
-		except KeyboardInterrupt:
-			pass
+		
+		
 		except OSError: #TODO: add note in files
 			if logger: traceback.print_exc()
 			leach_logger(log(['0807x-1', f_code, port, cd]))
@@ -1468,7 +1467,7 @@ class Netsys_ :  # fc=0800
 		"""
 
 		global server_code
-		
+
 		server_status = Netsys.check_server("http://localhost:%i" % UserData.user_primary_port, '0M04', timeout=5)
 
 		if config.server_status:
@@ -1489,7 +1488,7 @@ class Netsys_ :  # fc=0800
 					config.running_port = UserData.user_secondary_port
 
 					port = config.running_port 
-					 
+					
 					_t = self.run_server(port=port, cd=cd)
 				except OSError:
 					xprint("/rhi/Failed to run local server/=/")
@@ -1498,15 +1497,17 @@ class Netsys_ :  # fc=0800
 		else:
 			exit()
 
-		xprint("\n/i/ Running port /=/ :", config.running_port)
+		Ctitle("Running port: %i"% config.running_port)
 		if _t != 0:
-			server_code = None
 			server_code = _t
 		else:
 			return 0
 		try:
 			config.server_running = True
-			server_code.serve_forever()
+			if OPEN_SERVER:  #global variable to prevent strtup @fter exit
+				server_code.serve_forever()
+			else:
+				os_exit(0) # force burn
 
 		except OSError:
 			exit()
@@ -1554,10 +1555,9 @@ class Netsys_ :  # fc=0800
 		except requests.exceptions.ConnectionError:
 			return None  # port is open
 
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			return 2
-		except KeyboardInterrupt:
-			return 2
+		
 
 		except Exception as e:
 			leach_logger(log(['080Ax0', link, f_code, e.__class__.__name__, e]))
@@ -2078,7 +2078,10 @@ class All_list_type :  # fc=0B00
 			self.all_names[dir_indx].append(name)
 
 		else:
-			name_, _, ext_ = name.rpartition('.')
+			if '.' in name:
+				name_, _, ext_ = name.rpartition('.')
+			else:
+				name_, ext_ = name, ''
 			n = 1
 
 			# X = ''.join((name_, '(', str(n), ')', '.', ext_))
@@ -2283,6 +2286,8 @@ class ProjectType_ :  # fc=0P00
 	def __init__(self, project_name):  # fc=0P01
 		"""initialize variables on every start of a project"""
 		self.Project = project_name  # project name (case insensitive *need to work on it)
+		self.project_alias = project_name # case sensitive
+
 		self.__default__()
 
 	def __default__(self):  # fc=0P02
@@ -2381,6 +2386,17 @@ class ProjectType_ :  # fc=0P00
 		self.dl_threads = 10  # number of download threads
 		self.index_threads = 3  # number of indexing threads
 
+
+		self.online_page = False  # indicates if the page is online or not
+
+		self.discuss_id = ""
+		self.description = ""
+		self.tags = []
+		self.stars = 3.3
+		self.poster_loc = ""
+
+
+
 	def set_directories(self):  # fc=0P03
 		"""Set important directories for the project
 		self.download_dir: Download directory
@@ -2412,29 +2428,38 @@ class ProjectType_ :  # fc=0P00
 				return json.JSONEncoder.default(self, obj)
 
 		dataset= {"Project": self.Project,
-		'main_link': self.main_link,
-		 'link_startswith': self.link_startswith, 
-		 'file_starts': self.file_starts,
-		 'sp_flags': self.sp_flags,
-		 'sp_extension': self.sp_extension,
-		 'overwrite_bool': self.overwrite_bool,
-		 'dimention': self.dimention,
-		 'file_to_sort':self.file_to_sort,
-		 'dir_sorted': self.dir_sorted,
-		 'file_types': self.file_types,
-		 'dl_threads': self.dl_threads,
-		 'first_created': self.first_created, 
-		 'last_update': Nsys.cdt_(),
-		 'leacher_version': AboutApp._VERSION,
-		 'magic_number': Nsys.compressed_ip(UserData.user_ip["ip"]),
-		 'server_version': config.server_version,
-		 'get_html_title': self.get_html_title,
-		 'dl_done': self.dl_done,
-		 'has_missing': self.has_missing,
-		 'file_exts': self.file_exts,
-		 'sub_links': self.sub_links,
-		 'sub_dirs': self.sub_dirs,
-		 'all_names': self.all_list.all_names
+			"project_alias": self.project_alias,
+			'main_link': self.main_link,
+			'link_startswith': self.link_startswith, 
+			'file_starts': self.file_starts,
+			'sp_flags': self.sp_flags,
+			'sp_extension': self.sp_extension,
+			'overwrite_bool': self.overwrite_bool,
+			'dimention': self.dimention,
+			'file_to_sort':self.file_to_sort,
+			'dir_sorted': self.dir_sorted,
+			'file_types': self.file_types,
+			'dl_threads': self.dl_threads,
+			'first_created': self.first_created, 
+			'last_update': Nsys.cdt_(),
+			'leacher_version': AboutApp._VERSION,
+			'magic_number': Nsys.compressed_ip(UserData.user_ip["ip"]),
+			'server_version': config.server_version,
+			'get_html_title': self.get_html_title,
+			'dl_done': self.dl_done,
+			'has_missing': self.has_missing,
+			'file_exts': self.file_exts,
+			'sub_links': self.sub_links,
+			'sub_dirs': self.sub_dirs,
+			'all_names': self.all_list.all_names,
+
+			'online_page': self.online_page,
+
+			'discuss_id': self.discuss_id,
+			'description': self.description,
+			'tags': self.tags,
+			'stars': self.stars,
+			'poster_loc': self.poster_loc,
 		}
 		
 		json_proj = json.dumps(dataset, cls=SetEncoder, indent=4)
@@ -2959,13 +2984,11 @@ class ProjectType_ :  # fc=0P00
 					if self.break_all: return 0
 					oneline.update("Getting pages [%i/%i]" % (self.sub_dirs_count, len(self.sub_links)))
 
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			self.break_all = True
 			raise LeachICancelError
-		except KeyboardInterrupt:
-			self.break_all = True
-			raise LeachICancelError
-
+		
+		
 	def gen_sub_dirs(self):  # fc=0P08
 		"""Generates sub-directories|`self.sub_dirs`"""
 		oneline.new()
@@ -2990,16 +3013,13 @@ class ProjectType_ :  # fc=0P00
 
 			return True
 
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			leach_logger(log(['000', '0P0K', self.Project, 'f-Stop', 'was generating sub_dir names', 'Indexing Stopped']))
 			xprint("/yh/Project indexing cancelled by Keyboard/=/")
 			self.break_all = True
 			return 0
-		except KeyboardInterrupt:
-			leach_logger(log(['000', '0P0K', self.Project, 'f-Stop', 'was generating sub_dir names', 'Indexing Stopped']))
-			xprint("/yh/Project indexing cancelled by Keyboard/=/")
-			self.break_all = True
-			return 0
+		
+		
 
 		except LeachICancelError:
 			leach_logger(log(['000', '0P0K', self.Project, 'f-Stop', 'was generating sub_dir names', 'Indexing Stopped']))
@@ -3619,7 +3639,12 @@ class ProjectType_ :  # fc=0P00
 		xprint(align_format.format('Server Version: '), self.server_version, '\n')
 
 		xprint(align_format.format('DL done: '), self.dl_done)
-		xprint(align_format.format('Has Missing: '), self.has_missing)
+		xprint(align_format.format('Has Missing: '), self.has_missing, '\n')
+
+		xprint(align_format.format('Description: '), self.description)
+		xprint(align_format.format('Tags: '), self.tags)
+		xprint(align_format.format('Rating: '), self.stars)
+		xprint(align_format.format('Poster: '), self.poster_loc)
 
 
 
@@ -3916,6 +3941,8 @@ class ProjectType_ :  # fc=0P00
 			title = Datasys.trans_str(parse.unquote(html_unescape(title)), {'/\\|:*><?': '-', '"': "'"}).strip()[
 			        :config.dir_limit]
 
+			self.sub_links.append(link)
+
 			self.update_sub_dirs(
 				Datasys.trans_str(parse.unquote(html_unescape(title)), {'/\\|:*><?': '-', '"': "'"}).strip()[ :config.dir_limit], 0)
 
@@ -4036,16 +4063,13 @@ class ProjectType_ :  # fc=0P00
 					return False
 				time.sleep(0.3)
 
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			leach_logger(log(['000', '0P0W', self.Project, 'f-Stop', 'was indexing Images from webtoon', 'Indexing Stopped']))
 			xprint("/yh/Project indexing cancelled by Keyboard/=/")
 			self.break_all = True
 			return 0
-		except KeyboardInterrupt:
-			leach_logger(log(['000', '0P0W', self.Project, 'f-Stop', 'was indexing Images from webtoon', 'Indexing Stopped']))
-			xprint("/yh/Project indexing cancelled by Keyboard/=/")
-			self.break_all = True
-			return 0
+		
+		
 
 		except Exception as e:
 			xprint("/rh/code: Error 607\n The program will break in 5 seconds/=/")
@@ -4090,16 +4114,24 @@ class ProjectType_ :  # fc=0P00
 		OSsys.import_make()
 		self.manga_freak_patch()
 
-		return MakeHtml.make_pages(self.all_list.all_names, self.sub_dirs, self.Project, self.file_to_sort,
-		                           self.sp_extension, self.dir_sorted)
+		self.online_page = False
+		self.store_current_data()
+
+		return MakeHtml.make_pages(self.all_list.all_names, self.sub_dirs, self.Project, self.project_alias, self.file_to_sort, [],
+									self.sp_extension, self.dir_sorted, 
+									self.discuss_id, self.description, self.tags, self.stars, self.poster_loc)
 		                           
 	def make_online_html(self):  # fc=0P0O
 		"""Make the html file"""
 		OSsys.import_make()
 		#self.manga_freak_patch()
+		self.online_page = True
+		self.store_current_data()
 
-		return MakeHtml.make_online_page(self.all_list.get_all_list(), self.sub_dirs, self.Project, self.file_to_sort,
-		                           self.sp_extension, self.dir_sorted)
+		return MakeHtml.make_online_page(self.all_list.get_all_list(), self.sub_dirs, self.Project, self.project_alias, self.file_to_sort, [],
+		                           self.sp_extension, self.dir_sorted, 
+								   self.discuss_id, self.description, self.tags, self.stars, self.poster_loc)
+
 
 	def make_cbz(self):  # fc=0P0P
 		"""Make the cbz file"""
@@ -4114,6 +4146,33 @@ class ProjectType_ :  # fc=0P00
 
 		pass
 
+	def edit_page(self):  # fc=????
+		"""Edit the html file Datas"""
+
+		discuss_id = IOsys.safe_input('Enter the discuss id: ')
+		self.discuss_id = self.discuss_id if discuss_id=="?" else discuss_id
+
+		description = IOsys.safe_input("\n/hui/Description:/=/ ")
+		self.description = self.description if description=="?" else description
+
+		tags = IOsys.safe_input("\n/hui/Tags ( sep by comma ):/=/ ")
+		self.tags = self.tags if tags=="?" else [i.strip() for i in tags.split(",") if i.strip()!=""]
+
+		stars = IOsys.safe_input("\n/hui/Stars:/=/ ")
+		self.stars = self.stars if stars=="?" else float(stars)
+
+		poster_loc = IOsys.safe_input("\n/hui/Poster location:/=/ ")
+		self.poster_loc = self.poster_loc if poster_loc=="?" else poster_loc
+
+
+		xprint("/hui/DONE!!!/=/\n")
+
+		self.store_current_data()
+		if self.online_page:
+			self.make_online_html()
+		
+		else:
+			self.make_html()
 
 print(12)  # x
 
@@ -4227,10 +4286,10 @@ class Main :  # fc=0M00
 					server_code.shutdown()
 					
 					exit()
-				except EOFError:
+				except (KeyboardInterrupt, EOFError):
 					exit()
-				except KeyboardInterrupt:
-					exit()
+				
+				
 			__command = self.COMM.lower()
 			if __command == '':
 				print('You must enter a Project name here.')
@@ -4266,10 +4325,14 @@ Index    SP project Names                   Works
 
   8    /y/?enable-download-limit (%d)/=/ enables download limit (max dlim) with (%d) kbps
 
-  9    /y/?disable-download-limit/=/    disables download limit (sets "max dlim" to 0)
+  9    /y/?disable-download-limit/=/     disables download limit (sets "max dlim" to 0)
 
   10   /y/?project-info/=/               shows project information
-  11   /y/?online-page/=/               make online version of the site using original image links as src
+
+  11   /y/?online-page/=/                make online version of the site using original image links as src
+
+  12   /y/?edit-page/=/                  edit html page info (ie: description, poster link etc)
+
 
   -1   /g/?E-dl-T/=/                 same as 1
   -2   /g/?D-dl-T/=/                 same as 2
@@ -4282,6 +4345,7 @@ Index    SP project Names                   Works
   -9   /g/?D-dlim/=/                 same as 9
   -10  /g/?i-p/=/                    same as 10
   -11  /g/?o/=/                      same as 11
+  -12  /g/?e/=/                      same as 12
 ====================================================================
 
 /i/ Current settings /=/
@@ -4364,6 +4428,19 @@ Option               Value
 				else:
 					print('Project not found')
 				return 0
+
+			elif __command in ["?edit-page", "?e"]:
+				try:
+					p_name = IOsys.safe_input("Enter the project name: ")
+					self.P = ProjectType_(p_name)
+					check_project = self.P.load_data(p_name)
+					if check_project:
+						self.P.edit_page()
+					else:
+						print('Project not found')
+				except (KeyboardInterrupt, EOFError, LeachICancelError):
+					print('\nCancelled')
+					return 0
 				
 			elif __command in ["?online-page", "?o"]:
 				proj = IOsys.safe_input("Enter Project name: ")
@@ -4448,14 +4525,12 @@ Option               Value
 							Netsys.run_in_local_server(config.running_port, host_dir='%s/index.html' % (self.P.Project))
 
 
-						except EOFError:
+						except (KeyboardInterrupt, EOFError):
 							leach_logger('7001x1||' + self.P.Project)
 							print("Cancel command entered!\nReturning to main page")
 							return 0
-						except KeyboardInterrupt:
-							leach_logger('7001x1||' + self.P.Project)
-							print("Cancel command entered!\nReturning to main page")
-							return 0
+						
+						
 						except LeachICancelError:
 							leach_logger('7001x1||' + self.P.Project)
 							print("Cancel command entered!\nReturning to main page")
@@ -4467,14 +4542,12 @@ Option               Value
 						try:
 							first_page = self.P.make_cbz()
 							print('CBZ Created in "%s"' % first_page)
-						except EOFError:
+						except (KeyboardInterrupt, EOFError):
 							leach_logger('8001x1||' + self.P.Project)
 							print("Cancel command entered!\nReturning to main page")
 							return 0
-						except KeyboardInterrupt:
-							leach_logger('8001x1||' + self.P.Project)
-							print("Cancel command entered!\nReturning to main page")
-							return 0
+						
+						
 						return 0
 
 				elif temp == 'fresh':
@@ -4570,12 +4643,11 @@ yes/y to resume
 								self.P.link_startswith = self.P.mangafreak_link()
 
 
-							except EOFError:
+							except (KeyboardInterrupt, EOFError):
 								print("Cancel command entered! stopping")
 								return 0
-							except KeyboardInterrupt:
-								print("Cancel command entered! stopping")
-								return 0
+							
+							
 							if self.P.link_startswith == 0:  # cancel code
 								return 0
 
@@ -4598,12 +4670,11 @@ yes/y to resume
 					try:
 						self.P.link_startswith, title = self.P.nhentai_link()
 
-					except EOFError:
+					except (KeyboardInterrupt, EOFError):
 						print("Cancel command entered! stopping")
 						return 0
-					except KeyboardInterrupt:
-						print("Cancel command entered! stopping")
-						return 0
+					
+					
 
 					if self.P.link_startswith == False or title == False:
 						print("Failed to get data from %s\nReturning back to main page." % self.P.main_link)
@@ -4678,12 +4749,11 @@ yes/y to resume
 
 
 
-					except EOFError:
+					except (KeyboardInterrupt, EOFError):
 						xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
 						return 0
-					except KeyboardInterrupt:
-						xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
-						return 0
+					
+					
 
 
 			else:
@@ -4736,12 +4806,10 @@ yes/y to resume
 											break
 
 
-									except EOFError:
+									except (KeyboardInterrupt, EOFError):
 										print("Cancel command entered! stopping")
 										return 0
-									except KeyboardInterrupt:
-										print("Cancel command entered! stopping")
-										return 0
+										
 									# sub_links = ''
 									#exit(0)
 
@@ -4892,15 +4960,12 @@ yes/y to resume
 					leach_logger("000||0M05||%s||f-Stop||asking4sequence||probably user didnt get it" % self.P.Project)
 					return 0
 
-				except EOFError:
+				except (KeyboardInterrupt, EOFError):
 					xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
 					leach_logger("000||0M05||%s||f-Stop||asking4sequence||probably user didnt get it" % self.P.Project)
 					return 0
 
-				except KeyboardInterrupt:
-					xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
-					leach_logger("000||0M05||%s||f-Stop||asking4sequence||probably user didnt get it" % self.P.Project)
-					return 0
+
 
 
 			if not self.link_indexed:
@@ -4928,17 +4993,13 @@ yes/y to resume
 							return False
 						time.sleep(0.3)
 
-				except EOFError:
+				except (KeyboardInterrupt, EOFError):
 					leach_logger("000||0P0F||%s||f-Stop||is_indexing||probably something unwanted came")
 					xprint("/yh/Project indexing cancelled by Keyboard/=/")
 					self.P.break_all = True
 					return 0
-				except KeyboardInterrupt:
-					leach_logger("000||0P0F||%s||f-Stop||is_indexing||probably something unwanted came")
-					xprint("/yh/Project indexing cancelled by Keyboard/=/")
-					self.P.break_all = True
-					return 0
-
+				
+				
 				except Exception as e:
 					xprint("/rh/code: Error 0P0F\n The program will break in 5 seconds/=/")
 					leach_logger(log(["0P0Fx0", self.P.Project, e.__class__.__name__, e]), UserData.user_name)
@@ -5011,12 +5072,10 @@ yes/y to resume
 		if not 'mangafreak' in self.P.sp_flags:
 			try:
 				first_page = self.P.make_html()
-			except EOFError:
+			except (KeyboardInterrupt, EOFError):
 				print("Hard cancel command entered! stopping")
 				self.P.break_all = True
-			except KeyboardInterrupt:
-				print("Hard cancel command entered! stopping")
-				self.P.break_all = True
+			
 
 
 
@@ -5035,13 +5094,11 @@ yes/y to resume
 
 				will_open = IOsys.safe_input()
 
-			except EOFError:
+			except (KeyboardInterrupt, EOFError):
 				print("Hard cancel command entered! stopping")
 				self.P.break_all = True
-			except KeyboardInterrupt:
-				print("Hard cancel command entered! stopping")
-				self.P.break_all = True
-
+			
+			
 
 
 		else:
@@ -5061,15 +5118,13 @@ yes/y to resume
 			if 'mangafreak' in self.P.sp_flags:
 				try:
 					first_page = self.P.make_html()
-				except EOFError:
+				except (KeyboardInterrupt, EOFError):
 					leach_logger('7001x1||' + self.P.Project)
 					print("Cancel command entered!\nReturning to main page")
 					return 0
 
-				except KeyboardInterrupt:
-					leach_logger('7001x1||' + self.P.Project)
-					print("Cancel command entered!\nReturning to main page")
-					return 0
+				
+				
 
 				except Exception as e:
 					leach_logger(log(['7001x0', self.P.Project, e.__class__.__name__, e]))
@@ -5084,15 +5139,12 @@ yes/y to resume
 				try:
 					first_page = self.P.make_cbz()
 					print('CBZ Created in "%s"' % first_page)
-				except EOFError:
+				except (KeyboardInterrupt, EOFError):
 					leach_logger('8001x1||' + self.P.Project)
 					print("Cancel command entered!\nReturning to main page")
 					return 0
-				except KeyboardInterrupt:
-					leach_logger('8001x1||' + self.P.Project)
-					print("Cancel command entered!\nReturning to main page")
-					return 0
-				return
+				
+				
 
 
 
@@ -5109,14 +5161,12 @@ if __name__ == '__main__':
 		main.get_user()
 
 
-	except EOFError:
+	except (KeyboardInterrupt, EOFError):
 		xprint(Constants.hard_cancel)
 		import sys
 		sys.exit(0)
-	except KeyboardInterrupt:
-		xprint(Constants.hard_cancel)
-		import sys
-		sys.exit(0)
+	
+	
 	except:
 		traceback.print_exc()
 		

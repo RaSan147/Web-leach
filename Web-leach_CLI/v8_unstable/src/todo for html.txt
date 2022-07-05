@@ -1,0 +1,5 @@
+TODO:
+	1. add leach_bkp folder for the _server001_ 
+
+make_html> wl-page-2.html:
+	1. [FIXED] border is OFF by default however the button seems ON on startup

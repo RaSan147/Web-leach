@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Drag-and-drop Sortable List Demo
+    </title>
+
+    <!-- (A) LOAD CSS + JS -->
+    <link rel="stylesheet" href="sort-list.css"/>
+    <script src="sort-list.js"></script>
+  </head>
+  <body>
+    <!-- (B) THE LIST -->
+    <ul id="sortlist">
+      <li>First</li>
+      <li>Second</li>
+      <li>Third</li>
+      <li>Forth</li>
+      <li>Fifth</li>
+    </ul>
+
+    <!-- (C) INIT ON PAGE LOAD -->
+    <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      slist(document.getElementById("sortlist"));
+    });
+    </script>
+  </body>
+</html>

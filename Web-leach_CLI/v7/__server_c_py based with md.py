@@ -90,8 +90,7 @@ def read_wltxt(f_code):
 
 		where = _f_name[1:-1]
 
-	return_box.append("<h2><u>Description</u>: </h2> <br>")
-	conver2md()
+	return_box.append("<h2><u>Description</u>: </h2> <br><pre>" + "\n".join(convert2md(text_)) + "</pre>")
 	
 	try:
 		# import the file

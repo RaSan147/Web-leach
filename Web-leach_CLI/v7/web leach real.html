@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+<meta property="og:title" content="Kaguya-sama- Love Is War" />
+<meta property="og:image" content="https://i.ibb.co/D4KnFRC/emo-angel-titled-w400.png" />
+
+
+<meta name="description" content="Just a demo webpage for Manga.">
+
+<link rel="manifest" href="/manifest.json">
+<!--
+Z-INDEX LIST
+
+body: 0
+#brightness: 99
+.sidebar_bg: 4 // transparent modal_bg, onclick close sidebar
+sidebar: 5
+.top_bar: 9
+.modal_bg: 10
+.modal: 20
+#image-modal-content: 21
+#modal-img: 21
+.close-image-modal: 22
+.view_arrow: 22
+#modal-caption : 21
+.popup: 22 // pop-up may show even on focus mode
+.popup-box: 23
+
+
+
+
+
+-->
+
+
+<title>Web Leach</title>
+
+
+<link rel="stylesheet" href="/assets/style/main.css">
+<link rel="stylesheet" href="/assets/style/chapter_list.css">
+<link id='icon' rel="icon" href="/favicon.ico">
+
+
+<script>
+
+const log = console.log,
+	byId = document.getElementById.bind(document),
+	byClass = document.getElementsByClassName.bind(document),
+	byTag = document.getElementsByTagName.bind(document),
+	byName = document.getElementsByName.bind(document),
+	createElement = document.createElement.bind(document);
+
+	const alt_icons = ["/?assets/icon.ico",
+			"https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub@main/resources/icon.ico", "/icon.ico"],
+		alt_logos = ['https://i.ibb.co/D4KnFRC/emo-angel-titled-w400.png',
+			'emo_angel_titled_w400.png',
+			'/assets/emo_angel_titled_w400.png'
+		];
+
+	function called(by,func){
+		log(by, ' called ', func)
+	}
+	async function null_func(){return null}
+
+	async function alt_(elm, src_list) {
+		/*elm: element
+			src_list: list of links
+			attt: src or href*/
+		if (src_list.length==0) {
+			elm.onerror = "";
+			return true;
+		}
+
+		elm.src = src_list[0];
+		elm.onerror = function () {
+			alt_(elm, src_list.slice(1))
+		};
+	}
+
+
+	async function load_link(rel, href_list) {
+		for (let i = 0; i < href_list.length; i++) {
+			let link = createElement('link');
+			link.rel = rel;
+			link.href = href_list[i];
+			document.head.appendChild(link);
+		}
+	}
+
+	async function load_css(links){
+		load_link("stylesheet", links)
+	}
+
+	function load_font(gfont){
+		load_css(["https://fonts.googleapis.com/css?family=" + gfont])
+	}
+
+	load_css(['/?script/main.css']) // for web leach python server
+	load_css(['/?script/chapter_list.css']) // for web leach python server
+
+	function switch_icon() {
+		load_link("icon", alt_icons)
+	}
+
+	switch_icon()
+
+</script>
+
+
+</head>
+
+
+<body align="center">
+<h1 id="no_js" style="color: white; background-color: red;">
+	<i>"javascript"</i> IS DISABLED. THIS SITE WON'T WORK WITHOUT <i>"javascript"</i>!
+</h1>
+
+<script>
+	byId("no_js").style.display = "none"
+</script>
+<div id="brightness">
+</div>
+
+
+<div id='TopBar' class='top_bar'>
+	<button class="open-sidebar-btn" onclick="sidebar_control.toggleNavL()" style='float: left;'>&#9776; <span
+			class='nav-btn-text'>Sidebar</span></button>
+	<div id="app_header">
+		<span id="app_name_container">
+			<span style='font-size: 22px; color: #AAA;'> | </span><a id='app_name' href='/'> WL Reader</a></span>
+	</div>
+	<button class="open-sidebar-btn" onclick="sidebar_control.toggleNavR()" style='float: right;'><span
+			class='nav-btn-text'>Settings</span>&nbsp;&#x1F6E0; </button>
+</div>
+
+
+<div id="sidebar_bg"></div> <!-- trigger to close Sidebar-->
+<div id="popup-container">
+<!-- POP_UP items -->
+</div>
+
+
+<DIV id = "CHAPTER" class = "subpage">
+
+<div id="mySidebarL" class="sidebar">
+	<span style="text-align:left; float:left;" class="close-sidebar disable_selection" id="close-sidebarL" onclick = "sidebar_control.closeNavL()">&times;</span>
+
+	<div>
+		<div id="credits_btn" class="accordion accordion-button" onclick="show_credits()">Credits</div>
+		<div id="about_btn" class="accordion accordion-button" onclick="show_about()">About</div>
+		<div id="help_btn" class="accordion accordion-button" onclick="show_help()">Help</div>
+		<div id="debug_btn" class="accordion accordion-button" onclick="tools.enable_debug()">Enable Debugging</div>
+
+		<div id="clear_btn" class="accordion accordion-button" onclick="localStorage.clear()">Clear localStorage</div>
+
+
+
+		<p class="proj-panel">Project Directories</p>
+		<div style="display: flex; justify-content: center; align-items: center;">
+
+			<div class="search-box">
+				<button class="btn-search">
+					<span id="proj_search_icn">&#x1F50E;&#xFE0E;</span>
+				</button>
+				<input type="text" class="input-search" id="proj_search_input" placeholder="Type to Search...">
+			</div>
+
+		</div>
+
+		<hr>
+		<div id="ch-search-panel-body">
+			<!-- add links here -->
+		</div>
+	</div>
+
+	<div class='sidebar-end'></div>
+
+</div>
+
+<div id="mySidebarR" class="sidebar theme-tools" style='right:0;'>
+	<span style='right:0; text-align:right;margin-right: 20px;' class="close-sidebar disable_selection"
+		id="close-sidebarR" onclick = "sidebar_control.closeNavR()">&times;</span> <!-- × -->
+
+	<div class="sidebar-content">
+		<div class="accordion"><span>Image Border</span>
+			<div id="S-image-border" class='tron-switch'>
+				<div class='tron-switch-span' id='S-image-border-mode'>OFF</div>
+			</div>
+		</div>
+
+		<div class="accordion-panel">
+			<div class='accordion-panel-container'>
+				<span class="accordion-panel-heading">
+					<b>Border Color</b><br>
+				</span>
+				<form>
+					<label class="rad-label">
+						<input type="radio" class="rad-input" name="border-color" value=1 checked="checked" />
+						<span class="rad-design" style="background:black;"></span>
+						<span class="rad-text">Black</span>
+					</label>
+
+					<label class="rad-label">
+						<input type="radio" class="rad-input" name="border-color" value=2 />
+						<span class="rad-design" style="background:white;"></span>
+						<span class="rad-text">White</span>
+					</label>
+
+					<label class="rad-label">
+						<input type="radio" class="rad-input" name="border-color" value=3 />
+						<span class="rad-design" style="background:var(--theme-color);"></span>
+						<span class="rad-text" id="add_theme_name">Theme </span>
+					</label></form>
+
+				<span class="accordion-panel-heading"><b>Border Width</b></span>
+
+
+				<div class="range-input">
+					<input class="ranger" type="range" name="border-width" id="border-width-input" min="0" max="10"
+						step='1' oninput="page_styler.change_style()">
+					<br>
+					<div style="width:90%">
+						<div class='slider-tick'>|||||||||||</div>
+						<div class='slider-tick-label'>
+							<span style='float:left;font-weight: 50;font-size: 13px;'>thin</span><span
+								style='float:right;font-weight: 900;font-size: 10px;'>THICK</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="accordion"><span>Spacing</span>
+			<div id="S-image-space" class='tron-switch'>
+				<div class='tron-switch-span' id='S-image-space-mode'>ON</div>
+			</div>
+		</div>
+		<div class="accordion-panel">
+			<p><b>ON:</b> makes a gap between each media <br>
+				<b>OFF:</b>removes space between media</p>
+		</div>
+
+		<div class="accordion">
+			<span>Change Brightness</span>
+		</div>
+
+		<div class="accordion-panel">
+			<span class="accordion-panel-heading">
+				<b>Brightness Level</b><br>
+			</span>
+
+			<div class="range-input">
+				<input class="ranger" type="range" name="brightness" id="brightness-input" min="0" max="10" step='1'
+					value="10">
+				<br>
+				<div style="width:90%">
+					<div class='slider-tick'>|||||||||||</div>
+					<div class='slider-tick-label'>
+						<span style='float:left;font-weight: 50;font-size: 13px;'>Dark</span>
+						<span style='float:right;font-weight: 900;font-size: 11px;'>Bright</span>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+		<br>
+		<div class='sidebar-end'></div>
+	</div>
+</div>
+
+
+<div id="chapter-description">
+
+
+	<div style="width: 95vw; max-width: 700px; margin: 0 auto;">
+		<div class='poster' id ="logo">
+			<img src='/?assets/emo_angel_titled_w400.png' id="logo-img" onerror="alt_(this, alt_logos, 'src')" class="poster-img">
+		</div>
+		<div style="padding: 16px; text-align:left; float: left;">
+			<h2 class="page_title"><u>Project:&nbsp;</u><span id="proj_name"></span> </h2>
+			<h2 class="page_title"><u>Page:&nbsp;</u><span id="page_title"></span></h2>
+			<a id='go2main' href='../index.html'>
+				<u> Go to Page list</u>
+			</a>
+			<br><br><br>
+		</div>
+	</div>
+</div>
+
+
+
+
+<center><br>
+
+
+	<div id="myModal" class="modal">
+		<div class="modal_bg" style="background-color:rgba(0, 0, 0, 0.9);" onclick="modal_img.close_image_modal()">
+		</div>
+		<span class="close-image-modal">&times;</span>
+		<div id="image-modal-content">
+			<div style="text-align: center;">
+				<img id="modal-img" alt="Failed to load image">
+			</div>
+
+			<span id="modal-modal-caption-gap" style="padding: 100px 1px 1px 0; display: block;" onclick="modal_img.close_image_modal()"></span>
+
+		</div>
+		<div id="modal-caption-box">
+			<div id="modal-caption">1</div>
+		</div>
+
+		<span class="view_arrow disable_selection" id="prev_view" onclick="modal_img.change_image(-1)">
+			<p>&#10094;</p>
+				</span>
+		<span class="view_arrow disable_selection" id="next_view" onclick="modal_img.change_image(1)">
+			<p>&#10095;</p>
+				</span>
+	</div>
+
+
+	<div id="images" style="position: relative"></div>
+</center>
+<br>
+<br>
+
+
+
+</DIV>
+
+<DIV id = "CHAPTER-LIST" class = "subpage">
+
+<div id="manga-description">
+	<div class='poster' id ="logo">
+		<img src='' id="manga-img" class="poster-img">
+	</div>
+	<div style="padding: 16px; text-align:left; float: left; max-width: 400px;">
+		<h2 class="page_title"><u>Project:</u>&nbsp;<span id="manga_name"></span> </h2>
+		<p class ="description page_title"><u>Description:</u>&nbsp;<span id ="description-text" ></span></p>
+		<p class ="tag-list page_title"><u>Tag list:</u> <span id ="tag-list"></span><p>
+		<div class ="rating page_title"><h3><u>Rating:</u> <span id ="manga-stars"></span></h3></div>
+		<br><br><br>
+	</div>
+
+</div>
+
+
+<h2 style="text-align: center; color:var(--theme-color-text)">~Chapters~</h2>
+<hr style="width: 80%;">
+<center>
+<div id='allA'></div>
+</center>
+
+</DIV>
+
+
+<footer id='footer' style="align-self: center;">
+	<pre>
+
+</pre>
+
+	<center>
+
+	<div class='pagination' id='pagination'>
+
+		<span id='pagination-prev'>
+
+			<div class='paginationA'>Prev Page</div>
+		</span>
+		<span id='pagination-next'>
+			<div class='paginationA'>Next Page</div>
+		</span>
+	</div>
+
+
+	<br><br>
+		<hr width='95%'>
+		<hr width='89%'>
+	</center>
+	<p style="color: darkgray;">Made by Ratul Hasan with Web leach</p>
+	<br><br>
+</footer>
+
+
+
+
+<script>
+
+class Config {
+	constructor() {
+		this.page_type = "CHAPTER";
+		this.popup_msg_open = false;
+		this.total_popup = 0;
+		this.Debugging = false;
+		this.allow_Debugging = true;
+
+		this.Hammered_modal = 0;
+		this.is_touch_device = 'ontouchstart' in document.documentElement;
+
+		this.themes = ["Tron"]
+
+
+		this.is_webkit = navigator.userAgent.indexOf('AppleWebKit') != -1
+		this.is_edge = navigator.userAgent.indexOf('Edg') != -1
+
+
+		this.previous_type = null;
+	}
+}
+
+var config = new Config();
+
+
+byId(config.page_type).style.display = "contents";
+
+
+var panel2disable = [];
+
+
+class Datas {
+	constructor() {
+		this.images_loc = ['g001.jpg', 'g002.jpg', 'g003.jpg', 'g004.jpg', 'g005.jpg', 'g006.jpg', 'g007.jpg', 'g008.jpg', 'g009.jpg', 'g010.jpg', 'g011.jpg', 'g012.jpg', 'g013.jpg', 'g014.jpg', 'g015.jpg', 'g016.jpg', 'g017.jpg', 'g018.jpg', 'g618.jpg'];
+		this.pages_list = ['kaguya-sama-chapter-1', 'kaguya-sama-chapter-2', 'kaguya-sama-chapter-3', 'kaguya-sama-chapter-4', 'kaguya-sama-chapter-5', 'kaguya-sama-chapter-5-5', 'kaguya-sama-chapter-6', 'kaguya-sama-chapter-7', 'kaguya-sama-chapter-8', 'kaguya-sama-chapter-9', 'kaguya-sama-chapter-10', 'kaguya-sama-chapter-10-5', 'kaguya-sama-chapter-11', 'kaguya-sama-chapter-11-5', 'kaguya-sama-chapter-12', 'kaguya-sama-chapter-13', 'kaguya-sama-chapter-14', 'kaguya-sama-chapter-15', 'kaguya-sama-chapter-16', 'kaguya-sama-chapter-17', 'kaguya-sama-chapter-18', 'kaguya-sama-chapter-19', 'kaguya-sama-chapter-20', 'kaguya-sama-chapter-20-5', 'kaguya-sama-chapter-21', 'kaguya-sama-chapter-22', 'kaguya-sama-chapter-23', 'kaguya-sama-chapter-24', 'kaguya-sama-chapter-25', 'kaguya-sama-chapter-26', 'kaguya-sama-chapter-27', 'kaguya-sama-chapter-27-5', 'kaguya-sama-chapter-28', 'kaguya-sama-chapter-29', 'kaguya-sama-chapter-30', 'kaguya-sama-chapter-30-5', 'kaguya-sama-chapter-31', 'kaguya-sama-chapter-32', 'kaguya-sama-chapter-33', 'kaguya-sama-chapter-34', 'kaguya-sama-chapter-35', 'kaguya-sama-chapter-36', 'kaguya-sama-chapter-37', 'kaguya-sama-chapter-38', 'kaguya-sama-chapter-39', 'kaguya-sama-chapter-40', 'kaguya-sama-chapter-40-5', 'kaguya-sama-chapter-41', 'kaguya-sama-chapter-42', 'kaguya-sama-chapter-43', 'kaguya-sama-chapter-44', 'kaguya-sama-chapter-45', 'kaguya-sama-chapter-45-1', 'kaguya-sama-chapter-45-5', 'kaguya-sama-chapter-46', 'kaguya-sama-chapter-46-5', 'kaguya-sama-chapter-47', 'kaguya-sama-chapter-48', 'kaguya-sama-chapter-49', 'kaguya-sama-chapter-50', 'kaguya-sama-chapter-50-5', 'kaguya-sama-chapter-51', 'kaguya-sama-chapter-52', 'kaguya-sama-chapter-53', 'kaguya-sama-chapter-54', 'kaguya-sama-chapter-55', 'kaguya-sama-chapter-56', 'kaguya-sama-chapter-57', 'kaguya-sama-chapter-58', 'kaguya-sama-chapter-59', 'kaguya-sama-chapter-60', 'kaguya-sama-chapter-60-1', 'kaguya-sama-chapter-60-5', 'kaguya-sama-chapter-61', 'kaguya-sama-chapter-62', 'kaguya-sama-chapter-63', 'kaguya-sama-chapter-64', 'kaguya-sama-chapter-64-5', 'kaguya-sama-chapter-65', 'kaguya-sama-chapter-66', 'kaguya-sama-chapter-67', 'kaguya-sama-chapter-67-5', 'kaguya-sama-chapter-68', 'kaguya-sama-chapter-69', 'kaguya-sama-chapter-70', 'kaguya-sama-chapter-70-1', 'kaguya-sama-chapter-70-5', 'kaguya-sama-chapter-71', 'kaguya-sama-chapter-72', 'kaguya-sama-chapter-73', 'kaguya-sama-chapter-74', 'kaguya-sama-chapter-75', 'kaguya-sama-chapter-76', 'kaguya-sama-chapter-77', 'kaguya-sama-chapter-78', 'kaguya-sama-chapter-79', 'kaguya-sama-chapter-80', 'kaguya-sama-chapter-80-1', 'kaguya-sama-chapter-80-5', 'kaguya-sama-chapter-81', 'kaguya-sama-chapter-82', 'kaguya-sama-chapter-83', 'kaguya-sama-chapter-83-5', 'kaguya-sama-chapter-84', 'kaguya-sama-chapter-85', 'kaguya-sama-chapter-86', 'kaguya-sama-chapter-87', 'kaguya-sama-chapter-88', 'kaguya-sama-chapter-89', 'kaguya-sama-chapter-90', 'kaguya-sama-chapter-91', 'kaguya-sama-chapter-91-1', 'kaguya-sama-chapter-91-5', 'kaguya-sama-chapter-92', 'kaguya-sama-chapter-93', 'kaguya-sama-chapter-94', 'kaguya-sama-chapter-95', 'kaguya-sama-chapter-96', 'kaguya-sama-chapter-97', 'kaguya-sama-chapter-98', 'kaguya-sama-chapter-99', 'kaguya-sama-chapter-100', 'kaguya-sama-chapter-101', 'kaguya-sama-chapter-101-1', 'kaguya-sama-chapter-101-5', 'kaguya-sama-chapter-102', 'kaguya-sama-chapter-103', 'kaguya-sama-chapter-104', 'kaguya-sama-chapter-105', 'kaguya-sama-chapter-106', 'kaguya-sama-chapter-107', 'kaguya-sama-chapter-108', 'kaguya-sama-chapter-109', 'kaguya-sama-chapter-109-1', 'kaguya-sama-chapter-109-5', 'kaguya-sama-chapter-110', 'kaguya-sama-chapter-111', 'kaguya-sama-chapter-111-1', 'kaguya-sama-chapter-111-5', 'kaguya-sama-chapter-112', 'kaguya-sama-chapter-113', 'kaguya-sama-chapter-114', 'kaguya-sama-chapter-115', 'kaguya-sama-chapter-116', 'kaguya-sama-chapter-117', 'kaguya-sama-chapter-118', 'kaguya-sama-chapter-119', 'kaguya-sama-chapter-120', 'kaguya-sama-chapter-121', 'kaguya-sama-chapter-121-1', 'kaguya-sama-chapter-121-5', 'kaguya-sama-chapter-122', 'kaguya-sama-chapter-123', 'kaguya-sama-chapter-124', 'kaguya-sama-chapter-125', 'kaguya-sama-chapter-126', 'kaguya-sama-chapter-127', 'kaguya-sama-chapter-128', 'kaguya-sama-chapter-129', 'kaguya-sama-chapter-130', 'kaguya-sama-chapter-131', 'kaguya-sama-chapter-131-1', 'kaguya-sama-chapter-131-5', 'kaguya-sama-chapter-132', 'kaguya-sama-chapter-133', 'kaguya-sama-chapter-134', 'kaguya-sama-chapter-135', 'kaguya-sama-chapter-136', 'kaguya-sama-chapter-137', 'kaguya-sama-chapter-138', 'kaguya-sama-chapter-139', 'kaguya-sama-chapter-140', 'kaguya-sama-chapter-141', 'kaguya-sama-chapter-141-1', 'kaguya-sama-chapter-141-5', 'kaguya-sama-chapter-142', 'kaguya-sama-chapter-143', 'kaguya-sama-chapter-144', 'kaguya-sama-chapter-145', 'kaguya-sama-chapter-146', 'kaguya-sama-chapter-147', 'kaguya-sama-chapter-147-1', 'kaguya-sama-chapter-148', 'kaguya-sama-chapter-148-1', 'kaguya-sama-chapter-149', 'kaguya-sama-chapter-150', 'kaguya-sama-chapter-151', 'kaguya-sama-chapter-151-1', 'kaguya-sama-chapter-151-5', 'kaguya-sama-chapter-152', 'kaguya-sama-chapter-153', 'kaguya-sama-chapter-154', 'kaguya-sama-chapter-155', 'kaguya-sama-chapter-156', 'kaguya-sama-chapter-157', 'kaguya-sama-chapter-158', 'kaguya-sama-chapter-159', 'kaguya-sama-chapter-160', 'kaguya-sama-chapter-161', 'kaguya-sama-chapter-161-1', 'kaguya-sama-chapter-161-5', 'kaguya-sama-chapter-162', 'kaguya-sama-chapter-163', 'kaguya-sama-chapter-164', 'kaguya-sama-chapter-165', 'kaguya-sama-chapter-166', 'kaguya-sama-chapter-167', 'kaguya-sama-chapter-168', 'kaguya-sama-chapter-169', 'kaguya-sama-chapter-170', 'kaguya-sama-chapter-171', 'kaguya-sama-chapter-171-5', 'kaguya-sama-chapter-172', 'kaguya-sama-chapter-172-1', 'kaguya-sama-chapter-172-5', 'kaguya-sama-chapter-173', 'kaguya-sama-chapter-174', 'kaguya-sama-chapter-175', 'kaguya-sama-chapter-176', 'kaguya-sama-chapter-177', 'kaguya-sama-chapter-178', 'kaguya-sama-chapter-179', 'kaguya-sama-chapter-179-1', 'kaguya-sama-chapter-180', 'kaguya-sama-chapter-181', 'kaguya-sama-chapter-181-1', 'kaguya-sama-chapter-182', 'kaguya-sama-chapter-183', 'kaguya-sama-chapter-184', 'kaguya-sama-chapter-185', 'kaguya-sama-chapter-186', 'kaguya-sama-chapter-187', 'kaguya-sama-chapter-188', 'kaguya-sama-chapter-189', 'kaguya-sama-chapter-190', 'kaguya-sama-chapter-191', 'kaguya-sama-chapter-191-1', 'kaguya-sama-chapter-192', 'kaguya-sama-chapter-193', 'kaguya-sama-chapter-194', 'kaguya-sama-chapter-195', 'kaguya-sama-chapter-196', 'kaguya-sama-chapter-197', 'kaguya-sama-chapter-198', 'kaguya-sama-chapter-199', 'kaguya-sama-chapter-200', 'kaguya-sama-chapter-201', 'kaguya-sama-chapter-201-1', 'kaguya-sama-chapter-201-5', 'kaguya-sama-chapter-202', 'kaguya-sama-chapter-203', 'kaguya-sama-chapter-204', 'kaguya-sama-chapter-205', 'kaguya-sama-chapter-206', 'kaguya-sama-chapter-207', 'kaguya-sama-chapter-208', 'kaguya-sama-chapter-209', 'kaguya-sama-chapter-210', 'kaguya-sama-chapter-211', 'kaguya-sama-chapter-211-1', 'kaguya-sama-chapter-211-5', 'kaguya-sama-chapter-212', 'kaguya-sama-chapter-212-5', 'kaguya-sama-chapter-213', 'kaguya-sama-chapter-214', 'kaguya-sama-chapter-215', 'kaguya-sama-chapter-216', 'kaguya-sama-chapter-217', 'kaguya-sama-chapter-218', 'kaguya-sama-chapter-218_1', 'kaguya-sama-chapter-218_2', 'kaguya-sama-chapter-219', 'kaguya-sama-chapter-219_1', 'kaguya-sama-chapter-220', 'kaguya-sama-chapter-221', 'kaguya-sama-chapter-221-1', 'kaguya-sama-chapter-221-5', 'kaguya-sama-chapter-222', 'kaguya-sama-chapter-223', 'kaguya-sama-chapter-224', 'kaguya-sama-chapter-225', 'kaguya-sama-chapter-226', 'kaguya-sama-chapter-227', 'kaguya-sama-chapter-228', 'kaguya-sama-chapter-229', 'kaguya-sama-chapter-230', 'kaguya-sama-chapter-231', 'kaguya-sama-chapter-231-1', 'kaguya-sama-chapter-232', 'kaguya-sama-chapter-233', 'kaguya-sama-chapter-234', 'kaguya-sama-chapter-235', 'kaguya-sama-chapter-236', 'kaguya-sama-chapter-237', 'kaguya-sama-chapter-238', 'kaguya-sama-chapter-239', 'kaguya-sama-chapter-240', 'kaguya-sama-chapter-241', 'kaguya-sama-chapter-241-5', 'kaguya-sama-chapter-242', 'kaguya-sama-chapter-243', 'kaguya-sama-chapter-244', 'kaguya-sama-chapter-245', 'kaguya-sama-chapter-246', 'kaguya-sama-chapter-247', 'kaguya-sama-chapter-248', 'kaguya-sama-chapter-249', 'kaguya-sama-chapter-250', 'kaguya-sama-chapter-251', 'kaguya-sama-chapter-251-5', 'kaguya-sama-chapter-252', 'kaguya-sama-chapter-253', 'kaguya-sama-chapter-254', 'kaguya-sama-chapter-255', 'kaguya-sama-chapter-256', 'kaguya-sama-chapter-257', 'kaguya-sama-chapter-258', 'kaguya-sama-chapter-259', 'kaguya-sama-chapter-260', 'kaguya-sama-chapter-261', 'kaguya-sama-chapter-262', 'kaguya-sama-chapter-263', 'kaguya-sama-chapter-264', 'kaguya-sama-chapter-265', 'kaguya-sama-chapter-266', 'kaguya-sama-chapter-267', 'kaguya-sama-chapter-268'];
+		this.current_page_index = 8;
+
+		this.new_pages = []; // index of new pages
+
+
+
+		this.proj_name = "Kaguya-sama- Love Is War";
+
+		this.current_page_name = "WL-"+ this.proj_name + " " + this.current_page_index;
+		this.last_opened = null;
+
+		this.default_style = [0,1,1,1]; // may vary depending on project
+		this.current_style = this.default_style;
+		this.theme = 0;
+
+		this.discuss_id = ""
+		this.description = ""
+		this.stars = 0.000000;
+		this.tags = [];
+
+		this.poster_loc = "";
+
+		this.cssVar = document.querySelector(':root');
+
+		this.has_script = {};
+
+		this.last_opened_manga = [];
+
+	}
+
+	init(){
+		this.images_loc = [];
+		this.pages_list = [];
+		this.current_page_index = null;
+		this.new_pages = [];
+		this.current_page_name = "Web Leach";
+		this.last_opened = null;
+		this.last_opened_manga = null;
+		this.default_style = [];
+		this.current_style = [];
+		this.theme = 0;
+		this.discuss_id = "";
+		this.stars = 0;
+
+	}
+
+
+
+	get_css(key) {
+		return getComputedStyle(this.cssVar).getPropertyValue(key);
+
+	}
+
+	set_css(key, value) {
+		this.cssVar.style.setProperty(key, value);
+	}
+
+
+}
+
+let datas = new Datas();
+
+
+config.previous_type = config.current_type;
+
+
+if (!config.allow_Debugging){
+	log = null_func;
+	called = null_func;
+}
+
+
+
+function fuck(x="") {
+	alert("fuck " + x);
+}
+
+
+function helped_user(set = 0) {
+	if (set != 0) {
+		localStorage.setItem('?helped-user', set);
+		return;
+	}
+	var helped = localStorage.getItem('?helped-user');
+	if (helped == 'undefined' || helped == null) {
+		return false;
+	}
+	return true;
+}
+
+
+
+class Tools {
+	// various tools for the page
+	sleep(ms) {
+		// sleeps for a given time in milliseconds
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	set_brightness(n = 0) {
+		// sets the brightness of the screen
+
+		var val;
+		var input_ = byId('brightness-input');
+		var brightness = byId('brightness');
+		if (n == 0) {
+			val = sessionStorage.getItem('bright');
+			if (val) {
+				val = parseInt(val);
+				input_.value = val;
+			} else {
+				n = 1;
+			}
+		}
+		if (n == 1) {
+			val = input_.value;
+			//   int to string
+			sessionStorage.setItem('bright', val);
+		}
+
+		// to make sure opacity is not -1.11022e-16
+		if (val == 10) {brightness.style.opacity = 0;return;}
+
+
+		brightness.style.opacity = 0.7 - (val * 0.07);
+	}
+
+
+	onlyInt(str){
+	if(this.is_defined(str.replace)){
+	return parseInt(str.replace(/\D+/g, ""))}
+	return 0;
+	}
+
+	del_child(elm){
+		if(typeof(elm)=="string"){
+			elm = byId(elm)
+		}
+
+		while (elm.firstChild) {
+			elm.removeChild(elm.lastChild);
+		}
+	}
+	toggle_bool(bool){
+		return bool !== true;
+	}
+
+	exists(name){
+		return (typeof window[name] !== 'undefined')
+	}
+
+	hasClass(element, className, partial = false) {
+		if (partial) {
+			className = ' ' + className;
+		} else {
+			className = ' ' + className + ' ';
+		}
+
+		return (' ' + element.className + ' ').indexOf(className) > -1;
+	}
+
+	addClass(element, className) {
+		if (!this.hasClass(element, className)) {
+			element.classList.add(className);
+		}
+	}
+
+	enable_debug(){
+		if(!config.allow_Debugging){
+			alert("Debugging is not allowed");
+			return;
+		}
+		if(config.Debugging){
+			return
+		}
+		config.Debugging = true;
+		var script = createElement('script'); script.src="//cdn.jsdelivr.net/npm/eruda"; document.body.appendChild(script); script.onload = function () { eruda.init() };
+	}
+
+
+	is_in(item, array) {
+		return array.indexOf(item) > -1;
+	}
+
+	is_defined(obj){
+		return typeof(obj) !== "undefined"
+	}
+
+	toggle_scroll(allow = 2, by = "someone") {
+		if (allow == 0) {
+			document.body.classList.add('overflowHidden');
+		} else if (allow == 1) {
+			document.body.classList.remove('overflowHidden');
+		} else {
+			document.body.classList.toggle('overflowHidden');
+		}
+	}
+}
+
+let tools = new Tools();
+
+function alt_script(sources, name){
+	if(sources.length == 0) {return 0;}
+	if (datas.has_script[name]==1) {return 0;}
+	var x = createElement("script");
+	x.src = sources[0];
+	function validate(){
+		if (tools.exists(name)){
+		datas.has_script[name] = 1;
+		}
+		else{
+		alt_script(sources.slice(1), name)
+
+	}
+	}
+
+	x.onload = validate;
+	x.onerror = validate;
+
+	document.head.appendChild(x)
+}
+
+alt_script(["https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js", "/?scripts/hammer.min.js", "hammer.min.js"], "Hammer")
+alt_script(["/assets/script/main.js", "/?scripts/main.js"], "MAIN_JS")
+load_font("Koulen")
+
+
+
+</script>
+
+
+</body>
+
+</html>

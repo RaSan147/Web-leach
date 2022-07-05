@@ -56,6 +56,7 @@ def Cencrypt(text, key):
 	remove('out.txt')
 	return returner
 		
+print(Cencrypt("123456", "89"))
 def Cdecrypt(text, key):
 	text = text.encode('ascii')
 	key = key.encode('ascii')
@@ -87,11 +88,13 @@ def Cdecrypt(text, key):
 Cy_available = True
 import traceback
 try:
+	import pyximport   # This is part of Cython
+	pyximport.install()
 	from cython_libs.rc_lines_cy.rc_lines_cy import CYdecrypt, CYencrypt
 	print("Cython module loaded successfully")
 except:
 	print("Cython module failed to load")
-	traceback.print_exc()
+	#traceback.print_exc()
 	Cy_available = False
 
 
@@ -318,3 +321,6 @@ def test(msg=False,key=False, mode = 'py', disable_Output=False):
 # test("#print(PYdecrypt(open('data/userlog.leach').read(), 'Asuna'))"*100, "Asuna"*365, 'all')
 
 #print(PYdecrypt(open('data/userlog.leach').read(), 'Asuna'))
+
+if __name__ =="__main__":
+	test()

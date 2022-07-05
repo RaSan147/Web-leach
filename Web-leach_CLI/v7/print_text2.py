@@ -288,10 +288,11 @@ class oneLine(XprintClass):
 		
 		if self.old_len!=None:
 			size = int(get_terminal_size()[0])
-			sys.stdout.write('\x1b[2K\x1b[1A\x1b[2K'*int(ceil(self.old_len/size)))
+			sys.stdout.write('\x1b[2K\x1b[1A\x1b[2K'*ceil(self.old_len/size))
 
 		self.old_len = len(self.remove_style(self.text))
-		
+		if self.text.endswith("\n"):
+			self.old_len-=1
 		
 		self.slowtype(use_self_text=True, sep=sep, wait_time=wait_time, end=end, highlighter=highlighter, auto_resetting=auto_resetting, run_at_start=run_at_start)
 		

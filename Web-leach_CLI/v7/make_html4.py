@@ -72,36 +72,58 @@ CSSmin = css_minify()
 
 class MakeHtml_:   #func_code= 7000
 	#def ensure_template(self)
-	def return_sub_page(self, all_list, sub_dirs, page_index, title):   #func_code= 7002
+	def return_sub_page(self, all_list, sub_dirs, page_index, proj_name, 
+			discuss_id="", description="", tags=[], stars=3.3, poster_loc=""):   #func_code= 7002
 		#if not os_isfile(AboutApp.temp_dir+'wl-page.html'):
-		#	if config.god_mode(2) == 'offline':
+		#	if UserData.god_mode(2) == 'offline':
 		#		return False
-		sub_page_template= Fsys.reader('pwa-wl-page.xhtml', encoding='utf8')%("CHAPTER", str(all_list), str(sub_dirs), page_index, "[]", title, "[0,1,1,1]", "", "", 0, "[]", "")
+		sub_page_template= Fsys.reader('pwa-wl-page.xhtml', encoding='utf8')%(proj_name, "CHAPTER", str(all_list), str(sub_dirs), page_index, "[]", proj_name, "[0,1,1,1]", "", "", 0, "[]", "")
 		#print(type(sub_page_template))
 
 		return sub_page_template
 
+	def return_online_sub_page(self, all_list, sub_dirs, page_index, proj_name,
+			discuss_id="", description="", tags=[], stars=3.3, poster_loc=""):   #func_code= 7002
+	
+		sub_page_template= Fsys.reader('pwa-wl-page-online.xhtml', encoding='utf8')%(proj_name, "CHAPTER", str(all_list), str(sub_dirs), page_index, "[]", proj_name, "[0,1,1,1]", "", "", 0, "[]", "")
 
-	def return_main_page(self, sub_dirs, proj_name):   #func_code= 7003
+		return sub_page_template
+
+
+	def return_main_page(self, sub_dirs, proj_name, json_dict):   #func_code= 7003
 		"""
 		Return the main page of the project.
 		"""
 		#if not os_isfile(AboutApp.temp_dir+'wl-page.html'):
-		#	if config.god_mode(2) == 'offline':
+		#	if UserData.god_mode(2) == 'offline':
 		#		return False
-		main_page_template= Fsys.reader('pwa-wl-page.xhtml', encoding='utf8')%("CHAPTER-LIST", "[]", str(sub_dirs), -1, "[]", proj_name, "[0,1,1,1]", "", "", 3.3, "[]", "")
-		#print("000000", type(main_page_template))
+		main_page_template= Fsys.reader('pwa-wl-page.xhtml', encoding='utf8')%(proj_name, "CHAPTER-LIST", "[]", str(sub_dirs), -1, "[]", proj_name, str(json_dict["default_style"]), json_dict["discuss_id"] , json_dict["description"].replace('"', '\\"') , json_dict["stars"], json_dict["tags"], json_dict["poster_loc"])
 		
 		return main_page_template
+
+	def return_online_main_page(self, sub_dirs, proj_name, json_dict):
+		main_page_template= Fsys.reader('pwa-wl-page-online.xhtml', encoding='utf8')%(proj_name, "CHAPTER-LIST", "[]", str(sub_dirs), -1, "[]", proj_name, str(json_dict["default_style"]), json_dict["discuss_id"] , json_dict["description"].replace('"', '\\"') , json_dict["stars"], json_dict["tags"], json_dict["poster_loc"])
+		
+		return main_page_template
+
 		
 		
-	def make_online_page(self, all_li, dir_list, project, seq, new_sub_dirs =[], ext='', dir_sorted = False):   #func_code= 7001
+	def make_online_page(self, all_li, dir_list, project, project_alias, seq,
+			new_sub_dirs =[], ext='', dir_sorted = False,
+			discuss_id="", description="", tags=[], stars=3.3, poster_loc=""):   #func_code= 7001
 		"""all_li: all_list.all_names
 		dir_list: sub_dirs
 		project: project_name
+		project_alias: project_alias to be Desplayed in the page
 		seq: img to sort
+		new_sub_dirs: new sub_dirs when update
 		ext: extension
 		dir_sorted: if dir_sorted is true, then the dir_list is sorted
+		discuss_id: discuss_id
+		description: project description
+		tags: project tags
+		stars: project rating stars
+		poster_loc: project poster location
 		"""
 		
 		#from main_ez import IOsys
@@ -117,21 +139,21 @@ class MakeHtml_:   #func_code= 7000
 			dir_list = natsort.natsorted(dir_list)
 			
 		first_page = dir_path+'/Download_projects/'+ project+'/'+'index.html'
-		def make_json(type, imgs =[], index = -1, return_dict=False, old = False):
+		def make_json(type, imgs =[], index = -1, return_dict=False):
 			
 			
 			x = {}
 			x["page_type"] = type
-			x["proj_name"] = project
+			x["proj_name"] = project_alias
 			x["pages_list"] = dir_list
 			x["default_style"] = [0,1,1,1]
 			if type=="CHAPTER-LIST":
 				x["new_pages"] = new_sub_dirs
-				x["discuss_id"] = ""
-				x["description"] = old["description"] if old else IOsys.safe_input("\n/hui/Description:/=/ ")
-				x["tags"] = old["tags"] if old else  [i.strip() for i in IOsys.safe_input("\n/hui/Tags ( sep by comma ):/=/ ").split(",") if i.strip()!=""]
-				x["stars"] = old["stars"] if old else float(IOsys.safe_input("\n/hui/Rating stars:/=/ "))
-				x["poster_loc"] = old["poster_loc"] if old else IOsys.safe_input("\n/hui/Poster link:/=/ ")
+				x["discuss_id"] = discuss_id
+				x["description"] = description
+				x["tags"] = tags
+				x["stars"] = stars
+				x["poster_loc"] = poster_loc
 			if type =="CHAPTER":
 				x["images_loc"] = imgs
 				x["current_page_index"] = index
@@ -140,13 +162,7 @@ class MakeHtml_:   #func_code= 7000
 			if return_dict: return x, json.dumps(x)
 			return json.dumps(x)
 				
-		old = False
 
-		
-		if os_exists('Download_projects/'+ project +'/index.html.json'):
-			if IOsys.asker("\n\nImport old json? "):
-				old = json.loads(Fsys.reader('Download_projects/'+ project +'/index.html.json'))
-			
 		for i in range(dir_len):
 			if '.' == dir_list[i]:
 				dir_list.extend(natsort.natsorted(all_li[dir_bkp.index('.')]))
@@ -154,9 +170,9 @@ class MakeHtml_:   #func_code= 7000
 			temp= all_li[dir_bkp.index(dir_list[i])]
 			
 			if seq:
-				box= self.return_sub_page(natsort.natsorted(temp), dir_list, i, project)
+				box= self.return_online_sub_page(natsort.natsorted(temp), dir_list, i, project)
 			else:
-				box= self.return_sub_page(temp, dir_list, i, project)
+				box= self.return_online_sub_page(temp, dir_list, i, project)
 			
 			if not box:
 				return False
@@ -168,8 +184,9 @@ class MakeHtml_:   #func_code= 7000
 			
 		
 		
-		json_dict, json_file = make_json("CHAPTER-LIST", return_dict=True, old = old)
-		box = Fsys.reader('pwa-wl-page.xhtml', encoding='utf8')%("CHAPTER-LIST", "[]", str(dir_list), -1, "[]", project, str(json_dict["default_style"]), json_dict["discuss_id"] , json_dict["description"].replace('"', '\\"') , json_dict["stars"], json_dict["tags"], json_dict["poster_loc"])
+		json_dict, json_file = make_json("CHAPTER-LIST", return_dict=True)
+
+		box = self.return_online_main_page(dir_list, project, json_dict)
 		
 		
 		Fsys.writer('index.html', 'w', box,'Download_projects/'+ project, f_code= '40001')
@@ -180,19 +197,28 @@ class MakeHtml_:   #func_code= 7000
 
 	
 
-	def make_pages(self, all_li, dir_list, project, seq, new_sub_dirs=[], ext='', dir_sorted = False):   #func_code= 7001
+	def make_pages(self, all_li, dir_list, project, project_alias, seq, 
+			new_sub_dirs =[], ext='', dir_sorted = False,
+			discuss_id="", description="", tags=[], stars=3.3, poster_loc=""):   #func_code= 7001
 		"""all_li: all_list.all_names
 		dir_list: sub_dirs
 		project: project_name
+		project_alias: project_alias to be Desplayed in the page
 		seq: img to sort
+		new_sub_dirs: new sub_dirs when update
 		ext: extension
 		dir_sorted: if dir_sorted is true, then the dir_list is sorted
+		discuss_id: discuss_id
+		description: project description
+		tags: project tags
+		stars: project rating stars
+		poster_loc: project poster location
 		"""
 
-		dir_path = os_dirname(os_realpath(__file__))
+		dir_path = os.path.dirname(os.path.realpath(__file__))
 
 		leach_logger(log(['7001xI', project, seq, ext, dir_sorted]))
-		first_page=None
+
 		dir_len = len(dir_list)
 		dir_bkp = dir_list[:]
 
@@ -200,25 +226,30 @@ class MakeHtml_:   #func_code= 7000
 			dir_list = natsort.natsorted(dir_list)
 			
 		first_page = dir_path+'/Download_projects/'+ project+'/'+'index.html'
-		def make_json(type, imgs =[], index = -1):
+		def make_json(type, imgs =[], index = -1, return_dict=False):
+			
+			
 			x = {}
 			x["page_type"] = type
-			x["proj_name"] = project
+			x["proj_name"] = project_alias
 			x["pages_list"] = dir_list
 			x["default_style"] = [0,1,1,1]
 			if type=="CHAPTER-LIST":
 				x["new_pages"] = new_sub_dirs
-				x["discuss_id"] = ""
-				x["description"] = ""
-				x["tags"] = []
-				x["stars"] = 3.3
-				x["poster_loc"] = ""
+				x["discuss_id"] = discuss_id
+				x["description"] = description
+				x["tags"] = tags
+				x["stars"] = stars
+				x["poster_loc"] = poster_loc
 			if type =="CHAPTER":
 				x["images_loc"] = imgs
 				x["current_page_index"] = index
 				
 				
+				
+			if return_dict: return x, json.dumps(x)
 			return json.dumps(x)
+				
 				
 				
 			
@@ -231,7 +262,7 @@ class MakeHtml_:   #func_code= 7000
 			if seq:
 				box= self.return_sub_page(natsort.natsorted(temp), dir_list, i, project)
 			else:
-				box= self.return_sub_page(temp, dir_list, i, project)
+				box= self.return_sub_page(temp, dir_list, i, project_alias)
 			
 			if not box:
 				return False
@@ -242,11 +273,13 @@ class MakeHtml_:   #func_code= 7000
 			Fsys.writer('index.html.json', 'w', json_file,'Download_projects/'+ project+'/'+dir_list[i], f_code= '40001')
 			
 		
-		box = str(self.return_main_page(dir_list, project))
+		json_dict, json_file = make_json("CHAPTER-LIST", return_dict=True)
+
+		box = self.return_main_page(dir_list, project_alias, json_dict)
+		
+		
 		Fsys.writer('index.html', 'w', box,'Download_projects/'+ project, f_code= '40001')
-		
-		json_file = make_json("CHAPTER-LIST")
-		
+
 		Fsys.writer('index.html.json', 'w', json_file,'Download_projects/'+ project, f_code= '40001')
 		return first_page
 
