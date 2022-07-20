@@ -31,11 +31,9 @@ const log = console.log,
 	byName = document.getElementsByName.bind(document),
 	createElement = document.createElement.bind(document);
 
-	const alt_icons = ["/?assets/icon.ico",
-			"https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub@main/resources/icon.ico", "/icon.ico"],
+	const alt_icons = ["https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub@main/resources/icon.ico", "/icon.ico"],
 		alt_logos = ['https://i.ibb.co/D4KnFRC/emo-angel-titled-w400.png',
-			'emo_angel_titled_w400.png',
-			'/assets/emo_angel_titled_w400.png'
+			'emo_angel_titled_w400.png'
 		];
 
 	function called(by,func){
@@ -63,6 +61,9 @@ const log = console.log,
 		for (let i = 0; i < href_list.length; i++) {
 			let link = createElement('link');
 			link.rel = rel;
+			if(rel=='stylesheet'){
+				link.type = "text/css";
+				link.media = 'all';}
 			link.href = href_list[i];
 			document.head.appendChild(link);
 		}
@@ -76,8 +77,8 @@ const log = console.log,
 		load_css(["https://fonts.googleapis.com/css?family=" + gfont])
 	}
 
-	load_css(['/?scripts/main.css']) // for web leach python server
-	load_css(['/?scripts/chapter_list.css']) // for web leach python server
+	// load_css(['/?scripts/main.css']) // for web leach python server
+	// load_css(['/?scripts/chapter_list.css']) // for web leach python server
 
 	function switch_icon() {
 		load_link("icon", alt_icons)
@@ -255,13 +256,13 @@ const log = console.log,
 
 
 	<div style="width: 95vw; max-width: 700px; margin: 0 auto;">
-		<div class='poster' id ="logo">
-			<img src='/?assets/emo_angel_titled_w400.png' id="logo-img" onerror="alt_(this, alt_logos)" class="poster-img">
+		<div class='poster'>
+			<img src='/assets/emo_angel_titled_w400.png' id="logo-img" onerror="alt_(this, alt_logos)" class="poster-img">
 		</div>
 		<div style="padding: 16px; text-align:left; float: left;">
 			<h2 class="page_title"><u>Project:&nbsp;</u><span id="proj_name"></span> </h2>
 			<h2 class="page_title"><u>Page:&nbsp;</u><span id="page_title"></span></h2>
-			<a id='go2main' href='../index.html'>
+			<a id='go2main' href='../index.html' onclick="handle_json_request(this.href, event)">
 				<u> Go to Page list</u>
 			</a>
 			<br><br><br>
@@ -314,10 +315,10 @@ const log = console.log,
 <div id="manga-description">
     
 	<div style="width: 95vw; max-width: 700px; margin: 0 auto;">
-	<div class='poster' id ="logo">
+	<div class='poster'>
 		<img src='' id="manga-img" class="poster-img">
 	</div>
-	<div style="padding: 16px; text-align:left; float: left; max-width: 400px;">
+	<div class="description_container" >
 		<h2 class="page_title"><u>Project:</u>&nbsp;<span id="manga_name"></span> </h2>
 		<p class ="description page_title"><u>Description:</u>&nbsp;<span id ="description-text" ></span></p>
 		<p class ="tag-list page_title"><u>Tag list:</u> <span id ="tag-list"></span><p>
@@ -627,15 +628,14 @@ function alt_script(sources, name){
 	document.head.appendChild(x)
 }
 
-alt_script(["https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js", "/?scripts/hammer.min.js", "hammer.min.js"], "Hammer")
-alt_script(["/assets/script/main.js", "/?scripts/main.js"], "MAIN_JS")
+alt_script(["https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js", "assets/scripts/hammer.min.js"], "Hammer")
 load_font("Koulen")
 
 
 
 </script>
 
-
+<script src="/assets/script/main.js"></script>
 </body>
 
 </html>

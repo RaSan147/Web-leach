@@ -1,5 +1,5 @@
 # pylint: disable=anomalous-backslash-in-string
-import mimetypes, json
+import mimetypes, json, sys
 from urllib import parse, request  # used to parse values  # used to make requests into the url
 
 # for testing
@@ -92,6 +92,9 @@ def log(arr):
 			arr[i] = str(arr[i])
 
 	return "||".join(map(str, arr))
+	
+def endl(lines=1):
+	sys.stdout.write("\n"*lines)
 
 class __Make_proxy:
 	def make_pages(self, *args):

@@ -1,50 +1,48 @@
-
 /*=========CHAPTER-LIST=========*/
-#allA{
+#allA {
 	text-align: center;
 	margin-left: 5%;
 	margin-right: 5%;
 	width: 85%;
 }
 
-
-#manga_name{
-	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+#manga_name {
+	font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+		"Lucida Sans", Arial, sans-serif;
 }
 
-#description-text{
+#description-text {
 	color: var(--theme-color-text);
 }
 
-.list_class{
+.list_class {
 	font-size: 1.5em;
 	font-weight: 600;
 	font-family: monospace !important;
 	text-decoration: none;
-	color: #06A5EE;
+	color: #06a5ee;
 	overflow-wrap: break-word;
 	padding-left: 6%;
 	padding-right: 5%;
 	float: left;
 }
 
-.small-tag{
-	position:relative;
+.small-tag {
+	position: relative;
 	background-color: red;
 	color: white;
 	padding: 1px 3px 0 3px;
 	border-radius: 3px;
-	top:-2px;
-	font-size: .45em;
+	top: -2px;
+	font-size: 0.45em;
 	font-weight: 900;
-	font-family: 'Koulen', Monospace;
+	font-family: "Koulen", Monospace;
 }
 
-.tag{
+.tag {
 	background-color: #444;
 	color: #fff;
 	padding: 3px 5px 3px 5px;
 	border-radius: 2px;
 	line-height: 30px;
 }
-

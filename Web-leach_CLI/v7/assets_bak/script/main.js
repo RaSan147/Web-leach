@@ -1,5 +1,3 @@
-/*esversion: 8 */
-
 MAIN_JS = true;
 
 class Local_Data_Manager {
@@ -506,13 +504,12 @@ let page_styler = new CH_PageStyler();
 class Accordion_ {
 	constructor() {
 		this.acc = byClass("accordion");
-		
-		function click_func(ev) {
-			var that = ev.target;
 
-			that.classList.toggle("accordion-active");
-
-				var panel = that.nextElementSibling;
+		var that = this;
+		for (let i = 0; i < this.acc.length; i++) {
+			this.acc[i].addEventListener("click", function () {
+				this.classList.toggle("accordion-active");
+				var panel = this.nextElementSibling;
 				if (panel.classList.contains("accordion-panel")) {
 					if (panel.style.display === "block") {
 						panel.style.display = "none";
@@ -521,11 +518,7 @@ class Accordion_ {
 						slider_control.slider_fix_tick();
 					}
 				}
-			}
-
-		var that = this;
-		for (let i = 0; i < this.acc.length; i++) {
-			this.acc[i].addEventListener("click", click_func);
+			});
 		}
 
 		byId("add_theme_name").innerHTML +=

@@ -33,6 +33,7 @@ OPEN_SERVER = True # disable on exit
 
 # importing required packages
 
+from cmath import e
 import Number_sys_conv as Nsys  # fc=1000
 
 # different number based functions I made
@@ -103,7 +104,7 @@ try:
 	# SYS tools #######################
 	from sys import exit as sys_exit, executable as sys_executable, getsizeof
 
-	#sys_exit
+	sys_exit
 	# sys_exit = exit
 
 	from subprocess import call as subprocess_call, Popen as subprocess_Popen, DEVNULL as subprocess_DEVNULL
@@ -234,8 +235,8 @@ print(2) # x
 class AboutApp_ :     #fc=A000
 	""" Contains Information about the app and verion details"""
 
-	_VERSION = '7.001'
-	_Vcode = '007001'
+	_VERSION = '7.002'
+	_Vcode = '007002'
 	_APP_NAME = 'Web-Leach'
 	_APP_DESC = 'Web-Leach is a simple python script to download files from web'
 	_APP_AUTHOR = 'Ratul Hasan'
@@ -279,15 +280,16 @@ class AboutApp_ :     #fc=A000
 
 	g_mode = None
 
-	leach_projects = 'data/leach_projects/'
-	# location to store project data
-
+	
 	download_dir = "Download_projects/"
 	# download directory
-	thread_data_dir = "data/leach_projects/"  # + project name
-	# location to store the thread data
-	data_dir = "data/"
+	data_dir = "data8/"
 	# location to store app data
+	leach_projects = data_dir + 'leach_projects/'
+	# location to store project data
+
+	thread_data_dir = data_dir + "leach_projects/"  # + project name
+	# location to store the thread data
 	temp_dir = data_dir + ".temp/"
 	# location to store temp data
 	cached_webpages_dir = data_dir + ".cached_webpages/"
@@ -644,22 +646,20 @@ class IOsys_ :  # fc=0500
 				0 to delete current line"""
 
 		# return 0
-#		if lines == 0:
-#			sys_write('\n')
-#			self.delete_last_line()
-#			return 0
+		if lines == 0:
+			sys_write('\n')
+			self.delete_last_line()
+			return 0
 
-#		for _ in range(lines):
-#			# delete current line
-#			sys_write('\x1b[2K')
-#			
-#			# cursor up one line
-#			sys_write('\x1b[1A')
+		for _ in range(lines):
+			# delete current line
+			sys_write('\x1b[2K')
+			
+			# cursor up one line
+			sys_write('\x1b[1A')
 
-#			# delete last line
-#			sys_write('\x1b[2K')
-
-		sys_write("\033[2K\033[1G"+ ('\x1b[1A\x1b[2K'*lines))
+			# delete last line
+			sys_write('\x1b[2K')
 
 	def leach_logger(self, io, key='lock'):  # fc=0503 v
 		"""saves encrypted logger data to file\n
@@ -1972,6 +1972,545 @@ class SupportTools_ :  # fc=0A00
 
 SupportTools = SupportTools_()
 
+class new_All_list_type:
+	"""
+	1st the datas will be dtored like this:
+		sub_links = [link, ..dir_len]
+		sub_names = [name, ..dir_len]
+		dir_order = order to display directories
+		all_links = [[link, ...], ..dir_len]
+		all_names = [[name, ...], ..dir_len]
+
+	on finalization:
+		sub_links = [dir_link, ..dir_len]
+		sub_names = [dir_name, ..dir_len]
+		dir_order = order to display directories
+		sub_dirs = [[[link, name], ..sub_dir_len],
+					...dir_len]
+		"""
+	def __init__(self, sub_links=[], sub_names=[], dir_len=-1):
+		""" Either provide sub_links + sub_dirs + dir_order(opt)
+			or provide dir_len to use later
+			
+		# sub_links = [link, ..dir_len]
+		# sub_names = [name, ..dir_len]
+		# dir_order = order to display directories
+		"""
+		
+		if dir_len != -1:
+			self.dir_len = dir_len
+
+			self.sub_links = [None for i in range(dir_len)]
+			self.sub_names = [None for i in range(dir_len)]
+		else:
+			self.sub_links = sub_links
+			self.sub_names = sub_names
+			self.dir_len = len(sub_links)
+
+		self.dir_order = [i for i in range(self.dir_len)]
+		self.sub_dirs = [[] for i in range(self.dir_len)]
+		
+			
+	def load(self, json_dict):
+		self.sub_links = json_dict['sub_links']
+		self.sub_names = json_dict['sub_names']
+		self.dir_order = json_dict['dir_order']
+		self.sub_dirs = json_dict['sub_dirs']
+
+	def gen_data(self):
+		self.data = {
+							"sub_links": self.sub_links,
+							"sub_dirs": self.sub_dirs,
+							"dir_order": self.dir_order
+		}
+		
+		return self.data
+
+	def all_list(self):
+		all_list = []
+		for dir in range(self.dir_len):
+			dir_name = self.sub_names[dir]
+
+			for _i in range(len(self.sub_dirs[dir_name])):
+				link, name = self.sub_dirs[dir_name][_i]
+				all_list.append([link, name, dir])
+				
+				
+		return all_list
+		
+	def sort_by_name(self):
+		"""USE IT after final()
+		
+		DO NOT use it after writing
+		or while downloading"""
+		for dir in range(self.dir_len):
+			list_ = self.sub_dirs[dir]
+			list_ = natsort.natsorted(list_, key=lambda x: x[1])
+			self.sub_dirs[dir] = list_
+			
+	def make_sub_dirs(self, links, dirs):
+		self.sub_links =[]
+		for i in range(len(links)):
+			self.sub_links.append([links[i], dirs[i]])
+				
+
+	def get_name(self, name, dir_indx, ext=None):  # fc=0B0B
+		""" Add a name to the all_names
+		name: name to add
+		dir_indx: index of the directory
+		"""
+
+		name = Datasys.trans_str(name, {'/\\|:*><?': '-',
+		                                '"': "'",
+		                                "\n\t\r": " "})
+
+		name = name.strip()
+
+		if len(name) > config.file_limit:
+			name = re_sub('\s{2,}', ' ', name)
+
+		if len(name) > config.file_limit:
+			name = name[:config.file_limit - 3] + '...'
+
+		if ext is None: ext = ''
+		name = name + ext
+		
+		for i in self.sub_dirs[dir_indx]:
+			if name== i[1]:
+				break
+
+		else:
+			return name
+
+	
+		if '.' in name:
+			name_, _, ext_ = name.rpartition('.')
+		else:
+			name_, ext_ = name, ''
+		n = 1
+		
+		# X = ''.join((name_, '(', str(n), ')', '.', ext_))
+
+		for i in range(len(self.all_names[dir_indx]) - 1, 0, -1):
+			if self.all_names[dir_indx][i].startswith(name_ + '(') and self.all_names[dir_indx][i].endswith(
+					')' + '.' + ext_):
+				if self.all_names[dir_indx][i][len(name_) + 1:-len(ext_) - 2].isdigit():
+					n = int(self.all_names[dir_indx][i][len(name_) + 1:-len(ext_) - 2]) + 1
+				name = ''.join((name_, '(', str(n), ')', '.', ext_))
+
+				if name not in self.all_names[dir_indx]:
+					break
+			n += 1
+
+		return name
+
+	def final(self):
+		"""	Finalize sub dirs and optimize the lists"""
+		pass
+
+
+class All_list_type2 :  # fc=0B00
+	""" Data structure for all lists """
+
+	def __init__(self, dir_len, all_links=None, all_names=None, sub_links=[], dir_order=None):  # fc=0B01
+		"""
+		dir_len: number of directories
+		all_links: list of all links by directory
+		all_names: list of all names by directory
+		sub_links: list of sub links [[link, name], ..dir_len] if not, use make_sub_dirs
+		dir_order: order to display directories
+		"""
+		self.dir_len = dir_len
+		self.dir_height = [0 for _ in range(dir_len)]
+		self.all_names = [[] for _ in range(dir_len)]
+		# self.uplinks = [[] for _ in range(dir_len)]
+		self.link_len = 0
+		
+		self.final_ok = False
+
+		
+		self.sub_links = sub_links # [[link, name], ...dir_len]
+
+		self.dir_order = [i for i in range(self.dir_len)] if dir_order is None else dir_order
+		
+		#print(len(all_names))
+
+		# self.gen_temp(dir_len)
+		self.all_links = [[] for _ in range(dir_len)] # 1st [[[link, 0, 0], ...], ...] then on final [[[link, name, uplink], ...], ...]
+		if all_links is not None:
+			if len(all_links) == 0:
+				pass
+			# if len(all_links[0]) < 3:
+			# 	self._2to3(all_links)
+
+			elif all_names is None or all(not i for i in all_names):
+				self.generate(all_links)
+
+			else:
+				self.generate(all_links, all_names)
+
+		"""
+		types:
+			all_links: [[link, dir_dex, name_dex], ...]
+			all_names: [[name1, name2,...], ...dir_len]
+			uplinks: [[(hash, link), ...], ...dir_len]
+		"""
+
+	def load(self, json_dict):
+		
+		self.final_ok = True
+		self.sub_links = json_dict['sub_links']
+		self.dir_order = json_dict['dir_order']
+		self.all_links = json_dict['all_links']
+
+		self.update_values()
+
+
+	def final(self):
+		"""	Finalize sub dirs and optimize the lists"""
+		for i in range(self.dir_len):
+			for j in range(self.dir_height):
+				self.all_links[i][j][1] = self.all_names[i][j]
+
+		self.all_names.clear()
+		
+		self.final_ok = True
+	
+	def json(self):  # fc=
+		""" Return a json representation of the object """
+		json_dict = {}
+		json_dict['sub_links'] = self.sub_links
+		json_dict['dir_order'] = self.dir_order
+		json_dict['all_links'] = self.all_links
+
+		return json_dict
+
+		
+	
+		
+	def make_sub_dirs(self, links, dirs):
+		self.sub_links =[]
+		for i in range(len(links)):
+			self.sub_links.append([links[i], dirs[i]])
+	
+		self.update_values()
+
+		
+	def update_values(self):
+		self.dir_len = len(self.sub_links)
+		self.dir_height = [len(self.all_links[i]) for i in range(self.dir_len)]
+		self.link_len = sum(self.dir_height)
+
+	# def _2to3(self, all_links):  # fc=0B02
+	# 	""" convert old < v6 all_list [[link, dir_index]] based to new
+	# 		all_list [[link, dir_index, name_index]] """
+
+	# 	for i in range(len(all_links)):
+	# 		self.add_link(all_links[i][0], all_links[i][1])
+
+	def __str__(self):  # fc=0B03
+		return 'All_list_type{dir_len: %i,\n\nall_links: %s,\n\n all_names: %s}' % (
+			self.dir_len, self.all_links, self.all_names)
+
+	def __repr__(self):  # fc=0B04
+		return 'All_list_type(dir_len=%i,\n\nall_links=%s,\n\n all_names=%s)' % (
+			self.dir_len, self.all_links, self.all_names)
+
+	def __getitem__(self, index):  # fc=0B05
+		"""returns the values of the index of all_list
+		index: index of all_list
+		returns:
+			0: link
+			1: dir_index
+			2: file name
+		"""
+		return (self.all_links[index][0], self.all_links[index][1],
+		        self.all_names[self.all_links[index][1]][self.all_links[index][2]])
+
+	def __setattr__(self, name, value):
+		if name == 'all_links':
+			self.link_len = len(value)
+		
+		self.__dict__[name] = value
+		
+
+
+	def __len__(self):  # fc=0B06
+		return self.link_len
+
+	def __iter__(self):  # fc=0B07
+		self.iter_dex = 0
+		return self
+
+	def __next__(self):  # fc=0B08
+		while self.iter_dex < self.link_len:
+			key = self.iter_dex
+			self.iter_dex += 1
+			# print(1,self.all_links[key][0],)
+			# print(2,self.all_links[key][1],)
+			# print(3, [self.all_links[key][1]], [self.all_links[key][2]])
+			return (self.all_links[key][0], self.all_links[key][1],
+			        self.all_names[self.all_links[key][1]][self.all_links[key][2]])
+		raise StopIteration
+
+	def __sizeof__(self):  # fc=0B0S
+		xprint("/h/This process may take a second")
+		in_list = 0
+		for i in self.all_links:
+			in_list += getsizeof(i)
+
+		for i in self.all_names:
+			in_list += getsizeof(i)
+
+		for i in self.dir_height:
+			in_list += getsizeof(i)
+		return (getsizeof(self.all_links) + getsizeof(self.all_names) + getsizeof(self.dir_height) +
+		        getsizeof(self.dir_len) + getsizeof(self.link_len) + in_list)
+
+	def name_len(self):  # fc=0B09
+		"""returns total number of names in all dirs
+		"""
+		return sum(self.dir_height)
+
+	def add_link(self, link, dir_indx, name=None, ext=None):  # fc=0B0A
+		""" Add a link to the all_list and also sets its name
+		link: link to add
+		dir_indx: index of the directory
+		name: name of the file (optional) """
+
+		if name is not False:
+			if name is None:
+				self.add_name(Fsys.get_file_name(link, 'url'), dir_indx, ext=ext)
+			else:
+				self.add_name(name, dir_indx, ext=ext)
+		
+		else:
+			name_dex = 0
+
+		self.all_links[dir_indx].append([link, 0, 0]) # link, name, uplink
+		self.dir_height[dir_indx]+=1
+		self.link_len+=1
+	
+	
+	
+	def get_available_name(self, name, dir_indx, ext=None):  # fc=0B0B
+		""" Add a name to the all_names
+		name: name to add
+		dir_indx: index of the directory
+		"""
+
+		name = Datasys.trans_str(name, {'/\\|:*><?': '-',
+		                                '"': "'",
+		                                "\n\t\r": " "})
+
+		name = name.strip()
+
+		if len(name) > config.file_limit:
+			name = re_sub('\s{2,}', ' ', name)
+
+		if len(name) > config.file_limit:
+			name = name[:config.file_limit - 3] + '...'
+
+		if ext is None: ext = ''
+		name = name + ext
+		
+		for i in self.all_names[dir_indx]:
+			if name== i[1]:
+				break
+
+		else:
+			return name
+
+	
+		if '.' in name:
+			name_, _, ext_ = name.rpartition('.')
+		else:
+			name_, ext_ = name, ''
+		n = 1
+		
+		# X = ''.join((name_, '(', str(n), ')', '.', ext_))
+
+		for i in range(len(self.all_names[dir_indx]) - 1, 0, -1):
+			if self.all_names[dir_indx][i].startswith(name_ + '(') and self.all_names[dir_indx][i].endswith(
+					')' + '.' + ext_):
+				if self.all_names[dir_indx][i][len(name_) + 1:-len(ext_) - 2].isdigit():
+					n = int(self.all_names[dir_indx][i][len(name_) + 1:-len(ext_) - 2]) + 1
+				name = ''.join((name_, '(', str(n), ')', '.', ext_))
+
+				if name not in self.all_names[dir_indx]:
+					break
+			n += 1
+
+		return name
+
+
+	def add_name(self, name, dir_indx, link_dex=None, ext=None):  # fc=0B0B
+		""" Add a name to the all_names
+		name: name to add
+		dir_indx: index of the directory
+		link_dex: index of the link (optional) """
+
+#		name = Datasys.trans_str(name, {'/\\|:*><?': '-',
+#		                                '"': "'",
+#		                                "\n\t\r": " "})
+
+#		name = name.strip()
+
+#		if len(name) > config.file_limit:
+#			name = re_sub('\s{2,}', ' ', name)
+
+#		if len(name) > config.file_limit:
+#			name = name[:config.file_limit - 3] + '...'
+
+#		if ext is None: ext = ''
+#		name = name + ext
+
+#		if name not in self.all_names[dir_indx]:
+#			self.all_names[dir_indx].append(name)
+
+#		else:
+#			if '.' in name:
+#				name_, _, ext_ = name.rpartition('.')
+#			else:
+#				name_, ext_ = name, ''
+#			n = 1
+
+#			# X = ''.join((name_, '(', str(n), ')', '.', ext_))
+
+#			for i in range(len(self.all_names[dir_indx]) - 1, 0, -1):
+#				if self.all_names[dir_indx][i].startswith(name_ + '(') and self.all_names[dir_indx][i].endswith(
+#						')' + '.' + ext_):
+#					if self.all_names[dir_indx][i][len(name_) + 1:-len(ext_) - 2].isdigit():
+#						n = int(self.all_names[dir_indx][i][len(name_) + 1:-len(ext_) - 2]) + 1
+#					name = ''.join((name_, '(', str(n), ')', '.', ext_))
+
+#					if name not in self.all_names[dir_indx]:
+#						break
+#				n += 1
+
+		name = self.get_available_name(name, dir_indx, ext)
+
+		self.all_names[dir_indx].append(name)
+
+		# return self.dir_height[dir_indx]
+		
+		
+	def update_name(self, name, dir_indx, name_indx, ext=None):  # fc=0B0D
+		""" Update the name of a link
+		name: new name
+		dir_indx: index of the directory
+		name_indx: index of the name """
+		
+		name = self.get_available_name(name, dir_indx)
+		self.all_names[dir_indx][name_indx] = name
+		
+	def sort_by_name(self):
+		"""USE IT after final()
+		
+		DO NOT use it after writing
+		or while downloading"""
+		for dir in range(self.dir_len):
+			list_ = self.all_links[dir]
+			list_ = natsort.natsorted(list_, key=lambda x: x[1])
+			self.all_links[dir] = list_
+			
+
+	# def get_name(self, index):  # fc=0B0C
+		""" Get the name of the link index
+		index: index of the link
+		"""
+		# return self.all_names[self.all_links[index][1]][self.all_links[index][2]]
+
+	def generate(self, all_links, Name=None):  # fc=0B0E
+		""" Generate the all_list from a list of links (previously generated)
+		all_links: list of links
+		Name: name of the file (optional and available from v6+) """
+		if Name is None or all(not i for i in Name):
+			for i in range(len(all_links)):
+				self.add_link(all_links[i][0], all_links[i][1])
+		else:
+			for i in range(len(all_links)):
+				self.add_link(all_links[i][0], all_links[i][1], Name[all_links[i][1]][all_links[i][2]])
+				
+	# def get_all_list(self, sort_by_name = False, sort_by_link = False):
+	# 	"""create a list of lists based on directories like all_names"""
+	# 	all_links = [
+	# 			[j for j in range(self.dir_height[i])
+	# 		] for i in range(self.dir_len)]
+			
+	# 	name_ids = [
+	# 			[j for j in range(self.dir_height[i])
+	# 		] for i in range(self.dir_len)]
+			
+		
+			
+	# 	for i in range(self.link_len):
+	# 		link, dir_id, name_id = self.all_links[i]
+	# 		all_links[dir_id][name_id] = link
+
+
+	# 	if sort_by_name:
+	# 		for i in range(self.dir_len):
+	# 			name_serial = natsort.index_natsorted(self.all_names[i])
+				
+	# 			all_links[i] = natsort.order_by_index(all_links[i], name_serial)
+				
+	# 	if sort_by_link:
+	# 		for i in range(self.dir_len):
+	# 			all_links[i] = natsort.natsorted(all_links[i])
+				
+	# 	return all_links
+		
+
+
+	#def clear_temp(self):  # fc=0B0F
+	#	""" Clear the temp list """
+	#	self.dir_height = [0 for _ in range(self.dir_len)]
+
+#	def gen_temp(self, dir_len=None):  # fc=0B0G
+#		""" Generate the temp list
+#		dir_len: length of the directory list """
+#		if dir_len is None:
+#			dir_len = self.dir_len
+#		if hasattr(self, 'all_names'):
+#			self.dir_height = [len(self.all_names[i]) for i in range(dir_len)]
+#		else:
+#			self.dir_height = [0 for _ in range(dir_len)]
+
+	#def _3to2(self):  # fc=0B0H
+	#	""" Convert from version 3 to version 2 """
+	#	return [[i, j] for i, j, k in self.all_links]
+
+	# def remove_duplicates(self):  # fc=0B0I
+	# 	""" Remove the duplicates from the all_list 
+    #     since some page may have the same link multiple times"""
+	# 	# temp = self._3to2()
+	# 	# popped = []
+	# 	# print(temp)
+
+		
+    #     for i in range(self.dir_len):
+    #         temp_links = []
+
+	# 	for i in range(len(temp)):
+	# 		if temp[i] not in temp_links:
+	# 			temp_links.append(temp[i].copy())
+	# 			temp_names.append(self.get_name(i))
+
+	# 	self.all_links = []
+	# 	self.all_names = [[] for _ in range(self.dir_len)]
+	# 	self.dir_height = [0 for _ in range(self.dir_len)]
+	# 	self.link_len = 0
+
+	# 	for i in range(len(temp_links)):
+	# 		self.add_link(temp_links[i][0], temp_links[i][1], temp_names[i])
+
+	def __del__(self):  # fc=0B0J
+		self.all_links.clear()
+		self.all_names.clear()
+		self.dir_height.clear()
+		self.dir_order.clear()
+
 
 class All_list_type :  # fc=0B00
 	""" Data structure for all lists """
@@ -1990,10 +2529,10 @@ class All_list_type :  # fc=0B00
 		if all_links is not None:
 			if len(all_links) == 0:
 				pass
-			if len(all_links[0]) < 3:
-				self._2to3(all_links)
+			# if len(all_links[0]) < 3:
+			# 	self._2to3(all_links)
 
-			elif all_names is None or all(not i for i in all_names):
+			if all_names is None or all(not i for i in all_names):
 				self.generate(all_links)
 
 			else:
@@ -2269,6 +2808,14 @@ class All_list_type :  # fc=0B00
 		for i in range(len(temp_links)):
 			self.add_link(temp_links[i][0], temp_links[i][1], temp_names[i])
 
+#    def json(self):  # fc=
+#        """ Return a json representation of the object """
+#        json_dict = {}
+#        json_dict['sub_links'] = self.sub_links
+#        json_dict['dir_order'] = self.dir_order
+#        json_dict['all_links'] = self.all_links
+
+#        return json_dict
 	def __del__(self):  # fc=0B0J
 		self.all_links.clear()
 		self.all_names.clear()
@@ -2396,10 +2943,12 @@ class ProjectType_ :  # fc=0P00
 		self.update = False  # indicates if the project is getting an update or not
 
 
-		### after list writer
+		### before list writer
 		self.sub_dirs = []  # list of sub directories on the project folder
 		self.sub_links = []  # needed in requests.get() reference value (fixes many issues)
-		self.all_list = All_list_type(10)  # assigning a list of data links, but duplicates will be cancelled in process
+
+		### after list writer
+		self.all_list = All_list_type2(10)  # assigning a list of data links, but duplicates will be cancelled in process
 		self.need_2_gen_names = True  # indicates if the names of files needs to be generated
 
 		### directories
@@ -2432,8 +2981,7 @@ class ProjectType_ :  # fc=0P00
 		# download threads
 		self.dl_threads = 10  # number of download threads
 		self.index_threads = 3  # number of indexing threads
-		self.dl_extra_log = ""
-		self.dl_zip_log = ""
+
 
 		self.online_page = False  # indicates if the page is online or not
 
@@ -2461,7 +3009,7 @@ class ProjectType_ :  # fc=0P00
 		if self.first_created in ('0', 'False'):
 			self.first_created = Nsys.cdt_()
 
-		if self.last_update in (0, "0", "False", False):
+		if self.last_update in ("0", "False", False):
 			self.last_update = Nsys.cdt_()
 		
 
@@ -2497,9 +3045,9 @@ class ProjectType_ :  # fc=0P00
 			'dl_done': self.dl_done,
 			'has_missing': self.has_missing,
 			'file_exts': self.file_exts,
-			'sub_links': self.sub_links,
-			'sub_dirs': self.sub_dirs,
-			'all_names': self.all_list.all_names,
+			# 'sub_links': self.sub_links,
+			# 'sub_dirs': self.sub_dirs,
+			# 'all_names': self.all_list.all_names,
 
 			'online_page': self.online_page,
 
@@ -2511,108 +3059,107 @@ class ProjectType_ :  # fc=0P00
 		}
 		
 		json_proj = json.dumps(dataset, cls=SetEncoder, indent=2)
-		json_list = json.dumps({"all_list": self.all_list.all_links}, cls=SetEncoder, indent=1)
+		json_list = json.dumps(self.all_list.json(), cls=SetEncoder, indent=1)
+		
 		# clean the files if exist
 		Fsys.writer(self.Project + '.wllist', 'w', '', AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'w', '', AboutApp.leach_projects, '0M05')
-		
 
 		# write new data
 		Fsys.writer(self.Project + '.wllist', 'w', json_list, AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'w', json_proj, AboutApp.leach_projects, '0M05')
-		
 		del json_proj, json_list
 		
 
-	def store_current_data_old(self): # fc=????
+	# def store_current_data_old(self): # fc=????
 		
-		# clean the files if exist
-		Fsys.writer(self.Project + '.wllist', 'w', '', AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'w', '', AboutApp.leach_projects, '0M05')
+	# 	# clean the files if exist
+	# 	Fsys.writer(self.Project + '.wllist', 'w', '', AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'w', '', AboutApp.leach_projects, '0M05')
 
-		# patch self.first_created issue
-		if self.first_created in ['0', 'False']:
-			self.first_created = Nsys.cdt_()
+	# 	# patch self.first_created issue
+	# 	if self.first_created in ['0', 'False']:
+	# 		self.first_created = Nsys.cdt_()
 
-		if self.last_update == 0:
-			self.last_update = Nsys.cdt_()
+	# 	if self.last_update == 0:
+	# 		self.last_update = Nsys.cdt_()
 
 
-		# write new data
-		Fsys.writer(self.Project + '.wllist', 'w', str(self.all_list.all_links), AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'w', 'main_link= "%s"\n' % self.main_link, AboutApp.leach_projects,
-		            '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'link_startswith= "%s"\n' % self.link_startswith,
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'file_types = %s\n' % str(self.file_exts),
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'file_starts= "%s"\n' % self.file_starts,
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'sub_dirs = %s\n' % str(self.sub_dirs), AboutApp.leach_projects,
-		            '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'sp_flags = %s\n' % str(self.sp_flags), AboutApp.leach_projects,
-		            '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'sp_extension = "%s"\n' % self.sp_extension,
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'overwrite_bool = %s\n' % str(self.overwrite_bool),
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'dimention = %s\n' % str(self.dimention),
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'sequence = %s\n' % str(self.file_to_sort),
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'Project = "%s"\n' % str(self.Project), AboutApp.leach_projects,
-		            '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'sub_links = %s\n' % str(self.sub_links),
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'dir_sorted = %s\n' % str(self.dir_sorted),
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'all_names = %s\n' % str(self.all_list.all_names),
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'file_formats = %s\n' % str([self.file_types]),
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'dl_threads = %s\n' % str(self.dl_threads),
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', 'first_created = "%s"\n' % str(self.first_created),
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', f'last_update = "{Nsys.cdt_()}"\n', 
-					AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', f'leacher_version = "{AboutApp._VERSION}"\n',
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', f'magic_number = "{Nsys.compressed_ip(UserData.user_ip["ip"])}"\n',
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', f'server_version = "{config.server_version}"\n',
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', f'get_html_title = {self.get_html_title}\n',
-		            AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', f'dl_done = {self.dl_done}\n',
-					AboutApp.leach_projects, '0M05')
-		Fsys.writer(self.Project + '.wlproj', 'a', f'has_missing = {self.has_missing}\n',
-					AboutApp.leach_projects, '0M05')
+	# 	# write new data
+	# 	Fsys.writer(self.Project + '.wllist', 'w', str(self.all_list.all_links), AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'w', 'main_link= "%s"\n' % self.main_link, AboutApp.leach_projects,
+	# 	            '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'link_startswith= "%s"\n' % self.link_startswith,
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'file_types = %s\n' % str(self.file_exts),
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'file_starts= "%s"\n' % self.file_starts,
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'sub_dirs = %s\n' % str(self.sub_dirs), AboutApp.leach_projects,
+	# 	            '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'sp_flags = %s\n' % str(self.sp_flags), AboutApp.leach_projects,
+	# 	            '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'sp_extension = "%s"\n' % self.sp_extension,
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'overwrite_bool = %s\n' % str(self.overwrite_bool),
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'dimention = %s\n' % str(self.dimention),
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'sequence = %s\n' % str(self.file_to_sort),
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'Project = "%s"\n' % str(self.Project), AboutApp.leach_projects,
+	# 	            '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'sub_links = %s\n' % str(self.sub_links),
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'dir_sorted = %s\n' % str(self.dir_sorted),
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'all_names = %s\n' % str(self.all_list.all_names),
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'file_formats = %s\n' % str([self.file_types]),
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'dl_threads = %s\n' % str(self.dl_threads),
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', 'first_created = "%s"\n' % str(self.first_created),
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', f'last_update = "{Nsys.cdt_()}"\n', 
+	# 				AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', f'leacher_version = "{AboutApp._VERSION}"\n',
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', f'magic_number = "{Nsys.compressed_ip(UserData.user_ip["ip"])}"\n',
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', f'server_version = "{config.server_version}"\n',
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', f'get_html_title = {self.get_html_title}\n',
+	# 	            AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', f'dl_done = {self.dl_done}\n',
+	# 				AboutApp.leach_projects, '0M05')
+	# 	Fsys.writer(self.Project + '.wlproj', 'a', f'has_missing = {self.has_missing}\n',
+	# 				AboutApp.leach_projects, '0M05')
 					
 					
 	def load_data(self, file_dir):
-		new = True
+		#new = True
 		file_dir = file_dir.replace('"', '')
 		if file_dir.endswith("'") and file_dir.startswith("'"):
 			file_dir = file_dir[1:-1]
 
-		if file_dir.endswith('.proj'):
-			new=False			
+	#	if file_dir.endswith('.proj'):
+#			new=False			
 		
 
-		if new and not self.from_file:
+		if not self.from_file:
 			if os.path.isfile(AboutApp.leach_projects + self.Project + '.wlproj'):
 				pass
-			elif os.path.isfile(AboutApp.leach_projects + self.Project + '.proj'):
-				new = False
+			#elif os.path.isfile(AboutApp.leach_projects + self.Project + '.proj'):
+#				new = False
 
 			else:
 				self.__default__()
 				return False
 
-		else:
-			return self.load_old_data(file_dir)
-			
+		#else:
+#			return self.load_old_data(file_dir)
+#			
 		
 		proj_path = AboutApp.leach_projects + self.Project + self.proj_ext[0]
 
@@ -2623,8 +3170,8 @@ class ProjectType_ :  # fc=0P00
 			self.proj_good = True
 			self.proj_file = Fsys.reader(proj_path, 'r', True).strip()
 
-			if not new or not Datasys.is_json(self.proj_file):
-				return self.load_old_data(file_dir)
+	#		if not new or not Datasys.is_json(self.proj_file):
+	#			return self.load_old_data(file_dir)
 		else:
 			return False
 	
@@ -2633,18 +3180,15 @@ class ProjectType_ :  # fc=0P00
 			
 			for keys in loaded_data_set.keys():
 				self.__setattr__(keys, loaded_data_set[keys])
-
+				
+			if self.leacher_version < '7.002':
+				xprint("/rwi//h/ Unsupported version,/=//yi/ Please manually update/=/")
+				self.__default__()
+				return False
 			self.sp_flags = set(self.sp_flags)
 
 			
-			self.all_list = All_list_type(len(self.sub_dirs))
-
-			
-			if any(self.all_names):
-				self.all_list.all_names = self.all_names
-				self.all_list.update_values()
-				self.all_names = [] # reset coz there's no further use of it
-				self.need_2_gen_names = False
+			#self.all_list = All_list_type2(len(self.sub_dirs))
 
 			self.last_user_ip = Nsys.dec_ip(self.magic_number)
 
@@ -2658,7 +3202,7 @@ class ProjectType_ :  # fc=0P00
 
 			
 			proj_good = True
-
+			self.proj_file=True
 		except:
 			if logger: traceback.print_exc()
 			
@@ -2669,15 +3213,15 @@ class ProjectType_ :  # fc=0P00
 
 		try:
 			self.list_file = Fsys.reader(list_path, 'rb', True, 'str')
-			_list_json = json.loads(self.list_file)["all_list"]
-			if self.need_2_gen_names:
-				xprint('/uh/Generating Names.../=/')
-				self.all_list.generate(_list_json)
-			else:
-				self.all_list.all_links = _list_json
+			_list_json = json.loads(self.list_file)
+			#if self.need_2_gen_names:
+#				xprint('/uh/Generating Names.../=/')
+#				self.all_list.generate(_list_json)
+#			else:
+			self.all_list.load(_list_json)
 			del _list_json
 			self.list_file=True
-			self.proj_file=True
+			
 			self.list_good = True
 
 			
@@ -2691,227 +3235,228 @@ class ProjectType_ :  # fc=0P00
 			return False
 			
 			
-	def load_old_data(self, file_dir):  # fc=0P04
-		"""loads the data from the project file
-			returns: None if failed to load file
-					False if there is no project file"""
+	# def load_old_data(self, file_dir):  # fc=0P04
+	# 	"""loads the data from the project file
+	# 		returns: None if failed to load file
+	# 				False if there is no project file"""
 
-		file_dir = file_dir.replace('"', '')
-		if file_dir.endswith("'") and file_dir.startswith("'"):
-			file_dir = file_dir[1:-1]
+	# 	file_dir = file_dir.replace('"', '')
+	# 	if file_dir.endswith("'") and file_dir.startswith("'"):
+	# 		file_dir = file_dir[1:-1]
 
-		if file_dir.endswith(('.proj', '.wlproj')) and os.path.isfile(file_dir):
-			self.from_file = file_dir
-			proj_path = file_dir
+	# 	if file_dir.endswith(('.proj', '.wlproj')) and os.path.isfile(file_dir):
+	# 		self.from_file = file_dir
+	# 		proj_path = file_dir
 
-			if file_dir.endswith('.proj'):
-				self.proj_ext = ('.proj', '.list')
+	# 		if file_dir.endswith('.proj'):
+	# 			self.proj_ext = ('.proj', '.list')
 				
 
-		if not self.from_file:
-			if os.path.isfile(AboutApp.leach_projects + self.Project + '.wlproj'):
-				pass
-			elif os.path.isfile(AboutApp.leach_projects + self.Project + '.proj'):
-				self.proj_ext = ('.proj', '.list')
+	# 	if not self.from_file:
+	# 		if os.path.isfile(AboutApp.leach_projects + self.Project + '.wlproj'):
+	# 			pass
+	# 		elif os.path.isfile(AboutApp.leach_projects + self.Project + '.proj'):
+	# 			self.proj_ext = ('.proj', '.list')
 
-			else:
-				self.__default__()
-				return False
+	# 		else:
+	# 			self.__default__()
+	# 			return False
 
-			proj_path = AboutApp.leach_projects + self.Project + self.proj_ext[0]
+	# 		proj_path = AboutApp.leach_projects + self.Project + self.proj_ext[0]
 
-		list_path = proj_path[:-len(self.proj_ext[0])] + self.proj_ext[1]
+	# 	list_path = proj_path[:-len(self.proj_ext[0])] + self.proj_ext[1]
 
 
-		if os_exists(proj_path):
-			self.proj_good = True
+	# 	if os_exists(proj_path):
+	# 		self.proj_good = True
 
-			self.proj_file = Fsys.reader(proj_path, 'rb', True, 'str').strip()
+	# 		self.proj_file = Fsys.reader(proj_path, 'rb', True, 'str').strip()
 
-			self.proj_good = self.check_old_proj_file()
+	# 		self.proj_good = self.check_old_proj_file()
 
-			if self.proj_good:
+	# 		if self.proj_good:
 
-				if os_exists(list_path):
-					self.list_file = Fsys.reader(list_path, 'rb', True, 'str').strip()
-					self.list_good = self.check_old_list_file()
+	# 			if os_exists(list_path):
+	# 				self.list_file = Fsys.reader(list_path, 'rb', True, 'str').strip()
+	# 				self.list_good = self.check_old_list_file()
 
-					self.set_directories()
-					if self.list_good:
-						# print(getsizeof(self.all_list))
-						self.store_current_data()
-						return self.list_good
+	# 				self.set_directories()
+	# 				if self.list_good:
+	# 					# print(getsizeof(self.all_list))
+	# 					self.store_current_data()
+	# 					return self.list_good
 
-		self.__default__()
-		return None
+	# 	self.__default__()
+	# 	return None
 
-	def check_old_proj_file(self):  # fc=0P05
-		"""checks if the project file is valid
-		and if valid assigns the data to Class"""
+	# def check_old_proj_file(self):  # fc=0P05
+    #     # DEPRECATED
+	# 	"""checks if the project file is valid
+	# 	and if valid assigns the data to Class"""
 
-		proj_good = True
-		try:
-			loaded_data_set = dict()
-			existing_data = self.proj_file.split('\n')
+	# 	proj_good = True
+	# 	try:
+	# 		loaded_data_set = dict()
+	# 		existing_data = self.proj_file.split('\n')
 
-			for i in existing_data:
-				exec(i, locals(), loaded_data_set)
+	# 		for i in existing_data:
+	# 			exec(i, locals(), loaded_data_set)
 
-			if any(i not in loaded_data_set for i in ['main_link', 'link_startswith', 'file_types']):
-				raise ValueError
+	# 		if any(i not in loaded_data_set for i in ['main_link', 'link_startswith', 'file_types']):
+	# 			raise ValueError
 
-			self.main_link = loaded_data_set['main_link']
-			self.link_startswith = loaded_data_set['link_startswith']
-			self.file_starts = loaded_data_set['file_starts']
-			self.sub_dirs = loaded_data_set['sub_dirs']
-			self.sp_flags = set(loaded_data_set['sp_flags'])
-			self.sp_extension = loaded_data_set['sp_extension']
-			self.overwrite_bool = loaded_data_set['overwrite_bool']
-			self.dimention = loaded_data_set['dimention']
+	# 		self.main_link = loaded_data_set['main_link']
+	# 		self.link_startswith = loaded_data_set['link_startswith']
+	# 		self.file_starts = loaded_data_set['file_starts']
+	# 		self.sub_dirs = loaded_data_set['sub_dirs']
+	# 		self.sp_flags = set(loaded_data_set['sp_flags'])
+	# 		self.sp_extension = loaded_data_set['sp_extension']
+	# 		self.overwrite_bool = loaded_data_set['overwrite_bool']
+	# 		self.dimention = loaded_data_set['dimention']
 
-			if 'dl_done' in loaded_data_set:
-				self.dl_done = loaded_data_set['dl_done']
+	# 		if 'dl_done' in loaded_data_set:
+	# 			self.dl_done = loaded_data_set['dl_done']
 
-			if 'Project' in loaded_data_set:
-				self.Project = loaded_data_set['Project']
-			else:
-				if self.from_file:
-					self.Project = Fsys.get_file_name(self.Project)[:0 - (len(self.proj_ext[0]))]
-			if 'sequence' in loaded_data_set:
-				self.file_to_sort = loaded_data_set['sequence']
+	# 		if 'Project' in loaded_data_set:
+	# 			self.Project = loaded_data_set['Project']
+	# 		else:
+	# 			if self.from_file:
+	# 				self.Project = Fsys.get_file_name(self.Project)[:0 - (len(self.proj_ext[0]))]
+	# 		if 'sequence' in loaded_data_set:
+	# 			self.file_to_sort = loaded_data_set['sequence']
 
-			if 'sub_links' in loaded_data_set:
-				self.sub_links = loaded_data_set['sub_links']
+	# 		if 'sub_links' in loaded_data_set:
+	# 			self.sub_links = loaded_data_set['sub_links']
 
-			if 'dir_sorted' in loaded_data_set:
-				self.dir_sorted = True  # loaded_data_set['dir_sorted'] ## need to fix
+	# 		if 'dir_sorted' in loaded_data_set:
+	# 			self.dir_sorted = True  # loaded_data_set['dir_sorted'] ## need to fix
 
-			if 'has_missing' in loaded_data_set:
-				self.has_missing = loaded_data_set['has_missing']
+	# 		if 'has_missing' in loaded_data_set:
+	# 			self.has_missing = loaded_data_set['has_missing']
 
-			self.all_list = All_list_type(len(self.sub_dirs))
+	# 		self.all_list = All_list_type(len(self.sub_dirs))
 
-			if 'all_names' in loaded_data_set:
-				__all_names__ = loaded_data_set['all_names']
-				if any(i for i in __all_names__):
-					self.all_list.all_names = __all_names__
-					del __all_names__
+	# 		if 'all_names' in loaded_data_set:
+	# 			__all_names__ = loaded_data_set['all_names']
+	# 			if any(i for i in __all_names__):
+	# 				self.all_list.all_names = __all_names__
+	# 				del __all_names__
 				
-					self.need_2_gen_names = False
+	# 				self.need_2_gen_names = False
 
-			if 'file_formats' in loaded_data_set:
-				self.file_types = loaded_data_set['file_formats']
-				self.file_exts = loaded_data_set['file_types']
-			else:
-				self.file_types = loaded_data_set['file_types']
+	# 		if 'file_formats' in loaded_data_set:
+	# 			self.file_types = loaded_data_set['file_formats']
+	# 			self.file_exts = loaded_data_set['file_types']
+	# 		else:
+	# 			self.file_types = loaded_data_set['file_types']
 
-			if 'dl_threads' in loaded_data_set:
-				self.dl_threads = loaded_data_set['dl_threads']
+	# 		if 'dl_threads' in loaded_data_set:
+	# 			self.dl_threads = loaded_data_set['dl_threads']
 
-			if 'first_created' in loaded_data_set:
-				_temp = loaded_data_set['first_created']
-				self.first_created = '0' if _temp in ['False', '0'] else _temp
+	# 		if 'first_created' in loaded_data_set:
+	# 			_temp = loaded_data_set['first_created']
+	# 			self.first_created = '0' if _temp in ['False', '0'] else _temp
 
-			if 'last_update' in loaded_data_set:
-				self.last_update = loaded_data_set['last_update']
+	# 		if 'last_update' in loaded_data_set:
+	# 			self.last_update = loaded_data_set['last_update']
 
-			if 'leacher_version' in loaded_data_set:
-				self.leacer_version = loaded_data_set['leacher_version']
+	# 		if 'leacher_version' in loaded_data_set:
+	# 			self.leacer_version = loaded_data_set['leacher_version']
 			
 
-			if 'magic_number' in loaded_data_set:
-				self.last_user_ip = Nsys.dec_ip(loaded_data_set['magic_number'])
+	# 		if 'magic_number' in loaded_data_set:
+	# 			self.last_user_ip = Nsys.dec_ip(loaded_data_set['magic_number'])
 
-			if 'get_html_title' in loaded_data_set:
-				self.get_html_title = loaded_data_set['get_html_title']
+	# 		if 'get_html_title' in loaded_data_set:
+	# 			self.get_html_title = loaded_data_set['get_html_title']
 
-			proj_good = True
+	# 		proj_good = True
 
-		except:
-			if logger: traceback.print_exc()
+	# 	except:
+	# 		if logger: traceback.print_exc()
 
-			try:
-				self.main_link = existing_data[0]
-			except:
-				self.corruptions += [1]
-				xprint('/rh/Corrupted Data! Error code: 601x1/=/')
-				proj_good = False
-			if proj_good:
-				try:
-					self.link_startswith = existing_data[1]
-				except:
-					proj_good = False
-					xprint('/rh/Corrupted Data! Error code: 601x2/=/')
-					self.corruptions += [4]
+	# 		try:
+	# 			self.main_link = existing_data[0]
+	# 		except:
+	# 			self.corruptions += [1]
+	# 			xprint('/rh/Corrupted Data! Error code: 601x1/=/')
+	# 			proj_good = False
+	# 		if proj_good:
+	# 			try:
+	# 				self.link_startswith = existing_data[1]
+	# 			except:
+	# 				proj_good = False
+	# 				xprint('/rh/Corrupted Data! Error code: 601x2/=/')
+	# 				self.corruptions += [4]
 
-			if proj_good:
-				try:
-					self.file_exts = eval(existing_data[2])
-				except:
+	# 		if proj_good:
+	# 			try:
+	# 				self.file_exts = eval(existing_data[2])
+	# 			except:
 
-					proj_good = False
-					xprint('/rh/Corrupted Data! Error code: 601x3/=/')
-					self.corruptions += [4]
+	# 				proj_good = False
+	# 				xprint('/rh/Corrupted Data! Error code: 601x3/=/')
+	# 				self.corruptions += [4]
 
-			if proj_good:
-				try:
-					self.file_starts = existing_data[3]
-				except:
-					proj_good = False
-					xprint('/rh/Corrupted Data! Error code: 601x4/=/')
-					self.corruptions += [4]
+	# 		if proj_good:
+	# 			try:
+	# 				self.file_starts = existing_data[3]
+	# 			except:
+	# 				proj_good = False
+	# 				xprint('/rh/Corrupted Data! Error code: 601x4/=/')
+	# 				self.corruptions += [4]
 
-			if proj_good:
-				try:
-					self.sub_dirs = eval(existing_data[4])  # sub directory list
-				except:
-					proj_good = False
-					xprint('/rh/Corrupted Data! Error code: 601x5/=/')
-					self.corruptions += [2]
-				try:  # added in v5.0 may not be in older files
-					self.sp_flags = set(eval(existing_data[5]))
-					self.sp_extension = eval(existing_data[6])
-					self.overwrite_bool = eval(existing_data[7])
-				except IndexError:
-					pass
-			if proj_good:
-				try:  # added in v5.1 may not be in older files
-					self.dl_done = eval(existing_data[8])
-				except IndexError:
-					pass
-			if proj_good:
-				self.all_list = All_list_type(len(self.sub_dirs))
+	# 		if proj_good:
+	# 			try:
+	# 				self.sub_dirs = eval(existing_data[4])  # sub directory list
+	# 			except:
+	# 				proj_good = False
+	# 				xprint('/rh/Corrupted Data! Error code: 601x5/=/')
+	# 				self.corruptions += [2]
+	# 			try:  # added in v5.0 may not be in older files
+	# 				self.sp_flags = set(eval(existing_data[5]))
+	# 				self.sp_extension = eval(existing_data[6])
+	# 				self.overwrite_bool = eval(existing_data[7])
+	# 			except IndexError:
+	# 				pass
+	# 		if proj_good:
+	# 			try:  # added in v5.1 may not be in older files
+	# 				self.dl_done = eval(existing_data[8])
+	# 			except IndexError:
+	# 				pass
+	# 		if proj_good:
+	# 			self.all_list = All_list_type(len(self.sub_dirs))
 				
 
-		if self.file_types == Constants.old_img:
-			self.file_types = ['img']
-			# self.file_exts = Constants.all_image_types
+	# 	if self.file_types == Constants.old_img:
+	# 		self.file_types = ['img']
+	# 		# self.file_exts = Constants.all_image_types
 
-		return proj_good
+	# 	return proj_good
 
-	def check_old_list_file(self):  # fc=0P06
-		"""checks if the list file is valid
-		and if valid assigns the data to Class"""
+	# def check_old_list_file(self):  # fc=0P06
+	# 	"""checks if the list file is valid
+	# 	and if valid assigns the data to Class"""
 
-		existing_data = self.list_file.replace('\n', '')
-		existing_data = existing_data.replace('\r', '')
+	# 	existing_data = self.list_file.replace('\n', '')
+	# 	existing_data = existing_data.replace('\r', '')
 
-		if existing_data.strip() == '':
-			xprint('/rh/Corrupted Data! Error code: 601x6/=/')
-			self.corruptions += [3]
-			return False
-		else:
-			try:
-				if self.need_2_gen_names:
-					print('/uh/Generating Names.../=/')
-					self.all_list.generate(eval(str(existing_data)))
-				else:
-					self.all_list.all_links = eval(str(existing_data))
-				return True
+	# 	if existing_data.strip() == '':
+	# 		xprint('/rh/Corrupted Data! Error code: 601x6/=/')
+	# 		self.corruptions += [3]
+	# 		return False
+	# 	else:
+	# 		try:
+	# 			if self.need_2_gen_names:
+	# 				print('/uh/Generating Names.../=/')
+	# 				self.all_list.generate(eval(str(existing_data)))
+	# 			else:
+	# 				self.all_list.all_links = eval(str(existing_data))
+	# 			return True
 
-			except:
-				if logger: traceback.print_exc()
-				return False
+	# 		except:
+	# 			if logger: traceback.print_exc()
+	# 			return False
 
 	def gen_sub_links(self):  # fc=0P07
 		"""generates the sub links for the project"""
@@ -2952,7 +3497,7 @@ class ProjectType_ :  # fc=0P00
 
 		self.sub_dirs = list('' for i in range(len(self.sub_links)))
 
-		self.all_list = All_list_type(len(self.sub_links))
+		self.all_list = All_list_type2(len(self.sub_links))
 
 		del sub_links
 		
@@ -3101,8 +3646,7 @@ class ProjectType_ :  # fc=0P00
 		last_chunks = 0
 		last_done = 0
 		percent =0
-		#oneline = oneLine()
-		#old_len = len("".join(map(str, ['Downloaded [', ('━'*percent), '╺' if percent<30 else '━', '━'*(30-percent), '][', last_done, '/', self.total, ']', self.current_speed , '/s'])))
+		old_len = len("".join(map(str, ['Downloaded [', ('━'*percent), '╺' if percent<30 else '━', '━'*(30-percent), '][', last_done, '/', self.total, ']', self.current_speed , '/s'])))
 		while (not (self.dl_done or self.break_all)) or self.total == 0:
 			_temp = self.dl_chunks
 			self.current_speed = filesize_size((_temp - last_chunks) * config.sp_arg_flag['chunk_size'] * 2, filesize_alt)
@@ -3111,14 +3655,14 @@ class ProjectType_ :  # fc=0P00
 			percent = floor((self.done / self.total) * 30)
 			#IOsys.delete_last_line()
 			size = int(get_terminal_size()[0])
-			#IOsys.delete_last_line(int(ceil(old_len/size)))
+			IOsys.delete_last_line(int(ceil(old_len/size)))
 			#print("\n"*2,int(ceil(old_len/size)),"\n"*2)
 			last_done = self.done
 
-			oneline.update('Downloaded [/gh/', ('━'*percent), '/w/╺' if percent<30 else '━', '━'*(30-percent), '/=/][', last_done, '/', self.total, ']', self.current_speed , '/s', self.dl_extra_log, self.dl_zip_log, sep='')
+			sys_write(''.join(['Downloaded [', '\u001b[32;1m', ('━'*percent), '\u001b[30;1m╺' if percent<30 else '━', '━'*(30-percent), '\u001b[0m][', str(last_done), '/', str(self.total), ']', self.current_speed , '/s\n']))
 			
 			
-			#old_len = len("".join(map(str, ['Downloaded [', ('━'*percent), '╺' if percent<30 else '━', '━'*(30-percent), '][', last_done, '/', self.total, ']', self.current_speed , '/s'])))
+			old_len = len("".join(map(str, ['Downloaded [', ('━'*percent), '╺' if percent<30 else '━', '━'*(30-percent), '][', last_done, '/', self.total, ']', self.current_speed , '/s'])))
 			time.sleep(.5)
 			last_chunks = _temp
 
@@ -3266,8 +3810,13 @@ class ProjectType_ :  # fc=0P00
 
 						else:
 							self.re_error += 1
-							
-							self.dl_extra_log = "\nFailed to download from %i links\n" % (self.re_error)
+							if self.re_error == 1: IOsys.delete_last_line()
+							IOsys.delete_last_line()
+							if self.re_error < 4:
+								print("\n\nFailed to download from '%s'\n\n" % i[0])
+							else:
+								if self.re_error != 4: IOsys.delete_last_line()
+								print("Failed %i others links" % (self.re_error - 3))
 							Fsys.writer('left_errors.txt', 'a',
 							            str(i + (Netsys.hdr(current_header, '0P0B'), "Error dl")) + '\n',
 							            AboutApp.leach_projects + self.Project, '0P0B')
@@ -3306,7 +3855,11 @@ class ProjectType_ :  # fc=0P00
 
 				else:
 					self.re_error += 1
-					self.dl_extra_log = "\nFailed to download from %i links\n" % (self.re_error)
+					if self.re_error < 4:
+						print("Failed to download from '%s'\n\n" % i[0])
+					else:
+						if self.re_error != 4: IOsys.delete_last_line()
+						print("And %i others" % (self.re_error - 3))
 					Fsys.writer('left_errors.txt', 'a',
 					            str(i + (Netsys.hdr(current_header, '0P0B'), "Error dl")) + '\n',
 					            AboutApp.leach_projects + self.Project, '0P0B')
@@ -3321,9 +3874,14 @@ class ProjectType_ :  # fc=0P00
 					self.errors += 1
 				else:
 					self.re_error += 1
-					self.dl_zip_log = "Failed to Extract Zip from %i links\n" %self.re_error
-					
-					#print("It seems every time it downloads a broken or unknown zip from '%s'\n(possible cause password protected zips, if yes extract them manually)\n"%i[0])
+					if self.re_error < 4:
+						IOsys.delete_last_line()
+						print("Failed to Extract Zip from '%s'\n" % i[0])
+					else:
+						if self.re_error != 4:
+							IOsys.delete_last_line(2)
+						print("And %i others\n" % (self.re_error - 3))
+					print("It seems every time it downloads a broken or unknown zip from '%s'\n(possible cause password protected zips, if yes extract them manually)\n"%i[0])
 					Fsys.writer('left_errors.txt', 'a',
 					            str(i + (Netsys.hdr(current_header, '0P0B', ), "Bad zip")) + '\n',
 					            AboutApp.leach_projects + self.Project, '0P0B')
@@ -3431,7 +3989,7 @@ class ProjectType_ :  # fc=0P00
 		             UserData.user_name)
 
 	def print_index_result(self, link):  # fc=0P0E
-		oneline.update('Indexed [' + str(self.indx_count) + '/' + str(len(self.sub_links)) + '] /~`' + link + '`~/')
+		oneline._update('Indexed [', self.indx_count, '/', len(self.sub_links), '] ', link,   sep="")
 
 	def generic_list_writer(self, partitions, part=0, link=None):  # fc=0P0F
 		"""indexes the list of links or a single link and and adds & aligns files (of specified file formats) by relative folders in the all_list list
@@ -3483,7 +4041,7 @@ class ProjectType_ :  # fc=0P00
 						return 0
 					xprint('\n\n/r/Something went wrong/=/')
 					traceback.print_exc()
-					endl()
+					print('\n')
 					# return
 
 				if self.break_all: return 0
@@ -3646,7 +4204,6 @@ class ProjectType_ :  # fc=0P00
 		align_format = "/hi/{0: <30}/=/"
 
 		xprint(align_format.format('Project name: '), self.Project)
-		xprint(align_format.format('Display Name: '), self.project_alias)
 		xprint(align_format.format('Main URL: '), self.main_link)
 		xprint(align_format.format('Sub-link regex: '), self.link_startswith)
 		xprint(align_format.format('File-link regex: '), self.file_starts)
@@ -3663,7 +4220,7 @@ class ProjectType_ :  # fc=0P00
 		xprint(align_format.format('Sort files A-Z: '), self.file_to_sort)
 		xprint(align_format.format('Sort folders A-Z: '), self.dir_sorted, '\n')
 
-		xprint(align_format.format('Sub-folders: '), len(self.sub_dirs))
+		xprint(align_format.format('Sub-folders: '), len(self.all_list.sub_links))
 		xprint(align_format.format('Files count: '), len(self.all_list), '\n')
 
 		xprint(align_format.format('Special Flags: '), self.sp_flags)
@@ -3695,7 +4252,7 @@ class ProjectType_ :  # fc=0P00
 
 		link = self.main_link
 
-		self.all_list = All_list_type(1)
+		self.all_list = All_list_type2(1)
 
 		_temp = re_search(Constants.special_starts['mf_sc'], link)
 		if _temp:
@@ -3838,7 +4395,7 @@ class ProjectType_ :  # fc=0P00
 		if end == -1 or end is None:
 			end = last_ch
 
-		#print([start, end])
+		print([start, end])
 
 		if chapters:
 			for i in ch_keys:
@@ -3873,6 +4430,8 @@ class ProjectType_ :  # fc=0P00
 		code = code.groups()[0]
 
 		current_header = Netsys.header_()
+		
+		oneline.new()
 		with requests.Session() as _session:
 			try:
 				link_y = 'https://nhentai.net/g/' + code + '/'
@@ -3888,7 +4447,7 @@ class ProjectType_ :  # fc=0P00
 					urllib3.exceptions.SSLError):
 				leach_logger(log(["0P0Nx1", self.Project, link, Netsys.hdr(current_header, '0P0N')]),
 				             UserData.user_name)
-				print('nhentai.net server is not reachable, trying proxy server...')
+				oneline.update('nhentai.net server is not reachable, trying proxy server...')
 				link_y = 'https://nhentai.xxx/g/' + code + '/'
 				try:
 					page = _session.get(link_y, headers=Netsys.header_())
@@ -3904,7 +4463,7 @@ class ProjectType_ :  # fc=0P00
 					leach_logger(log(["0P0Nx3", self.Project, link, Netsys.hdr(current_header, '0P0N')]),
 					             UserData.user_name)
 					IOsys.delete_last_line()
-					print('nhentai.net server is not reachable, trying proxy server...(2)')
+					oneline.update('nhentai.net server is not reachable, trying proxy server...(2)')
 					link_y = 'https://nhentai.to/g/' + code + '/'
 
 					try:
@@ -3925,7 +4484,7 @@ class ProjectType_ :  # fc=0P00
 
 		self.file_exts = Constants.all_image_types
 		if page:
-			self.all_list = All_list_type(1)
+			self.all_list = All_list_type2(1)
 			soup = bs(Netsys.remove_noscript(page.text), parser)
 
 			title = Datasys.remove_non_uni(soup.find(id='info').find('h1').get_text(), '0P0N')
@@ -3942,7 +4501,9 @@ class ProjectType_ :  # fc=0P00
 
 					if xxx_search.search(img_link) is not None:
 						self.all_list.add_link(''.join([img_link.rpartition('t')[0], img_link.rpartition('t')[2]]), 0)
+					print(img_link)
 				# img_link.rpartition('t')[1]
+				
 
 			elif site == ".to":
 				to_search = re_compile("(https://nhentai.to/galleries/\d*/)|(https://cdn.dogehls.xyz/galleries/\d*/)")
@@ -3957,6 +4518,9 @@ class ProjectType_ :  # fc=0P00
 
 					if to_search.search(img_link) is not None:
 						self.all_list.add_link(img_link, 0)
+						
+					print(img_link)
+
 
 			elif site == ".net":
 				net_search = re_compile("https://i\d*.nhentai.net/galleries/\d*/")
@@ -3972,7 +4536,10 @@ class ProjectType_ :  # fc=0P00
 						img_link = img_link.replace('s://t', 's://i')[::-1].replace('t', '', 1)[::-1]
 					if net_search.search(img_link) is not None:
 						self.all_list.add_link(img_link, 0)
-			self.all_list.remove_duplicates()
+						
+					print(img_link)
+
+			#self.all_list.remove_duplicates()
 
 			self.sp_flags.add('nh')
 
@@ -4007,8 +4574,7 @@ class ProjectType_ :  # fc=0P00
 					self.all_list.add_link(remove_type.sub('', ii.get('data-url')), j)
 
 				self.temp_counter += 1
-				IOsys.delete_last_line()
-				print('Gathering Image links [%i / %i]' % (self.temp_counter, total_chapters))
+				oneline._update('Gathering Image links [%i / %i]' % (self.temp_counter, total_chapters))
 
 		_t = re_search(Constants.special_starts['webtoon'], self.main_link)
 		if _t:
@@ -4082,11 +4648,15 @@ class ProjectType_ :  # fc=0P00
 
 		total_chapters = len(sub_links)
 		
-		
+		#self.new_all_list = new_All_list_type(dir_len=total_chapters)
+		#self.new_all_list.make_sub_dirs(self.sub_links, self.sub_dirs)
+		# print(self.new_all_list.gen_data())
+		self.all_list = All_list_type2(total_chapters)
 
 		print('Found %i Chapters' % total_chapters)
+		
 		print('\nGathering Image links [%i / %i]' % (self.temp_counter, total_chapters))
-
+		oneline.new()
 		sub_range = range(total_chapters)
 
 		index_thread_list = [Process(target= get_images, args=(self, sub_range[i::self.index_threads])) for i in range(self.index_threads)]
@@ -4133,7 +4703,7 @@ class ProjectType_ :  # fc=0P00
 					return 0
 				self.sub_dirs += natsort.natsorted(
 					[os.path.splitext(i)[0] for i in self.all_list.all_names[0] if os_isdir(self.download_dir + os.path.splitext(i)[0])])
-				self.all_list = All_list_type(len(self.sub_dirs))
+				self.all_list = All_list_type2(len(self.sub_dirs))
 				for i in range(len(self.sub_dirs)):
 					for j in os_listdir(self.download_dir + self.sub_dirs[i]):
 
@@ -4154,7 +4724,7 @@ class ProjectType_ :  # fc=0P00
 
 		self.online_page = False
 		self.store_current_data()
-		#print(("reverse" in self.sp_flags))
+		print(("reverse" in self.sp_flags))
 
 		return MakeHtml.make_pages(self.all_list.all_names, self.sub_dirs, self.Project, self.project_alias, self.file_to_sort, [],
 									self.sp_extension, self.dir_sorted, 
@@ -4186,13 +4756,12 @@ class ProjectType_ :  # fc=0P00
 		adds source links and online file links in """
 
 		pass
- 
 
 	def edit_page(self):  # fc=????
 		"""Edit the html file Datas"""
 
-		project_alias = IOsys.safe_input('Enter Display Name: ')
-		self.project_alias = self.project_alias if project_alias=="?" else project_alias
+		discuss_id = IOsys.safe_input('Enter the discuss id: ')
+		self.discuss_id = self.discuss_id if discuss_id=="?" else discuss_id
 
 		description = IOsys.safe_input("\n/hui/Description:/=/ ")
 		self.description = self.description if description=="?" else description
@@ -4534,7 +5103,7 @@ Option               Value
 				
 				self.P = ProjectType_(proj)
 				check_project = self.P.load_data(proj)
-				#print(check_project)
+				print(check_project)
 				if check_project:
 					self.P.store_current_data()
 					if 'mangafreak' in self.P.sp_flags:
@@ -5026,7 +5595,7 @@ yes/y to resume
 							"\nFile Links Starts With (if known or need to be specified): ")
 						# leach_logger('0M05x1||%s||f_starts||%s'%(self.Project, self.file_starts), UserData.user_name)
 
-						endl()
+						print('\n')
 
 						self.P.file_to_sort = IOsys.asker("\n\n\u29bf Will download in sequential order? ", default=False)
 						self.P.overwrite_bool = IOsys.asker(
@@ -5060,7 +5629,7 @@ yes/y to resume
 
 				len_sub_links = len(self.P.sub_links)
 
-				self.P.all_list = All_list_type(len_sub_links)
+				self.P.all_list = All_list_type2(len_sub_links)
 
 
 
@@ -5108,17 +5677,19 @@ yes/y to resume
 		self.P.set_directories()
 		total_chapters = len(self.P.sub_links)
 		
+		self.P.all_list = All_list_type2(dir_len=total_chapters)
+		self.P.all_list.make_sub_dirs(self.P.sub_links, self.P.sub_dirs)
 		
 
 		self.P.store_current_data()
 
-		endl()
+		print('\n')
 
 		###########################################
 		# self.P.clean_unknown_files()
 		###########################################
 
-		self.P.all_list.remove_duplicates()
+		#self.P.all_list.remove_duplicates()
 
 		self.P.total = len(self.P.all_list)
 
@@ -5132,9 +5703,7 @@ yes/y to resume
 
 		self.dl_threads = []
 		
-		oneline.new()
-		oneline.update('/h/Downloaded [/g/', ('━'*0), '/=h/╺' if 0<30 else '━', '━'*(30-0), '/=/][', self.P.done, '/', self.P.total, ']', self.P.current_speed , '/s', sep="")
-		
+		xprint('Downloaded [/gh/', ('━'*0), '/=h/╺' if 0<30 else '━', '━'*(30-0), '/=/][', self.P.done, '/', self.P.total, ']', self.P.current_speed , '/s', sep="")
 
 		for i in range(self.P.dl_threads):
 			self.dl_threads.append(Process(target=self.P.downloader, args=[i]))

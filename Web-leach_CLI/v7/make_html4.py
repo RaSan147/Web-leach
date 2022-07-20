@@ -4,7 +4,7 @@
 
 import rjsmin
 from re import compile as re_compile
-import json
+import json, natsort
 
 # from main import AboutApp
 
@@ -110,7 +110,8 @@ class MakeHtml_:   #func_code= 7000
 		
 	def make_online_page(self, all_li, dir_list, project, project_alias, seq,
 			new_sub_dirs =[], ext='', dir_sorted = False,
-			discuss_id="", description="", tags=[], stars=3.3, poster_loc=""):   #func_code= 7001
+			discuss_id="", description="", tags=[], stars=3.3, poster_loc="",
+			reverse=False):   #func_code= 7001
 		"""all_li: all_list.all_names
 		dir_list: sub_dirs
 		project: project_name
@@ -135,8 +136,12 @@ class MakeHtml_:   #func_code= 7000
 		dir_len = len(dir_list)
 		dir_bkp = dir_list[:]
 
+		
 		if dir_sorted:
 			dir_list = natsort.natsorted(dir_list)
+
+		if reverse:
+			dir_list = dir_list[::-1]
 			
 		first_page = dir_path+'/Download_projects/'+ project+'/'+'index.html'
 		def make_json(type, imgs =[], index = -1, return_dict=False):
@@ -170,9 +175,9 @@ class MakeHtml_:   #func_code= 7000
 			temp= all_li[dir_bkp.index(dir_list[i])]
 			
 			if seq:
-				box= self.return_online_sub_page(natsort.natsorted(temp), dir_list, i, project)
+				box= self.return_online_sub_page(natsort.natsorted(temp), dir_list, i, project_alias)
 			else:
-				box= self.return_online_sub_page(temp, dir_list, i, project)
+				box= self.return_online_sub_page(temp, dir_list, i, project_alias)
 			
 			if not box:
 				return False
@@ -186,7 +191,7 @@ class MakeHtml_:   #func_code= 7000
 		
 		json_dict, json_file = make_json("CHAPTER-LIST", return_dict=True)
 
-		box = self.return_online_main_page(dir_list, project, json_dict)
+		box = self.return_online_main_page(dir_list, project_alias, json_dict)
 		
 		
 		Fsys.writer('index.html', 'w', box,'Download_projects/'+ project, f_code= '40001')
@@ -199,7 +204,8 @@ class MakeHtml_:   #func_code= 7000
 
 	def make_pages(self, all_li, dir_list, project, project_alias, seq, 
 			new_sub_dirs =[], ext='', dir_sorted = False,
-			discuss_id="", description="", tags=[], stars=3.3, poster_loc=""):   #func_code= 7001
+			discuss_id="", description="", tags=[], stars=3.3, poster_loc="",
+			reverse=False):   #func_code= 7001
 		"""all_li: all_list.all_names
 		dir_list: sub_dirs
 		project: project_name
@@ -224,6 +230,9 @@ class MakeHtml_:   #func_code= 7000
 
 		if dir_sorted:
 			dir_list = natsort.natsorted(dir_list)
+
+		if reverse:
+			dir_list = dir_list[::-1]
 			
 		first_page = dir_path+'/Download_projects/'+ project+'/'+'index.html'
 		def make_json(type, imgs =[], index = -1, return_dict=False):
@@ -260,7 +269,7 @@ class MakeHtml_:   #func_code= 7000
 			temp= all_li[dir_bkp.index(dir_list[i])]
 			
 			if seq:
-				box= self.return_sub_page(natsort.natsorted(temp), dir_list, i, project)
+				box= self.return_sub_page(natsort.natsorted(temp), dir_list, i, project_alias)
 			else:
 				box= self.return_sub_page(temp, dir_list, i, project_alias)
 			

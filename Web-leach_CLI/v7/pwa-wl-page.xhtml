@@ -23,7 +23,7 @@ sidebar: 5
 .modal: 20
 #image-modal-content: 21
 #modal-img: 21
-.close-image-modal: 22
+.close-image-modal: 23
 .view_arrow: 22
 #modal-caption : 21
 .popup: 22 // pop-up may show even on focus mode
@@ -109,6 +109,7 @@ user-select: none;
 	align-items: center;
 	/*height: 50vh !important;*/
 	flex-direction: column;
+		pointer-events: none;
 }
 
 #image-modal-content {
@@ -119,7 +120,7 @@ user-select: none;
 	height: 100vh !important;
 	flex-direction: column;
 	pointer-events: none;
-	;
+	
 }
 
 body {
@@ -256,13 +257,13 @@ body {
 }
 
 .disable_selection {
-	-webkit-touch-callout: none; /* iOS Safari */
-	-webkit-user-select: none; /* Safari */
-	-khtml-user-select: none; /* Konqueror HTML */
-	-moz-user-select: none; /* Old versions of Firefox */
-	-ms-user-select: none; /* Internet Explorer/Edge */
-	user-select: none; /* Non-prefixed version, currently */
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	-webkit-touch-callout: none !important; /* iOS Safari */
+	-webkit-user-select: none !important; /* Safari */
+	-khtml-user-select: none !important; /* Konqueror HTML */
+	-moz-user-select: none !important; /* Old versions of Firefox */
+	-ms-user-select: none !important; /* Internet Explorer/Edge */
+	user-select: none !important; /* Non-prefixed version, currently */
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
 
 }
 
@@ -520,14 +521,15 @@ body {
 
 .close-image-modal {
 	position: fixed;
-	top: 40px;
-	right: 40px;
+	top: 30px;
+	right: 30px;
 	color: #444;
 	font-size: 40px;
 	font-weight: 700;
 	transition: all .3s;
 	cursor: pointer;
-	z-index: 22;
+	z-index: 23;
+	padding: 5px;
 	text-shadow: -1px -1px 0 #3ab7ff, 1px -1px 0 #3ab7ff, -1px 1px 0 #3ab7ff, 1px 1px 0 #3ab7ff
 }
 
@@ -1583,7 +1585,7 @@ const log = console.log,
 	<div id="myModal" class="modal">
 		<div class="modal_bg" style="background-color:rgba(0, 0, 0, 0.9);" onclick="modal_img.close_image_modal()">
 		</div>
-		<span class="close-image-modal">&times;</span>
+		<span class="close-image-modal disable_selection">&times;</span>
 		<div id="image-modal-content">
 			<div style="text-align: center;">
 				<img id="modal-img" alt="Failed to load image">
@@ -1654,10 +1656,10 @@ const log = console.log,
 
 		<span id='pagination-prev'>
 
-			<div class='paginationA'>Prev Page</div>
+			<div class='paginationA disable_selection'>Prev Page</div>
 		</span>
 		<span id='pagination-next'>
-			<div class='paginationA'>Next Page</div>
+			<div class='paginationA disable_selection'>Next Page</div>
 		</span>
 	</div>
 

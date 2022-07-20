@@ -4,13 +4,16 @@ import sys
 from shutil import get_terminal_size
 from math import ceil
 
+from instaloader import Highlight
+
 wait_time = 0
-def null(*a):
+def null_func(*a):
 	return a[0]
+
 class XprintClass:
 	def __init__(self) -> None:
 		
-		self.text = ""
+		# self.text = ""
 		
 		self.normal_tx="0"
 		self.ul_tx="4"
@@ -64,26 +67,29 @@ class XprintClass:
 			return self.__dict__[name]
 			
 	def make_str(self, *text, sep = " ", end="\n", highlighter=False):
-		self.text= str(sep).join(map(str, text)) + str(end)
-		self.tnt_helper(highlighter)
+		text= str(sep).join(map(str, text)) + str(end)
+		text = self.tnt_helper(text, highlighter)
+		return text
 
-	def text_styling_markup(self): #not in use
+	def text_styling_markup(self, text): #not in use
 		''' for custom text stypling like html
 		print(tnt_helper('/<style= col: red>/ 69'))'''
-		if '/<' not in self.text:
-			return 0
+		if '/<' not in text:
+			return text
 
-		
-		while self.re['markup'].search(self.text):
-			a = self.re['markup'].search(self.text)
-			if a:
-				style = a.group(1)
+		a = self.re['markup'].search(text)
+		while a:
+			style = a.group(1)
+			# do stuff with style
+			text = text.replace(a.group(0), '')
+			a = self.re['markup'].search(text)
 
-				self.text = self.text.replace(a.group(0), '')
+		return text
 
 
 
-	def tnt_helper(self, highlighter):
+
+	def tnt_helper(self, text, highlighter):
 		''' i) custom_type_codes are used for custom commands to
 		simplify the code
 		ii) other text modifications are made here and passes optimized
@@ -91,15 +97,16 @@ class XprintClass:
 
 		if highlighter:
 			
-			self.text = self.re["/hu/"].sub(r"/hu/\1/=/", self.text)
-			
-			self.text =  self.re["/u/"].sub(r"/u/\1/=/", self.text)
+			text = self.re["/hu/"].sub(r"/hu/\1/=/", text)
+			text =  self.re["/u/"].sub(r"/u/\1/=/", text)
 
-		self.text_styling_markup()
+		text = self.text_styling_markup(text)
+
+		return text
 		
 
 
-	def slowtype(self, *text, sep= ' ', wait_time=wait_time, end='\n', highlighter=False, auto_resetting=True, run_at_start=null, use_self_text=False):
+	def slowtype(self, *text, sep= ' ', wait_time=wait_time, end='\n', highlighter=False, auto_resetting=True, run_at_start=None, parsed=False):
 		"""main typing engine that prints inputted text
 			slowly based on waiting time
 			
@@ -109,12 +116,15 @@ class XprintClass:
 			end: end of line character
 			highlighter: if True, will highlight text using ===.*=== -> /hu/ and ==.*== -> /u/
 			auto_resetting: if True, will reset the no_code and no_color after each output
-			use_self_text: set True if the *text already used by make_str
 			"""
 		self.custom_style = self.default_style.copy()
-		if not use_self_text:
-			self.make_str(*text, sep=sep, end=end, highlighter=highlighter)
-		self.text= run_at_start(self.text)
+		if parsed:
+			#print([text])
+			text = text[0]
+		else:
+			text = self.make_str(*text, sep=sep, end=end, highlighter=highlighter)
+		if run_at_start:
+			text= run_at_start(text)
 		self.wait_time=float(wait_time)
 		#self.end=str(end)
 
@@ -123,28 +133,31 @@ class XprintClass:
 
 		#custom_type_codes = ['/u/', '/a/', '/y/', '/g/', '/k/', '/b/', '/r/', '/h/', '/bu/', '/hu/', '/=/']
 		i=0
-		while  i<len(self.text):
-			slept= False
-			has_code= False
+		text_len = len(text)
+		
+		has_code= False
+		
+		while  i<text_len:
+			
 
 			### MUST CLOSE THESE NO COLOR AND NO CODE TAGS ###
 
-			if self.text[i:i+3] == '/~`':
+			if text[i:i+3] == '/~`':
 				self.no_code = True
 				i+=3
 				continue
 
-			if self.text[i:i+3] == '`~/':
+			if text[i:i+3] == '`~/':
 				self.no_code = False
 				i+=3	
 				continue
 
-			if self.text[i:i+3] == '/~~':
+			if text[i:i+3] == '/~~':
 				self.no_colors = True
 				i+=3
 				continue
 
-			if self.text[i:i+3] == '~~/':
+			if text[i:i+3] == '~~/':
 				self.no_colors = False
 				i+=3
 				continue
@@ -157,9 +170,9 @@ class XprintClass:
 
 
 			if self.no_code==False:
-				if self.text[i]=='/' and '/' in self.text[i+2:i+5]:
-					if self.no_colors==False and self.text[i+1] in ('a','r','g','y','b','p','c','w','=','u','i','h','_'):
-						x=self.text[i+1]
+				if text[i]=='/' and '/' in text[i+2:i+5]:
+					if self.no_colors==False and text[i+1] in ('a','r','g','y','b','p','c','w','=','u','i','h','_'):
+						x=text[i+1]
 						if x=='a': self.custom_style_temp["color"]=self.ash_c
 						elif x=='r': self.custom_style_temp["color"]=self.red_c
 						elif x=='g': self.custom_style_temp["color"]=self.green_c
@@ -176,12 +189,12 @@ class XprintClass:
 						elif x=='i': self.custom_style_temp["style"].append(self.neg_tx)
 						elif x=='h': self.custom_style_temp["style"].append(self.bold_tx)
 						
-						if self.text[i+2]=='/':
+						if text[i+2]=='/':
 							has_code=True
 							i+=2
-						elif self.text[i+2] in ('a','r','g','y','b','p','c','w','u','i','h','_'):
-							x=self.text[i+2]
-							if x=='a': self.custom_style_temp["bg"]= self.normal_b
+						elif text[i+2] in ('k','r','g','y','b','p','c','w','u','i','h','_'):
+							x=text[i+2]
+							if x=='k': self.custom_style_temp["bg"]= self.normal_b
 							elif x=='r': self.custom_style_temp["bg"]=self.red_b
 							elif x=='g': self.custom_style_temp["bg"]=self.green_b
 							elif x=='y': self.custom_style_temp["bg"]=self.yello_b
@@ -193,42 +206,41 @@ class XprintClass:
 							elif x=='i': self.custom_style_temp["style"].append(self.neg_tx)
 							elif x=='h': self.custom_style_temp["style"].append(self.bold_tx)
 
-							if self.text[i+3]=='/':
+							if text[i+3]=='/':
 								has_code=True
 								i+=3
-							elif self.text[i+3] in ('u','i','h'):
-								x=self.text[i+3]
+							elif text[i+3] in ('u','i','h'):
+								x=text[i+3]
 								if x=='u': self.custom_style_temp["style"].append(self.ul_tx)
 								elif x=='i': self.custom_style_temp["style"].append(self.neg_tx)
 								elif x=='h': self.custom_style_temp["style"].append(self.bold_tx)
 
-								if self.text[i+4]=='/':
+								if text[i+4]=='/':
 									has_code = True
 									i+=4
 
 
-					elif self.text[i+1]=='s':
+					elif text[i+1]=='s':
 						
 						sys.stdout.flush()
-						if self.text[i+3]=='/':
+						if text[i+3]=='/':
 							try:
-								sleep(float(self.text[i+2]))
+								sleep(float(text[i+2]))
 								i+=3
-								slept = True
-							except: pass
-						elif self.text[i+4]=='/':
+							except:
+								i-=3
+						elif text[i+4]=='/':
 							try:
-								sleep(float(self.text[i+2:i+4]))
+								sleep(float(text[i+2:i+4]))
 								i+=4
-								slept = True
-							except: pass
-						elif self.text[i+5]=='/':
+							except: i-=4
+						elif text[i+5]=='/':
 							try:
-								sleep(float(self.text[i+2:i+5]))
+								sleep(float(text[i+2:i+5]))
 								i+=5
-								slept = True
-							except: pass
+							except: i-=5
 			if has_code==True:
+				has_code = False
 				self.custom_style = self.custom_style_temp.copy()
 				
 
@@ -247,11 +259,10 @@ class XprintClass:
 					
 				style += "m"
 				sys.stdout.write(style)
-				sys.stdout.flush()
-			elif slept==True:
-				sys.stdout.flush()
+				#sys.stdout.flush()
+
 			else:
-				sys.stdout.write(self.text[i])
+				sys.stdout.write(text[i])
 				if wait_time!=0:
 					sys.stdout.flush()
 					sleep(self.wait_time)
@@ -270,56 +281,122 @@ class XprintClass:
 	def remove_style(self, text,highlighter=False):
 		"""text: must be parsed string (sep, end are parsed)"""
 		
-		self.text = text
-		self.tnt_helper(highlighter)
-		self.text = re.sub("/s\d*[.]?\d*/", "", self.text)
-		return re.sub("/[argybpcw \=uih_]+/","", self.text)
+		self.tnt_helper(text, highlighter)
+		text = re.sub("/s\d*[.]?\d*/", "", text)
+		return re.sub("/[argybpcw \=uih_]+/","", text)
 		
-		
+from queue import Queue
+
 class oneLine(XprintClass):
+	__all__ = ["new", "update", "_update"]
 	def __init__(self):
 		super().__init__()
 		self.old_len = None
-		pass#print(self.__dir__())
-		self.__all__ = ["new", "update"]
+		
+		self.queue = Queue()
+		self.BUSY = False
+		
 
-	def get_len(self, string):
+	def get_len(self, string:str):
 		# loop to read each line
 		lens = []
-		for line in string.split("\n"):
-			lens.append(len(line))
+		for line in string.split('\n'):
+			l = len(line)
+			if l==0: l=1 # empty line
+			lens.append(l)
+			
+		#print(lens, "\n\n")
 
 		return lens
+		
+	def get_ceil(self, i):
+		size = int(get_terminal_size()[0])
+		return ceil(i/size)
 
-		
-	def update(self, *text, sep= ' ', wait_time=wait_time, end='\n', highlighter=False, auto_resetting=True, run_at_start=null):
-		
-		self.make_str(*text, sep=sep, end=end, highlighter=highlighter)
+	def next(self):
+		# return self.queue.get()
+		if self.queue.empty() or self.BUSY:
+			return None
+
+		self.BUSY = True
+		text, wait_time, auto_resetting, out_func = self.queue.get()
+
 		
 		if self.old_len is not None:
-			# print(self.old_len)
-			for i in self.old_len:
-				sleep(.001)
-				size = int(get_terminal_size()[0])
-				sys.stdout.write('\x1b[2K\x1b[1A\x1b[2K'*ceil(i/size))
-				sys.stdout.flush()
+			
+			to_del = sum(map(self.get_ceil, self.old_len))-1
+			
+			#print(to_del)
+			sys.stdout.write("\033[2K\033[1G"+ ('\x1b[1A\x1b[2K'*to_del))
+			#sys.stdout.write('\x1b[K' + ('\x1b[1A\x1b[2K'*to_del))
+
+				#)# 
+				#sys.stdout.flush()
+				#print("boom\n")
 
 
-		self.old_len = self.get_len(self.remove_style(self.text))
+		if out_func=="slowtype":
+			self.old_len = self.get_len(self.remove_style(text))
+			self.slowtype(text, wait_time=wait_time, auto_resetting=auto_resetting, parsed=True)
+		if out_func=="print":
+			self.old_len = self.get_len(text)
+			sys.stdout.write(text +"\n")
+			sys.stdout.flush()
+		self.BUSY = False
+		self.next()
 
 		
-		self.slowtype(use_self_text=True, sep=sep, wait_time=wait_time, end=end, highlighter=highlighter, auto_resetting=auto_resetting, run_at_start=run_at_start)
+	def update(self, *text, sep= ' ', wait_time=wait_time, end='\n', highlighter=False, auto_resetting=True, run_at_start=null_func):
+		""" Uses xprint and parse string"""
+		text = self.make_str(*text, sep=sep, end=end, highlighter=highlighter)
+		text = run_at_start(text)
+		self.queue.put((text, wait_time, auto_resetting, "slowtype"))
+		self.next()
 		
+	def _update(self, *text, sep= ' ', wait_time=wait_time, end='\n', highlighter=False, auto_resetting=True, run_at_start=null_func):
+		""" Uses print and does not parse string"""
+		text = run_at_start(text)
+		text= str(sep).join(map(str, text)) + str(end)
+
+		self.queue.put((text, wait_time, auto_resetting, "print"))
+		self.next()
+
 	def new(self):
 		self.__init__()
 		
+
+# x= """Traceback (most recent call last):
+#   File "g:/Ratul/C_coding/Python/Web Leach/Web-leach/Web-leach_CLI/v7/print_text3.py", line 352, in <module>
+#     oneline.update([i for i in range(i)])
+#   File "g:/Ratul/C_coding/Python/Web Leach/Web-leach/Web-leach_CLI/v7/print_text3.py", line 340, in update
+#     self.next()
+#   File "g:/Ratul/C_coding/Python/Web Leach/Web-leach/Web-leach_CLI/v7/print_text3.py", line 321, in next
+#     sleep(.1)
+# KeyboardInterrupt"""
+
+# print(x.splitlines())
 
 XprintEngine = XprintClass()
 xprint = XprintEngine.slowtype
 remove_style = XprintEngine.remove_style
 
 
+
 if __name__ == '__main__':
+	print("test")
+	
+	def xx(t):
+		#print([t], "\n")
+		return t
+	
+	oneline = oneLine()
+	
+	l = [i for i in range(101)] + [i for i in range(101)[::-1]]
+	for i in l:
+	 	#oneline.update([i for i in range(i)])
+	 	oneline.update(i,end="", run_at_start=xx)
+	 	sleep(.02)
+	
 	xprint("/rhu/hello/=/ q to quit")
 
 	x = ''

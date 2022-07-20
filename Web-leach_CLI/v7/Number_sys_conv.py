@@ -15,6 +15,7 @@
 
 from random import randint
 from functools import partial
+from base64 import b85encode, b85decode
 
 base_li0= {'0':0,
 
@@ -140,9 +141,9 @@ base_li0= {'0':0,
 
 	'Z':61 ,
 
-	'?':62 ,
+	'+':62 ,
 
-	'!':63 
+	'/':63 
 
 }
 
@@ -250,6 +251,19 @@ def flatten_array(out, output_type = list):
 	if not isinstance(out, output_type):
 		out= output_type(out)
 	return out
+	
+	
+def hash_bin64(data):
+	import xxhash
+
+	if isinstance(data, int):
+		data = data.to_bytes((data.bit_length() + 7) // 8, byteorder="big")  # Here's where the magic happens
+	
+	x = xxhash.xxh3_64_digest(data)
+	return b85encode(x)
+	
+	
+# print(hash_bin64(4938101010103829191028**264))
 
 # from time import time
 # arr = [1,[],[],[],[],2, 3, [], 4, [], 5, [6], 7, 8, 9, [10,[1,1,3]], []]*500

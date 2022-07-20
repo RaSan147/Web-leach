@@ -140,13 +140,12 @@ cdef list _decrypt(list text, list C):
 			x=(x+1)%8
 		i+=8
 	return text
-
-
-cpdef str CYencrypt(str texts, str key, str typer='str'):
+	
+cdef list l_CYencrypt(str texts, str key):
 	"""
 	text: text data to decrypt
 	key: key to decrypt
-	typer: str or list (only available for str)
+	* typer: list
 	"""
 	cdef list returner = []
 	cdef list text_
@@ -167,14 +166,25 @@ cpdef str CYencrypt(str texts, str key, str typer='str'):
 		returner.append("".join(text_))
 
 	
-	return ('\n'.join(returner))
+	return returner
 
 
-cpdef str CYdecrypt(str texts, str key, str typer= "str"):
+
+cdef str s_CYencrypt(str texts, str key,):
 	"""
 	text: text data to decrypt
 	key: key to decrypt
-	typer: str or list (only available for str)
+	* typer: str
+	"""
+
+	return ('\n'.join(l_CYencrypt(texts, key)) )
+
+
+cdef list l_CYdecrypt(str texts, str key):
+	"""
+	text: text data to decrypt
+	key: key to decrypt
+	** typer: list
 	"""
 	cdef list returner = []
 	cdef list text_
@@ -197,4 +207,36 @@ cpdef str CYdecrypt(str texts, str key, str typer= "str"):
 
 		returner.append("".join(dtext_))
 
-	return ('\n'.join(returner))
+	return returner
+
+cdef str s_CYdecrypt(str texts, str key):
+	"""
+	text: text data to decrypt
+	key: key to decrypt
+	** typer: str
+	"""
+	return ('\n'.join(l_CYdecrypt(texts, key)))
+
+	
+def CYdecrypt(texts, key, typer="str"):
+	"""
+	text: text data to decrypt
+	key: key to decrypt
+	** typer: str | list
+	"""
+	if typer=="str":
+		return s_CYdecrypt(texts, key) 
+	else:
+		return l_CYdecrypt(texts, key)
+	
+def CYencrypt(texts, key, typer="str"):
+	"""
+	text: text data to decrypt
+	key: key to decrypt
+	** typer: str | list
+	"""
+	if typer=="str":
+		return s_CYencrypt(texts, key)  
+	else:
+		return l_CYencrypt(texts, key)
+	

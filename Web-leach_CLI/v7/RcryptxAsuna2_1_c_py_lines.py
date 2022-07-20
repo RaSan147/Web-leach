@@ -56,7 +56,7 @@ def Cencrypt(text, key):
 	remove('out.txt')
 	return returner
 		
-print(Cencrypt("123456", "89"))
+#print(f.read()("123456", "89"))
 def Cdecrypt(text, key):
 	text = text.encode('ascii')
 	key = key.encode('ascii')

@@ -942,6 +942,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 							decryptor_lang = 'Py'
 					try:
 						if decryptor_lang == 'Cy':
+							
 							self.decrypto_dat= RxAsuna.CYdecrypt(dec_raw, decrypto_key, 'list')
 						else:
 							self.decrypto_dat= RxAsuna.PYdecrypt(dec_raw, decrypto_key, 'list')
@@ -991,12 +992,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 				while self.decrypto_dat!=[]:
 					column = [[] for i in range(100)]
 					line_index+=1
+					#print(self.decrypto_dat)
+					#return
 					try:
 						_decrypto_dat_=self.decrypto_dat.pop()
 					except:
 						# print(self.decrypto_dat)
 						traceback.print_exc()
-						exit()
+						#exit()
 						continue
 
 					if _decrypto_dat_=='':
@@ -1005,10 +1008,15 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 					_Vcode = _decrypto_dat_[34:40]
 
 					_decrypto_dat = _decrypto_dat_[40: ].split('||')[: -1]
-
-					if spid!='' and spid!= _decrypto_dat[1]: continue
-					if scode!='' and scode!= _decrypto_dat[2]: continue
-					if scodepart!='' and scodepart not in _decrypto_dat[2]: continue
+					if len(_decrypto_dat)==0: continue
+					try:
+						if spid!='' and spid!= _decrypto_dat[1]: continue
+						if scode!='' and scode not in _decrypto_dat[2]: continue
+						if scodepart!='' and scodepart not in _decrypto_dat[2]: continue
+					except Exception as e:
+						print(e.__class__.__name__, ':', e)
+						print(_decrypto_dat)
+						continue
 
 					try:
 						column[0]= "%s/%s/%s &nbsp;&nbsp;&nbsp; %s: %s: %s" %Nsys.dec_dt(_decrypto_dat[0])
@@ -1684,7 +1692,7 @@ def test(HandlerClass=BaseHTTPRequestHandler,
 	HandlerClass.protocol_version = protocol
 	with ServerClass(server_address, HandlerClass) as httpd:
 		sa = httpd.socket.getsockname()
-		serve_message = "Serving HTTP on {host} port {port} (http://{host}:{port}/) ..."
+		serve_message = "Serving HTTP on {host} port {port} ( http://127.0.0.1:{port}/ ) ..."
 		print(serve_message.format(host=sa[0], port=sa[1]))
 		try:
 			httpd.serve_forever()
