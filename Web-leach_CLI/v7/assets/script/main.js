@@ -1,15 +1,7 @@
-/*esversion: 8 */
-
 MAIN_JS = true;
 
 class Local_Data_Manager {
-	constructor() {}
-
-	show_last_opened() {
-		var self = this;
-		log("show_last_opened used get_local_data");
-		var link = null;
-
+	constructor() {
 		this.click_last_link = function (evt) {
 			evt.preventDefault();
 			popup_msg.close();
@@ -19,14 +11,23 @@ class Local_Data_Manager {
 			handle_json_request(link + "/index.html");
 		};
 
+	}
+
+	show_last_opened() {
+		var self = this;
+		log("show_last_opened used get_local_data");
+		var link = null;
+
+
 		if (!this.get_local_data()) {
 			return 0;
 		}
 
 		//log(datas.current_page_index);
 		if (
+			//tools.is_null(datas.lastleft, ["undefined", -1])
 			datas.last_opened == "undefined" ||
-			datas.last_opened == null ||
+			datas.last_openqed == null ||
 			datas.last_opened == -1
 		) {
 			datas.last_opened = datas.current_page_index;
@@ -506,13 +507,12 @@ let page_styler = new CH_PageStyler();
 class Accordion_ {
 	constructor() {
 		this.acc = byClass("accordion");
-		
-		function click_func(ev) {
-			var that = ev.target;
 
-			that.classList.toggle("accordion-active");
-
-				var panel = that.nextElementSibling;
+		var that = this;
+		for (let i = 0; i < this.acc.length; i++) {
+			this.acc[i].addEventListener("click", function () {
+				this.classList.toggle("accordion-active");
+				var panel = this.nextElementSibling;
 				if (panel.classList.contains("accordion-panel")) {
 					if (panel.style.display === "block") {
 						panel.style.display = "none";
@@ -521,11 +521,7 @@ class Accordion_ {
 						slider_control.slider_fix_tick();
 					}
 				}
-			}
-
-		var that = this;
-		for (let i = 0; i < this.acc.length; i++) {
-			this.acc[i].addEventListener("click", click_func);
+			});
 		}
 
 		byId("add_theme_name").innerHTML +=
@@ -1059,7 +1055,7 @@ class CH_Sidebar_control {
 		this.sidebar_bg.style.display = "block";
 		this.left_bar.classList.add("mySidebar-active");
 		byId("app_header").classList.toggle("top-titleR-active");
-		this.find_this_chapter.style.display = "block";
+		this.find_this_chapter.style.display = "flex";
 
 	}
 
@@ -1097,7 +1093,7 @@ class CH_Sidebar_control {
 
 		tools.toggle_scroll(1);
 
-		tools.sleep(300);
+		tools.sleep(3000);
 	}
 
 	closeNavR() {
@@ -1105,7 +1101,7 @@ class CH_Sidebar_control {
 
 		this.sidebar_bg.style.display = "none";
 
-		tools.sleep(300);
+		tools.sleep(3000);
 		tools.toggle_scroll(1);
 
 		top_bar.dont_move = false; // allow moving the top bar
@@ -1451,6 +1447,11 @@ class Chapter_Handler {
 	}
 
 	init() {
+		
+		if (helped_user() == false) {
+			show_help();
+		}
+
 		byId("sidebar_bg").onclick = function () {
 			sidebar_control.closeNav();
 		};
@@ -1595,41 +1596,69 @@ class Chapter_List_Handler {
 		local_data_manager.show_last_opened();
 
 		tools.del_child("allA");
+		// for (let i = 0; i < datas.pages_list.length; i++) {
+		// 	var linkX = document.createElement("A");
+		// 	var linkContainer = document.createElement("DIV");
+		// 	linkContainer.className = "sub_li_divs";
+		// 	linkX.href = "./" + datas.pages_list[i] + "/index.html";
+
+		// 	linkX.onclick = function () {
+		// 		handle_json_request(this.href);
+
+		// 		datas.current_page_index = i;
+		// 		datas.last_opened = datas.current_page_index;
+
+		// 		local_data_manager.set_local_data();
+		// 		return false;
+		// 	};
+
+		// 	linkX.innerHTML = datas.pages_list[i];
+
+		// 	if (tools.is_in(i, datas.new_pages)) {
+		// 		linkX.innerHTML += '&nbsp; <span class="small-tag">NEW</span> ';
+		// 	}
+
+		// 	if (i % 2 == 0) {
+		// 		linkContainer.style.backgroundColor = "#35393b";
+		// 	} else {
+		// 		linkContainer.style.backgroundColor = "#222426";
+		// 	}
+
+		// 	linkX.className = "list_class";
+		// 	linkContainer.appendChild(linkX);
+		// 	linkContainer.appendChild(document.createElement("BR"));
+		// 	var hr_ = document.createElement("HR");
+		// 	linkContainer.appendChild(hr_);
+		// 	this.all_li.appendChild(linkContainer);
+		// }
+
+		
 		for (let i = 0; i < datas.pages_list.length; i++) {
-			var linkX = document.createElement("A");
-			var linkContainer = document.createElement("DIV");
-			linkContainer.className = "sub_li_divs";
-			linkX.href = "./" + datas.pages_list[i] + "/index.html";
-
-			linkX.onclick = function () {
-				handle_json_request(this.href);
-
+			var loc = createElement("a");
+			var box = createElement("div");
+			box.classList.add("ch-search-item");
+			box.classList.add("ch-list-item");
+			loc.appendChild(box);
+			if (i % 2 == 1) {
+				box.classList.add("ch-search-item-odd");
+			} else {
+				box.classList.add("ch-search-item-even");
+			}
+			loc.href = "./" + datas.pages_list[i] + "/index.html";
+			loc.onclick = function (evt) {
+				evt.preventDefault();
 				datas.current_page_index = i;
 				datas.last_opened = datas.current_page_index;
-
 				local_data_manager.set_local_data();
-				return false;
-			};
-
-			linkX.innerHTML = datas.pages_list[i];
-
-			if (tools.is_in(i, datas.new_pages)) {
-				linkX.innerHTML += '&nbsp; <span class="small-tag">NEW</span> ';
+				handle_json_request(this.href);
 			}
+			
 
-			if (i % 2 == 0) {
-				linkContainer.style.backgroundColor = "#35393b";
-			} else {
-				linkContainer.style.backgroundColor = "#222426";
+				box.innerText = datas.pages_list[i];
+				this.all_li.appendChild(loc);
 			}
+		
 
-			linkX.className = "list_class";
-			linkContainer.appendChild(linkX);
-			linkContainer.appendChild(document.createElement("BR"));
-			var hr_ = document.createElement("HR");
-			linkContainer.appendChild(hr_);
-			this.all_li.appendChild(linkContainer);
-		}
 	}
 
 	gen_data_set() {
@@ -1688,7 +1717,8 @@ class PWA_Handler {
 		await tools.sleep(200);
 		datas.init();
 		//log(data.page_type);
-		byId("logo").scrollIntoView({ behavior: "smooth" });
+		// byId("logo").scrollIntoView({ behavior: "smooth" });
+		document.body.scrollTop = document.documentElement.scrollTop = 0;
 		this.dismiss_others(data.page_type);
 
 		if (data.page_type == "CHAPTER") {
@@ -1729,6 +1759,7 @@ class PWA_Handler {
 			datas.discuss_id = data.discuss_id;
 			datas.current_page_index = -1;
 			datas.last_opened = datas.current_page_index;
+			datas.default_style = data.default_style;
 			datas.description = data.description;
 			datas.tags = data.tags;
 			datas.stars = data.stars;
@@ -1769,10 +1800,6 @@ if (config.page_type == "CHAPTER") {
 } else if (config.page_type == "CHAPTER-LIST") {
 	chapter_list_handler.init();
 	chapter_list_handler.display_changes();
-}
-
-if (helped_user() == false) {
-	show_help();
 }
 
 

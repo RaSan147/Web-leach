@@ -19,7 +19,7 @@
 
 <link rel="stylesheet" href="/assets/style/main.css">
 <link rel="stylesheet" href="/assets/style/chapter_list.css">
-<link id='icon' rel="icon" href="/favicon.ico">
+<link id='icon' rel="icon" href="/favicon.ico" onerror="alt_href(this, alt_icons)">
 
 <!-- <script src="https://kit.fontawesome.com/1a9e874525.js" crossorigin="anonymous"></script> -->
 <script>
@@ -53,6 +53,21 @@ const log = console.log,
 		elm.src = src_list[0];
 		elm.onerror = function () {
 			alt_(elm, src_list.slice(1))
+		};
+	}
+
+	async function alt_href(elm, href_list) {
+		/*elm: element
+			src_list: list of links
+			attt: src or href*/
+		if (href_list.length==0) {
+			elm.onerror = "";
+			return true;
+		}
+
+		elm.href = href_list[0];
+		elm.onerror = function () {
+			alt_href(elm, href_list.slice(1))
 		};
 	}
 
@@ -350,10 +365,10 @@ const log = console.log,
 
 		<span id='pagination-prev'>
 
-			<div class='paginationA'>Prev Page</div>
+			<div class='paginationA display'>Prev Page</div>
 		</span>
 		<span id='pagination-next'>
-			<div class='paginationA'>Next Page</div>
+			<div class='paginationA disable_selection'>Next Page</div>
 		</span>
 	</div>
 

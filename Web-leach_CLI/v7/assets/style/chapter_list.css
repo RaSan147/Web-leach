@@ -1,8 +1,8 @@
 /*=========CHAPTER-LIST=========*/
 #allA {
 	text-align: center;
-	margin-left: 5%;
-	margin-right: 5%;
+	margin-left: auto;
+	margin-right: auto;
 	width: 85%;
 }
 
@@ -15,17 +15,8 @@
 	color: var(--theme-color-text);
 }
 
-.list_class {
-	font-size: 1.5em;
-	font-weight: 600;
-	font-family: monospace !important;
-	text-decoration: none;
-	color: #06a5ee;
-	overflow-wrap: break-word;
-	padding-left: 6%;
-	padding-right: 5%;
-	float: left;
-}
+
+
 
 .small-tag {
 	position: relative;
@@ -45,4 +36,15 @@
 	padding: 3px 5px 3px 5px;
 	border-radius: 2px;
 	line-height: 30px;
+	cursor: pointer;
+}
+
+.ch-list-item{
+	text-align: left;
+	padding-left: 5%;
+	padding-right: 5%;
+
+}
+.ch-search-item {
+	max-width: 700px;
 }

@@ -4,7 +4,6 @@ import sys
 from shutil import get_terminal_size
 from math import ceil
 
-from instaloader import Highlight
 
 wait_time = 0
 def null_func(*a):

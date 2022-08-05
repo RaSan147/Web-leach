@@ -33,6 +33,7 @@ OPEN_SERVER = True # disable on exit
 
 # importing required packages
 
+
 import Number_sys_conv as Nsys  # fc=1000
 
 # different number based functions I made
@@ -1909,40 +1910,29 @@ class SupportTools_ :  # fc=0A00
 		if type(sp) == list:
 			return any(self.check_sp_links(link, sp=i) for i in sp)
 		if sp == 'nh':
-			if re_search('^' + Constants.special_starts['nh'], link) is not None:
-				return True
-			else:
-				return False
+			if re_search('^' + Constants.special_starts['nh'], link):
+				return "nh"
 		elif sp == "mangafreak":
-			if re_search('^' + Constants.special_starts['mangafreak'], link) is not None:
-				return True
-			else:
-				return False
-		elif sp == "pinterest":
-			if re_search('^' + Constants.special_starts['pinterest'], link) is not None:
-				return True
-			else:
-				return False
-		elif sp == "pinterest-pin":
-			if re_search('^' + Constants.special_starts['pinterest'] + 'pin/\d+$', link) is not None:
-				return True
-			else:
-				return False
+			if re_search('^' + Constants.special_starts['mangafreak'], link):
+				return 'mangafreak'
+
 		elif sp == 'webtoon':
-			if re_search('^' + Constants.special_starts['webtoon'], link) is not None:
-				return True
-			elif re_search('^' + Constants.special_starts['webtoon_ep'], link) is not None:
-				return True
-			else:
-				return False
+			if re_search('^' + Constants.special_starts['webtoon'], link):
+				return "webtoon"
+			elif re_search('^' + Constants.special_starts['webtoon_ep'], link):
+				return "webtoon_ep"
+		elif sp == "manhwa18.net":
+			if re_search('^' + Constants.special_starts['manhwa18.net'], link):
+				return "manhwa18.net"
 		elif sp is None:
-			for i in Constants.special_starts.values():
-				if re_search('^' + i, link) is not None:
-					return True
-			return False
+			for key, val in Constants.special_starts.itemps():
+				if re_search('^' + val, link):
+					return key
 		else:
 			xprint("/u/INvalid arg!/=/\n    pLEaSe REcHECK\n=======> %s <=======\n WITH\n-------> %s <-------"%(link, str(sp)))
 			raise ValueError
+
+		return False
 
 	def play_yamatte(self, vol=80):  # fc=0A02
 		"""just for parody"""
@@ -2640,11 +2630,10 @@ class ProjectType_ :  # fc=0P00
 			self.all_list = All_list_type(len(self.sub_dirs))
 
 			
-			if any(self.all_names):
-				self.all_list.all_names = self.all_names
-				self.all_list.update_values()
-				self.all_names = [] # reset coz there's no further use of it
-				self.need_2_gen_names = False
+			self.all_list.all_names = self.all_names
+			self.all_list.update_values()
+			self.all_names = [] # reset coz there's no further use of it
+			self.need_2_gen_names = False
 
 			self.last_user_ip = Nsys.dec_ip(self.magic_number)
 
@@ -2940,10 +2929,11 @@ class ProjectType_ :  # fc=0P00
 		self.homepage = Netsys.get_homepage(self.main_link)
 
 		for i in sub_links2:
-			i = Netsys.get_link(i, self.main_link, self.homepage)
-
-			if link_startswith_re.search(i) is not None:
-				sub_links.append(i)
+			j = Netsys.get_link(i, self.main_link, self.homepage)
+			# print(j)
+			if link_startswith_re.search(j) is not None:
+				sub_links.append(j)
+		# print(sub_links2)
 
 		xprint('.')
 		del sub_links2
@@ -3858,6 +3848,42 @@ class ProjectType_ :  # fc=0P00
 
 		return "mangafreak.net"
 
+
+
+	def manhwa18_net(self, new=False):  # fc=0P0N
+		"""checks if the link is manhwa18.net link and returns the manwha page list
+		else it will return 0"""
+		print("Fetching Data from manhwa18.net")
+		link = self.main_link
+
+		if not re_search(Constants.special_starts['manhwa18.net'], link):
+			return 0
+		link = self.main_link
+		
+		self.link_startswith = 'https://(www\.)?manhwa18.net/read-' + re_search(
+			Constants.special_starts['manhwa18.net'], link).group(1)
+		self.sp_flags.add("reverse")
+		self.sp_flags.add("manhwa18.net")
+		self.file_types = "img"
+		self.dimention = 2
+
+		if new:
+			self.edit_page()
+
+		
+		if not self.gen_sub_links():
+			return 0
+
+
+
+		if not self.gen_sub_dirs():
+			return 0
+
+
+		return True
+		
+
+
 	def nhentai_link(self):  # fc=0P0N
 		"""checks if the link is nhentai link and returns the available link and the title of the doujin
 		else it will return 0"""
@@ -3881,11 +3907,7 @@ class ProjectType_ :  # fc=0P00
 					site = ".net"
 				else:
 					raise requests.exceptions.ConnectionError
-			except (
-					requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout,
-					requests.exceptions.ReadTimeout,
-					requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError,
-					urllib3.exceptions.SSLError):
+			except NetErrors:
 				leach_logger(log(["0P0Nx1", self.Project, link, Netsys.hdr(current_header, '0P0N')]),
 				             UserData.user_name)
 				print('nhentai.net server is not reachable, trying proxy server...')
@@ -3896,9 +3918,7 @@ class ProjectType_ :  # fc=0P00
 						site = ".xxx"
 					else:
 						raise requests.exceptions.ConnectionError
-				except (requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout,
-				        requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema,
-				        requests.exceptions.MissingSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError):
+				except NetErrors:
 					IOsys.delete_last_line()
 					# xprint("/rh/Error code: 606x2\nLink not found, Please recheck the link and start a new project/=/")
 					leach_logger(log(["0P0Nx3", self.Project, link, Netsys.hdr(current_header, '0P0N')]),
@@ -3913,10 +3933,7 @@ class ProjectType_ :  # fc=0P00
 							site = ".to"
 						else:
 							raise requests.exceptions.ConnectionError
-					except (requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout,
-					        requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema,
-					        requests.exceptions.MissingSchema, requests.exceptions.SSLError,
-					        urllib3.exceptions.SSLError):
+					except NetErrors:
 						xprint(
 							"/rh/Error code: 606x3\nLink not found, Please recheck the link and start a new project/=/")
 						leach_logger(log(["0P0Nx2", self.Project, link, Netsys.hdr(current_header, '0P0N')]),
@@ -4146,6 +4163,8 @@ class ProjectType_ :  # fc=0P00
 			self.sp_flags.add('mangafreak-patched')
 
 			self.store_current_data()
+			
+		return True
 
 	def make_html(self):  # fc=0P0O
 		"""Make the html file"""
@@ -4297,6 +4316,45 @@ class Main :  # fc=0M00
 		
 		server_launcher = Process(target=Netsys.run_server_t, args=(AboutApp.download_dir,))
 		server_launcher.start()
+
+	def run_link_index(self):
+		
+				len_sub_links = len(self.P.sub_links)
+
+				self.P.all_list = All_list_type(len_sub_links)
+
+
+
+				oneline.new()
+				oneline.update('Indexed [0 / ' + str(len_sub_links) + ']')
+
+				try:
+
+					index_thread_list = []
+					for i in range(self.P.index_threads):
+						index_thread_list.append(
+							Process(target=self.P.generic_list_writer, args=(self.P.index_threads, i)))
+						index_thread_list[i].start()
+
+					while any([i.is_alive() for i in index_thread_list]):
+						if self.P.break_all:
+							return False
+						time.sleep(0.3)
+
+				except (KeyboardInterrupt, EOFError):
+					leach_logger("000||0P0F||%s||f-Stop||is_indexing||probably something unwanted came")
+					xprint("/yh/Project indexing cancelled by Keyboard/=/")
+					self.P.break_all = True
+					return 0
+				
+				
+				except Exception as e:
+					xprint("/rh/code: Error 0P0F\n The program will break in 5 seconds/=/")
+					leach_logger(log(["0P0Fx0", self.P.Project, e.__class__.__name__, e]), UserData.user_name)
+					self.P.break_all = True
+					time.sleep(5)
+					exit(0)
+
 
 
 	def main_loop(self):  # fc=0M05
@@ -4753,7 +4811,7 @@ yes/y to resume
 
 				elif 'nh' in self.P.sp_flags or (
 						self.P.main_link.startswith("https://nhentai.net/g/") and self.P.link_startswith.startswith(
-					"https://nhentai.xxx/g/")):
+					"https://nhentai.")):
 					try:
 						self.P.link_startswith, title = self.P.nhentai_link()
 
@@ -4776,7 +4834,19 @@ yes/y to resume
 
 				# leach_logger('0M05x0||%s||is_nh'%(self.Project), UserData.user_name)
 
-				if not any(i in self.P.sp_flags for i in ['nh', 'mangafreak', 'webtoon']):
+				elif "manhwa18.net" in self.P.sp_flags:
+					try:
+						if self.P.manhwa18_net():
+							self.run_link_index()
+							self.link_indexed = True
+							link_true = True
+
+					except (KeyboardInterrupt, EOFError):
+						print("Cancel command entered! stopping")
+						return 0
+					
+
+				else: #if not any(i in self.P.sp_flags for i in ['nh', 'mangafreak', 'webtoon']):
 					page = Netsys.get_page(self.P.main_link)
 					if page:
 						link_true = True
@@ -4861,7 +4931,9 @@ yes/y to resume
 					self.P.main_link = IOsys.safe_input("\nEnter the link: ")
 					pass  # leach_logger('0M05x1||%s||m_link||%s'%(self.Project, self.P.main_link), UserData.user_name)
 					while not link_true:
-						if SupportTools.check_sp_links(self.P.main_link, ['nh', 'mangafreak', 'webtoon']):
+						is_sp_link = SupportTools.check_sp_links(self.P.main_link)
+						print(is_sp_link)
+						if is_sp_link:
 
 							if SupportTools.check_sp_links(self.P.main_link, 'mangafreak'):
 								print("mangafreak link detected!!")
@@ -4939,28 +5011,46 @@ yes/y to resume
 										link_true = True
 										break
 
-							if SupportTools.check_sp_links(self.P.main_link, 'pinterest'):
-								print(
-									"Pinterest link detected.\nDo you want to try the special features for pinterest images?\nWarning: All images may not be the same from the website as you see\n")
-								if IOsys.asker('>> '):
+								
+							if SupportTools.check_sp_links(self.P.main_link, "manhwa18.net"):
+								xprint("/y/manhwa18 link detected!!/=/")
+								try:
+									if IOsys.asker(
+										"\u29bf Do you want to download Manwha images from this links?? /hui/ y /=///hui/ n /=/\n /gh/>>/=/  ", default=True):
 
-									if SupportTools.check_sp_links(self.P.main_link, 'pinterest-pin'):
-										try:
-											self.P.dimention = int(
-												IOsys.safe_input("Enter the index of your choice (1/2/3): "))
-										except ValueError:
-											self.P.dimention = -1
-										while self.P.dimention not in [1, 2, 3]:
-											try:
-												self.P.dimention = int(
-													IOsys.safe_input("/rh/Invalid input!/=/\nEnter 1 or 2 or 3:  "))
-											except ValueError:
-												self.P.dimention = -1
+										if self.P.manhwa18_net(new=True):
+											
+											self.run_link_index()
+											self.link_indexed = True
+											link_true = True
 
-
+								except (KeyboardInterrupt, EOFError):
+									print("Cancel command entered! stopping")
+									return 0
+								
 
 
-									self.P.link_startswith = 'https://www.pinterest.com'
+							# if SupportTools.check_sp_links(self.P.main_link, 'pinterest'):
+							# 	print(
+							# 		"Pinterest link detected.\nDo you want to try the special features for pinterest images?\nWarning: All images may not be the same from the website as you see\n")
+							# 	if IOsys.asker('>> '):
+
+							# 		if SupportTools.check_sp_links(self.P.main_link, 'pinterest-pin'):
+							# 			try:
+							# 				self.P.dimention = int(
+							# 					IOsys.safe_input("Enter the index of your choice (1/2/3): "))
+							# 			except ValueError:
+							# 				self.P.dimention = -1
+							# 			while self.P.dimention not in [1, 2, 3]:
+							# 				try:
+							# 					self.P.dimention = int(
+							# 						IOsys.safe_input("/rh/Invalid input!/=/\nEnter 1 or 2 or 3:  "))
+							# 				except ValueError:
+							# 					self.P.dimention = -1
+
+							# 		self.P.link_startswith = 'https://www.pinterest.com'
+
+							
 						if not link_true:
 							try:
 								try:
@@ -5057,42 +5147,8 @@ yes/y to resume
 
 			if not self.link_indexed:
 				# leach_logger("0M05x2||%s||%i"%(self.Project, len(self.sub_links)), UserData.user_name)
+				self.run_link_index()
 
-				len_sub_links = len(self.P.sub_links)
-
-				self.P.all_list = All_list_type(len_sub_links)
-
-
-
-				oneline.new()
-				oneline.update('Indexed [0 / ' + str(len_sub_links) + ']')
-
-				try:
-
-					index_thread_list = []
-					for i in range(self.P.index_threads):
-						index_thread_list.append(
-							Process(target=self.P.generic_list_writer, args=(self.P.index_threads, i)))
-						index_thread_list[i].start()
-
-					while any([i.is_alive() for i in index_thread_list]):
-						if self.P.break_all:
-							return False
-						time.sleep(0.3)
-
-				except (KeyboardInterrupt, EOFError):
-					leach_logger("000||0P0F||%s||f-Stop||is_indexing||probably something unwanted came")
-					xprint("/yh/Project indexing cancelled by Keyboard/=/")
-					self.P.break_all = True
-					return 0
-				
-				
-				except Exception as e:
-					xprint("/rh/code: Error 0P0F\n The program will break in 5 seconds/=/")
-					leach_logger(log(["0P0Fx0", self.P.Project, e.__class__.__name__, e]), UserData.user_name)
-					self.P.break_all = True
-					time.sleep(5)
-					exit(0)
 
 			if self.P.file_to_sort: self.P.all_list.all_links = natsort.natsorted(self.P.all_list.all_links,
 			                                                                     key=lambda x: x[0].lower())

@@ -291,33 +291,51 @@ def sorting_algoN(test_string):
 
 	return a'''
 
+# print(sys.argv)
+
+#print(dec2base(20201123220123445462,63))
+
+# print(compressed_dt())
+
+# datetime object containing current date and time
 
 
 
-def humanbytes(B):
-	'Return the given bytes as a human friendly KB, MB, GB, or TB string'
-	B = B
-	KB = 1024
-	MB = (KB ** 2) # 1,048,576
-	GB = (KB ** 3) # 1,073,741,824
-	TB = (KB ** 4) # 1,099,511,627,776
-	ret=''
 
-	if B>=TB:
-		ret+= '%i TB  '%(B//TB)
-		B%=TB
-	if B>=GB:
-		ret+= '%i GB  '%(B//GB)
-		B%=GB
-	if B>=MB:
-		ret+= '%i MB  '%(B//MB)
-		B%=MB
-	if B>=KB:
-		ret+= '%i KB  '%(B//KB)
-		B%=KB
-	if B>0:
-		ret+= '%i bytes'%B
 
-	return ret
+# dt_now= int(str(dt_()).replace('-','').replace(' ','').replace('.','').replace(':',''))
 
+# for i in range (2,75):
+
+#	 print(i,'\t=\t', dec2base(int(dt_now),int(i)), '\t', base2dec(dec2base(int(dt_now),int(i)),i), '\t',dt_now,'\t', base2dec(dec2base(int(dt_now),int(i)),i)==dt_now)
+
+
+
+#	 # point1=0
+
+#	 # dt_now= int(str(dt_now).replace('-','').replace(' ','').replace('.','').replace(':',''))
+
+#	 # for _ in range(10):
+
+#	 #	 if base2dec(dec2base(int(dt_now),int(i)),i)==dt_now:
+
+#	 #		 point1+=1
+
+#	 # point2=0
+
+#	 # for _ in range(100):
+
+#	 #	 dt_now= int(str(dt_now).replace('-','').replace(' ','').replace('.','').replace(':',''))
+
+#	 #	 if base2dec(dec2base(int(dt_now),int(i)),i)==dt_now:
+
+#	 #		 point2+=1
+
+#	 # print(i, '\t>>\t',point1, '\t>>\t',point2)
+
+#	 # # print(i,'\t=\t', dec2base(int(dt_now),int(i)), '\t', base2dec(dec2base(int(dt_now),int(i)),i), '\t',dt_now,'\t', base2dec(dec2base(int(dt_now),int(i)),i)==dt_now)
+
+
+
+# print(getSystemInfo())
 
