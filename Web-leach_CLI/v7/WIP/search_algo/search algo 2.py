@@ -1,7 +1,9 @@
 import json, re
 from unidecode import  unidecode as uni
 from collections import Counter
-data = json.load(open("names with alt names.json"))*10
+
+times = 1 # to make the array larger for future addutions
+data = json.load(open("names with alt names.json"))*times
 
 print(len(data))
 
@@ -95,6 +97,8 @@ class Search_Algo:
 			
 		
 		box = []
+		for key, value in found.items():
+			print(data[key], value)
 		for i, _ in found.most_common():
 			box.append(i)
 			
@@ -111,6 +115,7 @@ if __name__ == "__main__":
 	
 	query = "(akame ga k-ill"
 	query = ".hack xxx"
+	query = "sword art kill"
 	def out(txt):
 		return s.search(txt)
 	
@@ -142,8 +147,8 @@ if __name__ == "__main__":
 	#	for i in s.search("gel dust"):
 	#		pass#print(data[i])
 	
-	import cProfile
-	cProfile.run('out(query)')
+	# import cProfile
+	# cProfile.run('out(query)')
 	
 	multi()
 	start = time.time()

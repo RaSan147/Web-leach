@@ -1,5 +1,5 @@
 import Number_sys_conv as Nsys
-import html, traceback
+import html
 
 def linker(link, link_prefix='', link_suffix=''):
 	return '<a href = "' + link_prefix + link + link_suffix +'">'  + link + '</a>'
@@ -351,11 +351,7 @@ def extractor006000(_decrypto_dat, column, _decrypto_dat_, line_index):
 			if ecode == '0':
 				column[3] = '<b><u>Unknown Error occured</u></b>  <br>while running server [Netsys.check_server()]'
 
-				try:
-					column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Timeout: </b>' + _decrypto_dat[5] + '<br><b>Error Code: </b>' + _decrypto_dat[6] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[7]
-				except:
-					print(_decrypto_dat)
-					traceback.print_exc()
+				column[4] = '<b>Caller ID: </b>'+ _decrypto_dat[3] + '<br>' + '<b>Link: </b>' + linker(_decrypto_dat[4]) + '<br>' + '<b>Timeout: </b>' + _decrypto_dat[5] + '<br><b>Error Code: </b>' + _decrypto_dat[6] + '<br>' + '<b>Error Message: </b>' + _decrypto_dat[7]
 
 			elif ecode == '1':
 				column[3] = '<b><u>Failed to open server link</u></b><br>Due to App or Network issue'

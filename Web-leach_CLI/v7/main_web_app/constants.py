@@ -1,7 +1,6 @@
 # pylint: disable=anomalous-backslash-in-string
-# type: ignore
 import mimetypes, json, sys
-from urllib import parse, request, error as request_error  # used to parse values  # used to make requests into the url
+from urllib import parse, request  # used to parse values  # used to make requests into the url
 
 # for testing
 Project = main_link = link_startswith = file_types = file_starts = sub_dirs = sp_flags= sp_extension = overwrite_bool = dimention = dl_done = sequence = sub_links = has_missing = dir_sorted = 0
@@ -39,9 +38,8 @@ class constants:
 		'mf_read_chap':'https:\/\/w[\d]+\.mangafreak\.net\/Read1_([^\?\#]+)(_\d+)[\?\#]?.*',
 		'webtoon_ep':'https\:\/\/www\.webtoons\.com\/en\/(.*?)\/(.*?)\/.*?\/viewer\?title_no\=(\d+)\&episode_no\=\d+',
 		'webtoon': 'https:\/\/www\.webtoons\.com\/en\/(.*?)\/(.*?)\/list\?title_no=(\d+)',
-		'manhwa18.net':'https?:\/\/(?:www\.)?manhwa18\.net\/manga\-([^/\?#\.]*)',
-		'mangacc':'https://[^\/]+\.mangacc\.com/(?:M|m)anga/([^\?\#\/]+)',
-	}
+		'manhwa18.net':'https?:\/\/(?:www\.)?manhwa18\.net\/manga\-([^/\?#\.]*)',}
+
 	extensions_map = mimetypes.types_map.copy()
 	extensions_map.update({
 		'': 'application/octet-stream', # Default
@@ -69,7 +67,7 @@ class constants:
 			try:
 				request.urlopen(host, timeout=timeout)
 				return True
-			except request_error.URLError:
+			except request.URLError:
 				return False
 			#except socket.timeout:
 				#return False
@@ -90,7 +88,7 @@ def log(arr):
 		if type(arr) is str:
 			continue
 		if type(arr[i]) is bytes:
-			arr[i] = arr[i].decode('utf-8')  
+			arr[i] = arr[i].decode('utf-8')
 		else:
 			arr[i] = str(arr[i])
 

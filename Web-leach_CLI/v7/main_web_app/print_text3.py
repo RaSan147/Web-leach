@@ -339,7 +339,7 @@ class oneLine(XprintClass):
 			self.slowtype(text, wait_time=wait_time, auto_resetting=auto_resetting, parsed=True)
 		if out_func=="print":
 			self.old_len = self.get_len(text)
-			sys.stdout.write(text)
+			sys.stdout.write(text +"\n")
 			sys.stdout.flush()
 		self.BUSY = False
 		self.next()
@@ -352,12 +352,12 @@ class oneLine(XprintClass):
 		self.queue.put((text, wait_time, auto_resetting, "slowtype"))
 		self.next()
 		
-	def _update(self, *text, sep= ' ', wait_time=wait_time, end='\n', run_at_start=null_func):
+	def _update(self, *text, sep= ' ', wait_time=wait_time, end='\n', highlighter=False, auto_resetting=True, run_at_start=null_func):
 		""" Uses print and does not parse string"""
 		text = run_at_start(text)
 		text= str(sep).join(map(str, text)) + str(end)
 
-		self.queue.put((text, wait_time, False, "print"))
+		self.queue.put((text, wait_time, auto_resetting, "print"))
 		self.next()
 
 	def new(self):
@@ -393,7 +393,7 @@ if __name__ == '__main__':
 	l = [i for i in range(101)] + [i for i in range(101)[::-1]]
 	for i in l:
 	 	#oneline.update([i for i in range(i)])
-	 	oneline._update(i,end="", run_at_start=xx)
+	 	oneline.update(i,end="", run_at_start=xx)
 	 	sleep(.02)
 	
 	xprint("/rhu/hello/=/ q to quit")

@@ -1,0 +1,33 @@
+{
+    "name": "Web Leach",
+    "short_name": "Wl Reader",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#2d2e2e",
+    "theme_color": "#173159",
+    "orientation": "any",
+    "categories": ["books", "anime", "manga", "comic"],
+    "icons": [
+      {
+        "src": "/assets/icons/emo_angel_192.png",
+        "type": "image/png", "sizes": "192x192"
+      },
+      {
+        "src": "/assets/icons/emo_angel_512.png",
+        "type": "image/png", "sizes": "512x512"
+      }
+    ],
+    "shortcuts" : [
+  {
+    "name": "Home",
+    "url": ".",
+    "description": "Avarage Manga"
+  },
+  {
+    "name": "18",
+    "url": "/18",
+    "description": "New horizon"
+  }]
+  
+  
+}

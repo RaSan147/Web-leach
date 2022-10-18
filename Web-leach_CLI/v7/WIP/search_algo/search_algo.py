@@ -73,6 +73,8 @@ import time, timeit
 
 query = "akame ga kill"
 
+query = "sword art kill"
+
 def out(txt):
 	x = s.search(txt)
 	for i in x:

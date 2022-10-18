@@ -24,7 +24,7 @@
 # import post_online
 print("LOADING ASSETS...")
 print(1)  # x
-requirements_all = ('requests', 'beautifulsoup4', 'natsort', 'google', 'rjsmin', "xxhash", "charset-normalizer")
+requirements_all = ('requests', 'beautifulsoup4', 'natsort', 'google', 'rjsmin', "xxhash", "charset-normalizer", "htmlmin")
 requirements_win = ('pywin32-ctypes', 'comtypes', 'psutil', 'lxml', 'pywin32')
 
 
@@ -154,18 +154,15 @@ try:
 		parser = 'lxml'
 		try:
 			bs('<br>', parser)
-		except:
+		except Exception:
 			parser = 'html.parser'
 		from googlesearch import search as g_search
 		import requests, natsort, urllib3
 		import _server003_ as _server001_
 
 		if os_name == 'Windows': import mplay4
-
-		has_all_libs = True
-
-	except:
-		has_all_libs = False
+	except Exception:
+		pass
 
 
 	from headers_file import header_list
@@ -192,6 +189,9 @@ except (KeyboardInterrupt, EOFError):
 # Re Define to speed up###################
 len = len
 range = range
+
+
+has_all_libs = False
 
 def exit(*args):
 	global OPEN_SERVER
@@ -560,14 +560,15 @@ class UserData_ :  # fc=0400
 
 		current_header = Netsys.header_()
 		try:
-			page = requests.get('https://api.myip.com/', headers=current_header, timeout=6)
+			page = requests.get('https://api.ipify.org/', headers=current_header, timeout=6)
 			if page:
-				self.user_ip = page.json()
+				self.user_ip = page.text
 				return self.user_ip
-			else:
-				xprint("/rh/Error code: 0402x1\nNo internet connection!/=/\nRunning offline mode")
-				leach_logger(log(["0402x1", Netsys.hdr(current_header, '0402'), page.status_code]), 'lock')
-				return '0.0.0.0'
+				
+			#else:
+			xprint("/rh/Error code: 0402x1\nNo internet connection!/=/\nRunning offline mode")
+			leach_logger(log(["0402x1", Netsys.hdr(current_header, '0402'), page.status_code]), 'lock')
+			return '0.0.0.0'
 
 		except NetErrors as e:
 			xprint("/rh/Error code: 0402x2\nNo internet connection!/=/\nRunning offline mode")
@@ -804,10 +805,11 @@ class Fsys_ :  # fc=0600
 		"""returns the separator of the path"""
 		if '/' in path:
 			return '/'
-		elif '\\' in path:
+		
+		if '\\' in path:
 			return '\\'
-		else:
-			return os.sep
+		#else:
+		return os.sep
 
 	def loc(self, path, _os_name='Linux'):  # fc=0602 v
 		"""to fix dir problem based on os
@@ -819,8 +821,9 @@ class Fsys_ :  # fc=0600
 
 		if _os_name == 'Windows':
 			return path.replace('/', '\\')
-		else:
-			return path.replace('\\', '/')
+			
+		#else:
+		return path.replace('\\', '/')
 
 	def get_file_name(self, directory, mode='dir'):  # fc=0603 v
 		"""takes a file directory and returns the last last part of the dir (can be file or folder)
@@ -849,8 +852,8 @@ class Fsys_ :  # fc=0600
 			return os_basename(name)
 		if mode == 'dir':
 			return os_basename(directory)
-		else:
-			raise ValueError
+		#else:
+		raise ValueError
 
 	def get_file_ext(self, directory, mode='dir', no_format='noformat'):  # fc=0604 v
 		"""to get the extension of a file directory
@@ -864,8 +867,8 @@ class Fsys_ :  # fc=0600
 		temp = self.get_file_name(directory, mode).split('.')
 		if len(temp) == 1:
 			return no_format
-		else:
-			return temp[-1]
+		#else:
+		return temp[-1]
 
 	def get_dir(self, directory, mode='dir'):  # fc=0605 v
 		"""takes a file directory and returns the last last part of the dir (can be file or folder)
@@ -891,13 +894,15 @@ class Fsys_ :  # fc=0600
 			directory = Datasys.trans_str(parse.unquote(html_unescape(dirs[-1])), {'/\\|:*><?': '-', '"': "'"})
 
 			return directory
-		elif mode == 'dir':
+			
+		if mode == 'dir':
 			if os_basename(directory) == '':
 				return os_basename(os_dirname(directory))
-			else:
-				return os_basename(directory)
-		else:
-			raise ValueError
+			#else:
+			return os_basename(directory)
+			
+		#else:
+		raise ValueError
 
 	def go_prev_dir(self, directory, preserve_sep=False):  # fc=0606 v
 		"""returns the previous path str of web link or directory
@@ -915,8 +920,9 @@ class Fsys_ :  # fc=0600
 
 		if directory.endswith(sep):
 			return sep.join(directory[:-1].split(sep)[:-2]) + sep
-		else:
-			return sep.join(directory.split(sep)[:-2]) + sep
+			
+		#else:
+		return sep.join(directory.split(sep)[:-2]) + sep
 
 	def reader(self, direc, read_mode='r', ignore_error=False, output=None,
 	           encoding='utf-8', f_code='?????', on_missing=None,
@@ -947,8 +953,8 @@ class Fsys_ :  # fc=0600
 		else:
 			read_mode = 'r'
 
-		if (not os_isfile(self.loc(direc))):
-			if (not ignore_missing_log):
+		if  not os_isfile(self.loc(direc)):
+			if not ignore_missing_log:
 				print(self.loc(direc), 'NOT found to read. Error code: 0607x1')
 				leach_logger(log(['0607x1', f_code, direc, output, encoding, ignore_error, on_missing]))
 			return on_missing
@@ -957,7 +963,7 @@ class Fsys_ :  # fc=0600
 			with open(self.loc(direc), read_mode, encoding=None if 'b' in read_mode else encoding) as f:
 				out = f.read()
 		except PermissionError:
-			if (not ignore_missing_log):
+			if not ignore_missing_log:
 				xprint(self.loc(direc), 'failed to read due to /hui/ PermissionError /=/. Error code: 0607x2')
 				leach_logger(log(['0607x2', f_code, direc, output, encoding, ignore_error, on_missing]))
 			return on_missing
@@ -1074,11 +1080,12 @@ class Fsys_ :  # fc=0600
 				xprint('/r/', e.__class__.__name__, "occurred while writing", fname, 'in', 'current directory' if direc is None else direc, '/y/\nPlease inform the author. Error code: %sx101/=/' % f_code)
 				leach_logger('||'.join(map(str,['0608xP', f_code, fname, direc, mode, type(data), encoding])))
 				raise LeachPermissionError
-			else:
-				leach_logger('||'.join(map(str,['0608x0', f_code, fname, direc, mode, type(data), encoding, e.__class__.__name__, e])))
+				
+			#else:
+			leach_logger('||'.join(map(str,['0608x0', f_code, fname, direc, mode, type(data), encoding, e.__class__.__name__, e])))
 
-				xprint('/r/', e.__class__.__name__, "occurred while writing", fname, 'in', 'current directory' if direc is None else direc, '/y/\nPlease inform the author. Error code: 00008x' + f_code, '/=/')
-				raise e
+			xprint('/r/', e.__class__.__name__, "occurred while writing", fname, 'in', 'current directory' if direc is None else direc, '/y/\nPlease inform the author. Error code: 00008x' + f_code, '/=/')
+			raise e
 
 Fsys = Fsys_()
 
@@ -1126,6 +1133,7 @@ class OSsys_ :  # fc=0700
 			except NameError:
 				pass
 			return False
+		
 		return True
 
 	def get_installed(self):  # fc=0703 v
@@ -1190,24 +1198,23 @@ class OSsys_ :  # fc=0700
 		""" installs missing libraries from the requirements variable"""
 
 		if config.disable_lib_check:
+			print("Missing Lib Check Skipped")
 			return 0
 
-		if os_name == 'Windows':
-			if not 'psutils' in OSsys.get_installed():
-				config.has_all_libs = False
 		if config.has_all_libs:
 			return
-		else:
-			for i in requirements_all:
+
+		for i in requirements_all:
+			
+			if not OSsys.install_req(i):
+				time.sleep(5)
+				exit()
+
+		if os_name == "Windows":
+			for i in requirements_win:
 				if not OSsys.install_req(i):
 					time.sleep(5)
-					exit()
-
-			if os_name == "Windows":
-				for i in requirements_win:
-					if not OSsys.install_req(i):
-						time.sleep(5)
-						exit()  # required in mplay4
+					exit()  # required in mplay4
 
 		config.has_all_libs = True
 		xprint('/hu/Rebooting Program. Please wait/=/')
@@ -1353,10 +1360,12 @@ class Netsys_ :  # fc=0800
 		if i.startswith('//'):
 			if current_link.startswith('https'):
 				i = 'https:' + i
+			elif current_link.startswith('http'):
+				i = 'http:' + i
 			else:
 				scheme = self.gen_link_facts(homepage)['scheme']
 				if scheme:
-					i = scheme
+					i = scheme + i
 				else:
 					i = 'http:' + i
 
@@ -1411,16 +1420,17 @@ class Netsys_ :  # fc=0800
 
 		current_header = self.header_()
 		try:
-			if timeout is None:
-				r = requests.head(link, headers=current_header)
-			else:
+			if timeout:
 				r = requests.head(link, headers=current_header, timeout=timeout)
+				
+			else:
+				r = requests.head(link, headers=current_header)
 
 			if r:
 				return True
-			else:
-				if not no_log:
-					leach_logger('||'.join(map(str,['0806x2', f_code, link, self.hdr(current_header, '0806'), timeout, r.status_code])))
+			#else:
+			if not no_log:
+				leach_logger('||'.join(map(str,['0806x2', f_code, link, self.hdr(current_header, '0806'), timeout, r.status_code])))
 		except NetErrors as e:
 			if not no_log:
 				leach_logger('||'.join(map(str,['0806x2', f_code, link, self.hdr(current_header, '0806'), timeout, e.__class__.__name__, e])))
@@ -1478,10 +1488,11 @@ class Netsys_ :  # fc=0800
 			if config.server_status in (False, None):
 				if cd != '.':
 					return _server001_.run_server(port, cd, AboutApp.temp_dir)
-				else:
-					return _server001_.run_server(port, data_dir=AboutApp.temp_dir)
-			else:
-				return 0
+				#else:
+				return _server001_.run_server(port, data_dir=AboutApp.temp_dir)
+				
+			#else:
+			return 0
 		except (KeyboardInterrupt, EOFError):
 			pass
 		
@@ -1504,7 +1515,7 @@ class Netsys_ :  # fc=0800
 
 		global server_code
 
-		server_status = Netsys.check_server("http://localhost:%i" % UserData.user_primary_port, '0M04', timeout=5)
+		server_status = Netsys.check_server(UserData.user_primary_port, '0M04', timeout=5)
 
 		if config.server_status:
 			return
@@ -1561,27 +1572,35 @@ class Netsys_ :  # fc=0800
 		if config.sp_arg_flag['no browser']: return 0
 
 		webbrowser.open_new_tab('http://localhost:%i/%s' % (port, host_dir))
+		
+	def server_link(self): # fc=xxxx
+		"""Returns running server url"""
+		return f"http://127.0.0.1:{config.running_port}"
 
-	def check_server(self, link, f_code, timeout=None):  # fc=080A
+	def check_server(self, port=None, f_code="????", timeout=None):  # fc=080A
 		"""Checks if localhost server is running perfectly or the port is occupied
 
 		link: site link with port [adds /root?response on request]
 		f_code: caller id
 		timeout: request timeout
 		"""
+		if not port:
+			port = UserData.user_primary_port
+			
+		link = f"http://127.0.0.1:{port}/root?response"
 
 		try:
-			response = requests.get(link + '/root?response')
+			response = requests.get(link)
 			if response:
-				if response.content.startswith(b'Web-leach'):
+				if response.text.startswith('Web-leach'):
 					return True  # web-leach server
-				else:
-					leach_logger(log(['080Ax2', link, f_code, response.status_code, response.text[:20]]))
-					return False  # not web-leach server or older server
+				#else:
+				leach_logger(log(['080Ax2', link, f_code, response.status_code, response.text[:20]]))
+				return False  # not web-leach server or older server
 
-			else:
-				leach_logger(log(['080Ax3', link, f_code, response.status_code]))
-				return False  # not web-leach server
+			#else:
+			leach_logger(log(['080Ax3', link, f_code, response.status_code]))
+			return False  # not web-leach server
 
 		except (requests.exceptions.InvalidSchema, requests.exceptions.ReadTimeout, requests.exceptions.SSLError,
 		        urllib3.exceptions.SSLError) as e:
@@ -1589,6 +1608,7 @@ class Netsys_ :  # fc=0800
 			return 2
 
 		except requests.exceptions.ConnectionError:
+			print("port open")
 			return None  # port is open
 
 		except (KeyboardInterrupt, EOFError):
@@ -1596,6 +1616,7 @@ class Netsys_ :  # fc=0800
 		
 
 		except Exception as e:
+			traceback.print_exc()
 			leach_logger(log(['080Ax0', link, f_code, e.__class__.__name__, e]))
 			return 2
 
@@ -1605,10 +1626,10 @@ class Netsys_ :  # fc=0800
 		content: HTML content returned by requests.get().content or requests.get().text"""
 		if isinstance(content, bytes):
 			if b'<noscript>' in content:
-				return re_sub(b"(?i)(?:<noscript>)(?:.|\n)*?(?:<\/noscript>)", b'', content)
+				return re_sub(b"(?i)(?:<noscript>)(?:.|\n)*?(?:</noscript>)", b'', content)
 		elif isinstance(content, str):
 			if '<noscript>' in content:
-				return re_sub("(?i)(?:<noscript>)(?:.|\n)*?(?:<\/noscript>)", '', content)
+				return re_sub("(?i)(?:<noscript>)(?:.|\n)*?(?:</noscript>)", '', content)
 
 		return content
 
@@ -1622,6 +1643,25 @@ class Netsys_ :  # fc=0800
 		if link in CachedData.cached_link_facts:
 			return CachedData.cached_link_facts[link]
 		facts = dict()
+
+		
+		facts['is link'] = None
+		facts['scheme'] = None
+		facts['scheme'] = None
+		facts['login'] = None
+		facts['host'] = None
+		facts['port'] = None
+		facts['path'] = None
+		facts['query'] = None
+		facts['fragment'] = None
+		facts['noQuery'] = None
+		facts['homepage'] = None
+		facts['has homepage'] = None
+		facts['after homepage'] = None
+		facts['needs scheme'] = None
+		facts['is absolute'] = None
+
+
 		x = self.link_extractor.search(link)
 		if x:
 			facts['is link'] = True
@@ -1642,10 +1682,9 @@ class Netsys_ :  # fc=0800
 			facts['is absolute'] = (facts['scheme'] is not None and facts['host'] is not None)
 
 			CachedData.cached_link_facts[link] = facts
-			return facts
+		
+		return facts
 
-		else:
-			return None
 
 		# self.link_extractor = re_compile( r'^(?P<noQuery>(?P<schema>((?P<scheme>[^:/?#]+):(?=//))?(//)?)(((?P<login>[^:]+)(?::(?P<password>[^@]+)?)?@)?(?P<host>[^@/?#:]*)(?::(?P<port>\d+)?)?)?(?P<path>[^?#]*))(\?(?P<query>[^#]*))?(#(?P<fragment>.*))?')	# compiled regex tool for getting homepage
 		# https://regex101.com/r/UKWPmt/1
@@ -1702,7 +1741,7 @@ class Netsys_ :  # fc=0800
 			
 		page = None
 		try:
-			page = session.get(link, headers=current_header, timeout=5)
+			page = session.get(link, headers=current_header, timeout=3)
 			if not page:
 				if not failed:
 					page = retry()
@@ -1925,7 +1964,7 @@ class SupportTools_ :  # fc=0A00
 			if re_search('^' + Constants.special_starts['manhwa18.net'], link):
 				return "manhwa18.net"
 		elif sp is None:
-			for key, val in Constants.special_starts.itemps():
+			for key, val in Constants.special_starts.items():
 				if re_search('^' + val, link):
 					return key
 		else:
@@ -2103,7 +2142,7 @@ class All_list_type :  # fc=0B00
 		name = name.strip()
 
 		if len(name) > config.file_limit:
-			name = re_sub('\s{2,}', ' ', name)
+			name = re_sub(r'\s{2,}', ' ', name)
 
 		if len(name) > config.file_limit:
 			name = name[:config.file_limit - 3] + '...'
@@ -2501,7 +2540,7 @@ class ProjectType_ :  # fc=0P00
 		}
 		
 		json_proj = json.dumps(dataset, cls=SetEncoder, indent=2)
-		json_list = json.dumps({"all_list": self.all_list.all_links}, cls=SetEncoder, indent=1)
+		json_list = json.dumps({"all_list": self.all_list.all_links}, cls=SetEncoder, separators=(',\n', ':'))
 		# clean the files if exist
 		Fsys.writer(self.Project + '.wllist', 'w', '', AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'w', '', AboutApp.leach_projects, '0M05')
@@ -2968,7 +3007,7 @@ class ProjectType_ :  # fc=0P00
 		name = name.strip()
 
 		if len(name) > config.dir_limit:
-			name = re_sub('\s{2,}', ' ', name)
+			name = re_sub(r'\s{2,}', ' ', name)
 
 		if len(name) > config.dir_limit:
 			name = name[:config.dir_limit - 3] + '...'
@@ -3634,13 +3673,17 @@ class ProjectType_ :  # fc=0P00
 	def print_project_info(self):
 		""" Print the project info """
 		align_format = "/hi/{0: <30}/=/"
+		def no_format(i_type, *i):
+			xprint(align_format.format(i_type),end=" ")
+			print(*i)
+		
 
-		xprint(align_format.format('Project name: '), self.Project)
-		xprint(align_format.format('Display Name: '), self.project_alias)
-		xprint(align_format.format('Main URL: '), self.main_link)
-		xprint(align_format.format('Sub-link regex: '), self.link_startswith)
-		xprint(align_format.format('File-link regex: '), self.file_starts)
-		xprint(align_format.format('File format: '), self.file_types)
+		no_format('Project name: ', self.Project)
+		no_format('Display Name: ', self.project_alias)
+		no_format('Main URL: ', self.main_link)
+		no_format('Sub-link regex: ', self.link_startswith)
+		no_format('File-link regex: ', self.file_starts)
+		no_format('File format: ', self.file_types)
 		if self.dimention==1:
 			_dimention = 'Only Main page'
 		elif self.dimention==3:
@@ -3648,31 +3691,31 @@ class ProjectType_ :  # fc=0P00
 		else:
 			_dimention = 'Only Sub-Pages'
 
-		xprint(align_format.format('Search Dimensions: '), f'({self.dimention})', _dimention)
-		xprint(align_format.format('Will Overwrite: '), self.overwrite_bool)
-		xprint(align_format.format('Sort files A-Z: '), self.file_to_sort)
-		xprint(align_format.format('Sort folders A-Z: '), self.dir_sorted, '\n')
+		no_format('Search Dimensions: ', f'({self.dimention})', _dimention)
+		no_format('Will Overwrite: ', self.overwrite_bool)
+		no_format('Sort files A-Z: ', self.file_to_sort)
+		no_format('Sort folders A-Z: ', self.dir_sorted, '\n')
 
-		xprint(align_format.format('Sub-folders: '), len(self.sub_dirs))
-		xprint(align_format.format('Files count: '), len(self.all_list), '\n')
+		no_format('Sub-folders: ', len(self.sub_dirs))
+		no_format('Files count: ', len(self.all_list), '\n')
 
-		xprint(align_format.format('Special Flags: '), self.sp_flags)
-		xprint(align_format.format('Special .ext: '), self.sp_extension)
-		xprint(align_format.format('Get HTML Tile: '), self.get_html_title)
-		xprint(align_format.format('First Created: '), Nsys.dec_dt(self.first_created))
-		xprint(align_format.format('Last Updated: '), Nsys.dec_dt(self.last_update), '\n')
+		no_format('Special Flags: ', self.sp_flags)
+		no_format('Special .ext: ', self.sp_extension)
+		no_format('Get HTML Tile: ', self.get_html_title)
+		no_format('First Created: ', Nsys.dec_dt(self.first_created))
+		no_format('Last Updated: ', Nsys.dec_dt(self.last_update), '\n')
 
-		xprint(align_format.format('Leach Version: '), self.leacher_version)
-		xprint(align_format.format('Last used IP: '), self.last_user_ip)
-		xprint(align_format.format('Server Version: '), self.server_version, '\n')
+		no_format('Leach Version: ', self.leacher_version)
+		no_format('Last used IP: ', self.last_user_ip)
+		no_format('Server Version: ', self.server_version, '\n')
 
-		xprint(align_format.format('DL done: '), self.dl_done)
-		xprint(align_format.format('Has Missing: '), self.has_missing, '\n')
+		no_format('DL done: ', self.dl_done)
+		no_format('Has Missing: ', self.has_missing, '\n')
 
-		xprint(align_format.format('Description: '), self.description)
-		xprint(align_format.format('Tags: '), self.tags)
-		xprint(align_format.format('Rating: '), self.stars)
-		xprint(align_format.format('Poster: '), self.poster_loc)
+		no_format('Description: ', self.description)
+		no_format('Tags: ', self.tags)
+		no_format('Rating: ', self.stars)
+		no_format('Poster: ', self.poster_loc)
 
 
 
@@ -3690,10 +3733,10 @@ class ProjectType_ :  # fc=0P00
 		_temp = re_search(Constants.special_starts['mf_sc'], link)
 		if _temp:
 			_temp = str(_temp.group(1))
-			_temp = re_sub('[\!\:\.\'\, ]', '', _temp)
-			_temp = re_sub('[\+\/\\ \"\<\>\?\-]', '_', _temp)
-			link = 'https://mangafreak.net/Manga/' + _temp
-			link = re_sub('\_{2+}', '\_', link)
+			_temp = re_sub(r'[\!\:\.\'\, ]', '', _temp)
+			_temp = re_sub(r'[\+\/\\ \"\<\>\?\-]', '_', _temp)
+			link = r'https://mangafreak.net/Manga/' + _temp
+			link = re_sub(r'\_{2+}', r'\_', link)
 
 			try:
 				if requests.head("http://images.mangafreak.net:8080/downloads/" + _temp + '_1').headers['content-length'] == 0:
@@ -3745,11 +3788,11 @@ class ProjectType_ :  # fc=0P00
 		# print(page.content.decode())
 
 		if page:
-			if re_search('<div>\n*<a href=\".*?\">\n*Chapter [^\s]*.*\n*</a>\n*</div>', page.content.decode()):
+			if re_search(r'<div>\n*<a href=\".*?\">\n*Chapter [^\s]*.*\n*</a>\n*</div>', page.content.decode()):
 				print('Front page found!')
-				last_ch_ = int(re_search('<div>\n*<a href=\".*?\">\n*Chapter ([^\s]*).*\n*</a>\n*</div>', page.content.decode()).group(1))
+				last_ch_ = int(re_search(r'<div>\n*<a href=\".*?\">\n*Chapter ([^\s]*).*\n*</a>\n*</div>', page.content.decode()).group(1))
 
-				_all = re_find_all("<td>.*?<a href=\".*?\">.*?(Chapter (\d*).*?)[\s\n]*?</a></td>.*?<td>.*?</td>.*?<td>.*?<a .*?href=\"(.*?)\".*?</a>.*?</td>", page.text, re.IGNORECASE | re.DOTALL)
+				_all = re_find_all(r"<td>.*?<a href=\".*?\">.*?(Chapter (\d*).*?)[\s\n]*?</a></td>.*?<td>.*?</td>.*?<td>.*?<a .*?href=\"(.*?)\".*?</a>.*?</td>", page.text, re.IGNORECASE | re.DOTALL)
 				# chapters = {chapter: (name, dl link)}
 				chapters = dict([(chap, (name, link)) for name, chap, link in _all])
 
@@ -3860,7 +3903,7 @@ class ProjectType_ :  # fc=0P00
 			return 0
 		link = self.main_link
 		
-		self.link_startswith = 'https://(www\.)?manhwa18.net/read-' + re_search(
+		self.link_startswith = r'https://(www\.)?manhwa18.net/read-' + re_search(
 			Constants.special_starts['manhwa18.net'], link).group(1)
 		self.sp_flags.add("reverse")
 		self.sp_flags.add("manhwa18.net")
@@ -3892,7 +3935,7 @@ class ProjectType_ :  # fc=0P00
 		if re_search(Constants.special_starts['nh_sc'], link):
 			self.main_link = 'https://nhentai.net/g/' + str(re_search(Constants.special_starts['nh_sc'], link).group(1))
 		link = self.main_link
-		code = re_search('https://nhentai.[^/]*?/g/((\d)*)', link)
+		code = re_search(r'https://nhentai.[^/]*?/g/((\d)*)', link)
 
 		if code is None:
 			return False, False
@@ -3950,7 +3993,7 @@ class ProjectType_ :  # fc=0P00
 			self.file_starts = ''
 
 			if site == ".xxx":
-				xxx_search = re_compile("https://cdn.nhentai.xxx/g/\d+/\d*t..*")
+				xxx_search = re_compile(r"https://cdn.nhentai.xxx/g/\d+/\d*t..*")
 				for imgs in soup.find_all('img'):
 					img_link = imgs.get('data-src')
 
@@ -3962,7 +4005,7 @@ class ProjectType_ :  # fc=0P00
 				# img_link.rpartition('t')[1]
 
 			elif site == ".to":
-				to_search = re_compile("(https://nhentai.to/galleries/\d*/)|(https://cdn.dogehls.xyz/galleries/\d*/)")
+				to_search = re_compile(r"(https://nhentai.to/galleries/\d*/)|(https://cdn.dogehls.xyz/galleries/\d*/)")
 				for imgs in soup.find_all('img'):
 					img_link = imgs.get('data-src')
 					if img_link is None:
@@ -3976,7 +4019,7 @@ class ProjectType_ :  # fc=0P00
 						self.all_list.add_link(img_link, 0)
 
 			elif site == ".net":
-				net_search = re_compile("https://i\d*.nhentai.net/galleries/\d*/")
+				net_search = re_compile(r"https://i\d*.nhentai.net/galleries/\d*/")
 				for imgs in soup.find_all('img'):
 					img_link = imgs.get('data-src')
 					if img_link is None:
@@ -4014,7 +4057,7 @@ class ProjectType_ :  # fc=0P00
 		self.temp_counter = 0
 
 		def get_images(self, indx):  # fc=0P0W1
-			remove_type = re_compile('\?type\=.*.*')
+			remove_type = re_compile(r'\?type\=.*.*')
 			for j in indx:
 				i = self.sub_links[j]
 				temp1 = bs(Netsys.remove_noscript(session.get(i).text), parser)
@@ -4192,6 +4235,19 @@ class ProjectType_ :  # fc=0P00
 								   self.discuss_id, self.description, self.tags, self.stars, self.poster_loc,
 								   ("reverse" in self.sp_flags))
 
+			                           
+	def make_gh_online_html(self):  # fc=0P0O
+		"""Make the html file"""
+		OSsys.import_make()
+		#self.manga_freak_patch()
+		self.online_page = True
+		self.store_current_data()
+
+		return MakeHtml.make_github_online_page(self.all_list.get_all_list(), self.sub_dirs, self.Project, self.project_alias, self.file_to_sort, [],
+		                           self.sp_extension, self.dir_sorted, 
+								   self.discuss_id, self.description, self.tags, self.stars, self.poster_loc,
+								   ("reverse" in self.sp_flags))
+
 
 	def make_cbz(self):  # fc=0P0P
 		"""Make the cbz file"""
@@ -4250,7 +4306,7 @@ class BugFixes_n_Updates_ :  # fc=0D00
 		global err_hdr_list
 		if os_isfile(AboutApp.data_dir + 'err_header.txt'):
 			error_hdr_file = Fsys.reader(AboutApp.data_dir + 'err_header.txt')
-			temp_ = re_sub('\,{2,}', ',', error_hdr_file)
+			temp_ = re_sub(',{2,}', ',', error_hdr_file)
 
 			if temp_[-1] == ',': temp_ = temp_[:-1]
 
@@ -4358,6 +4414,9 @@ class Main :  # fc=0M00
 
 
 	def main_loop(self):  # fc=0M05
+	
+		self.dont_dl = False
+		# close loop before starting dl threads
 		global Keep_main_running
 		self.boot_server()
 		CachedData.clear()
@@ -4391,6 +4450,12 @@ class Main :  # fc=0M00
 				
 				
 			__command = self.COMM.lower()
+			
+			if __command =="?s":
+				# check server usage on mutiple window to avoid port conflict
+				print(Netsys.server_link())
+				print("Availability:", Netsys.check_server())
+				return
 			if __command == '':
 				print('You must enter a Project name here.')
 			elif __command in ['?disable-dl-thread', '?d-dl-t']:
@@ -4587,6 +4652,8 @@ Option               Value
 					print('\nCancelled')
 					return 
 					
+					
+						
 			elif __command in ["?online-page", "?o"]:
 				proj = IOsys.safe_input("Enter Project name: ")
 				
@@ -4600,6 +4667,26 @@ Option               Value
 						return 0
 					try:
 						self.P.make_online_html()
+					except LeachICancelError:
+						print("\nCancelled! ! !")
+						return 0
+					Netsys.run_in_local_server(config.running_port, host_dir='%s/index.html' % (self.P.Project))
+				pass
+				
+				
+			elif __command in ["?online-page", "?og"]:
+				proj = IOsys.safe_input("Enter Project name: ")
+				
+				self.P = ProjectType_(proj)
+				check_project = self.P.load_data(proj)
+				#print(check_project)
+				if check_project:
+					self.P.store_current_data()
+					if 'mangafreak' in self.P.sp_flags:
+						xprint("/rh/Sorry can't make online version of MangaFreak Page/=/")
+						return 0
+					try:
+						self.P.make_gh_online_html()
 					except LeachICancelError:
 						print("\nCancelled! ! !")
 						return 0
@@ -4644,9 +4731,11 @@ Option               Value
 \u29bf If you want make a fresh start with that project name type /hui/ fresh /=///hui/ f /=/
 \u29bf To open the project in Browser enter /hui/ b /=/
 \u29bf To Create CBZ file(s) of the project in Browser enter /hui/ cbz /=/
+\u29bf To Update file links enter /hui/ o /=/
 
-/g/  >> /=/""" % (' /h/[Recommended]/=/' if self.P.has_missing == True else ''), extra_opt=('b', 'fresh', 'f', 'cbz'),
-					                   extra_return=('browser', 'fresh', 'fresh', 'cbz'))
+
+/g/  >> /=/""" % (' /h/[Recommended]/=/' if self.P.has_missing == True else ''), extra_opt=('b', 'fresh', 'f', 'cbz', 'o'),
+					                   extra_return=('browser', 'fresh', 'fresh', 'cbz', "online"))
 
 				except LeachICancelError:
 					xprint("\n/yh/Cancellation command entered.\nReturning to main options/=/")
@@ -4703,7 +4792,9 @@ Option               Value
 					self.P.existing_found = False
 				# leach_logger('11000x1||%s'%self.P.Project, UserData.user_name)
 
-				elif temp is True:
+				elif temp is True or temp == "online":
+					if temp == "online":
+						self.dont_dl = True
 					#TODO: Need logging
 					self.P.existing_found = False
 					self.P.update = True
@@ -4851,7 +4942,7 @@ yes/y to resume
 					if page:
 						link_true = True
 					else:
-						xprint("/rh/Link Unavailable! /=/It seems the previous link is unaccessable right now.\nPlease Retry the project sometimes later with stable internet connection\n(possible cause: no internet or wrong link)\n/s4/")
+						xprint("/rh/Link Unavailable! /=/It seems the provided link is unaccessable right now.\nPlease Retry the project sometimes later with stable internet connection\n(possible cause: no internet or wrong link)\n")
 						#TODO: Need logging
 						return 0
 
@@ -5188,8 +5279,33 @@ yes/y to resume
 
 		self.dl_threads = []
 		
+		
+		OSsys.import_make()
+
+		if not 'mangafreak' in self.P.sp_flags:
+			try:
+				first_page = self.P.make_html()
+			except (KeyboardInterrupt, EOFError):
+				print("Hard cancel command entered! stopping")
+				self.P.break_all = True
+			
+		if self.dont_dl:
+			self.P.dl_done = True
+			self.P.store_current_data()
+			if 'mangafreak' in self.P.sp_flags:
+				xprint("/rh/Sorry can't make online version of MangaFreak Page/=/")
+				return 0
+			try:
+				self.P.make_online_html()
+			except LeachICancelError:
+				print("\nCancelled! ! !")
+				
+			return 0
+
+		
 		oneline.new()
 		oneline.update('/h/Downloaded [/g/', ('━'*0), '/=h/╺' if 0<30 else '━', '━'*(30-0), '/=/][', self.P.done, '/', self.P.total, ']', self.P.current_speed , '/s', sep="")
+
 		
 
 		for i in range(self.P.dl_threads):
@@ -5214,17 +5330,6 @@ yes/y to resume
 
 
 		will_open = None
-
-		OSsys.import_make()
-
-		if not 'mangafreak' in self.P.sp_flags:
-			try:
-				first_page = self.P.make_html()
-			except (KeyboardInterrupt, EOFError):
-				print("Hard cancel command entered! stopping")
-				self.P.break_all = True
-			
-
 
 
 
@@ -5252,7 +5357,7 @@ yes/y to resume
 		else:
 			while self.P.break_all == False and any(i.is_alive() for i in self.dl_threads + [t_dlim, t_dl_speed]):
 				try:
-					will_open = IOsys.safe_input()
+					will_open = IOsys.safe_input(">> ")
 				# print([i.is_alive() for i in self.dl_threads])
 				except LeachICancelError:
 					self.P.break_all = True

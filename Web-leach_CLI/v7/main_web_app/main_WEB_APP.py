@@ -88,29 +88,30 @@ XXX To do:
 
 
 
+import copy
 import datetime
 import email.utils
 import html
 import http.client
 import io
 import mimetypes
+import os
 import posixpath
 import shutil
 import socket # For gethostbyaddr()
 import socketserver
-from http import HTTPStatus
 import sys
 import time
 import urllib.parse
 
-import contextlib
-import json, re
-from Number_sys_conv import humanbytes, get_dir_size
+import contextlib, json, re
 import natsort
 from functools import partial
 
+from http import HTTPStatus
 
 
+from Number_sys_conv import humanbytes, get_dir_size
 
 # Default error message template
 DEFAULT_ERROR_MESSAGE = """\

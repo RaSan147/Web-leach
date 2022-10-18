@@ -4,23 +4,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
-<meta id="seoTitle" property="og:title" content="%s" />
-<meta id="seoImg" property="og:image" content="https://i.ibb.co/D4KnFRC/emo-angel-titled-w400.png" />
+<meta property="og:title" content="%s" />
+<meta property="og:image" content="https://i.ibb.co/D4KnFRC/emo-angel-titled-w400.png" />
 
 
-<meta id="seoDescription" name="description" content="Just a demo webpage for Manga.">
+<meta name="description" content="Just a demo webpage for Manga.">
 
-<link rel="manifest" href="/manifest.webmanifest">
+<link rel="manifest" href="/manifest.json">
+
+<link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro-v6@18657a9/css/all.min.css" rel="stylesheet" type="text/css" />
 
 <title>Web Leach</title>
 
+
+<link rel="stylesheet" href="/assets/style/main.css">
+<link rel="stylesheet" href="/assets/style/chapter_list.css">
 <link id='icon' rel="icon" href="/favicon.ico" onerror="alt_href(this, alt_icons)">
 
 <!-- <script src="https://kit.fontawesome.com/1a9e874525.js" crossorigin="anonymous"></script> -->
-<style>html{background-color: #222;}
-/*body{display: none;}*/
-</style>
-
 <script>
 
 const log = console.log,
@@ -31,7 +32,7 @@ const log = console.log,
 	createElement = document.createElement.bind(document);
 
 	const alt_icons = ["https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub@main/resources/icon.ico", "/icon.ico"],
-	alt_logos = ['https://i.ibb.co/D4KnFRC/emo-angel-titled-w400.png',
+		alt_logos = ['https://i.ibb.co/D4KnFRC/emo-angel-titled-w400.png',
 			'emo_angel_titled_w400.png'
 		];
 
@@ -126,7 +127,7 @@ const log = console.log,
 			<span style='font-size: 22px; color: #AAA;'> | </span><a id='app_name' href='/'> WL Reader</a></span>
 	</div>
 	<button class="open-sidebar-btn" onclick="sidebar_control.toggleNavR()" style='float: right;'><span><span
-			class='nav-btn-text'>Effects</span> <span class="fa fa-light fa-wand-magic-sparkles">🛠️</span></span></button>
+			class='nav-btn-text'>Effects</span> <i class="fa-light fa-wand-magic-sparkles"></i></span></button>
 </div>
 
 
@@ -135,19 +136,14 @@ const log = console.log,
 <!-- POP_UP items -->
 </div>
 
-<!-- Load CSS after displaying some element -->
-<link rel="stylesheet" href="/assets/style/main.css">
-<link rel="stylesheet" href="/assets/style/chapter_list.css">
-<!--<link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro-v6@18657a9/css/all.min.css" rel="stylesheet" type="text/css" />-->
-
 
 <DIV id = "CHAPTER" class = "subpage">
 
 <div id="mySidebarL" class="sidebar">
 	<span style="text-align:left; float:left;" class="close-sidebar disable_selection" id="close-sidebarL" onclick = "sidebar_control.closeNavL()">&times;</span>
 
-
-	<div id="find-this-chapter"><span class="fa fa-solid fa-map-location-dot">🧭</span></div>
+	
+	<div id="find-this-chapter"><i class="fa-solid fa-map-location-dot"></i></div>
 
 	<div>
 		<div id="more_btn" class="accordion accordion-button" onclick="show_ch_menus()">Menu</div>
@@ -159,7 +155,7 @@ const log = console.log,
 
 			<div class="search-box">
 				<button class="btn-search">
-					<span id="proj_search_icn"><span class="fa fa-light fa-magnifying-glass" style="line-height:1.8">🔍</span></span>
+					<span id="proj_search_icn"><i class="fa-light fa-magnifying-glass" style="line-height:1.8"></i></span>
 				</button>
 				<input type="text" class="input-search" id="proj_search_input" placeholder="Type to Search...">
 			</div>
@@ -332,10 +328,10 @@ const log = console.log,
 <DIV id = "CHAPTER-LIST" class = "subpage">
 
 <div id="manga-description">
-
+    
 	<div style="width: 95vw; max-width: 700px; margin: 0 auto;">
 	<div class='poster'>
-		<img src='/assets/emo_angel_titled_w400.png' id="manga-img" class="poster-img">
+		<img src='' id="manga-img" class="poster-img">
 	</div>
 	<div class="description_container" >
 		<h2 class="page_title"><u>Project:</u>&nbsp;<span id="manga_name"></span> </h2>
@@ -381,7 +377,7 @@ const log = console.log,
 		<hr width='95%%'>
 		<hr width='89%%'>
 	</center>
-	<p style="color: darkgray;">Made by RaSan147 with Web leach</p>
+	<p style="color: darkgray;">Made by Ratul Hasan with Web leach</p>
 	<br><br>
 </footer>
 
@@ -486,15 +482,6 @@ class Datas {
 }
 
 let datas = new Datas();
-
-// function SEOpatch(){
-// 	var poster = "https://i.ibb.co/D4KnFRC/emo-angel-titled-w400.png"
-// 	if(datas.poster_loc!=""){
-// 		poster =datas.poster_loc;
-// 	}
-// 	byId("seoImg").setAttribute("content", poster)
-// 	byId("seoDescription").setAttribute("content", d
-// }
 
 
 config.previous_type = config.current_type;
@@ -657,16 +644,13 @@ function alt_script(sources, name){
 }
 
 alt_script(["https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js", "assets/scripts/hammer.min.js"], "Hammer")
-//load_font("Koulen") //not implemented yet
+load_font("Koulen")
 
 
 
 </script>
 
 <script src="/assets/script/main.js"></script>
-<script>
-//load_css("https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro-v6@18657a9/css/all.min.css")
-</script>
 </body>
 
 </html>

@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+__version__ = "0.6"
+
+__all__ = [
+	"HTTPServer", "ThreadingHTTPServer", "BaseHTTPRequestHandler",
+	"SimpleHTTPRequestHandler",
+
+]
+
 from platform import system as platform_system
 import os
 import shutil
@@ -8,12 +16,12 @@ class Config:
 	def __init__(self):
 		# DEFAULT DIRECTORY TO LAUNCH SERVER
 		self.ftp_dir = "." # DEFAULT DIRECTORY TO LAUNCH SERVER
-		self.ANDROID_ftp_dir= "." # "/storage/emulated/0/"
+		self.ANDROID_ftp_dir=  "." #"/storage/emulated/0/"
 		self.LINUX_ftp_dir = "~/"
 		self.WIN_ftp_dir= 'G:\\'
 		# DEFAULT PORT TO LAUNCH SERVER
 		self.IP = None # will be assigned by checking
-		self.port= 6969
+		self.port= 9999  # DEFAULT PORT TO LAUNCH SERVER
 		# UPLOAD PASSWORD SO THAT ANYONE RANDOM CAN'T UPLOAD
 		self.PASSWORD= "SECret".encode('utf-8')
 		self.log_location = "G:/py-server/"  # fallback log_location = "./"
@@ -61,16 +69,20 @@ class Config:
 
 	def linux_installer(self):
 		# detect if apt or yum is installed
+		sudo = ""
+		if shutil.which("sudo"):
+			sudo = "sudo "
 		if shutil.which('pkg'):
-			return 'pkg'
-		elif shutil.which('apt'):
-			return 'apt'
-		elif shutil.which('apt-get'):
-			return 'apt-get'
-		elif shutil.which('yum'):
-			return 'yum'
-		else:
-			return None
+			return sudo + 'pkg'
+		if shutil.which('apt'):
+			return sudo + 'apt'
+		if shutil.which('apt-get'):
+			return sudo + 'apt-get'
+		if shutil.which('yum'):
+			return sudo + 'yum'
+		
+		
+		return None
 			
 	def address(self):
 		return "http://%s:%i"%(self.IP, self.port)
@@ -174,7 +186,7 @@ def init_requirements():
 		if promt=='y':
 			if config.get_os()=='Linux':
 				MISSING = [missing_dict[i] for i in missing]
-				subprocess.call(['sudo', config.linux_installer(), 'install', '-y'] + MISSING)
+				subprocess.call([config.linux_installer(), 'install', '-y'] + MISSING)
 
 			if config.get_os()=='Windows':
 				if 'pip' in missing:
@@ -215,7 +227,7 @@ def init_requirements():
 
 missing_sys_req = init_requirements()
 disabled_func = {
-	"send2trash": False,
+	"trash": False,
 	"7z":     False
 }
 if "pip" in missing_sys_req:
@@ -268,7 +280,7 @@ if not os.path.isdir(config.log_location):
 
 
 
-if not disabled_func["send2trash"]:
+if not disabled_func["trash"]:
 	from send2trash import send2trash, TrashPermissionError
 
 
@@ -356,6 +368,11 @@ word-wrap: break-word;
   font-weight: 400;
 }
 
+
+#dir-tree {
+	word-wrap: break-word;
+	max-width: 95vw;
+}
 
 #footer {
   position: absolute;
@@ -515,7 +532,7 @@ word-wrap: break-word;
 
 
 
-<h1 style="word-wrap: break-word;">%s</h1>
+<h1 id="dir-tree">%s</h1>
 <hr>
 
 
@@ -523,13 +540,13 @@ word-wrap: break-word;
 <ul id= "linkss">
 <a href="../" style="background-color: #000;padding: 3px 20px 8px 20px;border-radius: 4px;">&#128281; {Prev folder}</a>
 
-</ul>
-<hr>
-
-
 '''
 
 _js_script = """
+
+</ul>
+<hr>
+
 
 <div class='pagination' onclick = "request_reload()">reload</div><br>
 
@@ -587,35 +604,6 @@ class Tools {
 		// sleeps for a given time in milliseconds
 		return new Promise(resolve => setTimeout(resolve, ms));
 	}
-
-	set_brightness(n = 0) {
-		// sets the brightness of the screen
-
-		var val;
-		var input_ = byId('brightness-input');
-		var brightness = byId('brightness');
-		if (n == 0) {
-			val = sessionStorage.getItem('bright');
-			if (val) {
-				val = parseInt(val);
-				input_.value = val;
-			} else {
-				n = 1;
-			}
-		}
-		if (n == 1) {
-			val = input_.value;
-			//   int to string
-			sessionStorage.setItem('bright', val);
-		}
-
-		// to make sure opacity is not -1.11022e-16
-		if (val == 10) {brightness.style.opacity = 0;return;}
-
-
-		brightness.style.opacity = 0.7 - (val * 0.07);
-	}
-
 
 	onlyInt(str){
 	if(this.is_defined(str.replace)){
@@ -1030,7 +1018,7 @@ function run_recyle(url){
 	}
 }
 
-
+tools.del_child("linkss");
 const linkd_li = document.getElementsByTagName('ul')[0];
 
 for (let i = 0; i < r_li.length; i++) {
@@ -1124,6 +1112,11 @@ for (let i = 0; i < r_li.length; i++) {
 }
 
 
+var dir_tree = byId("dir-tree");
+dir_tree.style.overflow = "auto";
+dir_tree.style.whiteSpace = "nowrap";
+dir_tree.scrollLeft = dir_tree.scrollWidth;
+
 </script>
 
 </body>
@@ -1143,23 +1136,6 @@ and CGIHTTPRequestHandler for CGI scripts.
 It does, however, optionally implement HTTP/1.1 persistent connections,
 as of version 0.3.
 
-Notes on CGIHTTPRequestHandler
-------------------------------
-
-This class implements GET and POST requests to cgi-bin scripts.
-
-If the os.fork() function is not present (e.g. on Windows),
-subprocess.Popen() is used as a fallback, with slightly altered semantics.
-
-In all cases, the implementation is intentionally naive -- all
-requests are executed synchronously.
-
-SECURITY WARNING: DON'T USE THIS CODE UNLESS YOU ARE INSIDE A FIREWALL
--- it may execute arbitrary Python code or external programs.
-
-Note that status code 200 is sent prior to execution of a CGI script, so
-scripts cannot send other status codes such as 302 (redirect).
-
 XXX To do:
 
 - log requests even later (to capture byte count)
@@ -1168,60 +1144,7 @@ XXX To do:
 """
 
 
-# See also:
-#
-# HTTP Working Group										T. Berners-Lee
-# INTERNET-DRAFT											R. T. Fielding
-# <draft-ietf-http-v10-spec-00.txt>					 H. Frystyk Nielsen
-# Expires September 8, 1995								  March 8, 1995
-#
-# URL: http://www.ics.uci.edu/pub/ietf/http/draft-ietf-http-v10-spec-00.txt
-#
-# and
-#
-# Network Working Group									  R. Fielding
-# Request for Comments: 2616									   et al
-# Obsoletes: 2068											  June 1999
-# Category: Standards Track
-#
-# URL: http://www.faqs.org/rfcs/rfc2616.html
 
-# Log files
-# ---------
-#
-# Here's a quote from the NCSA httpd docs about log file format.
-#
-# | The logfile format is as follows. Each line consists of:
-# |
-# | host rfc931 authuser [DD/Mon/YYYY:hh:mm:ss] "request" ddd bbbb
-# |
-# |		host: Either the DNS name or the IP number of the remote client
-# |		rfc931: Any information returned by identd for this person,
-# |				- otherwise.
-# |		authuser: If user sent a userid for authentication, the user name,
-# |				  - otherwise.
-# |		DD: Day
-# |		Mon: Month (calendar name)
-# |		YYYY: Year
-# |		hh: hour (24-hour format, the machine's timezone)
-# |		mm: minutes
-# |		ss: seconds
-# |		request: The first line of the HTTP request as sent by the client.
-# |		ddd: the status code returned by the server, - if not available.
-# |		bbbb: the total number of bytes sent,
-# |			  *not including the HTTP/1.0 header*, - if not available
-# |
-# | You can determine the name of the file accessed through request.
-#
-# (Actually, the latter is only true if you know the server configuration
-# at the time the request was made!)
-
-__version__ = "0.6"
-
-__all__ = [
-	"HTTPServer", "ThreadingHTTPServer", "BaseHTTPRequestHandler",
-	"SimpleHTTPRequestHandler", "CGIHTTPRequestHandler",
-]
 
 import copy
 import datetime
@@ -1380,76 +1303,6 @@ class ThreadingHTTPServer(socketserver.ThreadingMixIn, HTTPServer):
 class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
 
 	"""HTTP request handler base class.
-
-	The following explanation of HTTP serves to guide you through the
-	code as well as to expose any misunderstandings I may have about
-	HTTP (so you don't need to read the code to figure out I'm wrong
-	:-).
-
-	HTTP (HyperText Transfer Protocol) is an extensible protocol on
-	top of a reliable stream transport (e.g. TCP/IP).  The protocol
-	recognizes three parts to a request:
-
-	1. One line identifying the request type and path
-	2. An optional set of RFC-822-style headers
-	3. An optional data part
-
-	The headers and data are separated by a blank line.
-
-	The first line of the request has the form
-
-	<command> <path> <version>
-
-	where <command> is a (case-sensitive) keyword such as GET or POST,
-	<path> is a string containing path information for the request,
-	and <version> should be the string "HTTP/1.0" or "HTTP/1.1".
-	<path> is encoded using the URL encoding scheme (using %xx to signify
-	the ASCII character with hex code xx).
-
-	The specification specifies that lines are separated by CRLF but
-	for compatibility with the widest range of clients recommends
-	servers also handle LF.  Similarly, whitespace in the request line
-	is treated sensibly (allowing multiple spaces between components
-	and allowing trailing whitespace).
-
-	Similarly, for output, lines ought to be separated by CRLF pairs
-	but most clients grok LF characters just fine.
-
-	If the first line of the request has the form
-
-	<command> <path>
-
-	(i.e. <version> is left out) then this is assumed to be an HTTP
-	0.9 request; this form has no optional headers and data part and
-	the reply consists of just the data.
-
-	The reply form of the HTTP 1.x protocol again has three parts:
-
-	1. One line giving the response code
-	2. An optional set of RFC-822-style headers
-	3. The data
-
-	Again, the headers and data are separated by a blank line.
-
-	The response code line has the form
-
-	<version> <responsecode> <responsestring>
-
-	where <version> is the protocol version ("HTTP/1.0" or "HTTP/1.1"),
-	<responsecode> is a 3-digit response code indicating success or
-	failure of the request, and <responsestring> is an optional
-	human-readable string explaining what the response code means.
-
-	This server parses the request and the headers, and then calls a
-	function specific to the request type (<command>).  Specifically,
-	a request SPAM will be handled by a method do_SPAM().  If no
-	such method exists the server sends an error response to the
-	client.  If it exists, it is called with no arguments:
-
-	do_SPAM()
-
-	Note that the request name is case sensitive (i.e. SPAM and spam
-	are different requests).
 
 	The various request details are stored in instance variables:
 
@@ -2833,7 +2686,7 @@ tr:nth-child(even) {
 				 'content="text/html; charset=%s">' % enc)
 		r.append('<title>%s</title>\n</head>' % title)'''
 		#r.append('<body>\n<h1>%s</h1>' % title)
-		r.append('<hr>\n<ul id= "linkss">')
+		# r.append('<hr>\n<ul id= "linkss">')
 		r_li= [] # type + file_link
 				 # f  : File
 				 # d  : Directory
@@ -2857,21 +2710,44 @@ tr:nth-child(even) {
 				_is_dir_ =False
 				__, ext = posixpath.splitext(fullname)
 				if ext=='.html':
+					r.append('<li><a class= "%s" href="%s">%s</a></li>'
+					% ("link", urllib.parse.quote(linkname,
+										  errors='surrogatepass'),
+					   html.escape(displayname, quote=False)))
+					
 					r_li.append('h'+ urllib.parse.quote(linkname, errors='surrogatepass'))
 					f_li.append(html.escape(displayname, quote=False))
 
 				elif self.guess_type(linkname).startswith('video/'):
+					r.append('<li><a class= "%s" href="%s">%s</a></li>'
+					% ("vid", urllib.parse.quote(linkname,
+										  errors='surrogatepass'),
+					   html.escape(displayname, quote=False)))
 					r_li.append('v'+ urllib.parse.quote(linkname, errors='surrogatepass'))
 					f_li.append(html.escape(displayname, quote=False))
 
 				elif self.guess_type(linkname).startswith('image/'):
+					r.append('<li><a class= "%s" href="%s">%s</a></li>'
+					% ("file", urllib.parse.quote(linkname,
+										  errors='surrogatepass'),
+					   html.escape(displayname, quote=False)))
 					r_li.append('i'+ urllib.parse.quote(linkname, errors='surrogatepass'))
 					f_li.append(html.escape(displayname, quote=False))
 
 				else:
+					
+					r.append('<li><a class= "%s" href="%s">%s</a></li>'
+					% ("file", urllib.parse.quote(linkname,
+										  errors='surrogatepass'),
+					   html.escape(displayname, quote=False)))
+					   
 					r_li.append('f'+ urllib.parse.quote(linkname, errors='surrogatepass'))
 					f_li.append(html.escape(displayname, quote=False))
 			if _is_dir_:
+				r.append('<li><a href="%s">%s</a></li>'
+					% (urllib.parse.quote(linkname,
+										  errors='surrogatepass'),
+					   html.escape(displayname, quote=False)))
 				r_li.append('d' + urllib.parse.quote(linkname, errors='surrogatepass'))
 				f_li.append(html.escape(displayname, quote=False))
 

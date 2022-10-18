@@ -130,20 +130,20 @@ body {
 	width: min-content;
 	padding: 10px;
 	border-radius: 8px;
-	margin: 20px;
+	margin: 15px;
 	float: left;
 	text-align: left;
 }
 
 
 .description_container{
-	padding: 16px; 
-	text-align:left; 
-	float: left; 
-	max-width: 408px;
+	padding: 20px;
+	text-align:left;
+	float: left;
+	max-width: 400px;
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 730px) {
 	.poster {
 		float: none;
 		margin-left: auto;
@@ -151,7 +151,8 @@ body {
 	}
 
 	.description_container{
-		max-width: 95vw; 
+		max-width: 95vw;
+		padding: 3px;
 	}
 
 }

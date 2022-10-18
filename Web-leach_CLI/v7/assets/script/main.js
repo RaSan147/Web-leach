@@ -1,7 +1,13 @@
 MAIN_JS = true;
 
 class Local_Data_Manager {
-	constructor() {
+	constructor() {}
+
+	show_last_opened() {
+		var self = this;
+		log("show_last_opened used get_local_data");
+		var link = null;
+
 		this.click_last_link = function (evt) {
 			evt.preventDefault();
 			popup_msg.close();
@@ -11,23 +17,13 @@ class Local_Data_Manager {
 			handle_json_request(link + "/index.html");
 		};
 
-	}
-
-	show_last_opened() {
-		var self = this;
-		log("show_last_opened used get_local_data");
-		var link = null;
-
-
 		if (!this.get_local_data()) {
 			return 0;
 		}
 
-		//log(datas.current_page_index);
 		if (
-			//tools.is_null(datas.lastleft, ["undefined", -1])
 			datas.last_opened == "undefined" ||
-			datas.last_openqed == null ||
+			datas.last_opened == null ||
 			datas.last_opened == -1
 		) {
 			datas.last_opened = datas.current_page_index;
@@ -36,6 +32,8 @@ class Local_Data_Manager {
 			return;
 		}
 
+
+		// CASE: Currently open CHAPTER-LIST
 		if (
 			datas.current_page_index == -1 &&
 			datas.last_opened != datas.current_page_index
@@ -222,11 +220,11 @@ var server_data_manager = new Server_Data_Manager();
 
 var vh = 0,
 	vw = 0;
-
+var repeat_counter = 0
 class Theme_Controller {
 	// TRON theme controller
 	constructor() {
-		// nothing to do here
+		this.fa_ok = false;
 	}
 
 	switch_init() {
@@ -302,11 +300,42 @@ class Theme_Controller {
 		vh = byId("brightness").clientHeight;
 		vw = byId("brightness").clientWidth;
 	}
+	
+	async del_fa_alt(){
+		if(this.fa_ok){
+		document.querySelectorAll(".fa").forEach(e=>e.parentNode.replaceChild(Object.assign(document.createElement("i"),{className:e.className, style:e.style}),e));
+	}}
+	
+	async load_fa(){
+		var that = this;
+		let link = createElement('link');
+		link.rel = "stylesheet";
+
+		link.type = "text/css";
+		link.media = 'print';
+		link.href = "https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro-v6@18657a9/css/all.min.css";
+		link.onload= function(){
+			log("fa loaded")
+			that.fa_ok = true;
+			that.del_fa_alt()
+			link.media ="all";
+
+			
+			
+			// var fa = byClass("fa")
+			// for (var i=0;i<fa.length;i++){
+			// 	fa[i].tagName = "i"
+			// }
+		}
+		document.head.appendChild(link);
+	}
 }
 
 var theme_controller = new Theme_Controller();
 
 theme_controller.getViewportSize();
+theme_controller.load_fa()
+
 
 class Top_Bar {
 	constructor() {
@@ -1059,7 +1088,7 @@ class CH_Sidebar_control {
 
 	}
 
-	
+
 	show_current_chapter() {
 		const yOffset = -210;
 		const element = byClass("ch-search-item-active")[0]
@@ -1166,7 +1195,7 @@ class Project_Panel_ {
 	constructor() {
 		this.rside_project = byId("ch-search-panel-body");
 		this.input_ = byId("proj_search_input");
-		this.button_ = byId("proj_search_icn"); // icon 
+		this.button_ = byId("proj_search_icn"); // icon
 
 		this.button = byClass("btn-search")[0]; // button
 		this.button.onfocus = () => {
@@ -1178,29 +1207,35 @@ class Project_Panel_ {
 		}
 	}
 
-	
+
 
 	show_search_results() {
 		var self = this;
 		var to_search = this.input_.value.toLowerCase();
 		tools.del_child(this.rside_project);
 		//log(11);
-		
+
 		if (to_search.length > 0) {
 			this.input_.setAttribute("data-state", "1");
 			this.button_.innerHTML = '<span style="font-size:25px">&times;</span>';
 			this.button_.onclick = function () {
 				self.input_.value = "";
 				self.input_.setAttribute("data-state", "0");
-				this.innerHTML = '<i class="fa-light fa-magnifying-glass"></i>';
-				this.to_search = "";
+				if (theme_controller.fa_ok){this.innerHTML = '<i class="fa-light fa-magnifying-glass"></i>';}
+				else {this.innerHTML = '<span class="fa fa-light fa-magnifying-glass" style="line-height:1.8">🔍</span>';
+				theme_controller.del_fa_alt()
+				}
+			this.to_search = "";
 				self.input_.focus();
 				self.show_search_results();
-				
+
 			};
 		} else {
 			this.input_.setAttribute("data-state", "0");
-			this.button_.innerHTML = '<i class="fa-light fa-magnifying-glass" style="line-height:1.8"></i>';
+			if (theme_controller.fa_ok){this.innerHTML = '<i class="fa-light fa-magnifying-glass"></i>';}
+			else {this.innerHTML = '<span class="fa fa-light fa-magnifying-glass" style="line-height:1.8">🔍</span>';
+			theme_controller.del_fa_alt()
+			}
 		}
 		//log(12);
 		var total_result = 0;
@@ -1258,7 +1293,7 @@ function show_ch_menus() {
 function show_credits() {
 	let header = "Credits";
 	let content =
-		"<h3>Created by Ratul Hasan</h3><h2>Special Thanks to:<hr width='80%'></h2><h3>Inul Haque<br>Sanjida Sirat<br>John Louis</h3>";
+		"<h3>Template created by Rasan147</h3><h2>Special Thanks to:<hr width='80%%'></h2><h3>Inul Haque<br>Sanjida Sirat<br>John Louis</h3>";
 
 	sidebar_control.closeNavL();
 
@@ -1447,7 +1482,7 @@ class Chapter_Handler {
 	}
 
 	init() {
-		
+
 		if (helped_user() == false) {
 			show_help();
 		}
@@ -1494,7 +1529,7 @@ class Chapter_Handler {
 		//log(2);
 		project_panel.show_search_results();
 		//log(3);
-			
+
 
 		project_panel.input_.oninput = function () {
 			project_panel.show_search_results();
@@ -1632,7 +1667,7 @@ class Chapter_List_Handler {
 		// 	this.all_li.appendChild(linkContainer);
 		// }
 
-		
+
 		for (let i = 0; i < datas.pages_list.length; i++) {
 			var loc = createElement("a");
 			var box = createElement("div");
@@ -1652,12 +1687,12 @@ class Chapter_List_Handler {
 				local_data_manager.set_local_data();
 				handle_json_request(this.href);
 			}
-			
+
 
 				box.innerText = datas.pages_list[i];
 				this.all_li.appendChild(loc);
 			}
-		
+
 
 	}
 

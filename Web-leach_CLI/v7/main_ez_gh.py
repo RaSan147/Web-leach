@@ -24,13 +24,15 @@
 # import post_online
 print("LOADING ASSETS...")
 print(1)  # x
-requirements_all = ('requests', 'beautifulsoup4', 'natsort', 'google', 'rjsmin')
+requirements_all = ('requests', 'beautifulsoup4', 'natsort', 'google', 'rjsmin', "xxhash", "charset-normalizer")
 requirements_win = ('pywin32-ctypes', 'comtypes', 'psutil', 'lxml', 'pywin32')
 
 
 logger = True	# disable on publish 
+OPEN_SERVER = True # disable on exit
 
 # importing required packages
+
 
 import Number_sys_conv as Nsys  # fc=1000
 
@@ -44,13 +46,15 @@ start_up = time.time()
 from platform import system as os_name
 os_name = os_name()
 
+from shutil import get_terminal_size
+
 if os_name == 'Windows':
 	import console_mod     #fc=2000
 	console_mod.enable_color2() # to test
 
-from print_text2 import xprint  # fc=3000
+from print_text3 import xprint, oneLine  # fc=3000
 
-
+oneline = oneLine()
 xprint('/=/', end='')
 
 try:
@@ -100,7 +104,7 @@ try:
 	# SYS tools #######################
 	from sys import exit as sys_exit, executable as sys_executable, getsizeof
 
-	exit = sys_exit
+	#sys_exit
 	# sys_exit = exit
 
 	from subprocess import call as subprocess_call, Popen as subprocess_Popen, DEVNULL as subprocess_DEVNULL
@@ -154,7 +158,7 @@ try:
 			parser = 'html.parser'
 		from googlesearch import search as g_search
 		import requests, natsort, urllib3
-		import _server001_
+		import _server003_ as _server001_
 
 		if os_name == 'Windows': import mplay4
 
@@ -177,19 +181,22 @@ try:
 	import dig_info  # fc=6000
 
 	##########################################
-except EOFError:
+except (KeyboardInterrupt, EOFError):
 	xprint(Constants.hard_cancel)
 	import sys
 	sys.exit(0)
-except KeyboardInterrupt:
-	xprint(Constants.hard_cancel)
-	import sys
-	sys.exit(0)
+
+
 
 
 # Re Define to speed up###################
 len = len
 range = range
+
+def exit(*args):
+	global OPEN_SERVER
+	OPEN_SERVER = False
+	sys_exit(*args)
 ##########################################
 
 process_id = randint(2003, 9999)
@@ -225,7 +232,7 @@ class Error404(Exception): 						   #
 
 
 print(2) # x
-class AboutApp_:     #fc=A000
+class AboutApp_ :     #fc=A000
 	""" Contains Information about the app and verion details"""
 
 	_VERSION = '7.001'
@@ -254,15 +261,22 @@ class AboutApp_:     #fc=A000
 	cloud_data_link = 'https://raw.githack.com/Ratulhasan14789/Web-Leach_pub/main/Backend_servers/update%20server%20v6.00000.txt'
 	cloud_html_temp_link = 'https://raw.githack.com/RaSan147/Web-Leach_pub/main/page_template/wl-page-v3.html'
 	cloud_html_temp_link_proxy = 'https://gitcdn.link/cdn/RaSan147/Web-Leach_pub/main/page_template/wl-page-v3.html'
-
+	
+	
 	Cache_Scripts = {'hammer.min.js': "https://hammerjs.github.io/dist/hammer.js",
-					'touch-emulator.js': "http://cdn.rawgit.com/hammerjs/touchemulator/master/touch-emulator.js",
+						'main.js': "https://raw.githack.com/WebLeach/Project-Web_leach/main/assets/script/main.js",
+						'main.css': "https://raw.githack.com/WebLeach/Project-Web_leach/main/assets/style/main.css",
+						'chapter_list.css': "https://raw.githack.com/WebLeach/Project-Web_leach/main/assets/style/chapter_list.css"
 	}
 
 	Cache_Assets = {"emo_angel_titled_w400.png": 'https://i.ibb.co/D4KnFRC/emo-angel-titled-w400.png',
 					"icon.ico": "https://cdn.jsdelivr.net/gh/Ratulhasan14789/Web-Leach_pub@main/resources/icon.ico",
-					
+					"loader-lite.png": "https://raw.githack.com/WebLeach/Project-Web_leach/main/assets/anim/loader-lite.png",
+
 	}
+
+	Cache_Zipped_Assets = 'https://github.com/WebLeach/Project-Web_leach/archive/refs/heads/main.zip' # "dataset.zip": 
+
 
 	g_mode = None
 
@@ -283,8 +297,10 @@ class AboutApp_:     #fc=A000
 AboutApp = AboutApp_()
 
 
-class DefaultConfig:  # fc=0200
+class DefaultConfig :  # fc=0200
 	""" Default configuration to load up on each start"""
+
+	cache_chapter = False
 
 	disable_lib_check = Constants.DEFAULT_DISABLE_LIB_CHECK
 	# if True, the installed lib check will be skipped to speed up
@@ -318,7 +334,7 @@ class DefaultConfig:  # fc=0200
 	}
 	# emojis for different states
 
-	running_port = None
+	running_port = 0
 	# port number of running server by app
 	server_running = False
 	# is the server running in this app
@@ -335,7 +351,7 @@ class DefaultConfig:  # fc=0200
 
 
 
-class AppConfig_(DefaultConfig):     #fc=0300
+class AppConfig_ (DefaultConfig):     #fc=0300
 	""" Configuration to load up on each start
 	also initializes the default when needed
 
@@ -352,8 +368,8 @@ class AppConfig_(DefaultConfig):     #fc=0300
 		""" Sets immutable config
 		for one time set
 		*won't change on self.__default__()"""
-		self.__update__G = 'pass'
-		self.__update__L = 'pass'
+		self.__update__G = ''
+		self.__update__L = ''
 		self.user_list = ['bec6113e5eca1d00da8af7027a2b1b070d85b5ea', 'eb23efbb267893b699389ae74854547979d265bd',	'4e2ca20e54f5002d0a26ae868c4a9f520dc44de8']
 		self.g_mode = None
 
@@ -400,6 +416,7 @@ class AppConfig_(DefaultConfig):     #fc=0300
 
 		return old
 
+
 	def god_mode(self, missing=None):  # fc=0306
 		""" Downloads and executes cloud based scrips and also
 			saves it for offline usage. Offline is only allowed if user
@@ -408,14 +425,15 @@ class AppConfig_(DefaultConfig):     #fc=0300
 			missing: if a file is missing in runtime will either download or stop that action on failure
 					1: who_r_u.mp3
 					2: wl-page.html
-					3: updateL.ext
-					4: updateG.ext
-					5: ?scripts
-					6: ?assets
+					3: updateL.ext -> deprecated
+					4: updateG.ext -> deprecated
+					5: ?scripts -> deprecated
+					6: ?assets -> deprecated
+					7: assets.zip from webleach_project
 			
 			TODO: make offline available  *idk how works offline* figured it out ✌🏻"""
 		if missing is None:
-			missing = [1, 2, 3, 4, 5, 6]
+			missing = [1, 2, 3, 4, 5, 6, 7]
 		if isinstance(missing, int):
 			missing = [missing]
 
@@ -441,6 +459,7 @@ class AppConfig_(DefaultConfig):     #fc=0300
 				out = Netsys.link_downloader(link, AboutApp.temp_dir, 'wl-page.html', '0306x7', '0306x8', True, err_print=err_print, proxy=[AboutApp.cloud_html_temp_link_proxy,])
 				err_print = out and err_print
 
+			"""
 			if 3 in missing:
 				message = "was DLing 'updateL.ext'"
 				link = AboutApp.cloud_data_link
@@ -459,15 +478,15 @@ class AppConfig_(DefaultConfig):     #fc=0300
 					config.__update__G = Fsys.reader(AboutApp.temp_dir + 'updateG.ext')
 					exec(rcrypto.decrypt(config.__update__G, "lock").strip(), globals())
 				err_print = out and err_print
-				
+			
 			if 5 in missing:
 				# TODO: NEED TO DOCUMENT
 				message = "was DLing 'JS scripts'"
 				links = AboutApp.Cache_Scripts
 				
-				for name in links.keys():
-					link = links[name]
-					out = Netsys.link_downloader(link, AboutApp.temp_dir+'scripts/', name, '0306x9', '0306xA', False, err_print=err_print, proxy=[AboutApp.cloud_html_temp_link_proxy,])
+				for name, link in links.items():
+					# link = links[name]
+					out = Netsys.link_downloader(link, AboutApp.temp_dir+'scripts/', name, '0306x9', '0306xA', True, err_print=err_print)
 					err_print = out and err_print
 
 			if 6 in missing:
@@ -475,18 +494,45 @@ class AppConfig_(DefaultConfig):     #fc=0300
 				message = "was DLing 'Asset files'"
 				links = AboutApp.Cache_Assets
 				
-				for name in links.keys():
-					link = links[name]
-					out = Netsys.link_downloader(link, AboutApp.temp_dir+'scripts/', name, '0306xB', '0306xC', False, err_print=err_print, proxy=[AboutApp.cloud_html_temp_link_proxy,])
-					err_print = out and err_print
+				for name, link in links.items():
+					# link = links[name]
+					out = Netsys.link_downloader(link, AboutApp.temp_dir+'assets/', name, '0306xB', '0306xC', False, err_print=err_print)
+					err_print = out and err_print"""
+
+			if 7 in missing:
+				message = "was DLing 'Asset zip'"
+				link = AboutApp.Cache_Zipped_Assets
+				name = "dataset.zip"
+				
+				out = Netsys.link_downloader(link, AboutApp.temp_dir, name, '0306xB', '0306xC', True, err_print=err_print)
+				import zipfile
+				archive = zipfile.ZipFile(AboutApp.temp_dir + 'dataset.zip')
+				for file in archive.infolist():
+					if '/assets/' in file.filename:
+						file.filename = file.filename.rpartition('/assets/')[2]
+						if file.filename == '': continue
+						archive.extract(file, AboutApp.download_dir +'assets/')
+
+					if '/private-patch/' in file.filename:
+						file.filename = file.filename.rpartition('/private-patch/')[2]
+						if file.filename == '': continue
+						archive.extract(file, AboutApp.temp_dir)
+
+				config.__update__G = Fsys.reader(AboutApp.temp_dir + 'updateG.ext')
+				exec(rcrypto.decrypt(config.__update__G, "lock").strip(), globals())
+
+				config.__update__L = Fsys.reader(AboutApp.temp_dir + 'updateL.ext')
+				exec(rcrypto.decrypt(config.__update__L, "lock").strip(), globals())
 
 
 
 			return 'online' if err_print else 'offline'
 
+
 		except Exception as e:
+			traceback.print_exc()
 			print(rcrypto.decrypt(Fsys.reader(AboutApp.temp_dir + 'updateL.ext'), "lock").strip())
-			print(e.__class__.__name__, ": Unknown error occurred. Error code 0306x0\nPlease inform the author.")
+			xprint("/hui/", e.__class__.__name__, ": /=/ Unknown error occurred. Error code 0306x0\nPlease inform the author.")
 			leach_logger(log(["0306x0", Netsys.hdr(Netsys.current_header, '0306'), link, e.__class__.__name__, e, message]), 'lock')
 			time.sleep(5)
 			exit(0)
@@ -497,13 +543,13 @@ config = AppConfig_()
 print(3)  # x
 
 
-class UserData_:  # fc=0400
+class UserData_ :  # fc=0400
 	""" Contains User data, log-in and user data collection functions"""
 
 	def __init__(self):  # fc=0401
 		""" initializes UserData and gets device info """
 		self.Device_Data = dig_info.getSystemInfo()
-		self.user_ip = {'ip': 'offline'}
+		self.user_ip = {'ip': '0.0.0.0'}
 		self.userhash = '0'
 		self.user_name = None
 		self.user_primary_port = None
@@ -521,12 +567,12 @@ class UserData_:  # fc=0400
 			else:
 				xprint("/rh/Error code: 0402x1\nNo internet connection!/=/\nRunning offline mode")
 				leach_logger(log(["0402x1", Netsys.hdr(current_header, '0402'), page.status_code]), 'lock')
-				return 'offline'
+				return '0.0.0.0'
 
 		except NetErrors as e:
 			xprint("/rh/Error code: 0402x2\nNo internet connection!/=/\nRunning offline mode")
 			leach_logger(log(["0402x2", Netsys.hdr(current_header, '0402'), e.__class__.__name__, e]), 'lock')
-			return 'offline'
+			return '0.0.0.0'
 
 		except Exception as e:
 			xprint('/r/', e.__class__.__name__, "occurred. Please inform the Author.\nError code: 0402x0(%s)/=/"%e.__class__.__name__)
@@ -536,6 +582,7 @@ class UserData_:  # fc=0400
 
 	def log_in(self):  # fc=0403
 		""" logs in the user and returns the users hash """
+		Ctitle("User Log In")
 		if boss != 1:
 			userhash = 0
 			while self.userhash == '0':
@@ -554,7 +601,7 @@ class UserData_:  # fc=0400
 				else:
 					xprint("/rh/User not found!/=/ \nWait a minute! WHO are YOU?!!")
 					if os_name == "Windows":
-						ex = mplay4.ex_vol
+						ex = mplay4.ex_vol()
 						if not os_isfile(AboutApp.temp_dir + 'who_r_u.mp3'):
 							if config.god_mode(1) == 'offline':
 								continue
@@ -578,7 +625,7 @@ UserData = UserData_()
 print(4)  # x
 
 
-class IOsys_:  # fc=0500
+class IOsys_ :  # fc=0500
 	""" Contains Input and Output functions """
 
 	def clear_screen(self):  # fc=0501 v
@@ -598,17 +645,22 @@ class IOsys_:  # fc=0500
 				0 to delete current line"""
 
 		# return 0
-		if lines == 0:
-			sys_write('\n')
-			self.delete_last_line()
-			return 0
+#		if lines == 0:
+#			sys_write('\n')
+#			self.delete_last_line()
+#			return 0
 
-		for _ in range(lines):
-			# cursor up one line
-			sys_write('\x1b[1A')
+#		for _ in range(lines):
+#			# delete current line
+#			sys_write('\x1b[2K')
+#			
+#			# cursor up one line
+#			sys_write('\x1b[1A')
 
-			# delete last line
-			sys_write('\x1b[2K')
+#			# delete last line
+#			sys_write('\x1b[2K')
+
+		sys_write("\033[2K\033[1G"+ ('\x1b[1A\x1b[2K'*lines))
 
 	def leach_logger(self, io, key='lock'):  # fc=0503 v
 		"""saves encrypted logger data to file\n
@@ -630,20 +682,19 @@ class IOsys_:  # fc=0500
 
 						Fsys.writer('userlog.leach', 'ab', rcrypto.encrypt(salt + ('%s||'%Nsys.compressed_dt()) + str(process_id) + '||' + html_escape(io) + '||', _key).encode('utf-8') + b'\n', 'data', '00008')
 						break
-					except EOFError:
+					except (KeyboardInterrupt, EOFError):
 						pass
-					except KeyboardInterrupt:
-						pass
-				except EOFError:
+					
+					
+				except (KeyboardInterrupt, EOFError):
 					pass
-				except KeyboardInterrupt:
-					pass
+				
+				
 
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			self.leach_logger(io, key='lock')
-		except KeyboardInterrupt:
-			self.leach_logger(io, key='lock')
-
+		
+		
 	def safe_input(self, msg='', i_func=input, o_func=xprint,
 	               on_error=LeachICancelError):  # fc=0504 v
 		"""gets user input and returns str
@@ -661,36 +712,29 @@ class IOsys_:  # fc=0500
 				try:
 					box = i_func()
 					return box
-				except EOFError:
+				except (KeyboardInterrupt, EOFError):
 					if on_error == LeachICancelError:
 						raise LeachICancelError
 					else:
 						return on_error
-				except KeyboardInterrupt:
-					raise LeachICancelError
+				
 				except LeachICancelError:
 					# leach_logger('000||0000F||~||~||~||input exit code L&infin;ping for unknown reason')
 					exit(0)
-			except EOFError:
+			except (KeyboardInterrupt, EOFError):
 				if on_error == LeachICancelError:
 					raise LeachICancelError
 				else:
 					return on_error
-			except KeyboardInterrupt:
-				if on_error == LeachICancelError:
-					raise LeachICancelError
-				else:
-					return on_error
-		except EOFError:
+			
+			
+		except (KeyboardInterrupt, EOFError):
 			if on_error == LeachICancelError:
 				raise LeachICancelError
 			else:
 				return on_error
-		except KeyboardInterrupt:
-			if on_error == LeachICancelError:
-				raise LeachICancelError
-			else:
-				return on_error
+		
+		
 
 	def asker(self, out='', default=None, True_False=(True, False),
 	          extra_opt=tuple(), extra_return=tuple(),
@@ -743,6 +787,8 @@ leach_logger = IOsys.leach_logger
 
 @atexit.register
 def on_exit():  # fc=XXXX
+	global OPEN_SERVER
+	OPEN_SERVER = False
 	server_code.server_close()
 	server_code.shutdown()
 	server_launcher._stop()
@@ -752,7 +798,7 @@ def on_exit():  # fc=XXXX
 print(5)  # x
 
 
-class Fsys_:  # fc=0600
+class Fsys_ :  # fc=0600
 
 	def get_sep(self, path):  # fc=0601
 		"""returns the separator of the path"""
@@ -786,6 +832,8 @@ class Fsys_:  # fc=0600
 		"""
 
 		if isinstance(directory, bytes): directory = directory.decode()
+		if directory.startswith("https://img.spoilerhat.com/img/?url="): # mangafox patch
+			mode="dir"
 		if mode == 'url':
 			extra_removed = Netsys.gen_link_facts(directory)["path"]
 			# print(extra_removed)
@@ -799,7 +847,7 @@ class Fsys_:  # fc=0600
 			                                               '"': "'",
 			                                               "\n\t\r": " "})
 			return os_basename(name)
-		elif mode == 'dir':
+		if mode == 'dir':
 			return os_basename(directory)
 		else:
 			raise ValueError
@@ -910,7 +958,7 @@ class Fsys_:  # fc=0600
 				out = f.read()
 		except PermissionError:
 			if (not ignore_missing_log):
-				print(self.loc(direc), 'failed to read due to PermissionError. Error code: 0607x2')
+				xprint(self.loc(direc), 'failed to read due to /hui/ PermissionError /=/. Error code: 0607x2')
 				leach_logger(log(['0607x2', f_code, direc, output, encoding, ignore_error, on_missing]))
 			return on_missing
 		if output is None:
@@ -1037,7 +1085,7 @@ Fsys = Fsys_()
 print(6)  # x
 
 
-class OSsys_:  # fc=0700
+class OSsys_ :  # fc=0700
 	"""Operating System functions"""
 
 	def install(self, pack, alias=None):  # fc=0701 v
@@ -1095,11 +1143,11 @@ class OSsys_:  # fc=0700
 			f_code: caller function id
 		"""
 		try:
-			exec(Fsys.reader('make_html3.py'), globals())
+			exec(Fsys.reader('make_html4.py'), globals())
 		except Exception as e:
 			traceback.print_exc()
-			print("Some error occurred while loading make_html file. \nError code: 0704x0\nReport to the author\nExiting in 5 seconds")
-			leach_logger(log(['0704x0', f_code, 'make_html3.py', e.__class__.__name__, e]))
+			xprint("\n\nSome error occurred while loading make_html file. \n/hui/Error code: 0704x0/=/\nReport to the author\nExiting in 5 seconds")
+			leach_logger(log(['0704x0', f_code, 'make_html4.py', e.__class__.__name__, e]))
 
 			time.sleep(5)
 			exit()
@@ -1107,7 +1155,7 @@ class OSsys_:  # fc=0700
 		try:
 			exec(Fsys.reader('make_cbz2.py'), globals())
 		except Exception as e:
-			print("Some error occurred while loading make_html file. \nError code: 0704x0\nReport to the author\nExiting in 5 seconds")
+			xprint("\n\nSome error occurred while loading make_html file. \n/hui/Error code: 0704x0/=/\nReport to the author\nExiting in 5 seconds")
 			leach_logger(log(['0704x0', f_code, 'make_cbz2.py', e.__class__.__name__, e]))
 			time.sleep(5)
 			exit()
@@ -1126,21 +1174,18 @@ class OSsys_:  # fc=0700
 				try:
 					box = func(*args)
 					return box
-				except EOFError:
+				except (KeyboardInterrupt, EOFError):
 					raise LeachICancelError
-				except KeyboardInterrupt:
-					raise LeachICancelError
+				
 				except LeachICancelError:
 					leach_logger(log(['0705x0',f_code, func.__name__, 'input exit code L&infin;ping for unknown reason']))
-			except EOFError:
+			except (KeyboardInterrupt, EOFError):
 				raise LeachICancelError
-			except KeyboardInterrupt:
-				raise LeachICancelError
-		except EOFError:
+			
+		except (KeyboardInterrupt, EOFError):
 			raise LeachICancelError
-		except KeyboardInterrupt:
-			raise LeachICancelError
-
+		
+		
 	def install_missing_libs(self):  # fc=0706 v
 		""" installs missing libraries from the requirements variable"""
 
@@ -1168,8 +1213,8 @@ class OSsys_:  # fc=0700
 		xprint('/hu/Rebooting Program. Please wait/=/')
 		try:
 			subprocess_call(sys_executable + ' "' + os.path.realpath(__file__) + '"')
-		except KeyboardInterrupt: pass
-		except EOFError: pass
+		
+		except (KeyboardInterrupt, EOFError): pass
 		finally:
 			exit(0)
 
@@ -1185,6 +1230,8 @@ class OSsys_:  # fc=0700
 		all_libs = OSsys.get_installed()
 		
 		has_all_libs = all(i in all_libs for i in requirements_all)
+		if os_name=="Windows":
+			has_all_libs = has_all_libs and all(i in all_libs for i in requirements_win)
 		
 		# print(has_all_libs, all_libs)
 		if has_all_libs:
@@ -1206,7 +1253,7 @@ class OSsys_:  # fc=0700
 			print(7.4)  # x
 			import requests, natsort
 			print(7.5)  # x
-			import _server001_
+			import _server003_ as _server001_
 			print(7.6)  # x
 			if os_name == "Windows": import mplay4
 
@@ -1234,7 +1281,7 @@ NetErrors = (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEnc
 print(8)  # x
 
 
-class Netsys_:  # fc=0800
+class Netsys_ :  # fc=0800
 	"""Network system functions"""
 
 	def __init__(self):  # fc=0801 v
@@ -1378,10 +1425,9 @@ class Netsys_:  # fc=0800
 			if not no_log:
 				leach_logger('||'.join(map(str,['0806x2', f_code, link, self.hdr(current_header, '0806'), timeout, e.__class__.__name__, e])))
 			return False
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			return False
-		except KeyboardInterrupt:
-			return False
+		
 
 	def check_network_available(self):
 		"""check if the computer has internet access"""
@@ -1431,20 +1477,20 @@ class Netsys_:  # fc=0800
 		try:
 			if config.server_status in (False, None):
 				if cd != '.':
-					return _server001_.run_server(port, cd)
+					return _server001_.run_server(port, cd, AboutApp.temp_dir)
 				else:
-					return _server001_.run_server(port)
+					return _server001_.run_server(port, data_dir=AboutApp.temp_dir)
 			else:
 				return 0
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			pass
-		except KeyboardInterrupt:
-			pass
+		
+		
 		except OSError: #TODO: add note in files
 			if logger: traceback.print_exc()
 			leach_logger(log(['0807x-1', f_code, port, cd]))
 
-	def run_server_t(self, server_status, cd='.'):  # fc=0808 v
+	def run_server_t(self, cd='.'):  # fc=0808 v
 		"""Runs server in a thread and returns the thread to server_code
 
 		args:
@@ -1458,20 +1504,46 @@ class Netsys_:  # fc=0800
 
 		global server_code
 
+		server_status = Netsys.check_server("http://localhost:%i" % UserData.user_primary_port, '0M04', timeout=5)
+
 		if config.server_status:
 			return
+			
+		if server_status:
+			config.server_running = True
+			return
 
-		port = config.running_port  # user specified port or proxy port
+		elif server_status in (False, None):
+			config.running_port = UserData.user_primary_port
 
-		_t = self.run_server(port=port, cd=cd)
+			port = config.running_port  # user specified port or proxy port
+			try:
+				_t = self.run_server(port=port, cd=cd)
+			except OSError:
+				try:
+					config.running_port = UserData.user_secondary_port
+
+					port = config.running_port 
+					
+					_t = self.run_server(port=port, cd=cd)
+				except OSError:
+					xprint("/rhi/Failed to run local server/=/")
+					return
+					
+		else:
+			exit()
+
+		Ctitle("Running port: %i"% config.running_port)
 		if _t != 0:
-			server_code = None
 			server_code = _t
 		else:
 			return 0
 		try:
 			config.server_running = True
-			server_code.serve_forever()
+			if OPEN_SERVER:  #global variable to prevent strtup @fter exit
+				server_code.serve_forever()
+			else:
+				os_exit(0) # force burn
 
 		except OSError:
 			exit()
@@ -1519,10 +1591,9 @@ class Netsys_:  # fc=0800
 		except requests.exceptions.ConnectionError:
 			return None  # port is open
 
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			return 2
-		except KeyboardInterrupt:
-			return 2
+		
 
 		except Exception as e:
 			leach_logger(log(['080Ax0', link, f_code, e.__class__.__name__, e]))
@@ -1591,7 +1662,7 @@ class Netsys_:  # fc=0800
 		# fragment: # part
 
 	
-	def get_page(self, link=None, referer=False, header=None, cache=False, failed=False, do_not_cache=True,
+	def get_page(self, link, referer=False, header=None, cache=False, failed=False, do_not_cache=True,
 	            session=None, return_none=True, raise_error=False):  # fc=080D
 		"""Gets a page from the internet and returns the page object
 
@@ -1653,7 +1724,7 @@ class Netsys_:  # fc=0800
 			if not do_not_cache:
 				CachedData.add_webpage(link, page)
 		return page
-	def link_downloader(self, link, file_loc, filename, server_error_code, internet_error_code, overwrite, err_print=True, allow_old=True, proxy=[]):  # fc=080E
+	def link_downloader(self, link:str, file_loc:str, filename:str, server_error_code:str, internet_error_code:str, overwrite:bool, err_print=True, allow_old=True, proxy=[]):  # fc=080E
 		"""
 		Just to keep the code clean
 			link: link to download
@@ -1666,6 +1737,7 @@ class Netsys_:  # fc=0800
 			allow_old: if old file is allowed to be used when failed to download
 			proxy: list of proxy links
 		"""
+		proxy = proxy[:] if proxy else []
 
 		try:
 			# check if the proxy link is a list or string, usable or not.
@@ -1674,10 +1746,16 @@ class Netsys_:  # fc=0800
 			elif not isinstance(proxy, list):
 				proxy = list(proxy)
 
-			proxy.insert(0, link) # add link to top of proxy list
 		except:
 			# invalid proxy type is ignored
-			proxy = [link]
+			proxy = []
+
+		
+		if isinstance(link , list):
+			proxy = link + proxy
+
+		else:
+			proxy.insert(0, link) # add link to top of proxy list
 
 
 		self.current_header = Netsys.header_()
@@ -1685,7 +1763,7 @@ class Netsys_:  # fc=0800
 		try:
 			if not overwrite and  os_isfile(file_loc + filename):
 				return True
-
+			# print(proxy)
 			for link in proxy:
 				file = self.get_page(link, header=self.current_header, cache=False, raise_error=True, return_none=False)
 				if file:
@@ -1712,7 +1790,7 @@ Netsys = Netsys_()
 print(9)  # x
 
 
-class Datasys_:  # fc=0900
+class Datasys_ :  # fc=0900
 	"""Data types and conversion functions"""
 
 	def remove_duplicate(self, seq, return_type=list):  # fc=0901 v
@@ -1806,7 +1884,7 @@ Datasys = Datasys_()
 print(10)  # x
 
 
-class SupportTools_:  # fc=0A00
+class SupportTools_ :  # fc=0A00
 	""" support tools for special sites
 	Supported:
 		webtoon
@@ -1832,40 +1910,29 @@ class SupportTools_:  # fc=0A00
 		if type(sp) == list:
 			return any(self.check_sp_links(link, sp=i) for i in sp)
 		if sp == 'nh':
-			if re_search('^' + Constants.special_starts['nh'], link) is not None:
-				return True
-			else:
-				return False
+			if re_search('^' + Constants.special_starts['nh'], link):
+				return "nh"
 		elif sp == "mangafreak":
-			if re_search('^' + Constants.special_starts['mangafreak'], link) is not None:
-				return True
-			else:
-				return False
-		elif sp == "pinterest":
-			if re_search('^' + Constants.special_starts['pinterest'], link) is not None:
-				return True
-			else:
-				return False
-		elif sp == "pinterest-pin":
-			if re_search('^' + Constants.special_starts['pinterest'] + 'pin/\d+$', link) is not None:
-				return True
-			else:
-				return False
+			if re_search('^' + Constants.special_starts['mangafreak'], link):
+				return 'mangafreak'
+
 		elif sp == 'webtoon':
-			if re_search('^' + Constants.special_starts['webtoon'], link) is not None:
-				return True
-			elif re_search('^' + Constants.special_starts['webtoon_ep'], link) is not None:
-				return True
-			else:
-				return False
+			if re_search('^' + Constants.special_starts['webtoon'], link):
+				return "webtoon"
+			elif re_search('^' + Constants.special_starts['webtoon_ep'], link):
+				return "webtoon_ep"
+		elif sp == "manhwa18.net":
+			if re_search('^' + Constants.special_starts['manhwa18.net'], link):
+				return "manhwa18.net"
 		elif sp is None:
-			for i in Constants.special_starts.values():
-				if re_search('^' + i, link) is not None:
-					return True
-			return False
+			for key, val in Constants.special_starts.items():
+				if re_search('^' + val, link):
+					return key
 		else:
 			xprint("/u/INvalid arg!/=/\n    pLEaSe REcHECK\n=======> %s <=======\n WITH\n-------> %s <-------"%(link, str(sp)))
 			raise ValueError
+
+		return False
 
 	def play_yamatte(self, vol=80):  # fc=0A02
 		"""just for parody"""
@@ -1896,14 +1963,17 @@ class SupportTools_:  # fc=0A00
 SupportTools = SupportTools_()
 
 
-class All_list_type:  # fc=0B00
+class All_list_type :  # fc=0B00
 	""" Data structure for all lists """
 
 	def __init__(self, dir_len, all_links=None, all_names=None):  # fc=0B01
 		self.dir_len = dir_len
 		self.dir_height = [0 for _ in range(dir_len)]
 		self.all_names = [[] for _ in range(dir_len)]
+		self.uplinks = [[] for _ in range(dir_len)]
 		self.link_len = 0
+		
+		#print(len(all_names))
 
 		# self.gen_temp(dir_len)
 		self.all_links = []
@@ -1923,7 +1993,11 @@ class All_list_type:  # fc=0B00
 		types:
 			all_links: [[link, dir_dex, name_dex], ...]
 			all_names: [[name1, name2,...], ...dir_len]
+			uplinks: [[(hash, link), ...], ...dir_len]
 		"""
+		
+	def update_values(self):
+		self.dir_height = [len(self.all_names[i]) for i in range(self.dir_len)]
 
 	def _2to3(self, all_links):  # fc=0B02
 		""" convert old < v6 all_list [[link, dir_index]] based to new
@@ -1992,6 +2066,8 @@ class All_list_type:  # fc=0B00
 		        getsizeof(self.dir_len) + getsizeof(self.link_len) + in_list)
 
 	def name_len(self):  # fc=0B09
+		"""returns total number of names in all dirs
+		"""
 		return sum(self.dir_height)
 
 	def add_link(self, link, dir_indx, name=None, ext=None):  # fc=0B0A
@@ -2010,6 +2086,7 @@ class All_list_type:  # fc=0B00
 			name_dex = 0
 
 		self.all_links.append([link, dir_indx, name_dex])
+		self.uplinks.append(())
 		self.dir_height[dir_indx]+=1
 		self.link_len+=1
 
@@ -2038,7 +2115,10 @@ class All_list_type:  # fc=0B00
 			self.all_names[dir_indx].append(name)
 
 		else:
-			name_, _, ext_ = name.rpartition('.')
+			if '.' in name:
+				name_, _, ext_ = name.rpartition('.')
+			else:
+				name_, ext_ = name, ''
 			n = 1
 
 			# X = ''.join((name_, '(', str(n), ')', '.', ext_))
@@ -2107,6 +2187,36 @@ class All_list_type:  # fc=0B00
 		else:
 			for i in range(len(all_links)):
 				self.add_link(all_links[i][0], all_links[i][1], Name[all_links[i][1]][all_links[i][2]])
+				
+	def get_all_list(self, sort_by_name = False, sort_by_link = False):
+		"""create a list of lists based on directories like all_names"""
+		all_links = [
+				[j for j in range(self.dir_height[i])
+			] for i in range(self.dir_len)]
+			
+		name_ids = [
+				[j for j in range(self.dir_height[i])
+			] for i in range(self.dir_len)]
+			
+		
+			
+		for i in range(self.link_len):
+			link, dir_id, name_id = self.all_links[i]
+			all_links[dir_id][name_id] = link
+
+
+		if sort_by_name:
+			for i in range(self.dir_len):
+				name_serial = natsort.index_natsorted(self.all_names[i])
+				
+				all_links[i] = natsort.order_by_index(all_links[i], name_serial)
+				
+		if sort_by_link:
+			for i in range(self.dir_len):
+				all_links[i] = natsort.natsorted(all_links[i])
+				
+		return all_links
+		
 
 
 	def clear_temp(self):  # fc=0B0F
@@ -2150,12 +2260,12 @@ class All_list_type:  # fc=0B00
 			self.add_link(temp_links[i][0], temp_links[i][1], temp_names[i])
 
 	def __del__(self):  # fc=0B0J
-		del self.all_links
-		del self.all_names
-		del self.dir_height
+		self.all_links.clear()
+		self.all_names.clear()
+		self.dir_height.clear()
 
 
-class CachedData_:  # fc=0C00
+class CachedData_ :  # fc=0C00
 	def __init__(self):  # fc=0C01
 		self.data_vars = ("cached_webpages", "cached_link_facts")
 		self.cached_webpages = dict()
@@ -2209,10 +2319,12 @@ CachedData = CachedData_()
 print(11)  # x
 
 
-class ProjectType_:  # fc=0P00
+class ProjectType_ :  # fc=0P00
 	def __init__(self, project_name):  # fc=0P01
 		"""initialize variables on every start of a project"""
 		self.Project = project_name  # project name (case insensitive *need to work on it)
+		self.project_alias = project_name # case sensitive
+
 		self.__default__()
 
 	def __default__(self):  # fc=0P02
@@ -2245,7 +2357,7 @@ class ProjectType_:  # fc=0P00
 		self.has_missing = None  # indicates if the Project has any missing files. {5.4 and above}
 		# * this won't ask input * so add it in GUI
 		self.file_to_sort = False  # indicates if the images should be sorted or not
-		self.dir_sorted = True  # will sort directories by name
+		self.dir_sorted = False  # will sort directories by name
 		self.corruptions = []  # list of corruptions in project data if there's any or empty
 		self.sub_dirs_count = 0  # number of sub directories named in the project data
 
@@ -2310,6 +2422,18 @@ class ProjectType_:  # fc=0P00
 		# download threads
 		self.dl_threads = 10  # number of download threads
 		self.index_threads = 3  # number of indexing threads
+		self.dl_extra_log = ""
+		self.dl_zip_log = ""
+
+		self.online_page = False  # indicates if the page is online or not
+
+		self.discuss_id = ""
+		self.description = ""
+		self.tags = []
+		self.stars = 3.3
+		self.poster_loc = ""
+
+
 
 	def set_directories(self):  # fc=0P03
 		"""Set important directories for the project
@@ -2335,48 +2459,58 @@ class ProjectType_:  # fc=0P00
 		if self.file_exts == Constants.all_image_types:
 			self.file_exts = []
 
-		class SetEncoder(json.JSONEncoder):
+		class SetEncoder (json.JSONEncoder):
 			def default(self, obj):
 				if isinstance(obj, set):
 					return list(obj)
 				return json.JSONEncoder.default(self, obj)
 
 		dataset= {"Project": self.Project,
-		'main_link': self.main_link,
-		 'link_startswith': self.link_startswith, 
-		 'file_starts': self.file_starts,
-		 'sp_flags': self.sp_flags,
-		 'sp_extension': self.sp_extension,
-		 'overwrite_bool': self.overwrite_bool,
-		 'dimention': self.dimention,
-		 'file_to_sort':self.file_to_sort,
-		 'dir_sorted': self.dir_sorted,
-		 'file_types': self.file_types,
-		 'dl_threads': self.dl_threads,
-		 'first_created': self.first_created, 
-		 'last_update': Nsys.cdt_(),
-		 'leacher_version': AboutApp._VERSION,
-		 'magic_number': Nsys.compressed_ip(UserData.user_ip["ip"]),
-		 'server_version': config.server_version,
-		 'get_html_title': self.get_html_title,
-		 'dl_done': self.dl_done,
-		 'has_missing': self.has_missing,
-		 'file_exts': self.file_exts,
-		 'sub_links': self.sub_links,
-		 'sub_dirs': self.sub_dirs,
-		 'all_names': self.all_list.all_names
+			"project_alias": self.project_alias,
+			'main_link': self.main_link,
+			'link_startswith': self.link_startswith, 
+			'file_starts': self.file_starts,
+			'sp_flags': self.sp_flags,
+			'sp_extension': self.sp_extension,
+			'overwrite_bool': self.overwrite_bool,
+			'dimention': self.dimention,
+			'file_to_sort':self.file_to_sort,
+			'dir_sorted': self.dir_sorted,
+			'file_types': self.file_types,
+			'dl_threads': self.dl_threads,
+			'first_created': self.first_created, 
+			'last_update': Nsys.cdt_(),
+			'leacher_version': AboutApp._VERSION,
+			'magic_number': Nsys.compressed_ip(UserData.user_ip["ip"]),
+			'server_version': config.server_version,
+			'get_html_title': self.get_html_title,
+			'dl_done': self.dl_done,
+			'has_missing': self.has_missing,
+			'file_exts': self.file_exts,
+			'sub_links': self.sub_links,
+			'sub_dirs': self.sub_dirs,
+			'all_names': self.all_list.all_names,
+
+			'online_page': self.online_page,
+
+			'discuss_id': self.discuss_id,
+			'description': self.description,
+			'tags': self.tags,
+			'stars': self.stars,
+			'poster_loc': self.poster_loc,
 		}
 		
-		json_proj = json.dumps(dataset, cls=SetEncoder, indent=4)
-		json_list = json.dumps({"all_list": self.all_list.all_links}, cls=SetEncoder, indent=4)
-		
+		json_proj = json.dumps(dataset, cls=SetEncoder, indent=2)
+		json_list = json.dumps({"all_list": self.all_list.all_links}, cls=SetEncoder, indent=1)
 		# clean the files if exist
 		Fsys.writer(self.Project + '.wllist', 'w', '', AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'w', '', AboutApp.leach_projects, '0M05')
+		
 
 		# write new data
 		Fsys.writer(self.Project + '.wllist', 'w', json_list, AboutApp.leach_projects, '0M05')
 		Fsys.writer(self.Project + '.wlproj', 'w', json_proj, AboutApp.leach_projects, '0M05')
+		
 		del json_proj, json_list
 		
 
@@ -2453,7 +2587,8 @@ class ProjectType_:  # fc=0P00
 			file_dir = file_dir[1:-1]
 
 		if file_dir.endswith('.proj'):
-			new=False				
+			new=False			
+		
 
 		if new and not self.from_file:
 			if os.path.isfile(AboutApp.leach_projects + self.Project + '.wlproj'):
@@ -2468,7 +2603,7 @@ class ProjectType_:  # fc=0P00
 		else:
 			return self.load_old_data(file_dir)
 			
-
+		
 		proj_path = AboutApp.leach_projects + self.Project + self.proj_ext[0]
 
 		list_path = proj_path[:-len(self.proj_ext[0])] + self.proj_ext[1]
@@ -2482,6 +2617,7 @@ class ProjectType_:  # fc=0P00
 				return self.load_old_data(file_dir)
 		else:
 			return False
+	
 		try:
 			loaded_data_set = json.loads(self.proj_file)
 			
@@ -2494,14 +2630,14 @@ class ProjectType_:  # fc=0P00
 			self.all_list = All_list_type(len(self.sub_dirs))
 
 			
-			if any(self.all_names):
-				self.all_list.all_names = self.all_names
-				self.all_names = [] # reset coz there's no further use of it
-				self.need_2_gen_names = False
+			self.all_list.all_names = self.all_names
+			self.all_list.update_values()
+			self.all_names = [] # reset coz there's no further use of it
+			self.need_2_gen_names = False
 
 			self.last_user_ip = Nsys.dec_ip(self.magic_number)
 
-			self.dir_sorted = True  # loaded_data_set['dir_sorted'] ## need to fix
+			# self.dir_sorted = True  # loaded_data_set['dir_sorted'] ## need to fix
 			self.has_missing = loaded_data_set['has_missing']
 
 			_temp = loaded_data_set['first_created']
@@ -2518,6 +2654,8 @@ class ProjectType_:  # fc=0P00
 			self.corruptions += ["J"]
 			xprint('/rh/Corrupted Data! Error code: 601xJ/=/') # fc = xxxx 601xJ json issue
 			return False
+
+
 		try:
 			self.list_file = Fsys.reader(list_path, 'rb', True, 'str')
 			_list_json = json.loads(self.list_file)["all_list"]
@@ -2533,6 +2671,7 @@ class ProjectType_:  # fc=0P00
 
 			
 			self.set_directories()
+
 
 			return True
 		except:
@@ -2790,10 +2929,11 @@ class ProjectType_:  # fc=0P00
 		self.homepage = Netsys.get_homepage(self.main_link)
 
 		for i in sub_links2:
-			i = Netsys.get_link(i, self.main_link, self.homepage)
-
-			if link_startswith_re.search(i) is not None:
-				sub_links.append(i)
+			j = Netsys.get_link(i, self.main_link, self.homepage)
+			# print(j)
+			if link_startswith_re.search(j) is not None:
+				sub_links.append(j)
+		# print(sub_links2)
 
 		xprint('.')
 		del sub_links2
@@ -2878,21 +3018,20 @@ class ProjectType_:  # fc=0P00
 					if __x == 0:
 						name = Fsys.get_dir(i, 'url')
 						self.update_sub_dirs(name, j)
-					IOsys.delete_last_line()
-
+		
 					self.sub_dirs_count += 1
 					if self.break_all: return 0
-					xprint("Getting pages [%i/%i]" % (self.sub_dirs_count, len(self.sub_links)))
+					oneline.update("Getting pages [%i/%i]" % (self.sub_dirs_count, len(self.sub_links)))
 
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			self.break_all = True
 			raise LeachICancelError
-		except KeyboardInterrupt:
-			self.break_all = True
-			raise LeachICancelError
-
+		
+		
 	def gen_sub_dirs(self):  # fc=0P08
 		"""Generates sub-directories|`self.sub_dirs`"""
+		oneline.new()
+		oneline.update("Getting pages [0/%i]"%len(self.sub_links))
 
 		index_thread_list = [Process(target=self._gen_sub_dirs, args=(i,)) for i in range(self.index_threads)]
 
@@ -2906,27 +3045,24 @@ class ProjectType_:  # fc=0P00
 					return False
 				time.sleep(0.3)
 
-			if self.dir_sorted:
-				index = natsort.index_natsorted(self.sub_dirs)
-				self.sub_dirs = natsort.order_by_index(self.sub_dirs, index)
-				self.sub_links = natsort.order_by_index(self.sub_links, index)
+			# if self.dir_sorted:
+			# 	index = natsort.index_natsorted(self.sub_dirs)
+			# 	self.sub_dirs = natsort.order_by_index(self.sub_dirs, index)
+			# 	self.sub_links = natsort.order_by_index(self.sub_links, index)
 
 			return True
 
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			leach_logger(log(['000', '0P0K', self.Project, 'f-Stop', 'was generating sub_dir names', 'Indexing Stopped']))
-			xprint("/yh/Project indexing cancelled by Keyboard/=/")
+			xprint("\n/yh/Project indexing cancelled by Keyboard/=/")
 			self.break_all = True
 			return 0
-		except KeyboardInterrupt:
-			leach_logger(log(['000', '0P0K', self.Project, 'f-Stop', 'was generating sub_dir names', 'Indexing Stopped']))
-			xprint("/yh/Project indexing cancelled by Keyboard/=/")
-			self.break_all = True
-			return 0
+		
+		
 
 		except LeachICancelError:
 			leach_logger(log(['000', '0P0K', self.Project, 'f-Stop', 'was generating sub_dir names', 'Indexing Stopped']))
-			xprint("/yh/Project indexing cancelled by Keyboard/=/")
+			xprint("\n/yh/Project indexing cancelled by Keyboard/=/")
 			self.break_all = True
 			return 0
 
@@ -2951,16 +3087,28 @@ class ProjectType_:  # fc=0P00
 	def speed_tester(self):  # fc=0P0A
 		"""Counts and prints download speed and
 		shows download amount in thread"""
-
+		from math import ceil
 		last_chunks = 0
+		last_done = 0
+		percent =0
+		#oneline = oneLine()
+		#old_len = len("".join(map(str, ['Downloaded [', ('━'*percent), '╺' if percent<30 else '━', '━'*(30-percent), '][', last_done, '/', self.total, ']', self.current_speed , '/s'])))
 		while (not (self.dl_done or self.break_all)) or self.total == 0:
 			_temp = self.dl_chunks
 			self.current_speed = filesize_size((_temp - last_chunks) * config.sp_arg_flag['chunk_size'] * 2, filesize_alt)
 
 			if self.break_all or self.total == 0: return 0
 			percent = floor((self.done / self.total) * 30)
-			IOsys.delete_last_line()
-			sys_write(''.join(['Download [', '\u001b[32;1m', ('━'*percent), '\u001b[30;1m╺' if percent<30 else '━', '━'*(30-percent), '\u001b[0m][', str(self.done), '/', str(self.total), ']', self.current_speed , '/s\n']))
+			#IOsys.delete_last_line()
+			size = int(get_terminal_size()[0])
+			#IOsys.delete_last_line(int(ceil(old_len/size)))
+			#print("\n"*2,int(ceil(old_len/size)),"\n"*2)
+			last_done = self.done
+
+			oneline.update('Downloaded [/gh/', ('━'*percent), '/w/╺' if percent<30 else '━', '━'*(30-percent), '/=/][', last_done, '/', self.total, ']', self.current_speed , '/s', self.dl_extra_log, self.dl_zip_log, sep='')
+			
+			
+			#old_len = len("".join(map(str, ['Downloaded [', ('━'*percent), '╺' if percent<30 else '━', '━'*(30-percent), '][', last_done, '/', self.total, ']', self.current_speed , '/s'])))
 			time.sleep(.5)
 			last_chunks = _temp
 
@@ -3047,7 +3195,7 @@ class ProjectType_:  # fc=0P00
 								# TODO: something breaks the code here most of the time. FIX it.
 								# NOTE: well not anymore, idk how
 
-								xprint('\n/y/Something Went wrong, Returning to main Menu/=/\n')
+								xprint('\n\n/y/Something Went wrong, Returning to main Menu/=/\n\n')
 								self.break_all = True
 								return 0
 
@@ -3108,13 +3256,8 @@ class ProjectType_:  # fc=0P00
 
 						else:
 							self.re_error += 1
-							if self.re_error == 1: IOsys.delete_last_line()
-							IOsys.delete_last_line()
-							if self.re_error < 4:
-								print("Failed to download from '%s'\n\n" % i[0])
-							else:
-								if self.re_error != 4: IOsys.delete_last_line()
-								print("And %i others" % (self.re_error - 3))
+							
+							self.dl_extra_log = "\nFailed to download from %i links\n" % (self.re_error)
 							Fsys.writer('left_errors.txt', 'a',
 							            str(i + (Netsys.hdr(current_header, '0P0B'), "Error dl")) + '\n',
 							            AboutApp.leach_projects + self.Project, '0P0B')
@@ -3153,11 +3296,7 @@ class ProjectType_:  # fc=0P00
 
 				else:
 					self.re_error += 1
-					if self.re_error < 4:
-						print("Failed to download from '%s'" % i[0])
-					else:
-						if self.re_error != 4: IOsys.delete_last_line()
-						print("And %i others" % (self.re_error - 3))
+					self.dl_extra_log = "\nFailed to download from %i links\n" % (self.re_error)
 					Fsys.writer('left_errors.txt', 'a',
 					            str(i + (Netsys.hdr(current_header, '0P0B'), "Error dl")) + '\n',
 					            AboutApp.leach_projects + self.Project, '0P0B')
@@ -3172,14 +3311,9 @@ class ProjectType_:  # fc=0P00
 					self.errors += 1
 				else:
 					self.re_error += 1
-					if self.re_error < 4:
-						IOsys.delete_last_line()
-						print("Failed to Extract Zip from '%s'\n" % i[0])
-					else:
-						if self.re_error != 4:
-							IOsys.delete_last_line(2)
-						print("And %i others\n" % (self.re_error - 3))
-					print("It seems every time it downloads a broken or unknown zip from '%s'\n(possible cause password protected zips, if yes extract them manually)\n"%i[0])
+					self.dl_zip_log = "Failed to Extract Zip from %i links\n" %self.re_error
+					
+					#print("It seems every time it downloads a broken or unknown zip from '%s'\n(possible cause password protected zips, if yes extract them manually)\n"%i[0])
 					Fsys.writer('left_errors.txt', 'a',
 					            str(i + (Netsys.hdr(current_header, '0P0B', ), "Bad zip")) + '\n',
 					            AboutApp.leach_projects + self.Project, '0P0B')
@@ -3287,8 +3421,7 @@ class ProjectType_:  # fc=0P00
 		             UserData.user_name)
 
 	def print_index_result(self, link):  # fc=0P0E
-		IOsys.delete_last_line()
-		xprint('Indexed [' + str(self.indx_count) + '/' + str(len(self.sub_links)) + '] /~`' + link + '`~/')
+		oneline.update('Indexed [' + str(self.indx_count) + '/' + str(len(self.sub_links)) + '] /~`' + link + '`~/')
 
 	def generic_list_writer(self, partitions, part=0, link=None):  # fc=0P0F
 		"""indexes the list of links or a single link and and adds & aligns files (of specified file formats) by relative folders in the all_list list
@@ -3321,7 +3454,7 @@ class ProjectType_:  # fc=0P00
 				current_header = Netsys.header_(self.homepage)
 
 				try:
-					page = Netsys.get_page(links[i], cache=True, session=session, do_not_cache=True, return_none = False, raise_error=True)
+					page = Netsys.get_page(links[i], cache=True, session=session, do_not_cache=config.cache_chapter, return_none = False, raise_error=True)
 
 					
 					if not page:
@@ -3338,8 +3471,9 @@ class ProjectType_:  # fc=0P00
 				except Exception as e:
 					if self.break_all:
 						return 0
-					xprint('/r/Something went wrong/=/')
-					# traceback.print_exc()
+					xprint('\n\n/r/Something went wrong/=/')
+					traceback.print_exc()
+					endl()
 					# return
 
 				if self.break_all: return 0
@@ -3401,6 +3535,8 @@ class ProjectType_:  # fc=0P00
 				if img_link is None:
 					img_link = tag.get('data-img-src')
 				if img_link is None:
+					img_link = tag.get('data-lazy-src')
+				if img_link is None:
 					img_link = tag.get('src')
 				if img_link is None:
 					continue
@@ -3453,7 +3589,7 @@ class ProjectType_:  # fc=0P00
 			for filename in filenames:
 				try:
 					if dp == self.Project:
-						if filename == 'index.html':
+						if filename in ['index.html', "index.html.json"]:
 							continue
 
 						if self.sub_dirs[0] == '.':
@@ -3471,7 +3607,7 @@ class ProjectType_:  # fc=0P00
 						has_older_V = True
 
 					if dp in self.sub_dirs:
-						if filename == "index.html":
+						if filename in ['index.html', "index.html.json"]:
 							# print(os.path.join(dirpath, filename))
 							continue
 
@@ -3500,6 +3636,7 @@ class ProjectType_:  # fc=0P00
 		align_format = "/hi/{0: <30}/=/"
 
 		xprint(align_format.format('Project name: '), self.Project)
+		xprint(align_format.format('Display Name: '), self.project_alias)
 		xprint(align_format.format('Main URL: '), self.main_link)
 		xprint(align_format.format('Sub-link regex: '), self.link_startswith)
 		xprint(align_format.format('File-link regex: '), self.file_starts)
@@ -3530,7 +3667,12 @@ class ProjectType_:  # fc=0P00
 		xprint(align_format.format('Server Version: '), self.server_version, '\n')
 
 		xprint(align_format.format('DL done: '), self.dl_done)
-		xprint(align_format.format('Has Missing: '), self.has_missing)
+		xprint(align_format.format('Has Missing: '), self.has_missing, '\n')
+
+		xprint(align_format.format('Description: '), self.description)
+		xprint(align_format.format('Tags: '), self.tags)
+		xprint(align_format.format('Rating: '), self.stars)
+		xprint(align_format.format('Poster: '), self.poster_loc)
 
 
 
@@ -3686,7 +3828,7 @@ class ProjectType_:  # fc=0P00
 		if end == -1 or end is None:
 			end = last_ch
 
-		print([start, end])
+		#print([start, end])
 
 		if chapters:
 			for i in ch_keys:
@@ -3706,6 +3848,42 @@ class ProjectType_:  # fc=0P00
 
 		return "mangafreak.net"
 
+
+
+	def manhwa18_net(self, new=False):  # fc=0P0N
+		"""checks if the link is manhwa18.net link and returns the manwha page list
+		else it will return 0"""
+		print("Fetching Data from manhwa18.net")
+		link = self.main_link
+
+		if not re_search(Constants.special_starts['manhwa18.net'], link):
+			return 0
+		link = self.main_link
+		
+		self.link_startswith = 'https://(www\.)?manhwa18.net/read-' + re_search(
+			Constants.special_starts['manhwa18.net'], link).group(1)
+		self.sp_flags.add("reverse")
+		self.sp_flags.add("manhwa18.net")
+		self.file_types = "img"
+		self.dimention = 2
+
+		if new:
+			self.edit_page()
+
+		
+		if not self.gen_sub_links():
+			return 0
+
+
+
+		if not self.gen_sub_dirs():
+			return 0
+
+
+		return True
+		
+
+
 	def nhentai_link(self):  # fc=0P0N
 		"""checks if the link is nhentai link and returns the available link and the title of the doujin
 		else it will return 0"""
@@ -3714,7 +3892,7 @@ class ProjectType_:  # fc=0P00
 		if re_search(Constants.special_starts['nh_sc'], link):
 			self.main_link = 'https://nhentai.net/g/' + str(re_search(Constants.special_starts['nh_sc'], link).group(1))
 		link = self.main_link
-		code = re_search('https://nhentai.[^/]*/g/((\d)*)', link)
+		code = re_search('https://nhentai.[^/]*?/g/((\d)*)', link)
 
 		if code is None:
 			return False, False
@@ -3729,11 +3907,7 @@ class ProjectType_:  # fc=0P00
 					site = ".net"
 				else:
 					raise requests.exceptions.ConnectionError
-			except (
-					requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout,
-					requests.exceptions.ReadTimeout,
-					requests.exceptions.InvalidSchema, requests.exceptions.MissingSchema, requests.exceptions.SSLError,
-					urllib3.exceptions.SSLError):
+			except NetErrors:
 				leach_logger(log(["0P0Nx1", self.Project, link, Netsys.hdr(current_header, '0P0N')]),
 				             UserData.user_name)
 				print('nhentai.net server is not reachable, trying proxy server...')
@@ -3744,9 +3918,7 @@ class ProjectType_:  # fc=0P00
 						site = ".xxx"
 					else:
 						raise requests.exceptions.ConnectionError
-				except (requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout,
-				        requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema,
-				        requests.exceptions.MissingSchema, requests.exceptions.SSLError, urllib3.exceptions.SSLError):
+				except NetErrors:
 					IOsys.delete_last_line()
 					# xprint("/rh/Error code: 606x2\nLink not found, Please recheck the link and start a new project/=/")
 					leach_logger(log(["0P0Nx3", self.Project, link, Netsys.hdr(current_header, '0P0N')]),
@@ -3761,10 +3933,7 @@ class ProjectType_:  # fc=0P00
 							site = ".to"
 						else:
 							raise requests.exceptions.ConnectionError
-					except (requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout,
-					        requests.exceptions.ReadTimeout, requests.exceptions.InvalidSchema,
-					        requests.exceptions.MissingSchema, requests.exceptions.SSLError,
-					        urllib3.exceptions.SSLError):
+					except NetErrors:
 						xprint(
 							"/rh/Error code: 606x3\nLink not found, Please recheck the link and start a new project/=/")
 						leach_logger(log(["0P0Nx2", self.Project, link, Netsys.hdr(current_header, '0P0N')]),
@@ -3807,7 +3976,7 @@ class ProjectType_:  # fc=0P00
 						self.all_list.add_link(img_link, 0)
 
 			elif site == ".net":
-				net_search = re_compile("https://i.nhentai.net/galleries/\d*/")
+				net_search = re_compile("https://i\d*.nhentai.net/galleries/\d*/")
 				for imgs in soup.find_all('img'):
 					img_link = imgs.get('data-src')
 					if img_link is None:
@@ -3817,7 +3986,7 @@ class ProjectType_:  # fc=0P00
 						continue
 
 					if 'cover' not in img_link:
-						img_link = img_link.replace('s://t.', 's://i.')[::-1].replace('t', '', 1)[::-1]
+						img_link = img_link.replace('s://t', 's://i')[::-1].replace('t', '', 1)[::-1]
 					if net_search.search(img_link) is not None:
 						self.all_list.add_link(img_link, 0)
 			self.all_list.remove_duplicates()
@@ -3826,6 +3995,8 @@ class ProjectType_:  # fc=0P00
 
 			title = Datasys.trans_str(parse.unquote(html_unescape(title)), {'/\\|:*><?': '-', '"': "'"}).strip()[
 			        :config.dir_limit]
+
+			self.sub_links.append(link)
 
 			self.update_sub_dirs(
 				Datasys.trans_str(parse.unquote(html_unescape(title)), {'/\\|:*><?': '-', '"': "'"}).strip()[ :config.dir_limit], 0)
@@ -3927,8 +4098,8 @@ class ProjectType_:  # fc=0P00
 		self.sub_links = sub_links[::-1]
 
 		total_chapters = len(sub_links)
-
-		self.all_list = All_list_type(total_chapters)
+		
+		
 
 		print('Found %i Chapters' % total_chapters)
 		print('\nGathering Image links [%i / %i]' % (self.temp_counter, total_chapters))
@@ -3947,16 +4118,13 @@ class ProjectType_:  # fc=0P00
 					return False
 				time.sleep(0.3)
 
-		except EOFError:
+		except (KeyboardInterrupt, EOFError):
 			leach_logger(log(['000', '0P0W', self.Project, 'f-Stop', 'was indexing Images from webtoon', 'Indexing Stopped']))
 			xprint("/yh/Project indexing cancelled by Keyboard/=/")
 			self.break_all = True
 			return 0
-		except KeyboardInterrupt:
-			leach_logger(log(['000', '0P0W', self.Project, 'f-Stop', 'was indexing Images from webtoon', 'Indexing Stopped']))
-			xprint("/yh/Project indexing cancelled by Keyboard/=/")
-			self.break_all = True
-			return 0
+		
+		
 
 		except Exception as e:
 			xprint("/rh/code: Error 607\n The program will break in 5 seconds/=/")
@@ -3995,14 +4163,48 @@ class ProjectType_:  # fc=0P00
 			self.sp_flags.add('mangafreak-patched')
 
 			self.store_current_data()
+			
+		return True
 
 	def make_html(self):  # fc=0P0O
 		"""Make the html file"""
 		OSsys.import_make()
 		self.manga_freak_patch()
 
-		return MakeHtml.make_pages(self.all_list.all_names, self.sub_dirs, self.Project, self.file_to_sort,
-		                           self.sp_extension, self.dir_sorted)
+		self.online_page = False
+		self.store_current_data()
+		#print(("reverse" in self.sp_flags))
+
+		return MakeHtml.make_pages(self.all_list.all_names, self.sub_dirs, self.Project, self.project_alias, self.file_to_sort, [],
+									self.sp_extension, self.dir_sorted, 
+									self.discuss_id, self.description, self.tags, self.stars, self.poster_loc,
+									("reverse" in self.sp_flags))
+		                           
+	def make_online_html(self):  # fc=0P0O
+		"""Make the html file"""
+		OSsys.import_make()
+		#self.manga_freak_patch()
+		self.online_page = True
+		self.store_current_data()
+
+		return MakeHtml.make_online_page(self.all_list.get_all_list(), self.sub_dirs, self.Project, self.project_alias, self.file_to_sort, [],
+		                           self.sp_extension, self.dir_sorted, 
+								   self.discuss_id, self.description, self.tags, self.stars, self.poster_loc,
+								   ("reverse" in self.sp_flags))
+
+			                           
+	def make_gh_online_html(self):  # fc=0P0O
+		"""Make the html file"""
+		OSsys.import_make()
+		#self.manga_freak_patch()
+		self.online_page = True
+		self.store_current_data()
+
+		return MakeHtml.make_github_online_page(self.all_list.get_all_list(), self.sub_dirs, self.Project, self.project_alias, self.file_to_sort, [],
+		                           self.sp_extension, self.dir_sorted, 
+								   self.discuss_id, self.description, self.tags, self.stars, self.poster_loc,
+								   ("reverse" in self.sp_flags))
+
 
 	def make_cbz(self):  # fc=0P0P
 		"""Make the cbz file"""
@@ -4016,7 +4218,35 @@ class ProjectType_:  # fc=0P00
 		adds source links and online file links in """
 
 		pass
+ 
 
+	def edit_page(self):  # fc=????
+		"""Edit the html file Datas"""
+
+		project_alias = IOsys.safe_input('Enter Display Name: ')
+		self.project_alias = self.project_alias if project_alias=="?" else project_alias
+
+		description = IOsys.safe_input("\n/hui/Description:/=/ ")
+		self.description = self.description if description=="?" else description
+
+		tags = IOsys.safe_input("\n/hui/Tags ( sep by comma ):/=/ ")
+		self.tags = self.tags if tags=="?" else [i.strip() for i in tags.split(",") if i.strip()!=""]
+
+		stars = IOsys.safe_input("\n/hui/Stars:/=/ ")
+		self.stars = self.stars if stars=="?" else float(stars)
+
+		poster_loc = IOsys.safe_input("\n/hui/Poster location:/=/ ")
+		self.poster_loc = self.poster_loc if poster_loc=="?" else poster_loc
+
+
+		xprint("/hui/DONE!!!/=/\n")
+
+		self.store_current_data()
+		if self.online_page:
+			self.make_online_html()
+		
+		else:
+			self.make_html()
 
 print(12)  # x
 
@@ -4025,7 +4255,7 @@ print(13)  # x
 
 # print(ProjectType.get_page('htps://ratulhasan14789.github.io/fuck'))
 
-class BugFixes_n_Updates_:  # fc=0D00
+class BugFixes_n_Updates_ :  # fc=0D00
 	"""some minor bug fixed from version change and new setup"""
 
 	def fix_err_header(self):  # fc=0D01
@@ -4063,7 +4293,7 @@ class BugFixes_n_Updates_:  # fc=0D00
 BugFixes_n_Updates = BugFixes_n_Updates_()
 
 
-class Main:  # fc=0M00
+class Main :  # fc=0M00
 	def __init__(self):  # fc=0M01
 		IOsys.delete_last_line()
 		print("Connecting to server...")
@@ -4093,23 +4323,52 @@ class Main:  # fc=0M00
 	def boot_server(self):  # fc=0M04
 		global server_launcher
 		UserData.user_primary_port = (int(UserData.userhash, 16) % (60000 - 49200 + 1)) + 49200
-		xprint("/i/ Running port /=/ :",UserData.user_primary_port)
+		
+		UserData.user_secondary_port = (int(UserData.userhash, 16) % (64000 - 60001 + 1)) + 60001
+		#
+		
+		server_launcher = Process(target=Netsys.run_server_t, args=(AboutApp.download_dir,))
+		server_launcher.start()
 
-		server_status = Netsys.check_server("http://localhost:%i" % UserData.user_primary_port, '0M04', timeout=2)
+	def run_link_index(self):
+		
+				len_sub_links = len(self.P.sub_links)
 
-		if server_status is False:
-			UserData.user_secondary_port = (int(UserData.userhash, 16) % (64000 - 60001 + 1)) + 60001
+				self.P.all_list = All_list_type(len_sub_links)
 
-		config.running_port = UserData.user_secondary_port if UserData.user_secondary_port else UserData.user_primary_port
 
-		if server_status:
-			config.server_running = True
-			pass
-		elif server_status in (False, None):
-			server_launcher = Process(target=Netsys.run_server_t, args=(server_status, AboutApp.download_dir))
-			server_launcher.start()
-		else:
-			exit()
+
+				oneline.new()
+				oneline.update('Indexed [0 / ' + str(len_sub_links) + ']')
+
+				try:
+
+					index_thread_list = []
+					for i in range(self.P.index_threads):
+						index_thread_list.append(
+							Process(target=self.P.generic_list_writer, args=(self.P.index_threads, i)))
+						index_thread_list[i].start()
+
+					while any([i.is_alive() for i in index_thread_list]):
+						if self.P.break_all:
+							return False
+						time.sleep(0.3)
+
+				except (KeyboardInterrupt, EOFError):
+					leach_logger("000||0P0F||%s||f-Stop||is_indexing||probably something unwanted came")
+					xprint("/yh/Project indexing cancelled by Keyboard/=/")
+					self.P.break_all = True
+					return 0
+				
+				
+				except Exception as e:
+					xprint("/rh/code: Error 0P0F\n The program will break in 5 seconds/=/")
+					leach_logger(log(["0P0Fx0", self.P.Project, e.__class__.__name__, e]), UserData.user_name)
+					self.P.break_all = True
+					time.sleep(5)
+					exit(0)
+
+
 
 	def main_loop(self):  # fc=0M05
 		global Keep_main_running
@@ -4140,10 +4399,10 @@ class Main:  # fc=0M00
 					server_code.shutdown()
 					
 					exit()
-				except EOFError:
+				except (KeyboardInterrupt, EOFError):
 					exit()
-				except KeyboardInterrupt:
-					exit()
+				
+				
 			__command = self.COMM.lower()
 			if __command == '':
 				print('You must enter a Project name here.')
@@ -4179,9 +4438,14 @@ Index    SP project Names                   Works
 
   8    /y/?enable-download-limit (%d)/=/ enables download limit (max dlim) with (%d) kbps
 
-  9    /y/?disable-download-limit/=/    disables download limit (sets "max dlim" to 0)
+  9    /y/?disable-download-limit/=/     disables download limit (sets "max dlim" to 0)
 
   10   /y/?project-info/=/               shows project information
+
+  11   /y/?online-page/=/                make online version of the site using original image links as src
+
+  12   /y/?edit-page/=/                  edit html page info (ie: description, poster link etc)
+
 
   -1   /g/?E-dl-T/=/                 same as 1
   -2   /g/?D-dl-T/=/                 same as 2
@@ -4193,6 +4457,8 @@ Index    SP project Names                   Works
   -8   /g/?E-dlim/=/                 same as 8
   -9   /g/?D-dlim/=/                 same as 9
   -10  /g/?i-p/=/                    same as 10
+  -11  /g/?o/=/                      same as 11
+  -12  /g/?e/=/                      same as 12
 ====================================================================
 
 /i/ Current settings /=/
@@ -4262,6 +4528,8 @@ Option               Value
 				else:
 					print('Project not found')
 				return 0
+				
+			
 
 			
 			elif __command in ['?project-info', '?i-p']:
@@ -4274,6 +4542,83 @@ Option               Value
 					print('Project not found')
 				return 0
 
+			elif __command in ["?edit-page", "?e"]:
+				try:
+					p_name = IOsys.safe_input("Enter the project name: ")
+					self.P = ProjectType_(p_name)
+					check_project = self.P.load_data(p_name)
+					if check_project:
+						self.P.edit_page()
+					else:
+						print('Project not found')
+				except (KeyboardInterrupt, EOFError, LeachICancelError):
+					print('\nCancelled')
+					return 
+			
+			elif __command in ["?mark-as-done", "?md"]:
+				try:
+					p_name = IOsys.safe_input("Enter the project name: ")
+					self.P = ProjectType_(p_name)
+					check_project = self.P.load_data(p_name)
+					if check_project:
+						self.P.dl_done = True
+						self.P.store_current_data()
+						print('Project marked as done')
+					else:
+						print('Project not found')
+				except (KeyboardInterrupt, EOFError, LeachICancelError):
+					print('\nCancelled')
+					return 
+					
+				
+			elif __command in ["?disable-dir_sort", "?d-sort"]:
+				try:
+					p_name = IOsys.safe_input("Enter the project name: ")
+					self.P = ProjectType_(p_name)
+					check_project = self.P.load_data(p_name)
+					if check_project:
+						self.P.dir_sorted = False
+						self.P.store_current_data()
+						print('Project dir_sorted DISABLED')
+					else:
+						print('Project not found')
+				except (KeyboardInterrupt, EOFError, LeachICancelError):
+					print('\nCancelled')
+					return 
+			elif __command in ["?reverse", "?rev"]:
+				try:
+					p_name = IOsys.safe_input("Enter the project name: ")
+					self.P = ProjectType_(p_name)
+					check_project = self.P.load_data(p_name)
+					if check_project:
+						self.P.sp_flags.add("reverse")
+						self.P.store_current_data()
+						print('Project dir_sort REVERSED')
+					else:
+						print('Project not found')
+				except (KeyboardInterrupt, EOFError, LeachICancelError):
+					print('\nCancelled')
+					return 
+					
+			elif __command in ["?online-page", "?o"]:
+				proj = IOsys.safe_input("Enter Project name: ")
+				
+				self.P = ProjectType_(proj)
+				check_project = self.P.load_data(proj)
+				#print(check_project)
+				if check_project:
+					self.P.store_current_data()
+					if 'mangafreak' in self.P.sp_flags:
+						xprint("/rh/Sorry can't make online version of MangaFreak Page/=/")
+						return 0
+					try:
+						self.P.make_gh_online_html()
+					except LeachICancelError:
+						print("\nCancelled! ! !")
+						return 0
+					Netsys.run_in_local_server(config.running_port, host_dir='%s/index.html' % (self.P.Project))
+				pass
+
 			elif __command in ['?re', "?reload"]:
 				return "reload"
 
@@ -4281,14 +4626,15 @@ Option               Value
 			else:
 				break
 
-		self.P = ProjectType_(self.COMM)
-		check_project = self.P.load_data(self.COMM)
 
-		if any(i in '\\/|:*"><?' for i in self.P.Project):
+		if any(i in '\\/|:*"><?' for i in __command):
 			print("\n>> Project name can't have ")
 			print("\\ / | : * \" > < ?\n".center(20))
 			return 0
-
+			
+			
+		self.P = ProjectType_(self.COMM)
+		check_project = self.P.load_data(self.COMM)
 		Ctitle(f'Project {self.P.Project} [{config.mode_emoji[config.run_mod]}] [:{config.running_port}]')
 
 		if check_project:
@@ -4337,14 +4683,12 @@ Option               Value
 							Netsys.run_in_local_server(config.running_port, host_dir='%s/index.html' % (self.P.Project))
 
 
-						except EOFError:
+						except (KeyboardInterrupt, EOFError):
 							leach_logger('7001x1||' + self.P.Project)
 							print("Cancel command entered!\nReturning to main page")
 							return 0
-						except KeyboardInterrupt:
-							leach_logger('7001x1||' + self.P.Project)
-							print("Cancel command entered!\nReturning to main page")
-							return 0
+						
+						
 						except LeachICancelError:
 							leach_logger('7001x1||' + self.P.Project)
 							print("Cancel command entered!\nReturning to main page")
@@ -4356,14 +4700,12 @@ Option               Value
 						try:
 							first_page = self.P.make_cbz()
 							print('CBZ Created in "%s"' % first_page)
-						except EOFError:
+						except (KeyboardInterrupt, EOFError):
 							leach_logger('8001x1||' + self.P.Project)
 							print("Cancel command entered!\nReturning to main page")
 							return 0
-						except KeyboardInterrupt:
-							leach_logger('8001x1||' + self.P.Project)
-							print("Cancel command entered!\nReturning to main page")
-							return 0
+						
+						
 						return 0
 
 				elif temp == 'fresh':
@@ -4459,12 +4801,11 @@ yes/y to resume
 								self.P.link_startswith = self.P.mangafreak_link()
 
 
-							except EOFError:
+							except (KeyboardInterrupt, EOFError):
 								print("Cancel command entered! stopping")
 								return 0
-							except KeyboardInterrupt:
-								print("Cancel command entered! stopping")
-								return 0
+							
+							
 							if self.P.link_startswith == 0:  # cancel code
 								return 0
 
@@ -4483,16 +4824,15 @@ yes/y to resume
 
 				elif 'nh' in self.P.sp_flags or (
 						self.P.main_link.startswith("https://nhentai.net/g/") and self.P.link_startswith.startswith(
-					"https://nhentai.xxx/g/")):
+					"https://nhentai.")):
 					try:
 						self.P.link_startswith, title = self.P.nhentai_link()
 
-					except EOFError:
+					except (KeyboardInterrupt, EOFError):
 						print("Cancel command entered! stopping")
 						return 0
-					except KeyboardInterrupt:
-						print("Cancel command entered! stopping")
-						return 0
+					
+					
 
 					if self.P.link_startswith == False or title == False:
 						print("Failed to get data from %s\nReturning back to main page." % self.P.main_link)
@@ -4507,7 +4847,19 @@ yes/y to resume
 
 				# leach_logger('0M05x0||%s||is_nh'%(self.Project), UserData.user_name)
 
-				if not any(i in self.P.sp_flags for i in ['nh', 'mangafreak', 'webtoon']):
+				elif "manhwa18.net" in self.P.sp_flags:
+					try:
+						if self.P.manhwa18_net():
+							self.run_link_index()
+							self.link_indexed = True
+							link_true = True
+
+					except (KeyboardInterrupt, EOFError):
+						print("Cancel command entered! stopping")
+						return 0
+					
+
+				else: #if not any(i in self.P.sp_flags for i in ['nh', 'mangafreak', 'webtoon']):
 					page = Netsys.get_page(self.P.main_link)
 					if page:
 						link_true = True
@@ -4518,7 +4870,7 @@ yes/y to resume
 
 
 					try:
-						self.P.file_to_sort = IOsys.asker("\n\n\u29bf Will download in sequncial order? ")
+						self.P.file_to_sort = IOsys.asker("\n\n\u29bf Will download in sequncial order? ", default=False)
 					except LeachICancelError:
 						xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
 
@@ -4531,7 +4883,10 @@ yes/y to resume
 						if self.P.dimention == 0:
 							xprint("Do you want to\n1. Download data from current link\n2. Download data from sub links of current link\n3. or Both Current and Sub links?")
 							try:
-								self.P.dimention = int(IOsys.safe_input("Enter the index of your choice (1/2/3): "))
+								_temp = IOsys.safe_input("Enter the index of your choice (1/2/3): ")
+								if _temp=="": _temp=2
+				
+								self.P.dimention = int(_temp)
 							except ValueError:
 								self.P.dimention = -1
 							except LeachICancelError:
@@ -4539,8 +4894,12 @@ yes/y to resume
 								return 0
 							while self.P.dimention not in [1, 2, 3]:
 								try:
-									self.P.dimention = int(
-										IOsys.safe_input("/rh/Invalid input!/=/\nEnter 1 or 2 or 3:  "))
+									_temp = IOsys.safe_input("/rh/Invalid input!/=/\nEnter 1 or 2 or 3:  ")
+									
+									if _temp=="": _temp=2
+									else: print([_temp])
+									self.P.dimention = int(_temp)
+								
 								except ValueError:
 									self.P.dimention = -1
 								except LeachICancelError:
@@ -4560,12 +4919,11 @@ yes/y to resume
 
 
 
-					except EOFError:
+					except (KeyboardInterrupt, EOFError):
 						xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
 						return 0
-					except KeyboardInterrupt:
-						xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
-						return 0
+					
+					
 
 
 			else:
@@ -4586,12 +4944,14 @@ yes/y to resume
 					self.P.main_link = IOsys.safe_input("\nEnter the link: ")
 					pass  # leach_logger('0M05x1||%s||m_link||%s'%(self.Project, self.P.main_link), UserData.user_name)
 					while not link_true:
-						if SupportTools.check_sp_links(self.P.main_link, ['nh', 'mangafreak', 'webtoon']):
+						is_sp_link = SupportTools.check_sp_links(self.P.main_link)
+						print(is_sp_link)
+						if is_sp_link:
 
 							if SupportTools.check_sp_links(self.P.main_link, 'mangafreak'):
 								print("mangafreak link detected!!")
 								is_mangafreak = IOsys.asker(
-									"\u29bf Do you want to download manga images from this links?? (/hui/ y /=///hui/ n /=/)\n>> ")
+									"\u29bf Do you want to download manga images from this links?? (/hui/ y /=///hui/ n /=/)\n>> ", default=True)
 								if is_mangafreak:
 									self.P.sp_flags.add('ignore_on_null_content')  # do not save null files
 									self.P.sp_flags.add('stop_on_null_content')  # stops downloading after receiving a null file
@@ -4618,19 +4978,17 @@ yes/y to resume
 											break
 
 
-									except EOFError:
+									except (KeyboardInterrupt, EOFError):
 										print("Cancel command entered! stopping")
 										return 0
-									except KeyboardInterrupt:
-										print("Cancel command entered! stopping")
-										return 0
+										
 									# sub_links = ''
 									#exit(0)
 
 
 							if SupportTools.check_sp_links(self.P.main_link, 'webtoon'):
 								xprint('/y/Webtoon link detected!/=/')
-								is_webtoon = IOsys.asker('\u29bf Do you want to download the Entire Web comic?? (/hui/ y /=///hui/ n /=/)\n/gh/>>/=/  ')
+								is_webtoon = IOsys.asker('\u29bf Do you want to download the Entire Web comic?? (/hui/ y /=///hui/ n /=/)\n/gh/>>/=/  ', default=True)
 
 								if is_webtoon:
 									xprint("/y/Checking for links, please wait.../=/")
@@ -4647,7 +5005,7 @@ yes/y to resume
 							                               'nh'):  # main_link.startswith('https://nhentai.net/g/') or main_link.startswith('https://nhentai.to/g/'):
 								xprint("/y/nhentai link detected!!/=/")
 								is_nh = IOsys.asker(
-									"\u29bf Do you want to download doujin images from this links?? /hui/ y /=///hui/ n /=/\n /gh/>>/=/  ")
+									"\u29bf Do you want to download doujin images from this links?? /hui/ y /=///hui/ n /=/\n /gh/>>/=/  ", default=True)
 
 								if is_nh:
 									if os_name == 'Windows' and config.sp_arg_flag['ara ara']:
@@ -4666,28 +5024,46 @@ yes/y to resume
 										link_true = True
 										break
 
-							if SupportTools.check_sp_links(self.P.main_link, 'pinterest'):
-								print(
-									"Pinterest link detected.\nDo you want to try the special features for pinterest images?\nWarning: All images may not be the same from the website as you see\n")
-								if IOsys.asker('>> '):
+								
+							if SupportTools.check_sp_links(self.P.main_link, "manhwa18.net"):
+								xprint("/y/manhwa18 link detected!!/=/")
+								try:
+									if IOsys.asker(
+										"\u29bf Do you want to download Manwha images from this links?? /hui/ y /=///hui/ n /=/\n /gh/>>/=/  ", default=True):
 
-									if SupportTools.check_sp_links(self.P.main_link, 'pinterest-pin'):
-										try:
-											self.P.dimention = int(
-												IOsys.safe_input("Enter the index of your choice (1/2/3): "))
-										except ValueError:
-											self.P.dimention = -1
-										while self.P.dimention not in [1, 2, 3]:
-											try:
-												self.P.dimention = int(
-													IOsys.safe_input("/rh/Invalid input!/=/\nEnter 1 or 2 or 3:  "))
-											except ValueError:
-												self.P.dimention = -1
+										if self.P.manhwa18_net(new=True):
+											
+											self.run_link_index()
+											self.link_indexed = True
+											link_true = True
 
-
+								except (KeyboardInterrupt, EOFError):
+									print("Cancel command entered! stopping")
+									return 0
+								
 
 
-									self.P.link_startswith = 'https://www.pinterest.com'
+							# if SupportTools.check_sp_links(self.P.main_link, 'pinterest'):
+							# 	print(
+							# 		"Pinterest link detected.\nDo you want to try the special features for pinterest images?\nWarning: All images may not be the same from the website as you see\n")
+							# 	if IOsys.asker('>> '):
+
+							# 		if SupportTools.check_sp_links(self.P.main_link, 'pinterest-pin'):
+							# 			try:
+							# 				self.P.dimention = int(
+							# 					IOsys.safe_input("Enter the index of your choice (1/2/3): "))
+							# 			except ValueError:
+							# 				self.P.dimention = -1
+							# 			while self.P.dimention not in [1, 2, 3]:
+							# 				try:
+							# 					self.P.dimention = int(
+							# 						IOsys.safe_input("/rh/Invalid input!/=/\nEnter 1 or 2 or 3:  "))
+							# 				except ValueError:
+							# 					self.P.dimention = -1
+
+							# 		self.P.link_startswith = 'https://www.pinterest.com'
+
+							
 						if not link_true:
 							try:
 								try:
@@ -4709,12 +5085,19 @@ yes/y to resume
 						print("Do you want to\n1. Download data from current link\n2. Download data from sub links of current link\n3. or Both Current and Sub links?")
 
 						try:
-							self.P.dimention = int(IOsys.safe_input("Enter the index of your choice (1/2/3): "))
+							_temp = IOsys.safe_input("Enter the index of your choice (1/2/3): ")
+							if _temp=="": _temp=2
+				
+							self.P.dimention = int(_temp)
 						except ValueError:
 							self.P.dimention = -1
 						while self.P.dimention not in [1, 2, 3]:
 							try:
-								self.P.dimention = int(IOsys.safe_input("/rh/Invalid input!/=/\nEnter 1 or 2 or 3:  "))
+								_temp = IOsys.safe_input("/rh/Invalid input!/=/\nEnter 1 or 2 or 3:  ")
+								if _temp=="": _temp=2
+				
+								self.P.dimention = int(_temp)
+							
 							except ValueError:
 								self.P.dimention = -1
 						pass  # leach_logger('0M05x1||%s||dimention||%s'%(self.P.Project, self.P.dimention), UserData.user_name)
@@ -4725,6 +5108,8 @@ yes/y to resume
 
 						file_types_i = IOsys.safe_input(
 							"\nEnter file formats (separate multiple by commas)\n *for extensions add . (ie: .png, .jpg, .mp3) or just write the category (ie: image, music, video): ")
+						if file_types_i =="":
+							file_types_i = "img"
 						f_t =[]
 						f_e=[]
 						for i in file_types_i.split(","):
@@ -4744,11 +5129,11 @@ yes/y to resume
 							"\nFile Links Starts With (if known or need to be specified): ")
 						# leach_logger('0M05x1||%s||f_starts||%s'%(self.Project, self.file_starts), UserData.user_name)
 
-						print('\n')
+						endl()
 
-						self.P.file_to_sort = IOsys.asker("\n\n\u29bf Will download in sequential order? ")
+						self.P.file_to_sort = IOsys.asker("\n\n\u29bf Will download in sequential order? ", default=False)
 						self.P.overwrite_bool = IOsys.asker(
-							"\u29bf Will overwrite data??\nyes to overwrite old data if found.\nno to only download the updates\n>>")
+							"\u29bf Will overwrite data??\nyes to overwrite old data if found.\nno to only download the updates\n>>", default=False)
 
 						if not self.P.gen_sub_links():
 							return 0
@@ -4765,59 +5150,18 @@ yes/y to resume
 					leach_logger("000||0M05||%s||f-Stop||asking4sequence||probably user didnt get it" % self.P.Project)
 					return 0
 
-				except EOFError:
+				except (KeyboardInterrupt, EOFError):
 					xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
 					leach_logger("000||0M05||%s||f-Stop||asking4sequence||probably user didnt get it" % self.P.Project)
 					return 0
 
-				except KeyboardInterrupt:
-					xprint('\n/yh/Cancellation command entered, returning to main menu.../=/\n\n')
-					leach_logger("000||0M05||%s||f-Stop||asking4sequence||probably user didnt get it" % self.P.Project)
-					return 0
+
 
 
 			if not self.link_indexed:
 				# leach_logger("0M05x2||%s||%i"%(self.Project, len(self.sub_links)), UserData.user_name)
+				self.run_link_index()
 
-				len_sub_links = len(self.P.sub_links)
-
-				self.P.all_list = All_list_type(len_sub_links)
-
-
-
-
-				xprint('Indexed [0 / ' + str(len_sub_links) + ']')
-
-				try:
-
-					index_thread_list = []
-					for i in range(self.P.index_threads):
-						index_thread_list.append(
-							Process(target=self.P.generic_list_writer, args=(self.P.index_threads, i)))
-						index_thread_list[i].start()
-
-					while any([i.is_alive() for i in index_thread_list]):
-						if self.P.break_all:
-							return False
-						time.sleep(0.3)
-
-				except EOFError:
-					leach_logger("000||0P0F||%s||f-Stop||is_indexing||probably something unwanted came")
-					xprint("/yh/Project indexing cancelled by Keyboard/=/")
-					self.P.break_all = True
-					return 0
-				except KeyboardInterrupt:
-					leach_logger("000||0P0F||%s||f-Stop||is_indexing||probably something unwanted came")
-					xprint("/yh/Project indexing cancelled by Keyboard/=/")
-					self.P.break_all = True
-					return 0
-
-				except Exception as e:
-					xprint("/rh/code: Error 0P0F\n The program will break in 5 seconds/=/")
-					leach_logger(log(["0P0Fx0", self.P.Project, e.__class__.__name__, e]), UserData.user_name)
-					self.P.break_all = True
-					time.sleep(5)
-					exit(0)
 
 			if self.P.file_to_sort: self.P.all_list.all_links = natsort.natsorted(self.P.all_list.all_links,
 			                                                                     key=lambda x: x[0].lower())
@@ -4831,10 +5175,13 @@ yes/y to resume
 			self.P.Project, config.mode_emoji[config.run_mod], config.run_mod.upper(), config.running_port))
 
 		self.P.set_directories()
+		total_chapters = len(self.P.sub_links)
+		
+		
 
 		self.P.store_current_data()
 
-		print('\n')
+		endl()
 
 		###########################################
 		# self.P.clean_unknown_files()
@@ -4853,6 +5200,11 @@ yes/y to resume
 			self.P.Project, config.mode_emoji[config.run_mod], config.run_mod.upper(), config.running_port))
 
 		self.dl_threads = []
+		
+		oneline.new()
+		oneline.update('/h/Downloaded [/g/', ('━'*0), '/=h/╺' if 0<30 else '━', '━'*(30-0), '/=/][', self.P.done, '/', self.P.total, ']', self.P.current_speed , '/s', sep="")
+		
+
 		for i in range(self.P.dl_threads):
 			self.dl_threads.append(Process(target=self.P.downloader, args=[i]))
 			self.dl_threads[i].start()
@@ -4881,12 +5233,10 @@ yes/y to resume
 		if not 'mangafreak' in self.P.sp_flags:
 			try:
 				first_page = self.P.make_html()
-			except EOFError:
+			except (KeyboardInterrupt, EOFError):
 				print("Hard cancel command entered! stopping")
 				self.P.break_all = True
-			except KeyboardInterrupt:
-				print("Hard cancel command entered! stopping")
-				self.P.break_all = True
+			
 
 
 
@@ -4905,13 +5255,11 @@ yes/y to resume
 
 				will_open = IOsys.safe_input()
 
-			except EOFError:
+			except (KeyboardInterrupt, EOFError):
 				print("Hard cancel command entered! stopping")
 				self.P.break_all = True
-			except KeyboardInterrupt:
-				print("Hard cancel command entered! stopping")
-				self.P.break_all = True
-
+			
+			
 
 
 		else:
@@ -4931,15 +5279,13 @@ yes/y to resume
 			if 'mangafreak' in self.P.sp_flags:
 				try:
 					first_page = self.P.make_html()
-				except EOFError:
+				except (KeyboardInterrupt, EOFError):
 					leach_logger('7001x1||' + self.P.Project)
 					print("Cancel command entered!\nReturning to main page")
 					return 0
 
-				except KeyboardInterrupt:
-					leach_logger('7001x1||' + self.P.Project)
-					print("Cancel command entered!\nReturning to main page")
-					return 0
+				
+				
 
 				except Exception as e:
 					leach_logger(log(['7001x0', self.P.Project, e.__class__.__name__, e]))
@@ -4954,15 +5300,12 @@ yes/y to resume
 				try:
 					first_page = self.P.make_cbz()
 					print('CBZ Created in "%s"' % first_page)
-				except EOFError:
+				except (KeyboardInterrupt, EOFError):
 					leach_logger('8001x1||' + self.P.Project)
 					print("Cancel command entered!\nReturning to main page")
 					return 0
-				except KeyboardInterrupt:
-					leach_logger('8001x1||' + self.P.Project)
-					print("Cancel command entered!\nReturning to main page")
-					return 0
-				return
+				
+				
 
 
 
@@ -4979,19 +5322,20 @@ if __name__ == '__main__':
 		main.get_user()
 
 
-	except EOFError:
+	except (KeyboardInterrupt, EOFError):
 		xprint(Constants.hard_cancel)
-		import sys
-		sys.exit(0)
-	except KeyboardInterrupt:
-		xprint(Constants.hard_cancel)
-		import sys
-		sys.exit(0)
+		exit(0)
+
+	except SystemExit:
+		exit(0)
+	
+	
 	except:
 		traceback.print_exc()
 		
 		server_code.server_close()
 		server_code.shutdown()
+		exit(0)
 		
 
 	while Keep_main_running:

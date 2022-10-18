@@ -10,3 +10,5 @@ Supported:
 
 need to work:
 	#0306
+	
+⭐ remove names from credit  list and use github id with *
