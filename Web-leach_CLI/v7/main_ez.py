@@ -562,7 +562,7 @@ class UserData_ :  # fc=0400
 		try:
 			page = requests.get('https://api.ipify.org/', headers=current_header, timeout=6)
 			if page:
-				self.user_ip = page.text
+				self.user_ip = {"ip": page.text}
 				return self.user_ip
 				
 			#else:
